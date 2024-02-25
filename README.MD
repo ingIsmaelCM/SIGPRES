@@ -1,8 +1,51 @@
-## Sigpress Documentation
+## Sigpres Documentation
 
 ---
 
 ### Get Started
+
+Clone this Repository
+
+```bash
+git clone https://github.com/AtrionTechSD/SIGPRES
+```
+
+Install Dependencies
+
+```bash
+npm install
+```
+
+Set up Environments Vars
+
+```bash
+//Windows
+copy .env.example .env
+```
+
+```bash
+//linux
+cp .env.example .env
+```
+
+Create Database
+
+```mysql
+CREATE DATABASE IF NOT EXIST `sigpres_main`
+```
+
+Migrate Data
+
+```bash
+npm run migrate all
+npm run seed all
+```
+
+Run API Service
+
+```bash
+npm run dev
+```
 
 ---
 
@@ -153,11 +196,11 @@ interface Itenant {
 
 ##### Responses
 
-> | http code | content-type     | response                                               |
-> | --------- | ---------------- | ------------------------------------------------------ |
-> | `201`     | application/json | `{"code":"201","title":"Usuario creado exitosamente"}` |
-> | `422`     | application/json | `{"code":"422","content":"Unproccesable data"}`        |
-> | `500`     | application/json | `{"code":"500","content":"Unkonown server error"}`     |
+> | http code | content-type     | response                                                     |
+> | --------- | ---------------- | ------------------------------------------------------------ |
+> | `201`     | application/json | `{"statusCode":"201","title":"Usuario creado exitosamente"}` |
+> | `422`     | application/json | `{"statusCode":"422","content":"Unproccesable data"}`        |
+> | `500`     | application/json | `{"statusCode":"500","content":"Unkonown server error"}`     |
 
 ##### Example Axios
 
@@ -187,18 +230,19 @@ interface Itenant {
 <summary><code>POST </code> <code>/api/auth/login</code> </summary>
 ##### Parameters
 
-> | name     | type     | data type | description              |
-> | -------- | -------- | --------- | ------------------------ |
-> | email    | required | string    | Unique email to register |
-> | password | required | string    | 6-25 length password     |
+> | name     | type     | data type | description          |
+> | -------- | -------- | --------- | -------------------- |
+> | username | required | string    | Registered username  |
+> | password | required | string    | 6-25 length password |
 
 ##### Responses
 
-> | http code | content-type     | response                                           |
-> | --------- | ---------------- | -------------------------------------------------- |
-> | `200`     | application/json | `{"code":"200","content": auth: object}`           |
-> | `422`     | application/json | `{"code":"422","message":"Unproccesable data"}`    |
-> | `500`     | application/json | `{"code":"500","message":"Unkonown server error"}` |
+> | http code | content-type     | response                                                                                   |
+> | --------- | ---------------- | ------------------------------------------------------------------------------------------ |
+> | `200`     | application/json | `{"statusCode":"200", "title": "Sesión iniciada correctamente", ""content": auth: object}` |
+> | `422`     | application/json | `{"statusCode":"422","message":"Unproccesable data"}`                                      |
+> | `401`     | application/json | `{"statusCode":"401","message":"Credenciales incorrectas"}`                                |
+> | `500`     | application/json | `{"statusCode":"500","message":"Unkonown server error"}`                                   |
 
 ##### Example Axios
 
@@ -206,8 +250,17 @@ interface Itenant {
 > axios({
 >   method: "post",
 >   url: "/api/auth/login",
->   data: { email: "email@example.com", password: "password1234" },
+>   data: {
+> ```
+
+            username: "exampleuser",
+            password: "password1234"
+          },
+
 > });
+>
+> ```
+>
 > ```
 
 </details>
@@ -277,103 +330,3 @@ interface Itenant {
 </details>
 
 ---
-
-### Schema User
-
-### Manage User
-
-<details>
-
-<summary><code>POST </code> <code>/api/users</code> </summary>
-
-##### Headers
-
-> | name          | type     | data type    | description           |
-> | ------------- | -------- | ------------ | --------------------- |
-> | Authorization | required | Bearer Token | Token provided by api |
-
-##### Parameters
-
-> | name     | type     | data type | description              |
-> | -------- | -------- | --------- | ------------------------ |
-> | name     | required | string    | First name for user      |
-> | lastname | required | string    | Last name for user       |
-> | phone    | required | string    | Phone number             |
-> | address  | required | string    | Complete address details |
-
-##### Responses
-
-> | http code | content-type     | response                                           |
-> | --------- | ---------------- | -------------------------------------------------- |
-> | `201`     | application/json | `{"code":"201","content": newUser (object)}`       |
-> | `422`     | application/json | `{"code":"422","content": "Unproccesable data"}`   |
-> | `500`     | application/json | `{"code":"500","message":"Unkonown server error"}` |
-
-##### Example Axios
-
-> ```javascript
-> axios({
->   method: "post",
->   headers: {Authorization: `Bearer ${token}`}
->   url: "/api/auth/logout/all",
->   data: {
->        name: "John",
->        lastname: "Doe",
->        phone:"(809) 765-4321",
->        address: "2310 Fifth Avenue, Bronx, New York"
->        }
-> });
-> ```
-
-</details>
-
-#### Profile
-
-<details>
-
-<summary>
-<code>POST </code> <code>/api/profile</code>
-</summary>
-
-##### Headers
-
-> | name          | type     | data type    | description           |
-> | ------------- | -------- | ------------ | --------------------- |
-> | Authorization | required | Bearer Token | Token provided by api |
-
-##### Parameters
-
-> | name         | type     | data type | description              |
-> | ------------ | -------- | --------- | ------------------------ |
-> | name         | required | string    | First name for user      |
-> | lastname     | required | string    | Last name for user       |
-> | email        | required | string    | Suggest same auth        |
-> | phone        | required | string    | Phone number             |
-> | address      | required | string    | Complete address details |
-> | institute_id | required | number    | Complete address details |
-
-##### Responses
-
-> | http code | content-type     | response                                              |
-> | --------- | ---------------- | ----------------------------------------------------- |
-> | `201`     | application/json | `{"code":"201","content": newProfile(User) (object)}` |
-> | `422`     | application/json | `{"code":"422","content": "Unproccesable data"}`      |
-> | `500`     | application/json | `{"code":"500","message":"Unkonown server error"}`    |
-
-##### Example Axios
-
-> ```javascript
-> axios({
->   method: "post",
->   headers: {Authorization: `Bearer ${token}`}
->   url: "/api/auth/logout/all",
->   data: {
->        "name": "John",
->        "lastname": "Doe",
->        "phone":"(809) 765-4321",
->        "address": "2310 Fifth Avenue, Bronx, New York"
->        },
-> });
-> ```
-
-</details>

@@ -1,0 +1,26 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "ES2022",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "outDir": "./dist",
+    "esModuleInterop": true,
+    "strict": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "moduleResolution": "node",
+    "sourceMap": true,
+    "rootDir": ".",
+    "removeComments": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"],
+      "@app/*": ["./src/app/*"],
+      "@auth/*": ["./src/auth/*"],
+      "@file/*": ["./src/file/*"]
+    }
+  },
+  "include": ["src/**/*", "App.ts", "src/app/app.config.ts"],
+  "exclude": ["node_modules", "src/**/tests/*"]
+}

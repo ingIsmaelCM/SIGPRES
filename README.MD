@@ -204,20 +204,11 @@ interface Itenant {
 
 ##### Example Axios
 
-> ```javascript
+> ```Typescript
 > axios({
 >   method: "post",
 >   url: "/api/auth/register",
->   data: {email: "email@example.com",
-> ```
-
-            username: "exampleuser",
-            password: "password1234",
-            name: "John",
-            lastname: "Doe"},});
-
-> ```
->
+>   data: {email: "email@example.com",username: "exampleuser", password: "password1234", name: "John",    lastname: "Doe"},});
 > ```
 
 </details>

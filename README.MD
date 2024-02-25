@@ -283,6 +283,7 @@ interface Itenant {
 > | http code | content-type     | response                                                  |
 > | --------- | ---------------- | --------------------------------------------------------- |
 > | `200`     | application/json | `{"code":"200","content": "Sesión cerrada exitosamente"}` |
+> | `401`     | application/json | `{"statusCode":"401","message":string}`                   |
 > | `500`     | application/json | `{"code":"500","message":"Unkonown server error"}`        |
 
 ##### Example Axios
@@ -315,6 +316,7 @@ interface Itenant {
 > | http code | content-type     | response                                                        |
 > | --------- | ---------------- | --------------------------------------------------------------- |
 > | `200`     | application/json | `{"code":"200","content": "Se han cerrado todas las sesiones"}` |
+> | `401`     | application/json | `{"statusCode":"401","message":string}`                         |
 > | `500`     | application/json | `{"code":"500","message":"Unkonown server error"}`              |
 
 ##### Example Axios

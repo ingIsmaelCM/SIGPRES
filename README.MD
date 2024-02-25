@@ -66,7 +66,7 @@ Las respuestas a las llamadas de la API retornan dos formatos, dependiendo de si
 
 ```json
 {
-  "statusCode": 20X,
+  "statusCode": `20X`,
   "title": string,
   "content": any
 }
@@ -80,7 +80,7 @@ Las respuestas a las llamadas de la API retornan dos formatos, dependiendo de si
 
 ```json
 {
-  "statusCode": 40X|50X,
+  "statusCode": `40X|50X`,
   "content": any
 }
 ```
@@ -128,7 +128,7 @@ Para iniciar sesión, el usuario debe enviar su nombre de usuario y contraseña.
 
 #### Cuerpo de la Respuestas
 
-```json
+```Typescript
 {
     "statusCode": 200,
     "title": "Sesión iniciada correctamente",
@@ -208,18 +208,14 @@ interface Itenant {
 > axios({
 >   method: "post",
 >   url: "/api/auth/register",
->   data: {
+>   data: {email: "email@example.com",
 > ```
 
-            email: "email@example.com",
             username: "exampleuser",
             password: "password1234",
             name: "John",
-            lastname: "Doe"
-        },
+            lastname: "Doe"},});
 
-> });
->
 > ```
 >
 > ```
@@ -228,6 +224,7 @@ interface Itenant {
 
 <details>
 <summary><code>POST </code> <code>/api/auth/login</code> </summary>
+
 ##### Parameters
 
 > | name     | type     | data type | description          |
@@ -250,17 +247,8 @@ interface Itenant {
 > axios({
 >   method: "post",
 >   url: "/api/auth/login",
->   data: {
-> ```
-
-            username: "exampleuser",
-            password: "password1234"
-          },
-
+>   data: { username: "exampleuser", password: "password1234" },
 > });
->
-> ```
->
 > ```
 
 </details>

@@ -10,6 +10,14 @@ import BaseConnection from "@/app/db/BaseConnection";
 
 class AuthMiddleware extends Middleware {
   static request: any;
+
+  /**
+   * Authenticates the user using the JWT token in the request headers or cookies.
+   * If the token is valid, the user's session is validated and the user object is attached to the request object as `req.auth`.
+   * @param req The Express request object.
+   * @param res The Express response object.
+   * @param next The Express next function.
+   */
   async auth(req: any, res: Response, next: NextFunction): Promise<any> {
     try {
       const authToken = await this.verifyTokenExists(req);
@@ -47,7 +55,6 @@ class AuthMiddleware extends Middleware {
     }
   }
 
-  /* Check if token was provided */
   private async verifyTokenExists(req: any): Promise<any> {
     return new Promise((resolve, reject) => {
       const authToken: any =
@@ -62,7 +69,6 @@ class AuthMiddleware extends Middleware {
     });
   }
 
-  /* Check if token provided is valid */
   private verifyTokenIsValid(authToken: string, req: any) {
     return jwt.verify(
       authToken,

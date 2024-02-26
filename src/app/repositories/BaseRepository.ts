@@ -1,6 +1,6 @@
 import { Model, ModelStatic, Sequelize } from "sequelize";
 import Scope from "../utils/scopes";
-import { IParams } from "../utils/Interfaces";
+import { IParams } from "../utils/AppInterfaces";
 import tools from "../utils/tools";
 import BaseConnection from "../db/BaseConnection";
 

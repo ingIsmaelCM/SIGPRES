@@ -121,7 +121,7 @@ CREATE TABLE `wallets`(
 
 CREATE TABLE `expenses`(
     `id` INT AUTO_INCREMENT PRIMARY KEY,
-    `amount` DECIMAL(10,2),
+    `amount` DECIMAL(10,2) NOT NULL,
     `date` DATE NOT NULL,
     `concepto` VARCHAR(125) NOT NULL,
     `walletId` INT NOT NULL,
@@ -159,7 +159,7 @@ CREATE TABLE `conditions`(
     `id` INT AUTO_INCREMENT PRIMARY KEY,
     `initDeadline` INT NOT NULL DEFAULT 0,
     `initRateMora` DECIMAL(4,2) NOT NULL,
-    `finaRateMora` DECIMAL(4,2) NOT NULL,
+    `finalRateMora` DECIMAL(4,2) NOT NULL,
     `loanId` INT NOT NULL,
     `clientId` INT NOT NULL,
     `createdBy` INT NOT NULL,
@@ -301,7 +301,7 @@ INSERT INTO `preferences` (`key`, label, createdBy, updatedBy, value) VALUES
 ('loanPeriod','Forma de Pago Predeterminada',1,1, NULL),
 ('capitalCompany','Capital de Trabajo',1,1, 0),
 ('cargePerSaldo','Cargo Por Saldo Adelantado',1,1, 0), 
-('percenToChagerPerSaldo','Porcentaje de Préstamo Cargable',1,1, 0),
+('percenToChargePerSaldo','Porcentaje de Préstamo Cargable',1,1, 0),
 ('companyData','Detalles del negocio',1,1, '{"name":"SIGPRES","longName":"Sistema Integrado Para la Gestión de Préstamos","address":"Located at Word Wide Web","phone":"(809) 000-0000","email":"info@atriontechsd.com","logo":"https://res.cloudinary.com/atriontechsd/image/upload/v1708904993/logo_long_oraqpj.png","rnc":"000-00000-0"}')
 
 ;

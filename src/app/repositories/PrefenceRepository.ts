@@ -1,6 +1,6 @@
 import Preference from "@app/models/Preference";
 import { BaseRepository } from "@app/repositories/BaseRepository";
-import { IParams } from "../utils/Interfaces";
+import { IParams } from "../utils/AppInterfaces";
 
 export default class PreferenceRepository extends BaseRepository<Preference> {
   constructor() {

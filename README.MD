@@ -51,9 +51,13 @@ npm run dev
 
 ## MultiTenant
 
-# BaseConnection Class Documentation
+### BaseConnection
 
 A class for managing connections to a database using Sequelize.
+
+### BaseRepository
+
+A class for managing all calls to DB trhought sequelize using safeRun method.
 
 ## Constructor
 

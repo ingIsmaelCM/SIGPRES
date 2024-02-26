@@ -3,7 +3,7 @@ import IController from "@/app/controllers/IController";
 import TenantService from "../services/TenantService";
 import response from "@/app/utils/response";
 import TenantRoutes from "../routes/TenantRoutes";
-import { Itenant } from "../utils/Interfaces";
+import { Itenant } from "../utils/AuthInterfaces";
 
 export default class TenantController
   extends Controller

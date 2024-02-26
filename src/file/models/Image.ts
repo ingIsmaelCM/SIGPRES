@@ -4,26 +4,23 @@ import {
   InferCreationAttributes,
   DataTypes,
 } from "sequelize";
-import { ITenantModel } from "@/app/models/ITenantModel";
+import ITM from "@/app/models/ITenantModel";
+import { IImage, IImageRelation } from "../utils/FileInterface";
 
-class Image
-  extends Model<InferAttributes<Image>, InferCreationAttributes<Image>>
-  implements ITenantModel
-{
+@ITM.staticImplements<IImage, IImageRelation>()
+class Image extends Model<
+  InferAttributes<Image>,
+  InferCreationAttributes<Image>
+> {
   getSearchables(): string[] {
     return ["caption", "path", "imageableType", "imageableId"];
   }
-  getRelations(): string[] {
-    return ["transaction"];
+  getRelations(): (keyof IImageRelation)[] {
+    return [];
   }
   static isTenant = true;
   static attributes = {
-    id: {
-      type: DataTypes.INTEGER,
-      primaryKey: true,
-      autoIncrement: true,
-    },
-
+    ...ITM.commonAttributes,
     path: {
       type: DataTypes.STRING,
     },
@@ -39,23 +36,6 @@ class Image
     },
     imageableId: {
       type: DataTypes.INTEGER,
-    },
-
-    createdBy: {
-      type: DataTypes.INTEGER,
-    },
-    updatedBy: {
-      type: DataTypes.INTEGER,
-    },
-    createdAt: {
-      type: DataTypes.DATE,
-    },
-    updatedAt: {
-      type: DataTypes.DATE,
-    },
-    deletedAt: {
-      type: DataTypes.DATE,
-      allowNull: true,
     },
   };
   static modelName = "Image";

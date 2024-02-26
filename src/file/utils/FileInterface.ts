@@ -6,3 +6,5 @@ export interface IImage {
   imageableType: string;
   imageableId: string;
 }
+
+export interface IImageRelation {}

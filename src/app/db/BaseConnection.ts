@@ -4,6 +4,7 @@ import config from "../app.config";
 export default class BaseConnection<T> {
   protected static connection: Sequelize | null;
   static request: any;
+
   constructor(database: string) {
     BaseConnection.connection = new Sequelize(
       database,
@@ -17,6 +18,12 @@ export default class BaseConnection<T> {
       }
     );
   }
+
+  /**
+   * Creates a new instance of the database connection.
+   * @param dbName The name of the database to connect to. If not specified, the default database will be used.
+   * @returns The database connection.
+   */
   static getConnection(dbName?: string): Sequelize {
     try {
       if (dbName) {
@@ -34,9 +41,17 @@ export default class BaseConnection<T> {
     }
   }
 
-  static async getTrans() {
+  /**
+   * Gets a new transaction instance.
+   * Set BaseConnection.request as null for use Default Database
+   * @returns The transaction instance.
+   */
+  static async getTrans(dbDefault: boolean = false) {
     try {
-      const tenant = BaseConnection.request?.cookies?.tenant || undefined;
+      const tenant = dbDefault
+        ? null
+        : BaseConnection.request?.cookies?.tenant || undefined;
+      console.log(tenant);
       const transaction = await BaseConnection.getConnection(
         tenant
       ).transaction({

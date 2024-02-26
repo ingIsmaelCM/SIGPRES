@@ -1,30 +1,9 @@
-import {
-  DataTypes,
-  InferAttributes,
-  InferCreationAttributes,
-  Model,
-} from "sequelize";
-import { ITenantModel } from "@app/models/ITenantModel";
-import BaseConnection from "../db/BaseConnection";
+import { DataTypes, Model } from "sequelize";
+import { staticImplements, commonAttributes } from "./ITenantModel";
+import { IPreference } from "../utils/AppInterfaces";
 
-class Preference
-  extends Model<
-    InferAttributes<Preference>,
-    InferCreationAttributes<Preference>
-  >
-  implements ITenantModel
-{
-  declare id: number;
-  declare key: string;
-  declare value: number;
-
-  declare createdBy: number;
-  declare updatedBy: number;
-
-  declare createdAt: string;
-  declare updatedAt: string;
-  declare deletedAt: string;
-
+@staticImplements<IPreference>()
+export default class Preference extends Model {
   getSearchables(): string[] {
     return ["key", "value"];
   }
@@ -35,11 +14,6 @@ class Preference
   static modelName = "Preference";
   static tableName = "preferences";
   static attributes = {
-    id: {
-      type: DataTypes.INTEGER,
-      primaryKey: true,
-      autoIncrement: true,
-    },
     key: {
       type: DataTypes.STRING,
       unique: true,
@@ -53,23 +27,6 @@ class Preference
       type: DataTypes.TEXT,
       allowNull: false,
     },
-    createdBy: {
-      type: DataTypes.INTEGER,
-    },
-    updatedBy: {
-      type: DataTypes.INTEGER,
-    },
-    createdAt: {
-      type: DataTypes.DATE,
-    },
-    updatedAt: {
-      type: DataTypes.DATE,
-    },
-    deletedAt: {
-      type: DataTypes.DATE,
-      allowNull: true,
-    },
+    ...commonAttributes,
   };
 }
-
-export default Preference;

@@ -1,6 +1,6 @@
 import ImageRepository from "@file/repositories/ImageRepository";
 import BaseConnection from "@app/db/BaseConnection";
-import { IParams } from "@/app/utils/Interfaces";
+import { IParams } from "@/app/utils/AppInterfaces";
 import Image from "../models/Image";
 
 export default class ImageService {

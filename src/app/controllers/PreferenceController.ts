@@ -4,8 +4,10 @@ import PreferenceService from "@app/services/PreferenceService";
 import response from "@app/utils/response";
 import PreferenceRoutes from "@app/routes/PreferenceRoutes";
 import tools from "@app/utils/tools";
-import { IPreference } from "@app/utils/Interfaces";
+import { IPreference } from "@/app/utils/AppInterfaces";
 import config from "../app.config";
+import Amortization from "@/source/models/Amortization";
+import Preference from "../models/Preference";
 
 export default class PreferenceController
   extends Controller
@@ -29,7 +31,6 @@ export default class PreferenceController
     }, res);
   }
   async getPreferences(req: any, res: any) {
-    console.log(JSON.stringify(config.company));
     this.safeRun(async () => {
       const pref = await this.preferenceService.getPreferences(req.query);
       response.success(res, 200, pref, "Preferencias");

@@ -1,6 +1,6 @@
 import RoleRepository from "@auth/repositories/RoleRepository";
 import { AuthRepository } from "@auth/repositories/AuthRepository";
-import { IPermission, IRole } from "@auth/utils/Interfaces";
+import { IPermission, IRole } from "@/auth/utils/AuthInterfaces";
 import BaseConnection from "@app/db/BaseConnection";
 import PermissionRepository from "@auth/repositories/PermissionRepository";
 export default class RoleService {

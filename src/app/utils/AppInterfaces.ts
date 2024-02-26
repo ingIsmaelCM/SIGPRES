@@ -17,10 +17,17 @@ export interface IParams {
   like?: string;
 }
 
-export interface IPreference {
-  id?: number;
+export interface IPreference extends ICommonField {
   key: string;
   value: string;
-  createdBy: number;
-  updatedBy: number;
+  label: string;
+}
+
+export interface ICommonField {
+  id?: number;
+  createdBy?: number;
+  updatedBy?: number;
+  createdAt?: string;
+  updatedAt?: string;
+  deletedAt?: string;
 }

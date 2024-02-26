@@ -1,5 +1,5 @@
 import { Model, ModelStatic, Op } from "sequelize";
-import { IParams } from "./Interfaces";
+import { IParams } from "./AppInterfaces";
 import tools from "./tools";
 import moment from "moment";
 

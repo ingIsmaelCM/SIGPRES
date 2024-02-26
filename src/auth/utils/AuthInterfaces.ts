@@ -8,7 +8,9 @@ export interface IAuth {
   lastname: string;
   lastlogin?: string;
   role?: string;
-  tenants?: Itenant[]
+  tenants?: Itenant[];
+  permissions?: IPermission[];
+  roles?: IRole[];
 }
 
 export interface IRole {

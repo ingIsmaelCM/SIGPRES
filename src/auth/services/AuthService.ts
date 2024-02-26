@@ -9,7 +9,7 @@ import { Response } from "express";
 import tools from "@app/utils/tools";
 import BaseConnection from "@app/db/BaseConnection";
 import path from "path";
-import { IAuth } from "@auth/utils/Interfaces";
+import { IAuth } from "@/auth/utils/AuthInterfaces";
 import Permission from "../models/Permission";
 import Role from "../models/Role";
 import PreferenceRepository from "@/app/repositories/PrefenceRepository";
@@ -18,9 +18,14 @@ export default class AuthService {
   private authMailService: AuthMailService = new AuthMailService();
   basePath: string = config.app.url;
 
-  async createAuth(auth: IAuth) {
-    BaseConnection.request == null;
-    const trans: any = await BaseConnection.getTrans();
+  /**
+   * Creates a new authentication record in the database.
+   * @param auth - The authentication data to create.
+   * @returns The created authentication record.
+   * @throws An error if the email or username is already in use.
+   */
+  async createAuth(auth: IAuth): Promise<Auth> {
+    const trans: any = await BaseConnection.getTrans(true);
     try {
       const emailExists: any = await this.authRepo.find("email", auth.email);
       const usernameExists: any = await this.authRepo.find(
@@ -30,7 +35,7 @@ export default class AuthService {
       if (emailExists || usernameExists) {
         throw {
           code: 422,
-          message: "El correo ingresado ya está registrado",
+          message: "The provided email or username is already in use.",
         };
       }
       const hashedPWD = await bcrypt.hash(auth.password, 10);
@@ -50,8 +55,14 @@ export default class AuthService {
     }
   }
 
+  /**
+   * Login a user
+   * @param auth - user credentials
+   * @param res - express response object
+   * @returns user object and access token
+   */
   async login(auth: any, res: Response) {
-    const trans = await BaseConnection.getTrans();
+    const trans = await BaseConnection.getTrans(true);
     try {
       let userAuth = await this.authRepo.find(
         config.auth.loginField,
@@ -66,7 +77,7 @@ export default class AuthService {
         if (!userAuth.tenants || userAuth.tenants.length == 0) {
           throw {
             code: 401,
-            message: "El usuario no tiene una DB asociada",
+            message: "The user does not have a DB associated with them",
           };
         }
         const updateData = { lastlogin: new Date(), status: 1 };
@@ -91,7 +102,7 @@ export default class AuthService {
       }
       throw {
         code: 401,
-        message: "Credenciales incorrectas",
+        message: "Invalid credentials",
       };
     } catch (error: any) {
       await trans.rollback();
@@ -111,6 +122,10 @@ export default class AuthService {
     BaseConnection.request = { cookies: { tenant: userAuth.tenants[0].key } };
   }
 
+  /**
+   * Returns an object containing the user's permissions, roles, and company data.
+   * @param userAuth - The user authentication data.
+   */
   private async setAuthFields(userAuth: any) {
     let permissions: any[] = userAuth.permissions.map((p: Permission) => ({
       name: p.name,
@@ -126,15 +141,15 @@ export default class AuthService {
       name: r.name,
       id: r.id,
     }));
-    let company = await new PreferenceRepository().getAll({
-      fields: "id,key,label,value",
-      filter: ["key:eq:companyData"],
-      limit: 1,
-    });
-    company = company.dataValues;
+    let company = await new PreferenceRepository().get("companyData", {});
+    company = JSON.parse(company.companyData);
     return { permissions, roles, company };
   }
 
+  /**
+   * Verifies user account
+   * @param authId -The user authentication id.
+   */
   async verifyAuth(authId: number) {
     const trans = await BaseConnection.getTrans();
     try {
@@ -153,6 +168,11 @@ export default class AuthService {
     }
   }
 
+  /**
+   * Generate tokens for the user
+   * @param userAuth - The user authentication data
+   * @returns An object containing the access and refresh tokens
+   */
   public generateTokens(userAuth: any) {
     const token = tools.getToken(
       { ...userAuth.dataValues, roles: undefined, permissions: undefined },
@@ -165,6 +185,13 @@ export default class AuthService {
     return { token, refreshToken };
   }
 
+  /**
+   * Verifies the user authentication account.
+   * @param auth - The user authentication data.
+   * @param pwd - The user password.
+   * @returns A boolean indicating whether the password is valid.
+   * @throws An error if the account is not verified or if the password is incorrect.
+   */
   private async validateAuthAccount(auth: any, pwd: string): Promise<Boolean> {
     const isValidPassword = await bcrypt.compare(
       pwd,
@@ -180,6 +207,11 @@ export default class AuthService {
     tools.setCookie(res, "accessToken", "null");
   }
 
+  /**
+   * Logs out the user and removes their access token from the session.
+   * @param req - The request object.
+   * @param res - The response object.
+   */
   public async logoutAll(req: any, res: Response) {
     const trans = await BaseConnection.getTrans();
     try {
@@ -190,7 +222,9 @@ export default class AuthService {
         req.auth.id,
         trans
       );
+
       tools.setCookie(res, "accessToken", "null");
+
       await trans.commit();
     } catch (error: any) {
       await trans.rollback();

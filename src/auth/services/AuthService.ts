@@ -12,11 +12,14 @@ import path from "path";
 import { IAuth } from "@auth/utils/Interfaces";
 import Permission from "../models/Permission";
 import Role from "../models/Role";
+import PreferenceRepository from "@/app/repositories/PrefenceRepository";
 export default class AuthService {
   private authRepo: AuthRepository = new AuthRepository();
   private authMailService: AuthMailService = new AuthMailService();
   basePath: string = config.app.url;
+
   async createAuth(auth: IAuth) {
+    BaseConnection.request == null;
     const trans: any = await BaseConnection.getTrans();
     try {
       const emailExists: any = await this.authRepo.find("email", auth.email);
@@ -60,29 +63,26 @@ export default class AuthService {
         userAuth &&
         (await this.validateAuthAccount(userAuth, auth.password))
       ) {
+        if (!userAuth.tenants || userAuth.tenants.length == 0) {
+          throw {
+            code: 401,
+            message: "El usuario no tiene una DB asociada",
+          };
+        }
         const updateData = { lastlogin: new Date(), status: 1 };
         await this.authRepo.update(updateData, userAuth.id, trans);
         const { token, refreshToken } = this.generateTokens(userAuth);
-        tools.setCookie(res, "refreshToken", `${refreshToken}`);
-        tools.setCookie(res, "accessToken", `Bearer ${token}`);
-        let permissions: any[] = userAuth.permissions.map((p: Permission) => ({
-          name: p.name,
-          id: p.id,
-        }));
-        const rolePermissions: any[] = userAuth.roles.map((r: Role) =>
-          r.permissions.map((p: Permission) => ({ name: p.name, id: p.id }))
-        );
-        rolePermissions.forEach((rP) => {
-          permissions = permissions.concat(rP);
-        });
-        const roles = userAuth.roles.map((r: Role) => ({
-          name: r.name,
-          id: r.id,
-        }));
+        this.setLoginCookies(res, refreshToken, token, userAuth);
+        var {
+          permissions,
+          roles,
+          company,
+        }: { permissions: any[]; roles: any[]; company: any } =
+          await this.setAuthFields(userAuth);
         await trans.commit();
         const result = {
           ...userAuth.dataValues,
-          company: config.company,
+          company: company,
           password: null,
           permissions: [...new Set(permissions)],
           roles,
@@ -97,6 +97,42 @@ export default class AuthService {
       await trans.rollback();
       throw { code: error.code, message: error.message };
     }
+  }
+
+  private setLoginCookies(
+    res: Response<any, Record<string, any>>,
+    refreshToken: String,
+    token: String,
+    userAuth: any
+  ) {
+    tools.setCookie(res, "refreshToken", `${refreshToken}`);
+    tools.setCookie(res, "accessToken", `Bearer ${token}`);
+    tools.setCookie(res, "tenant", userAuth.tenants[0].key);
+    BaseConnection.request = { cookies: { tenant: userAuth.tenants[0].key } };
+  }
+
+  private async setAuthFields(userAuth: any) {
+    let permissions: any[] = userAuth.permissions.map((p: Permission) => ({
+      name: p.name,
+      id: p.id,
+    }));
+    const rolePermissions: any[] = userAuth.roles.map((r: Role) =>
+      r.permissions.map((p: Permission) => ({ name: p.name, id: p.id }))
+    );
+    rolePermissions.forEach((rP) => {
+      permissions = permissions.concat(rP);
+    });
+    const roles = userAuth.roles.map((r: Role) => ({
+      name: r.name,
+      id: r.id,
+    }));
+    let company = await new PreferenceRepository().getAll({
+      fields: "id,key,label,value",
+      filter: ["key:eq:companyData"],
+      limit: 1,
+    });
+    company = company.dataValues;
+    return { permissions, roles, company };
   }
 
   async verifyAuth(authId: number) {

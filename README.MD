@@ -49,6 +49,53 @@ npm run dev
 
 ---
 
+## MultiTenant
+
+# BaseConnection Class Documentation
+
+A class for managing connections to a database using Sequelize.
+
+## Constructor
+
+### Parameters
+
+- `database`: string - The name of the database to connect to.
+
+## Properties
+
+- `connection`: Sequelize | null - The Sequelize connection instance.
+- `request`: any - Static property to hold request information. It is used to determine the database from which to generate the transaction. If a global database is desired, set this property to null before calling `BaseConnection.getTrans()`.
+
+## Methods
+
+### getConnection(dbName?: string): Sequelize
+
+Returns a Sequelize connection instance.
+
+#### Parameters
+
+- `dbName`: string (optional) - The name of the database. If not provided, it uses the default database specified in the app configuration.
+
+#### Returns
+
+- `Sequelize`: The Sequelize connection instance.
+
+### getTrans(): Promise<any>
+
+Returns a transaction for the current connection.
+
+#### Returns
+
+- `Promise<any>`: A Promise resolving to a transaction object.
+
+#### Throws
+
+- `Object`: An object with a code and message property if an error occurs during the transaction retrieval.
+
+## Notes
+
+- The class BaseRepository has a method `safeRun` from which all queries should be called. This method verifies if the model class has the property `isTenant` set to true. If so, it initializes the model according to the tenant in `BaseConnection.request.cookies.tenant`, which is assigned in the auth middleware executed before each route.
+
 #### Api URL
 
 `/api/`
@@ -67,8 +114,8 @@ Las respuestas a las llamadas de la API retornan dos formatos, dependiendo de si
 ```json
 {
   "statusCode": `20X`,
-  "title": string,
-  "content": any
+  "title": `string`,
+  "content": `any`
 }
 ```
 
@@ -81,7 +128,7 @@ Las respuestas a las llamadas de la API retornan dos formatos, dependiendo de si
 ```json
 {
   "statusCode": `40X|50X`,
-  "content": any
+  "content": `any`
 }
 ```
 

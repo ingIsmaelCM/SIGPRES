@@ -7,11 +7,13 @@ import PermissionEnums from "../utils/PermissionEnums";
 import PreferenceRequest from "../middlewares/PreferenceRequest";
 
 export default class PreferenceRoutes extends AbstractRoutes<PreferenceController> {
-  constructor(router: Router, controller: PreferenceController) {
-    super(router, controller);
-  }
-
   initRoutes(): void {
+    this.router.get(
+      "/",
+      AuthMiddleware.auth,
+      RoleMiddeware.hasPermission(PermissionEnums.getPreference),
+      (req: any, res: any) => this.controller.getPreferences(req, res)
+    );
     this.router.post(
       "/:key",
       AuthMiddleware.auth,

@@ -32,7 +32,7 @@ VALUES
 ('admin@atriontechsd.com','$2a$10$uR9yGrtV2MJLZwbjOpA49eZRHoRp5j/tN8kZ4gQY57pAwzeyMSYau', 'icontreras','Ismael','Contreras', '2024-01-01 12:00:01'),
 ('user1@example.com', '$2a$10$sOhAGjEUAIGVSVffACk3POMbIzkDorKX3imNeCFndiJQMCx7elimK', 'user1', "User","One", '2024-01-01 12:00:01');
 
-INSERT INTO `tenants` (name, `key`) VALUES ('Base de Datos Administrador','main_tenant');
+INSERT INTO `tenants` (name, `key`) VALUES ('Base de Datos Administrador','sigpres_main_tenant');
 
 INSERT INTO `auth_roles` (authId, roleId) VALUES (1,1);
 

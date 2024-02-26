@@ -36,7 +36,10 @@ export default class BaseConnection<T> {
 
   static async getTrans() {
     try {
-      const transaction = await BaseConnection.getConnection().transaction({
+      const tenant = BaseConnection.request?.cookies?.tenant || undefined;
+      const transaction = await BaseConnection.getConnection(
+        tenant
+      ).transaction({
         autocommit: false,
       });
       return transaction;

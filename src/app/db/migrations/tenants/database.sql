@@ -27,7 +27,7 @@ CREATE TABLE `preferences`
     `id` INT AUTO_INCREMENT PRIMARY KEY,
     `key` VARCHAR(50) NOT NULL UNIQUE,
     `label` VARCHAR(150) NOT NULL,
-    `value` VARCHAR(250),
+    `value` LONGTEXT,
     `createdBy` INT NOT NULL,
     `updatedBy` INT NOT NULL,
     `createdAt` TIMESTAMP NOT NULL DEFAULT current_timestamp,
@@ -200,7 +200,7 @@ CREATE TABLE `amortizations`(
     `capital` DECIMAL(10,2) NOT NULL DEFAULT 0,
     `interest` DECIMAL(10,2) NOT NULL DEFAULT 0,
     `balance` DECIMAL(10,2) NOT NULL DEFAULT 0,
-    `sttus` ENUM('Pendiente','Pagado', 'Cancelado') NOT NULL DEFAULT 0,
+    `status` ENUM('Pendiente','Pagado', 'Cancelado') NOT NULL DEFAULT 'Pendiente',
     `loanId` INT NOT NULL,
     `clientId` INT NOT NULL,
     `createdBy` INT NOT NULL,
@@ -240,6 +240,8 @@ ALTER TABLE `loans` ADD CONSTRAINT `FK_loans_clients` FOREIGN KEY (`clientId`) R
 ALTER TABLE `loans` ADD CONSTRAINT `FK_loans_lawyers` FOREIGN KEY (`lawyerId`) REFERENCES `lawyers` (`id`);
 ALTER TABLE `conditions` ADD CONSTRAINT `FK_conditions_loans` FOREIGN KEY (`loanId`) REFERENCES `loans` (`id`);
 ALTER TABLE `conditions` ADD CONSTRAINT `FK_conditions_clients` FOREIGN KEY (`clientId`) REFERENCES `clients` (`id`);
+ALTER TABLE `amortizations` ADD CONSTRAINT `FK_amortizations_loans` FOREIGN KEY (`loanId`) REFERENCES `loans` (`id`);
+ALTER TABLE `amortizations` ADD CONSTRAINT `FK_amortizations_clients` FOREIGN KEY (`clientId`) REFERENCES `clients` (`id`);
 ALTER TABLE `payments` ADD CONSTRAINT `FK_payments_wallets` FOREIGN KEY (`walleId`) REFERENCES `wallets` (`id`);
 ALTER TABLE `payments` ADD CONSTRAINT `FK_payments_loans` FOREIGN KEY (`loanId`) REFERENCES `loans` (`id`);
 ALTER TABLE `payments` ADD CONSTRAINT `FK_payments_clients` FOREIGN KEY (`clientId`) REFERENCES `clients` (`id`);
@@ -274,6 +276,9 @@ CREATE INDEX idx_loans_lawyerId ON loans (lawyerId);
 CREATE INDEX idx_conditions_loanId ON conditions (loanId);
 CREATE INDEX idx_conditions_clientId ON conditions (clientId);
 
+CREATE INDEX idx_amortizations_loanId ON amortizations (loanId);
+CREATE INDEX idx_amortizations_clientId ON amortizations (clientId);
+
 CREATE INDEX idx_payments_walletId ON payments (walleId);
 CREATE INDEX idx_payments_loanId ON payments (loanId);
 CREATE INDEX idx_payments_clientId ON payments (clientId);
@@ -290,13 +295,13 @@ INSERT INTO `preferences` (`key`, label, createdBy, updatedBy, value) VALUES
 ('initRateMora', 'Tasa de Mora Inicial', 1,1, NULL),
 ('finalRateMora','Tasa de Mora Resto de Días',1,1, NULL),
 ('loanRate','Tasa de Interés de Préstamos',1,1, NULL),
-('loanDealine','Plazo de Pago de Préstamos',1,1, NULL),
+('loanDeadline','Plazo de Pago de Préstamos',1,1, NULL),
 ('loanGrace','Días de Gracia de Pago',1,1, NULL),
 ('loanPeriodArray','Períodos de Pagos',1,1, '[{"key":"Diario","value":"diario"},{"key":"Semanal","value":"semanal"},{"key":"Quincenal","value":"quincenal"},{"key":"Mensual","value":"mensual"}]' ),
 ('loanPeriod','Forma de Pago Predeterminada',1,1, NULL),
 ('capitalCompany','Capital de Trabajo',1,1, 0),
-('cargePerSaldo','Cargo Por Saldo Adelantado',1,1, 0), //Porcentaje que se cobra por pagar un préstamo por adelantado
-('percenToChagerPerSaldo','Porcentaje Aplicable a Cargo',1,1, 0),// Porcentaje del préstamo a partir del cual se aplica el cargo
-('companyData','Detalles del negocio',1,1, 0)
+('cargePerSaldo','Cargo Por Saldo Adelantado',1,1, 0), 
+('percenToChagerPerSaldo','Porcentaje de Préstamo Cargable',1,1, 0),
+('companyData','Detalles del negocio',1,1, '{"name":"SIGPRES","longName":"Sistema Integrado Para la Gestión de Préstamos","address":"Located at Word Wide Web","phone":"(809) 000-0000","email":"info@atriontechsd.com","logo":"https://res.cloudinary.com/atriontechsd/image/upload/v1708904993/logo_long_oraqpj.png","rnc":"000-00000-0"}')
 
 ;

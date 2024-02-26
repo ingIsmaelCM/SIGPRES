@@ -17,7 +17,7 @@ export class BaseRepository<T extends Model> {
     try {
       const model = this.model as any;
       if (Boolean(model.isTenant)) {
-        const tenant = BaseConnection.request.headers.tenant;
+        const tenant = BaseConnection.request.cookies.tenant || "sigpres_main";
         this.model.init(model.attributes, {
           sequelize: BaseConnection.getConnection(tenant),
           modelName: model.name,

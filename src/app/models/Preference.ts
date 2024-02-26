@@ -4,7 +4,7 @@ import {
   InferCreationAttributes,
   Model,
 } from "sequelize";
-import { IModel } from "./IModel";
+import { ITenantModel } from "@app/models/ITenantModel";
 import BaseConnection from "../db/BaseConnection";
 
 class Preference
@@ -12,7 +12,7 @@ class Preference
     InferAttributes<Preference>,
     InferCreationAttributes<Preference>
   >
-  implements IModel
+  implements ITenantModel
 {
   declare id: number;
   declare key: string;
@@ -31,10 +31,10 @@ class Preference
   getRelations(): string[] {
     return [];
   }
-}
-
-Preference.init(
-  {
+  static isTenant = true;
+  static modelName = "Preference";
+  static tableName = "preferences";
+  static attributes = {
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
@@ -46,6 +46,10 @@ Preference.init(
       allowNull: false,
     },
     value: {
+      type: DataTypes.TEXT,
+      allowNull: false,
+    },
+    label: {
       type: DataTypes.TEXT,
       allowNull: false,
     },
@@ -65,13 +69,7 @@ Preference.init(
       type: DataTypes.DATE,
       allowNull: true,
     },
-  },
-  {
-    sequelize: BaseConnection.getConnection(),
-    tableName: "app__preferences",
-    modelName: "Preference",
-    paranoid: true,
-  }
-);
+  };
+}
 
 export default Preference;

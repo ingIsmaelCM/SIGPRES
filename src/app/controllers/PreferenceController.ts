@@ -1,10 +1,11 @@
 import Controller from "@app/controllers/Controller";
 import IController from "@app/controllers/IController";
-import PreferenceService from "../services/PreferenceService";
-import response from "../utils/response";
-import PreferenceRoutes from "../routes/PreferenceRoutes";
-import tools from "../utils/tools";
-import { IPreference } from "../utils/Interfaces";
+import PreferenceService from "@app/services/PreferenceService";
+import response from "@app/utils/response";
+import PreferenceRoutes from "@app/routes/PreferenceRoutes";
+import tools from "@app/utils/tools";
+import { IPreference } from "@app/utils/Interfaces";
+import config from "../app.config";
 
 export default class PreferenceController
   extends Controller
@@ -20,8 +21,18 @@ export default class PreferenceController
 
   async getPreference(req: any, res: any) {
     this.safeRun(async () => {
-      const pref = await this.preferenceService.getPreference(req.params.key);
+      const pref = await this.preferenceService.getPreference(
+        req.params.key,
+        req.query
+      );
       response.success(res, 200, pref, "Preferencia");
+    }, res);
+  }
+  async getPreferences(req: any, res: any) {
+    console.log(JSON.stringify(config.company));
+    this.safeRun(async () => {
+      const pref = await this.preferenceService.getPreferences(req.query);
+      response.success(res, 200, pref, "Preferencias");
     }, res);
   }
 

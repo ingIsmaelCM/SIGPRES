@@ -4,7 +4,7 @@ import { IContact, IContactRelation } from "../utils/SourceInterfaces";
 
 @ITM.staticImplements<IContact, IContactRelation>()
 export default class Contact extends Model {
-  getSearchables(): string[] {
+  getSearchables(): Array<keyof IContact> {
     return ["name", "lastname", "infoId", "clientId"];
   }
 

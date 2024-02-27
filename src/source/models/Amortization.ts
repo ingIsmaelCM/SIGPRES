@@ -12,7 +12,7 @@ import {
 
 @ITM.staticImplements<IAmortization, IAmortizationRelation>()
 export default class Amortization extends Model {
-  getSearchables(): string[] {
+  getSearchables(): Array<keyof IAmortization> {
     return [
       "date",
       "cuota",

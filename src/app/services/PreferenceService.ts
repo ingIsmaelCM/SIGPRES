@@ -1,6 +1,7 @@
 import BaseConnection from "@app/db/BaseConnection";
 import PreferenceRepository from "@app/repositories/PrefenceRepository";
-import { IParams, IPreference } from "@/app/utils/AppInterfaces";
+import { IParams } from "@/app/utils/AppInterfaces";
+import { IPreference } from "@/source/utils/SourceInterfaces";
 
 export default class PreferenceService {
   private preferenceRepo = new PreferenceRepository();

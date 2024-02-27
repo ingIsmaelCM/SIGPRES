@@ -7,4 +7,13 @@ export interface IImage {
   imageableId: string;
 }
 
+export interface IDocument {
+  id?: number;
+  path: string;
+  title: string;
+  size: number;
+  documentableType: string;
+  documentableId: string;
+}
 export interface IImageRelation {}
+export interface IDocumentRelation {}

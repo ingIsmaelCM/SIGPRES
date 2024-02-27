@@ -2,7 +2,7 @@ import AuthMiddleware from "../middlewares/AuthMiddleware";
 import AbstractRoutes from "@app/routes/AbstractRoutes";
 import AuthRequests from "@/auth/middlewares/AuthRequest";
 import { AuthController } from "@auth/controllers/AuthController";
-import RoleMiddeware from "../middlewares/RoleMiddeware";
+import RoleMiddleware from "../middlewares/RoleMiddleware";
 
 export default class AuthRoutes extends AbstractRoutes<AuthController> {
   public initRoutes() {
@@ -28,7 +28,7 @@ export default class AuthRoutes extends AbstractRoutes<AuthController> {
     this.router.post(
       "/verify/:id",
       AuthMiddleware.auth,
-      RoleMiddeware.hasPermission("Verificar Usuario"),
+      RoleMiddleware.hasPermission("Verificar Usuario"),
       (req: any, res: any) => this.controller.verifyAuth(req, res)
     );
     this.router.post("/logout", AuthMiddleware.auth, (req: any, res: any) =>

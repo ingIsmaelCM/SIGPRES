@@ -4,7 +4,7 @@ import { IExpense, IExpenseRelation } from "../utils/SourceInterfaces";
 
 @ITM.staticImplements<IExpense, IExpenseRelation>()
 export default class Expense extends Model {
-  getSearchables(): string[] {
+  getSearchables(): Array<keyof IExpense> {
     return ["amount", "date", "concepto", "walletId", "lawyerId"];
   }
 

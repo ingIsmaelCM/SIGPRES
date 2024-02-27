@@ -1,4 +1,4 @@
-import Preference from "@app/models/Preference";
+import Preference from "@/source/models/Preference";
 import { BaseRepository } from "@app/repositories/BaseRepository";
 import { IParams } from "../utils/AppInterfaces";
 

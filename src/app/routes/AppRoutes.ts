@@ -2,7 +2,7 @@ import { Router } from "express";
 import AbstractRoutes from "@app/routes/AbstractRoutes";
 import AppController from "@app/controllers/AppController";
 import AuthMiddleware from "@auth/middlewares/AuthMiddleware";
-import RoleMiddeware from "@/auth/middlewares/RoleMiddeware";
+import RoleMiddleware from "@/auth/middlewares/RoleMiddleware";
 import PermissionEnums from "../utils/PermissionEnums";
 
 export default class AppRoutes extends AbstractRoutes<AppController> {
@@ -13,8 +13,7 @@ export default class AppRoutes extends AbstractRoutes<AppController> {
   initRoutes(): void {
     this.router.get(
       "/cloudinary/signature",
-      AuthMiddleware.auth,
-      RoleMiddeware.hasPermission(PermissionEnums.getCloudinarySign),
+      RoleMiddleware.hasPermission(PermissionEnums.getCloudinarySign),
       (req: any, res: any) => {
         this.controller.getCloudSignature(req, res);
       }

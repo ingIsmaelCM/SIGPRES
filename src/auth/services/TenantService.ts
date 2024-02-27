@@ -3,9 +3,7 @@ import TenantRepository from "../repositories/TenantRepository";
 import { Itenant } from "../utils/AuthInterfaces";
 import BaseConnection from "@/app/db/BaseConnection";
 import MigrateTenant from "@/app/db/migrations/tenants/MigrateTenant";
-import Auth from "../models/Auth";
 
-//TODO set company data as preference
 export default class TenantService {
   tenantRepo = new TenantRepository();
   async getTenants(param: IParams): Promise<any> {

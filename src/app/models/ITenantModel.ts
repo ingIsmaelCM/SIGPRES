@@ -1,13 +1,14 @@
-import { DataTypes } from "sequelize";
+import { DataTypes, Model, ModelStatic } from "sequelize";
 import { ICommonField } from "../utils/AppInterfaces";
+import BaseConnection from "../db/BaseConnection";
 
-interface ItenantNonStatic<R> {
-  getSearchables(): string[];
+interface ItenantNonStatic<T, R> {
+  getSearchables(): Array<keyof T>;
   getRelations(): Array<keyof R>;
 }
 
 export interface ITenantInterface<T, R> {
-  new (): ItenantNonStatic<R>;
+  new (): ItenantNonStatic<T, R>;
   isTenant: boolean;
   modelName: string;
   tableName: string;

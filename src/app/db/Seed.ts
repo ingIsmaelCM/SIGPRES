@@ -1,9 +1,9 @@
 // migrate.ts
 
 import { Sequelize } from "sequelize";
-import BaseConnection from "./BaseConnection";
 import fs from "fs";
 import path from "path";
+import config from "../app.config";
 
 class Seed {
   constructor(private sequelize: Sequelize) {}
@@ -70,6 +70,16 @@ class Seed {
     }
   }
 }
-
-const runner = new Seed(BaseConnection.getConnection());
+const sequelize = new Sequelize(
+  config.db.database,
+  config.db.user,
+  config.db.password,
+  {
+    dialect: config.db.dialect,
+    host: config.db.host,
+    logging: config.db.logging,
+    timezone: "-04:00",
+  }
+);
+const runner = new Seed(sequelize);
 runner.run(process.argv.slice(2));

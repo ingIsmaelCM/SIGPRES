@@ -28,7 +28,6 @@ export default class SocketService {
       this.socket.on("connection", (socket: any) => {
         socket.on("message", (socket: any) => {
           const auth: IAuth = socket.auth;
-          console.log(auth);
           const sender = {
             name: auth.name + " " + auth.lastname,
             email: auth.email,

@@ -4,7 +4,7 @@ import { ICondition, IConditionRelation } from "../utils/SourceInterfaces";
 
 @ITM.staticImplements<ICondition, IConditionRelation>()
 export default class Condition extends Model {
-  getSearchables(): string[] {
+  getSearchables(): Array<keyof ICondition> {
     return [
       "initDeadline",
       "initRateMora",

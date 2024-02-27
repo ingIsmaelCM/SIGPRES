@@ -7,6 +7,8 @@ import session from "express-session";
 import config from "./app/app.config";
 import http from "http";
 import SocketService from "./app/services/SocketService";
+import AuthMiddleware from "./auth/middlewares/AuthMiddleware";
+import { AuthController } from "./auth/controllers/AuthController";
 
 export class App {
   public app: express.Application;
@@ -45,6 +47,9 @@ export class App {
     );
   }
   private initControllers(controllers: Array<IController>) {
+    const authController = new AuthController();
+    this.app.use(`/api/${authController.prefix}`, authController.router);
+    this.app.use(AuthMiddleware.auth);
     controllers.forEach((controller: IController) => {
       this.app.use(`/api/${controller.prefix}`, controller.router);
     });

@@ -24,7 +24,10 @@ INSERT INTO `permissions`(name) VALUES
 ('Obtener Preferencia'),
 ('Crear Inquilinos'),
 ('Ver Inquilinos'),
-('Modificar Inquilinos')
+('Crear Clientes'),
+('Ver Clientes'),
+('Editar Clientes'),
+('Eliminar Clientes')
 ;
 
 INSERT INTO `auths` (email, password, username, name, lastname, verifiedAt)

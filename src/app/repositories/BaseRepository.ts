@@ -6,25 +6,19 @@ import BaseConnection from "../db/BaseConnection";
 
 export class BaseRepository<T extends Model> {
   protected model;
-  private primaryKeyName: string;
+  private primaryKeyName: string = "id";
 
   constructor(model: ModelStatic<T>) {
     this.model = model;
-    this.primaryKeyName = this.model.primaryKeyAttribute;
   }
 
   protected async safeRun(method: () => Promise<any>): Promise<any> {
     try {
       const model = this.model as any;
-      if (Boolean(model.isTenant)) {
-        const tenant = BaseConnection.request.cookies.tenant || "sigpres_main";
-        this.model.init(model.attributes, {
-          sequelize: BaseConnection.getConnection(tenant),
-          modelName: model.name,
-          tableName: model.tableName,
-        });
-      }
 
+      const tenant = BaseConnection.request?.cookies?.tenant || "sigpres_main";
+      BaseConnection.getConnection(Boolean(model.isTenant) ? tenant : null);
+      this.primaryKeyName = this.model.primaryKeyAttribute;
       return await method();
     } catch (error) {
       throw error;

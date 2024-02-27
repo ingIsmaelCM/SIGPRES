@@ -1,13 +1,16 @@
 import { DataTypes, Model } from "sequelize";
-import { staticImplements, commonAttributes } from "./ITenantModel";
-import { IPreference } from "../utils/AppInterfaces";
+import { staticImplements, commonAttributes } from "@app/models/ITenantModel";
+import {
+  IPreference,
+  IPreferenceRelation,
+} from "@source/utils/SourceInterfaces";
 
-@staticImplements<IPreference>()
+@staticImplements<IPreference, IPreferenceRelation>()
 export default class Preference extends Model {
-  getSearchables(): string[] {
-    return ["key", "value"];
+  getSearchables(): Array<keyof IPreference> {
+    return ["key", "value", "label"];
   }
-  getRelations(): string[] {
+  getRelations(): Array<keyof IPreferenceRelation> {
     return [];
   }
   static isTenant = true;

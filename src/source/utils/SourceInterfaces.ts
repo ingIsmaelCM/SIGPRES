@@ -1,4 +1,5 @@
 import { ICommonField } from "@/app/utils/AppInterfaces";
+import { IDocument, IImage } from "@/file/utils/FileInterface";
 
 export interface IAmortization extends ICommonField {
   date: string;
@@ -29,7 +30,7 @@ export interface IClient extends ICommonField {
 }
 
 export interface IClientRelation {
-  info: IInfo;
+  info?: IInfo;
   loans: ILoan[];
   payments: IPayment[];
   moras: IMora[];
@@ -56,7 +57,7 @@ export interface IContact extends ICommonField {
 }
 
 export interface IContactRelation {
-  info: IInfo;
+  info?: IInfo;
   client: IClient;
 }
 
@@ -81,38 +82,126 @@ export interface IInfo extends ICommonField {
   address: string;
 }
 
+export interface IInfoRelation {
+  image: IImage;
+  document: IDocument;
+}
+
 export interface IJob extends ICommonField {
   startAt: string;
   salary: number;
   position: string;
   company: string;
-  infoId: string;
+  infoId?: string;
   clientId: string;
 }
 
 export interface IJobRelation {
-  info: IInfo;
+  info?: IInfo;
   client: IClient;
+  image: IImage;
+  document: IDocument;
 }
 
 export interface ILawyer extends ICommonField {
   name: string;
   lastname: string;
-  exequatur: string;
-  infoId: number;
+  exequatur?: string;
+  infoId?: number;
 }
 
 export interface ILawyerRelation {
-  info: IInfo;
+  info?: IInfo;
   loans: ILoan[];
+  payments: IPayment[];
+  expenses: IExpense[];
+  image: IImage;
+  document: IDocument;
+}
+
+export interface ILoan extends ICommonField {
+  amount: number;
+  balance: number;
+  startAt: string;
+  endAt: string;
+  rate: number;
+  deadlines: number;
+  grace: number;
+  clientId: number;
+  lawyerId: number;
+}
+
+export interface ILoanRelation {
+  lawyer: ILawyer;
+  client: IClient;
+  condition: ICondition;
+  images: IImage[];
+  documents: IDocument;
+  payments: IPayment[];
+  moras: IMora[];
+  amortizations: IAmortization[];
+}
+
+export interface IMora extends ICommonField {
+  initAmount: number;
+  lateAmount: number;
+  status: EMoraStatus;
+  dueAt: string;
+  closedAt: string;
+  loanId: number;
+  clientId: number;
+  paymentId: number;
+}
+
+export interface IMoraRelation {
+  client: IClient;
+  payment: IPayment;
+  loan: ILoan;
+}
+
+export enum EMoraStatus {
+  Cobrada = "Cobrada",
+  Perdonada = "Perdonada",
+}
+
+export interface IPayment extends ICommonField {
+  amount: number;
+  capital: number;
+  interest: number;
+  balanceBofore: number;
+  balanceAfter: number;
+  dueAt: string;
+  payedAt: string;
+  note?: string;
+  walletId: number;
+  loanId: number;
+  clientId: null;
+  lawyerId?: number;
+}
+
+export interface IPaymentRelation {
+  wallet: IWallet;
+  loan: ILoan;
+  lawyer?: ILawyer;
+  client: IClient;
+  mora?: IMora;
+  image?: IImage;
+}
+
+export interface IWallet extends ICommonField {
+  name: string;
+  balance: number;
+}
+
+export interface IWalletRelation {
   payments: IPayment[];
   expenses: IExpense[];
 }
 
-export interface ILoan extends ICommonField {}
+export interface IPreference extends ICommonField {
+  key: string;
+  value: string;
+  label: string;
+}
 
-export interface IMora extends ICommonField {}
-
-export interface IPayment extends ICommonField {}
-
-export interface IWallet extends ICommonField {}
+export interface IPreferenceRelation {}

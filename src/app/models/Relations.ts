@@ -1,6 +1,6 @@
 import AuthRelation from "@/auth/models/AuthRelations";
 import FileRelation from "@/file/models/FIleRelations";
-import { Sequelize, Model, ModelStatic } from "sequelize";
+import SourceRelation from "@/source/models/SourceRelation";
 
 export default class Relation {
   static initRelations() {

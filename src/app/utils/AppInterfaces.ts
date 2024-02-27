@@ -17,12 +17,6 @@ export interface IParams {
   like?: string;
 }
 
-export interface IPreference extends ICommonField {
-  key: string;
-  value: string;
-  label: string;
-}
-
 export interface ICommonField {
   id?: number;
   createdBy?: number;

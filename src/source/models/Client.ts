@@ -1,10 +1,10 @@
 import ITM from "@/app/models/ITenantModel";
 import { DataTypes, Model } from "sequelize";
-import { IClient, IClientRelation } from "../utils/SourceInterfaces";
+import { IClient, IClientRelation } from "@source/utils/SourceInterfaces";
 
 @ITM.staticImplements<IClient, IClientRelation>()
 export default class Client extends Model {
-  getSearchables(): string[] {
+  getSearchables(): Array<keyof IClient> {
     return ["name", "lastname", "infoId"];
   }
 
@@ -28,7 +28,7 @@ export default class Client extends Model {
     },
     infoId: {
       type: DataTypes.NUMBER,
-      allowNull: false,
+      allowNull: true,
     },
   };
 }

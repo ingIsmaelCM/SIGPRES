@@ -18,7 +18,8 @@
     "@": "src",
     "@app": "src/app",
     "@auth": "src/auth",
-    "@file": "src/file"
+    "@file": "src/file",
+    "@source": "src/source"
   },
   "author": "Ismael Contreras",
   "license": "ISC",

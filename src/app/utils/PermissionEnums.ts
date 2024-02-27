@@ -18,6 +18,10 @@ enum PermissionEnums {
   deleteImages = "Eliminar Imágenes",
   setPreference = "Guardar Preferencia",
   getPreference = "Obtener Preferencia",
+  createClients = "Crear Clientes",
+  getClients = "Ver Clientes",
+  editClients = "Editar Clientes",
+  deleteClients = "Eliminar Clientes",
 }
 
 export default PermissionEnums;

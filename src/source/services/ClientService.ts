@@ -64,4 +64,19 @@ export default class ClientService {
       };
     }
   }
+  async deleteClient(clientId: number): Promise<any> {
+    const trans = await BaseConnection.getTrans();
+    try {
+      const deletedClient = await this.clientRepo.delete(clientId, trans);
+      await trans.commit();
+      return deletedClient;
+    } catch (error: any) {
+      await trans.rollback();
+      console.log(error);
+      throw {
+        code: error.code,
+        message: error.message,
+      };
+    }
+  }
 }

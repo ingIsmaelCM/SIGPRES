@@ -25,10 +25,16 @@ export enum EAmortizationStatus {
 
 export interface IClient extends ICommonField {
   name: string;
+  code?:string;
   lastname: string;
   infoId?: number;
+  clienttype: EClientType;
 }
 
+export enum EClientType {
+  Persona = "Persona",
+  Negocio = "Negocio",
+}
 export interface IClientRelation {
   info?: IInfo;
   loans: ILoan[];
@@ -77,14 +83,20 @@ export interface IExpenseRelation {
 export interface IInfo extends ICommonField {
   dni: string;
   phone: string;
-  email: string;
-  birthdate: string;
-  address: string;
+  email?: string;
+  birthdate?: string;
+  address?: string;
 }
 
 export interface IInfoRelation {
   image: IImage;
   document: IDocument;
+}
+
+export enum EInfoModels {
+  Client = "client",
+  Lawyer = "lawyer",
+  Contact = "contact",
 }
 
 export interface IJob extends ICommonField {

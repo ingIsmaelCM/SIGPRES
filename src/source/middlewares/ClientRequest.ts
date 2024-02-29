@@ -1,5 +1,6 @@
 import BaseRequest from "@/app/middlewares/BaseRequest";
 import { ValidationChain, body, param } from "express-validator";
+import { EClientType } from "../utils/SourceInterfaces";
 
 class ClientRequest extends BaseRequest {
   createClientRequest(): Array<ValidationChain> {
@@ -10,6 +11,7 @@ class ClientRequest extends BaseRequest {
         max: 30,
       }),
       body("lastname", "El apellido es requerido").exists().notEmpty(),
+      body("clientype","El tipo de cliente no es válido").optional().isIn(Object.values(EClientType)),
       body("lastname", "El apellido es muy extenso").isLength({
         min: 1,
         max: 50,

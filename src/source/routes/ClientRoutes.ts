@@ -31,6 +31,10 @@ export default class ClientRoutes extends AbstractRoutes<ClientController> {
         ClientRequest.createClientRequest(),
         ClientRequest.validate,
         (req: any, res: any) => this.controller.updateClient(req, res)
+      )
+      .delete(
+        RoleMiddleware.hasPermission(PermissionEnums.deleteClients),
+        (req: any, res: any) => this.controller.deleteClient(req, res)
       );
   }
 }

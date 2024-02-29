@@ -49,4 +49,12 @@ export default class ClientController
       response.success(res, 201, client, "Cliente Actualizado");
     }, res);
   }
+
+  async deleteClient(req: any, res: any) {
+    this.safeRun(async () => {
+      const clientId = req.params.id;
+      const client = await this.clientService.deleteClient(clientId);
+      response.success(res, 201, client, "Cliente Eliminado");
+    }, res);
+  }
 }

@@ -73,6 +73,7 @@ export default class BaseConnection<T> {
         sequelize: instanceConection,
         modelName: model.modelName,
         tableName: model.tableName,
+        paranoid: true,
       });
     }
     instanceConection.models;

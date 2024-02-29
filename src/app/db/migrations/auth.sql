@@ -81,6 +81,8 @@ ADD CONSTRAINT `FK_tenants_tenant` FOREIGN KEY (`tenantId`) REFERENCES `tenants`
 
 ALTER TABLE `model_permissions` ADD CONSTRAINT `FK_model_permissions_permission` FOREIGN KEY (`permissionId`) REFERENCES `permissions`(`id`);
 
-
+DELIMITER //
 CREATE TRIGGER IF NOT EXISTS insert_auth_tenants_trigger
 AFTER INSERT ON tenants FOR EACH ROW BEGIN INSERT INTO auth_tenants (authId, tenantId) VALUES (1, NEW.id); END;
+//
+DELIMITER ;

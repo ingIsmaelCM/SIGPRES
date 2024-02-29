@@ -1,6 +1,7 @@
 import { DataTypes, Model, ModelStatic } from "sequelize";
 import { ICommonField } from "../utils/AppInterfaces";
-import BaseConnection from "../db/BaseConnection";
+
+/* FIXED: Setting static and common interfaces */
 
 interface ItenantNonStatic<T, R> {
   getSearchables(): Array<keyof T>;
@@ -20,7 +21,7 @@ export function staticImplements<T, R>() {
     constructor;
   };
 }
-
+//TODO: Implemenst interface and declare on each model
 export const commonAttributes: Record<keyof ICommonField, any> = {
   id: {
     type: DataTypes.INTEGER,

@@ -1,11 +1,15 @@
 import ITM from "@/app/models/ITenantModel";
 import { DataTypes, Model } from "sequelize";
-import { IClient, IClientRelation } from "@source/utils/SourceInterfaces";
+import {
+  EClientType,
+  IClient,
+  IClientRelation,
+} from "@source/utils/SourceInterfaces";
 
 @ITM.staticImplements<IClient, IClientRelation>()
 export default class Client extends Model {
   getSearchables(): Array<keyof IClient> {
-    return ["name", "lastname", "infoId"];
+    return ["code", "name", "lastname", "infoId", "clienttype"];
   }
 
   getRelations(): (keyof IClientRelation)[] {
@@ -18,6 +22,10 @@ export default class Client extends Model {
 
   static attributes = {
     ...ITM.commonAttributes,
+    code: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
     name: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -30,5 +38,16 @@ export default class Client extends Model {
       type: DataTypes.NUMBER,
       allowNull: true,
     },
+    clienttype: {
+      type: DataTypes.ENUM(...Object.values(EClientType)),
+      allowNull: false,
+      defaultValue: EClientType.Persona,
+    },
   };
 }
+
+/* 
+
+FIXED Add clienttype `[Personal, Negocio]
+TODO: create guarantees table (name, description) (relation image or document) status (consignado, devuelto), type (física, nominal)
+*/

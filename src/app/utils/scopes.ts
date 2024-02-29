@@ -3,6 +3,7 @@ import { IParams } from "./AppInterfaces";
 import tools from "./tools";
 import moment from "moment";
 
+/* BUG Send page, perpage and limit at the same time throw error */
 class Scope {
   inclusiones: any = null;
 
@@ -23,12 +24,15 @@ class Scope {
     in: Op.in,
   };
   paginate(perPage: number, page: number): object {
-    const startIndex: number = (page - 1) * perPage;
-    const pagination: object = {
-      offset: tools.parseOrZero(startIndex),
-      limit: tools.parseOrZero(perPage),
-    };
-    return pagination;
+    if (!isNaN(perPage) && !isNaN(page)) {
+      const startIndex: number = (page - 1) * perPage;
+      const pagination: object = {
+        offset: tools.parseOrZero(startIndex),
+        limit: tools.parseOrZero(perPage),
+      };
+      return pagination;
+    }
+    return {};
   }
 
   limit(limit: number): object {
@@ -244,9 +248,7 @@ class Scope {
     model: ModelStatic<T>
   ): Object {
     const fields = Object.keys(model.getAttributes());
-    if (!params.page && (!params.limit || params.limit > 1000)) {
-      params.limit === 1000;
-    }
+
     cols.push("createdAt");
     cols.push("updatedAt");
     cols.push("id");
@@ -284,6 +286,7 @@ class Scope {
     if (!params.limit && (!params.page || !params.perpage)) {
       query.limit = 1000;
     }
+    console.log(query);
     return query;
   }
   private loadScopes<T extends Model>(

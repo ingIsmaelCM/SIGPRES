@@ -41,7 +41,7 @@ CREATE TABLE `infos`(
     `dni` VARCHAR(18) NOT NULL UNIQUE,
     `phone` VARCHAR(15) NOT NULL,
     `email` VARCHAR(75) UNIQUE,
-    `birthdate` DATE NOT NULL,
+    `birthdate` DATE ,
     `address` VARCHAR(125),
     `createdBy` INT NOT NULL,
     `updatedBy` INT NOT NULL,
@@ -52,8 +52,10 @@ CREATE TABLE `infos`(
 
 CREATE TABLE `clients`(
     `id` INT AUTO_INCREMENT PRIMARY KEY,
+    `code` VARCHAR(10),
     `name` VARCHAR(50) NOT NULL,
     `lastname` VARCHAR(50) NOT NULL,
+    `clientType` ENUM('Persona', 'Negocio') NOT NULL DEFAULT 'Persona',
     `infoId` INT,
     `createdBy` INT NOT NULL,
     `updatedBy` INT NOT NULL,
@@ -258,6 +260,9 @@ CREATE INDEX idx_documents_documentableId ON documents (documentableId);
 CREATE INDEX idx_documents_documentableType ON documents (documentableType);
 
 CREATE INDEX idx_clients_infoId ON clients (infoId);
+CREATE INDEX idx_clients_code ON clients (code);
+CREATE INDEX idx_clients_name ON clients (name);
+CREATE INDEX idx_clients_lastname ON clients (lastname);
 
 CREATE INDEX idx_lawyers_infoId ON lawyers (infoId);
 
@@ -287,6 +292,11 @@ CREATE INDEX idx_payments_lawyerId ON payments (lawyerId);
 CREATE INDEX idx_moras_loanId ON moras (loanId);
 CREATE INDEX idx_moras_clientId ON moras (clientId);
 CREATE INDEX idx_moras_paymentId ON moras (paymentId);
+
+DELIMITER //
+CREATE TRIGGER IF NOT EXISTS add_code_to_client BEFORE INSERT ON clients FOR EACH ROW BEGIN SET NEW.code = LPAD((SELECT IFNULL(MAX(id), 0) + 1 FROM clients), 5, '0'); END;
+//
+DELIMITER ;
 
 
 TRUNCATE TABLE `preferences`;

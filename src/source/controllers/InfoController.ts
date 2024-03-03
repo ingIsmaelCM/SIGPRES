@@ -22,4 +22,16 @@ export default class InfoController extends Controller implements IController {
       response.success(res, 201, newInfo, "Información registrada");
     }, res);
   }
+  @setAuthor
+  async updateInfo(req: Request, res: Response) {
+    this.safeRun(async () => {
+      const data = req.body;
+      const infoId = req.params.id;
+      const updatedInfo = await this.infoService.updateInfo(
+        data,
+        Number(infoId)
+      );
+      response.success(res, 201, updatedInfo, "Información actualizada");
+    }, res);
+  }
 }

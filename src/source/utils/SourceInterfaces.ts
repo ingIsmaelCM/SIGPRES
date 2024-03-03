@@ -25,7 +25,7 @@ export enum EAmortizationStatus {
 
 export interface IClient extends ICommonField {
   name: string;
-  code?:string;
+  code?: string;
   lastname: string;
   infoId?: number;
   clienttype: EClientType;
@@ -38,8 +38,14 @@ export enum EClientType {
 export interface IClientRelation {
   info?: IInfo;
   loans: ILoan[];
+  images: IImage[];
+  profile?: IImage;
+  contacts: IContact[];
+
   payments: IPayment[];
   moras: IMora[];
+  "loans.payments": ILoan[];
+  "payments.mora": IPayment[];
 }
 
 export interface ICondition extends ICommonField {
@@ -59,12 +65,11 @@ export interface IContact extends ICommonField {
   name: string;
   lastname: string;
   infoId?: number;
-  clientId: number;
 }
 
 export interface IContactRelation {
   info?: IInfo;
-  client: IClient;
+  clients: IClient[];
 }
 
 export interface IExpense extends ICommonField {
@@ -86,6 +91,8 @@ export interface IInfo extends ICommonField {
   email?: string;
   birthdate?: string;
   address?: string;
+  gender: EInfoGender;
+  country: string;
 }
 
 export interface IInfoRelation {
@@ -97,6 +104,12 @@ export enum EInfoModels {
   Client = "client",
   Lawyer = "lawyer",
   Contact = "contact",
+}
+
+export enum EInfoGender {
+  Masculino = "Masculino",
+  Femenino = "Femenino",
+  Ninguno = "Ninguno",
 }
 
 export interface IJob extends ICommonField {
@@ -139,12 +152,23 @@ export interface ILoan extends ICommonField {
   rate: number;
   deadlines: number;
   grace: number;
+  status: ELoanStatus;
+  period: string;
   clientId: number;
   lawyerId: number;
+  walletId: number;
+  guarantorId: number;
+}
+
+export enum ELoanStatus {
+  Pendiente = "Pendiente",
+  Aprobado = "Aprobado",
+  Rechazado = "Rechazado",
 }
 
 export interface ILoanRelation {
-  lawyer: ILawyer;
+  lawyer?: ILawyer;
+  guarantor?: IContact;
   client: IClient;
   condition: ICondition;
   images: IImage[];
@@ -180,10 +204,11 @@ export interface IPayment extends ICommonField {
   amount: number;
   capital: number;
   interest: number;
-  balanceBofore: number;
+  balanceBefore: number;
   balanceAfter: number;
   dueAt: string;
   payedAt: string;
+  nextAt: string;
   note?: string;
   walletId: number;
   loanId: number;
@@ -197,7 +222,7 @@ export interface IPaymentRelation {
   lawyer?: ILawyer;
   client: IClient;
   mora?: IMora;
-  image?: IImage;
+  images: IImage[];
 }
 
 export interface IWallet extends ICommonField {

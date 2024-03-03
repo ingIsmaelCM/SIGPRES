@@ -5,6 +5,9 @@ export interface IImage {
   size: number;
   imageableType: string;
   imageableId: string;
+  createdAt: string;
+  updatedAt: string;
+  deletedAt: string;
 }
 
 export interface IDocument {
@@ -14,6 +17,9 @@ export interface IDocument {
   size: number;
   documentableType: string;
   documentableId: string;
+  createdAt: string;
+  updatedAt: string;
+  deletedAt: string;
 }
 export interface IImageRelation {}
 export interface IDocumentRelation {}

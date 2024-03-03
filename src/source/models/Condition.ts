@@ -18,7 +18,6 @@ export default class Condition extends Model {
     return ["loan", "client"];
   }
 
-  static isTenant = true;
   static tableName = "conditions";
   static modelName = "Condition";
 

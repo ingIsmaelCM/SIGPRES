@@ -12,7 +12,6 @@ export default class Job extends Model {
     return ["client", "info", "image", "document"];
   }
 
-  static isTenant = true;
   static tableName = "jobs";
   static modelName = "Job";
 

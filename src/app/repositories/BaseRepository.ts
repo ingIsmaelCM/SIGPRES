@@ -2,7 +2,6 @@ import { Model, ModelStatic, Sequelize } from "sequelize";
 import Scope from "../utils/scopes";
 import { IParams } from "../utils/AppInterfaces";
 import tools from "../utils/tools";
-import BaseConnection from "../db/BaseConnection";
 
 export class BaseRepository<T extends Model> {
   protected model;
@@ -14,10 +13,6 @@ export class BaseRepository<T extends Model> {
 
   protected async safeRun(method: () => Promise<any>): Promise<any> {
     try {
-      const model = this.model as any;
-
-      const tenant = BaseConnection.request?.cookies?.tenant || "sigpres_main";
-      BaseConnection.getConnection(Boolean(model.isTenant) ? tenant : null);
       this.primaryKeyName = this.model.primaryKeyAttribute;
       return await method();
     } catch (error) {

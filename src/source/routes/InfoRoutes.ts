@@ -13,5 +13,12 @@ export default class InfoRoutes extends AbstractRoutes<InfoController> {
         InfoRequest.validate,
         (req: Request, res: Response) => this.controller.createInfo(req, res)
       );
+    this.router
+      .route("/:id")
+      .put(
+        InfoRequest.createInfoRequest().slice(0, 6),
+        InfoRequest.validate,
+        (req: Request, res: Response) => this.controller.updateInfo(req, res)
+      );
   }
 }

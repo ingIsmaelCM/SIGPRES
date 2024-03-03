@@ -1,6 +1,6 @@
 import ITM from "@/app/models/ITenantModel";
 import { DataTypes, Model } from "sequelize";
-import { IInfo, IInfoRelation } from "../utils/SourceInterfaces";
+import { EInfoGender, IInfo, IInfoRelation } from "../utils/SourceInterfaces";
 
 @ITM.staticImplements<IInfo, IInfoRelation>()
 export default class Info extends Model implements IInfo {
@@ -10,6 +10,8 @@ export default class Info extends Model implements IInfo {
   declare email?: string;
   declare birthdate?: string;
   declare address?: string;
+  declare gender: EInfoGender;
+  declare country: string;
   declare id?: number;
   declare createdBy?: number;
   declare updatedBy?: number;
@@ -17,14 +19,21 @@ export default class Info extends Model implements IInfo {
   declare updatedAt?: string;
   declare deletedAt?: string;
   getSearchables(): Array<keyof IInfo> {
-    return ["dni", "phone", "email", "birthdate", "address"];
+    return [
+      "dni",
+      "phone",
+      "email",
+      "birthdate",
+      "address",
+      "gender",
+      "country",
+    ];
   }
 
   getRelations(): (keyof IInfoRelation)[] {
     return ["image", "document"];
   }
 
-  static isTenant = true;
   static modelName = "Info";
   static tableName = "infos";
 
@@ -51,6 +60,17 @@ export default class Info extends Model implements IInfo {
     address: {
       type: DataTypes.STRING,
       allowNull: true,
+    },
+    gender: {
+      type: DataTypes.ENUM,
+      values: Object.values(EInfoGender),
+      allowNull: false,
+      defaultValue: EInfoGender.Ninguno,
+    },
+    country: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      defaultValue: "República Dominicana",
     },
   };
 }

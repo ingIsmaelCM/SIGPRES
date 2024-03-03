@@ -43,6 +43,9 @@ CREATE TABLE `auth_tenants` (
 CREATE TABLE `roles`(
 `id` INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
 `name` VARCHAR(500) NOT NULL UNIQUE
+`createdAt` TIMESTAMP NOT NULL DEFAULT current_timestamp,
+`updatedAt` TIMESTAMP NOT NULL DEFAULT current_timestamp,
+`deletedAt` TIMESTAMP
 );
 
 CREATE TABLE `permissions`(

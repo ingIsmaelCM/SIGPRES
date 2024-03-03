@@ -1,16 +1,15 @@
 import { Sequelize } from "sequelize";
 import BaseConnection from "../../BaseConnection";
+import TenantConnection from "../../TenantConnection";
 import path from "path";
 import fs from "fs";
 import config from "../../../app.config";
 
 export default class MigrateTenant {
   private dbName: string;
-  private connection: Sequelize;
 
   constructor(dbName: string) {
     this.dbName = dbName;
-    this.connection = BaseConnection.getConnection(dbName);
   }
 
   async createDatabase(): Promise<void> {
@@ -26,7 +25,7 @@ export default class MigrateTenant {
         };
       }
       const query = `CREATE DATABASE IF NOT EXISTS ${this.dbName};`;
-      await BaseConnection.getConnection(config.db.database).query(query);
+      await BaseConnection.getConnection().query(query);
       await this.migrateDatabase(this.dbName);
     } catch (error: any) {
       throw {
@@ -37,7 +36,7 @@ export default class MigrateTenant {
   }
 
   private async migrateDatabase(dbName: string): Promise<void> {
-    const connection = BaseConnection.getConnection(dbName);
+    const connection = TenantConnection.getConnection(dbName);
     try {
       const folderPath = __dirname;
       const files = fs.readdirSync(folderPath);

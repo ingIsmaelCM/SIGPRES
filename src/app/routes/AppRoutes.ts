@@ -11,8 +11,9 @@ export default class AppRoutes extends AbstractRoutes<AppController> {
   }
 
   initRoutes(): void {
-    this.router.get(
+    this.router.post(
       "/cloudinary/signature",
+      AuthMiddleware.auth,
       RoleMiddleware.hasPermission(PermissionEnums.getCloudinarySign),
       (req: any, res: any) => {
         this.controller.getCloudSignature(req, res);

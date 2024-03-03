@@ -25,7 +25,7 @@ export default class AuthService {
    * @throws An error if the email or username is already in use.
    */
   async createAuth(auth: IAuth): Promise<Auth> {
-    const trans: any = await BaseConnection.getTrans(true);
+    const trans: any = await BaseConnection.getTrans();
     try {
       const emailExists: any = await this.authRepo.find("email", auth.email);
       const usernameExists: any = await this.authRepo.find(
@@ -62,7 +62,7 @@ export default class AuthService {
    * @returns user object and access token
    */
   async login(auth: any, res: Response) {
-    const trans = await BaseConnection.getTrans(true);
+    const trans = await BaseConnection.getTrans();
     try {
       let userAuth = await this.authRepo.find(
         config.auth.loginField,
@@ -84,16 +84,11 @@ export default class AuthService {
         await this.authRepo.update(updateData, userAuth.id, trans);
         const { token, refreshToken } = this.generateTokens(userAuth);
         this.setLoginCookies(res, refreshToken, token, userAuth);
-        var {
-          permissions,
-          roles,
-          company,
-        }: { permissions: any[]; roles: any[]; company: any } =
+        var { permissions, roles }: { permissions: any[]; roles: any[] } =
           await this.setAuthFields(userAuth);
         await trans.commit();
         const result = {
           ...userAuth.dataValues,
-          company: company,
           password: null,
           permissions: [...new Set(permissions)],
           roles,
@@ -141,9 +136,8 @@ export default class AuthService {
       name: r.name,
       id: r.id,
     }));
-    let company = await new PreferenceRepository().get("companyData", {});
-    company = JSON.parse(company.companyData);
-    return { permissions, roles, company };
+
+    return { permissions, roles };
   }
 
   /**

@@ -1,13 +1,13 @@
 import ImageRepository from "@file/repositories/ImageRepository";
-import BaseConnection from "@app/db/BaseConnection";
 import { IParams } from "@/app/utils/AppInterfaces";
 import Image from "../models/Image";
+import TenantConnection from "@/app/db/TenantConnection";
 
 export default class ImageService {
   imageRepo: ImageRepository = new ImageRepository();
 
   async createImages(images: Image[]): Promise<any> {
-    const trans = await BaseConnection.getTrans();
+    const trans = await TenantConnection.getTrans();
     try {
       const newImages = await this.imageRepo.bulkCreate(images, trans);
       await trans.commit();
@@ -34,7 +34,7 @@ export default class ImageService {
   }
 
   async deleteImage(imageId: number): Promise<Image> {
-    const trans = await BaseConnection.getTrans();
+    const trans = await TenantConnection.getTrans();
     try {
       const deletedImage = await this.imageRepo.delete(imageId, trans);
       await trans.commit();

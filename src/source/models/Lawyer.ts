@@ -12,7 +12,6 @@ export default class Lawyer extends Model {
     return ["info", "loans", "payments", "expenses", "image", "document"];
   }
 
-  static isTenant = true;
   static tableName = "lawyers";
   static modelName = "Lawyer";
 

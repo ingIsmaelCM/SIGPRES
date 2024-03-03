@@ -31,7 +31,6 @@ export default class Amortization extends Model {
 
   static tableName = "amortizations";
   static modelName = "Amortization";
-  static isTenant = true;
 
   static attributes: Record<keyof IAmortization, any> = {
     ...ITM.commonAttributes,

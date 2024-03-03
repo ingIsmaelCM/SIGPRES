@@ -1,6 +1,6 @@
 import BaseRequest from "@/app/middlewares/BaseRequest";
 import { ValidationChain, body } from "express-validator";
-import { EInfoModels } from "../utils/SourceInterfaces";
+import { EInfoGender, EInfoModels } from "../utils/SourceInterfaces";
 
 class InfoRequest extends BaseRequest {
   createInfoRequest(): Array<ValidationChain> {
@@ -12,18 +12,26 @@ class InfoRequest extends BaseRequest {
         min: 10,
         max: 15,
       }),
-      body("email", "Revise el formado de correo").optional().isEmail(),
+      body("email", "Revise el formado de correo")
+        .optional()
+        .isEmail()
+        .custom((value: string) => {
+          return value.length > 5 || !value;
+        }),
       body("birthdate", "La fecha de nacimiento no es válida")
         .optional()
         .isDate()
         .custom((value: string) => {
           const date = new Date(value);
-          return !isNaN(date.getTime());
+          return !isNaN(date.getTime()) || !value;
         }),
       body("address", "La dirección es muy extensa").optional().isLength({
         min: 1,
         max: 125,
       }),
+      body("gender", "Ingrese un género válud")
+        .optional()
+        .isIn(Object.values(EInfoGender)),
       body("modelType", "Indique el modelo asociado").exists().notEmpty(),
       body("modelType", "El modelo indicado no es válido").isIn(
         Object.values(EInfoModels)

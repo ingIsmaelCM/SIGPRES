@@ -12,7 +12,6 @@ export default class Expense extends Model {
     return ["wallet", "lawyer"];
   }
 
-  static isTenant = true;
   static modelName = "Expense";
   static tableName = "expenses";
 

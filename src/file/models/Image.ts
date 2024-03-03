@@ -10,9 +10,13 @@ class Image extends Model {
   getRelations(): (keyof IImageRelation)[] {
     return [];
   }
-  static isTenant = true;
+
   static attributes = {
-    ...ITM.commonAttributes,
+    id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+    },
     path: {
       type: DataTypes.STRING,
     },
@@ -28,6 +32,16 @@ class Image extends Model {
     },
     imageableId: {
       type: DataTypes.INTEGER,
+    },
+    createdAt: {
+      type: DataTypes.DATE,
+    },
+    updatedAt: {
+      type: DataTypes.DATE,
+    },
+    deletedAt: {
+      type: DataTypes.DATE,
+      allowNull: true,
     },
   };
   static modelName = "Image";

@@ -7,6 +7,9 @@ import Info from "./Info";
 import Job from "./Job";
 import Image from "@/file/models/Image";
 import Preference from "./Preference";
+import Loan from "./Loan";
+import Payment from "./Payment";
+import Lawyer from "./Lawyer";
 
 export {
   Client,
@@ -18,4 +21,7 @@ export {
   Job,
   Image,
   Preference,
+  Loan,
+  Payment,
+  Lawyer,
 };

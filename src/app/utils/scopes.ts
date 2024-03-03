@@ -286,7 +286,6 @@ class Scope {
     if (!params.limit && (!params.page || !params.perpage)) {
       query.limit = 1000;
     }
-    console.log(query);
     return query;
   }
   private loadScopes<T extends Model>(

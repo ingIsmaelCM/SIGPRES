@@ -5,14 +5,13 @@ import { IContact, IContactRelation } from "../utils/SourceInterfaces";
 @ITM.staticImplements<IContact, IContactRelation>()
 export default class Contact extends Model {
   getSearchables(): Array<keyof IContact> {
-    return ["name", "lastname", "infoId", "clientId"];
+    return ["name", "lastname", "infoId"];
   }
 
   getRelations(): (keyof IContactRelation)[] {
-    return ["client", "info"];
+    return ["clients", "info"];
   }
 
-  static isTenant = true;
   static tableName = "contacts";
   static modelName = "Contact";
 
@@ -29,10 +28,6 @@ export default class Contact extends Model {
     infoId: {
       type: DataTypes.INTEGER,
       allowNull: true,
-    },
-    clientId: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
     },
   };
 }

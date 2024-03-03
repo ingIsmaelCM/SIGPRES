@@ -18,9 +18,7 @@ export default class AppController extends Controller implements IController {
 
   public async getCloudSignature(req: any, res: any) {
     try {
-      const cloudinarySignature = await this.appService.getCloudSignature(
-        `profile${req.auth.id}`
-      );
+      const cloudinarySignature = await this.appService.getCloudSignature();
       response.success(res, 200, cloudinarySignature, "Firma de Cloudinary");
     } catch (error: any) {
       response.error(res, error.code, error.message);

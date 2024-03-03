@@ -43,6 +43,8 @@ CREATE TABLE `infos`(
     `email` VARCHAR(75) UNIQUE,
     `birthdate` DATE ,
     `address` VARCHAR(125),
+    `gender` ENUM('Masculino','Femenino', 'Ninguno') NOT NULL DEFAULT 'Ninguno',
+     `country` NVARCHAR(50) NOT NULL DEFAULT 'República Dominicana',
     `createdBy` INT NOT NULL,
     `updatedBy` INT NOT NULL,
     `createdAt` TIMESTAMP NOT NULL DEFAULT current_timestamp,
@@ -84,12 +86,22 @@ CREATE TABLE `contacts`(
     `name` VARCHAR(50) NOT NULL,
     `lastname` VARCHAR(50) NOT NULL,
     `infoId` INT,
-    `clientId` INT NOT NULL,
     `createdBy` INT NOT NULL,
     `updatedBy` INT NOT NULL,
     `createdAt` TIMESTAMP NOT NULL DEFAULT current_timestamp,
     `updatedAt` TIMESTAMP NOT NULL DEFAULT current_timestamp,
     `deletedAt` TIMESTAMP
+);
+
+CREATE TABLE `client_contacts`(
+      `id` INT AUTO_INCREMENT PRIMARY KEY,
+      `clientId` INT NOT NULL,
+      `contactId` INT NOT NULL,
+      `createdBy` INT NOT NULL,
+      `updatedBy` INT NOT NULL,
+      `createdAt` TIMESTAMP NOT NULL DEFAULT current_timestamp,
+      `updatedAt` TIMESTAMP NOT NULL DEFAULT current_timestamp,
+      `deletedAt` TIMESTAMP
 );
 
 
@@ -148,7 +160,9 @@ CREATE TABLE `loans`(
     `status` ENUM('Pendiente', 'Aprobado','Rechazado') NOT NULL DEFAULT 'Pendiente',
     `period` VARCHAR(50) NOT NULL,
     `clientId` INT NOT NULL,
+    `walletId` INT NOT NULL,
     `lawyerId` INT,
+    `guarantorId` INT,
     `createdBy` INT NOT NULL,
     `updatedBy` INT NOT NULL,
     `createdAt` TIMESTAMP NOT NULL DEFAULT current_timestamp,
@@ -183,7 +197,7 @@ CREATE TABLE `payments`(
     `payedAt` DATE NOT NULL,
     `nextAt` DATE NOT NULL,
     `note` VARCHAR(75),
-    `walleId` INT NOT NULL,
+    `walletId` INT NOT NULL,
     `loanId` INT NOT NULL,
     `clientId` INT NOT NULL,
     `lawyerId` INT,
@@ -202,7 +216,7 @@ CREATE TABLE `amortizations`(
     `capital` DECIMAL(10,2) NOT NULL DEFAULT 0,
     `interest` DECIMAL(10,2) NOT NULL DEFAULT 0,
     `balance` DECIMAL(10,2) NOT NULL DEFAULT 0,
-    `status` ENUM('Pendiente','Pagado', 'Cancelado') NOT NULL DEFAULT 'Pendiente',
+    `status` ENUM('Pendiente','Pagado', 'Cancelado') NOT NULL DEFAULT 'Pendiente', 
     `loanId` INT NOT NULL,
     `clientId` INT NOT NULL,
     `createdBy` INT NOT NULL,
@@ -234,17 +248,21 @@ CREATE TABLE `moras`(
 ALTER TABLE `clients` ADD CONSTRAINT `FK_clients_infos` FOREIGN KEY (`infoId`) REFERENCES `infos` (`id`);
 ALTER TABLE `lawyers` ADD CONSTRAINT `FK_lawyers_infos` FOREIGN KEY (`infoId`) REFERENCES `infos` (`id`);
 ALTER TABLE `contacts` ADD CONSTRAINT `FK_contacts_infos` FOREIGN KEY (`infoId`) REFERENCES `infos` (`id`);
+ALTER TABLE `client_contacts` ADD CONSTRAINT `FK_client_contacts_client` FOREIGN KEY (`clientId`) REFERENCES `clients` (`id`);
+ALTER TABLE `client_contacts` ADD CONSTRAINT `FK_client_contacts_contact` FOREIGN KEY (`contactId`) REFERENCES `contacts` (`id`);
 ALTER TABLE `jobs` ADD CONSTRAINT `FK_jobs_clients` FOREIGN KEY (`clientId`) REFERENCES `clients` (`id`);
 ALTER TABLE `jobs` ADD CONSTRAINT `FK_jobs_wallets` FOREIGN KEY (`infoId`) REFERENCES `wallets` (`id`);
 ALTER TABLE `expenses` ADD CONSTRAINT `FK_expenses_wallets` FOREIGN KEY (`walletId`) REFERENCES `wallets` (`id`);
 ALTER TABLE `expenses` ADD CONSTRAINT `FK_expenses_lawyers` FOREIGN KEY (`lawyerId`) REFERENCES `lawyers` (`id`);
 ALTER TABLE `loans` ADD CONSTRAINT `FK_loans_clients` FOREIGN KEY (`clientId`) REFERENCES `clients` (`id`);
+ALTER TABLE `loans` ADD CONSTRAINT `FK_loans_wallets` FOREIGN KEY (`walletsId`) REFERENCES `walletss` (`id`);
 ALTER TABLE `loans` ADD CONSTRAINT `FK_loans_lawyers` FOREIGN KEY (`lawyerId`) REFERENCES `lawyers` (`id`);
+ALTER TABLE `loans` ADD CONSTRAINT `FK_loans_guarantor` FOREIGN KEY (`guarantorId`) REFERENCES `contacts` (`id`);
 ALTER TABLE `conditions` ADD CONSTRAINT `FK_conditions_loans` FOREIGN KEY (`loanId`) REFERENCES `loans` (`id`);
 ALTER TABLE `conditions` ADD CONSTRAINT `FK_conditions_clients` FOREIGN KEY (`clientId`) REFERENCES `clients` (`id`);
 ALTER TABLE `amortizations` ADD CONSTRAINT `FK_amortizations_loans` FOREIGN KEY (`loanId`) REFERENCES `loans` (`id`);
 ALTER TABLE `amortizations` ADD CONSTRAINT `FK_amortizations_clients` FOREIGN KEY (`clientId`) REFERENCES `clients` (`id`);
-ALTER TABLE `payments` ADD CONSTRAINT `FK_payments_wallets` FOREIGN KEY (`walleId`) REFERENCES `wallets` (`id`);
+ALTER TABLE `payments` ADD CONSTRAINT `FK_payments_wallets` FOREIGN KEY (`walletId`) REFERENCES `wallets` (`id`);
 ALTER TABLE `payments` ADD CONSTRAINT `FK_payments_loans` FOREIGN KEY (`loanId`) REFERENCES `loans` (`id`);
 ALTER TABLE `payments` ADD CONSTRAINT `FK_payments_clients` FOREIGN KEY (`clientId`) REFERENCES `clients` (`id`);
 ALTER TABLE `payments` ADD CONSTRAINT `FK_payments_lawyers` FOREIGN KEY (`lawyerId`) REFERENCES `lawyers` (`id`);
@@ -267,7 +285,9 @@ CREATE INDEX idx_clients_lastname ON clients (lastname);
 CREATE INDEX idx_lawyers_infoId ON lawyers (infoId);
 
 CREATE INDEX idx_contacts_infoId ON contacts (infoId);
-CREATE INDEX idx_contacts_clientId ON contacts (clientId);
+
+CREATE INDEX idx_contacts_clientId ON client_contacts (clientId);
+CREATE INDEX idx_contacts_contactId ON client_contacts (contactId);
 
 CREATE INDEX idx_jobs_clientId ON jobs (clientId);
 CREATE INDEX idx_jobs_infoId ON jobs (infoId);
@@ -277,6 +297,7 @@ CREATE INDEX idx_expenses_lawyerId ON expenses (lawyerId);
 
 CREATE INDEX idx_loans_clientId ON loans (clientId);
 CREATE INDEX idx_loans_lawyerId ON loans (lawyerId);
+CREATE INDEX idx_loans_guarantorId ON loans (guarantorId);
 
 CREATE INDEX idx_conditions_loanId ON conditions (loanId);
 CREATE INDEX idx_conditions_clientId ON conditions (clientId);
@@ -284,7 +305,7 @@ CREATE INDEX idx_conditions_clientId ON conditions (clientId);
 CREATE INDEX idx_amortizations_loanId ON amortizations (loanId);
 CREATE INDEX idx_amortizations_clientId ON amortizations (clientId);
 
-CREATE INDEX idx_payments_walletId ON payments (walleId);
+CREATE INDEX idx_payments_walletId ON payments (walletId);
 CREATE INDEX idx_payments_loanId ON payments (loanId);
 CREATE INDEX idx_payments_clientId ON payments (clientId);
 CREATE INDEX idx_payments_lawyerId ON payments (lawyerId);

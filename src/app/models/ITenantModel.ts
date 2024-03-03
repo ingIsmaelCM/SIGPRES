@@ -10,7 +10,6 @@ interface ItenantNonStatic<T, R> {
 
 export interface ITenantInterface<T, R> {
   new (): ItenantNonStatic<T, R>;
-  isTenant: boolean;
   modelName: string;
   tableName: string;
   attributes: Record<keyof T, any>;

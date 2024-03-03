@@ -13,7 +13,6 @@ export default class Preference extends Model {
   getRelations(): Array<keyof IPreferenceRelation> {
     return [];
   }
-  static isTenant = true;
   static modelName = "Preference";
   static tableName = "preferences";
   static attributes = {

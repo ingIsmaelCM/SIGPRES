@@ -6,7 +6,8 @@ import { AuthRepository } from "../repositories/AuthRepository";
 import Middleware from "@app/middlewares/Middleware";
 import Permission from "../models/Permission";
 import Role from "../models/Role";
-import BaseConnection from "@/app/db/BaseConnection";
+import { request } from "express";
+import TenantConnection from "@/app/db/TenantConnection";
 
 class AuthMiddleware extends Middleware {
   static request: any;
@@ -24,8 +25,8 @@ class AuthMiddleware extends Middleware {
       const decoded = this.verifyTokenIsValid(authToken, req);
       const auth = await this.validateSessionId(decoded, res);
       req.auth = auth;
-      BaseConnection.request = req;
-
+      request.headers["tenant"] = req.cookies.tenant;
+      TenantConnection.getConnection();
       next();
     } catch (error: any) {
       response.error(res, error.code, error.message);

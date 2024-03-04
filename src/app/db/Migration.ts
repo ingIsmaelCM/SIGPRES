@@ -3,7 +3,6 @@
 import { Sequelize } from "sequelize";
 import fs from "fs";
 import path from "path";
-import MigrateTenant from "./migrations/tenants/MigrateTenant";
 import config from "../app.config";
 
 class Migration {
@@ -47,8 +46,6 @@ class Migration {
     for (const migration of migrations) {
       await this.runFromMigration(migration);
     }
-    await this.sequelize.query("DROP DATABASE IF EXISTS sigpres_main_tenant");
-    await new MigrateTenant("sigpres_main_tenant").createDatabase();
     await this.sequelize.query("SET foreign_key_checks = 1");
     console.log(
       "\x1b[34m%s\x1b[0m",

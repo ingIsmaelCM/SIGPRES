@@ -28,10 +28,11 @@ copy .env.example .env
 cp .env.example .env
 ```
 
-Create Database
+Create Databases
 
 ```mysql
 CREATE DATABASE IF NOT EXIST `sigpres_main`
+CREATE DATABASE IF NOT EXIST `sigpres_main_tenant`
 ```
 
 Migrate Data
@@ -39,6 +40,12 @@ Migrate Data
 ```bash
 npm run migrate all
 npm run seed all
+```
+
+Run Scripts
+
+```
+Copy and run script on ./src/app/db/migrations/tenants/database.sql. You can use phpMyAdmin, Workbench or wathever you want.
 ```
 
 Run API Service
@@ -51,54 +58,76 @@ npm run dev
 
 ## MultiTenant
 
-### BaseConnection
+## BaseConnection
 
 A class for managing connections to a database using Sequelize.
 
-### BaseRepository
+### Constructor
 
-A class for managing all calls to DB trhought sequelize using safeRun method.
+- Check if not exists a connecion and create a new connection with config.db properties.
+- Assign this new connection to BaseConnectio.connection static property.
 
-## Constructor
+### Properties
 
-### Parameters
+- `connection`: Sequelize | null - The static Sequelize connection instance.
 
-- `database`: string - The name of the database to connect to.
+### Methods
 
-## Properties
+#### getConnection(): Sequelize
 
-- `connection`: Sequelize | null - The Sequelize connection instance.
-- `request`: any - Static property to hold request information. It is used to determine the database from which to generate the transaction. If a global database is desired, set this property to null before calling `BaseConnection.getTrans()`.
+- Run class constructor to build a connection if not exists.
+- Return the connection instance for main database.
 
-## Methods
-
-### getConnection(dbName?: string): Sequelize
-
-Returns a Sequelize connection instance.
-
-#### Parameters
-
-- `dbName`: string (optional) - The name of the database. If not provided, it uses the default database specified in the app configuration.
-
-#### Returns
+@Returns
 
 - `Sequelize`: The Sequelize connection instance.
 
-### getTrans(): Promise<any>
+#### getTrans(): Promise<any>
 
-Returns a transaction for the current connection.
+- Create a new transaction from the current sequelize connection.
 
-#### Returns
+@Returns
 
 - `Promise<any>`: A Promise resolving to a transaction object.
 
-#### Throws
+## Notes
 
-- `Object`: An object with a code and message property if an error occurs during the transaction retrieval.
+- BaseConnection must be used for models on main database (Auth, Tenant, Role, Permission)
+
+## TenantConnection
+
+A class for managing connections to a database for each tenant using Sequelize.
+
+### Properties
+
+- `connections`: A Map set containing a collection of connections according each tenant (databases).
+
+### Methods
+
+#### getConection(dbName?: string): Sequelize
+
+@ param dbName (optional) the name of the tenant
+
+- If tenant is not provided, gets it from request.headers object or default on config.bd.database
+- Check if not exists a connecion with given tenant on static connections property and create a new for it.
+- Set the created connection to connections map property.
+- Initialize models for this new connection.
+
+@ Returns
+
+- A connection for given tenant from connections map property.
+
+#### getTrans(): Promise<any>
+
+- Create a new transaction from the current sequelize connection.
+
+@Returns
+
+- `Promise<any>`: A Promise resolving to a transaction object.
 
 ## Notes
 
-- The class BaseRepository has a method `safeRun` from which all queries should be called. This method verifies if the model class has the property `isTenant` set to true. If so, it initializes the model according to the tenant in `BaseConnection.request.cookies.tenant`, which is assigned in the auth middleware executed before each route.
+- TenantConnection must be used for models on tenant database (Client, Loan, Payment ...)
 
 #### Api URL
 

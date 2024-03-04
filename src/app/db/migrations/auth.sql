@@ -42,7 +42,7 @@ CREATE TABLE `auth_tenants` (
 
 CREATE TABLE `roles`(
 `id` INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
-`name` VARCHAR(500) NOT NULL UNIQUE
+`name` VARCHAR(500) NOT NULL UNIQUE,
 `createdAt` TIMESTAMP NOT NULL DEFAULT current_timestamp,
 `updatedAt` TIMESTAMP NOT NULL DEFAULT current_timestamp,
 `deletedAt` TIMESTAMP
@@ -84,8 +84,4 @@ ADD CONSTRAINT `FK_tenants_tenant` FOREIGN KEY (`tenantId`) REFERENCES `tenants`
 
 ALTER TABLE `model_permissions` ADD CONSTRAINT `FK_model_permissions_permission` FOREIGN KEY (`permissionId`) REFERENCES `permissions`(`id`);
 
-DELIMITER //
-CREATE TRIGGER IF NOT EXISTS insert_auth_tenants_trigger
-AFTER INSERT ON tenants FOR EACH ROW BEGIN INSERT INTO auth_tenants (authId, tenantId) VALUES (1, NEW.id); END;
-//
-DELIMITER ;
+CREATE TRIGGER IF NOT EXISTS insert_auth_tenants_trigger AFTER INSERT ON tenants FOR EACH ROW BEGIN INSERT INTO auth_tenants (authId, tenantId) VALUES (1, NEW.id); END;

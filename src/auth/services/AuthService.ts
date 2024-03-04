@@ -114,7 +114,6 @@ export default class AuthService {
     tools.setCookie(res, "refreshToken", `${refreshToken}`);
     tools.setCookie(res, "accessToken", `Bearer ${token}`);
     tools.setCookie(res, "tenant", userAuth.tenants[0].key);
-    BaseConnection.request = { cookies: { tenant: userAuth.tenants[0].key } };
   }
 
   /**

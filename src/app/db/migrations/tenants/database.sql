@@ -158,7 +158,7 @@ CREATE TABLE `loans`(
     `balance` DECIMAL(10,2) NOT NULL,
     `startAt` DATE NOT NULL,
     `endAt` DATE NOT NULL,
-     `nextPaymentAt` DATE NOT NULL,
+     `nextPaymentAt` DATE,
     `term` INT NOT NULL COMMENT 'Cantidad de cuotas',
     `status` ENUM('Pendiente', 'Aprobado','Rechazado') NOT NULL DEFAULT 'Pendiente',
     `period` VARCHAR(50) NOT NULL,

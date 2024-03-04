@@ -1,18 +1,23 @@
 import ITM from "@/app/models/ITenantModel";
 import { DataTypes, Model } from "sequelize";
-import { ELoanStatus, ILoan, ILoanRelation } from "../utils/SourceInterfaces";
+import {
+  ELoanPeriod,
+  ELoanStatus,
+  ILoan,
+  ILoanRelation,
+} from "../utils/SourceInterfaces";
 
 @ITM.staticImplements<ILoan, ILoanRelation>()
 export default class Loan extends Model implements ILoan {
+  declare code: string;
   declare amount: number;
   declare balance: number;
   declare startAt: string;
   declare endAt: string;
-  declare rate: number;
-  declare deadlines: number;
-  declare grace: number;
+  declare nextPaymentAt: string;
+  declare term: number;
   declare status: ELoanStatus;
-  declare period: string;
+  declare period: ELoanPeriod | number;
   declare clientId: number;
   declare lawyerId: number;
   declare walletId: number;
@@ -29,14 +34,17 @@ export default class Loan extends Model implements ILoan {
 
   getSearchables(): Array<keyof ILoan> {
     return [
+      "code",
       "clientId",
       "lawyerId",
       "amount",
       "balance",
       "startAt",
       "endAt",
-      "grace",
-      "rate",
+      "period",
+      "term",
+      "status",
+      "guarantorId",
     ];
   }
 
@@ -56,6 +64,10 @@ export default class Loan extends Model implements ILoan {
 
   static attributes: Record<keyof ILoan, any> = {
     ...ITM.commonAttributes,
+    code: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
     amount: {
       type: DataTypes.DECIMAL,
       allowNull: false,
@@ -64,19 +76,11 @@ export default class Loan extends Model implements ILoan {
       type: DataTypes.DECIMAL,
       allowNull: false,
     },
-    rate: {
+    term: {
       type: DataTypes.DECIMAL,
       allowNull: false,
     },
-    grace: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      defaultValue: 0,
-    },
-    deadlines: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-    },
+
     status: {
       type: DataTypes.ENUM(...Object.values(ELoanStatus)),
       allowNull: false,
@@ -92,7 +96,7 @@ export default class Loan extends Model implements ILoan {
     },
     lawyerId: {
       type: DataTypes.INTEGER,
-      allowNull: false,
+      allowNull: true,
     },
     walletId: {
       type: DataTypes.INTEGER,
@@ -100,13 +104,17 @@ export default class Loan extends Model implements ILoan {
     },
     guarantorId: {
       type: DataTypes.INTEGER,
-      allowNull: false,
+      allowNull: true,
     },
     startAt: {
       type: DataTypes.DATE,
       allowNull: false,
     },
     endAt: {
+      type: DataTypes.DATE,
+      allowNull: false,
+    },
+    nextPaymentAt: {
       type: DataTypes.DATE,
       allowNull: false,
     },

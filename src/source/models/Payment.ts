@@ -11,7 +11,6 @@ export default class Payment extends Model implements IPayment {
   declare balanceAfter: number;
   declare dueAt: string;
   declare payedAt: string;
-  declare nextAt: string;
   declare note?: string;
   declare walletId: number;
   declare loanId: number;
@@ -75,10 +74,6 @@ export default class Payment extends Model implements IPayment {
       allowNull: false,
     },
     payedAt: {
-      type: DataTypes.DATE,
-      allowNull: false,
-    },
-    nextAt: {
       type: DataTypes.DATE,
       allowNull: false,
     },

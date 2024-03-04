@@ -49,11 +49,13 @@ export interface IClientRelation {
 }
 
 export interface ICondition extends ICommonField {
-  initDeadline: number;
+  initTerm: number;
   initRateMora: number;
   finalRateMora: number;
   loanId: number;
   clientId: number;
+  grace: number;
+  rate: number;
 }
 
 export interface IConditionRelation {
@@ -145,19 +147,25 @@ export interface ILawyerRelation {
 }
 
 export interface ILoan extends ICommonField {
+  code: string;
   amount: number;
   balance: number;
   startAt: string;
   endAt: string;
-  rate: number;
-  deadlines: number;
-  grace: number;
+  nextPaymentAt: string;
+  term: number;
   status: ELoanStatus;
-  period: string;
+  period: ELoanPeriod | number;
   clientId: number;
   lawyerId: number;
   walletId: number;
   guarantorId: number;
+}
+export enum ELoanPeriod {
+  Diario = "diario",
+  Semanal = "semanal",
+  Quincenal = "quincenal",
+  Mensual = "mensual",
 }
 
 export enum ELoanStatus {
@@ -208,7 +216,6 @@ export interface IPayment extends ICommonField {
   balanceAfter: number;
   dueAt: string;
   payedAt: string;
-  nextAt: string;
   note?: string;
   walletId: number;
   loanId: number;

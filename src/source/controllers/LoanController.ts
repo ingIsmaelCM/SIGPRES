@@ -1,4 +1,4 @@
-import Controller from "@/app/controllers/Controller";
+import Controller, { setAuthor } from "@/app/controllers/Controller";
 import IController from "@/app/controllers/IController";
 import LoanService from "../services/LoanService";
 import { Request, Response } from "express";
@@ -18,6 +18,14 @@ export default class LoanController extends Controller implements IController {
     this.safeRun(async () => {
       const loans = await this.loanService.getLoans(req.query);
       response.success(res, 200, loans, "Listado de préstamos");
+    }, res);
+  }
+
+  @setAuthor
+  async createLoan(req: Request, res: Response) {
+    this.safeRun(async () => {
+      const loans = await this.loanService.createLoan(req.body);
+      response.success(res, 201, loans, "Préstamo Registrado");
     }, res);
   }
 }

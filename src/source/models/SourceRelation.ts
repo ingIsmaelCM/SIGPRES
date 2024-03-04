@@ -6,6 +6,7 @@ import Lawyer from "./Lawyer";
 import Contact from "./Contact";
 import Condition from "./Condition";
 import Payment from "./Payment";
+import Amortization from "./Amortization";
 
 /* TODO: Define relations for each Source Models */
 export default class SourceRelation {
@@ -48,33 +49,36 @@ export default class SourceRelation {
     Loan.belongsTo(Contact, {
       foreignKey: "lawyerId",
       as: "guarantor",
-    }),
-      Loan.belongsTo(Lawyer, {
-        foreignKey: "lawyerId",
-        as: "lawyer",
-      }),
-      Loan.hasOne(Condition, {
-        foreignKey: "conditionId",
-        as: "condition",
-      }),
-      Loan.hasMany(Image, {
-        foreignKey: "imageableId",
-        as: "images",
-        scope: {
-          imageableType: "loan",
-        },
-      }),
-      Loan.hasMany(Payment, {
-        as: "payments",
-        foreignKey: "loanId",
-      }),
-      Loan.belongsTo(Client, {
-        foreignKey: "clientId",
-        as: "client",
-      });
+    });
+    Loan.belongsTo(Lawyer, {
+      foreignKey: "lawyerId",
+      as: "lawyer",
+    });
+    Loan.hasOne(Condition, {
+      foreignKey: "loanId",
+      as: "condition",
+    });
+    Loan.hasMany(Image, {
+      foreignKey: "imageableId",
+      as: "images",
+      scope: {
+        imageableType: "loan",
+      },
+    });
+    Loan.hasMany(Payment, {
+      as: "payments",
+      foreignKey: "loanId",
+    });
+    Loan.hasMany(Amortization, {
+      as: "amortizations",
+      foreignKey: "loanId",
+    });
+    Loan.belongsTo(Client, {
+      foreignKey: "clientId",
+      as: "client",
+    });
   }
 } /* 
       "documents",
-      "payments",
       "moras",
       "amortizations", */

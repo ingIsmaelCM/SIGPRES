@@ -3,15 +3,22 @@ import { DataTypes, Model } from "sequelize";
 import { ICondition, IConditionRelation } from "../utils/SourceInterfaces";
 
 @ITM.staticImplements<ICondition, IConditionRelation>()
-export default class Condition extends Model {
+export default class Condition extends Model implements ICondition {
+  declare initTerm: number;
+  declare initRateMora: number;
+  declare finalRateMora: number;
+  declare loanId: number;
+  declare clientId: number;
+  declare grace: number;
+  declare rate: number;
+  declare id?: number;
+  declare createdBy?: number;
+  declare updatedBy?: number;
+  declare createdAt?: string;
+  declare updatedAt?: string;
+  declare deletedAt?: string;
   getSearchables(): Array<keyof ICondition> {
-    return [
-      "initDeadline",
-      "initRateMora",
-      "finalRateMora",
-      "loanId",
-      "clientId",
-    ];
+    return ["initTerm", "initRateMora", "finalRateMora", "loanId", "clientId"];
   }
 
   getRelations(): (keyof IConditionRelation)[] {
@@ -21,15 +28,24 @@ export default class Condition extends Model {
   static tableName = "conditions";
   static modelName = "Condition";
 
-  static attributes = {
+  static attributes: Record<keyof ICondition, any> = {
     ...ITM.commonAttributes,
 
-    initDeadline: {
+    initTerm: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
     initRateMora: {
       type: DataTypes.DECIMAL,
+      allowNull: false,
+    },
+    grace: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      defaultValue: 0,
+    },
+    rate: {
+      type: DataTypes.INTEGER,
       allowNull: false,
     },
     finalRateMora: {

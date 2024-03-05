@@ -1,0 +1,16 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Clients",
+    "description": "Create, update and retrieve clients",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3001/clients",
+      "description": "For testing on localhost"
+    }
+  ],
+  "paths": {
+  }
+}

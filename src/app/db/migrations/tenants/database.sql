@@ -150,7 +150,6 @@ CREATE TABLE `expenses`(
     `deletedAt` TIMESTAMP
 );
 
-
 CREATE TABLE `loans`(
     `id` INT AUTO_INCREMENT PRIMARY KEY,
      `code` VARCHAR(10),

@@ -22,7 +22,6 @@ export default class AuthRoutes extends AbstractRoutes<AuthController> {
     );
     this.router.post(
       "/refreshtoken",
-
       (req: any, res: any) => this.controller.refreshToken(req, res)
     );
     this.router.post(

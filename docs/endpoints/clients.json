@@ -7,10 +7,25 @@
   },
   "servers": [
     {
-      "url": "http://localhost:3001/clients",
+      "url": "http://localhost:3001/api",
       "description": "For testing on localhost"
     }
   ],
   "paths": {
+    "/clients": {
+      "get": {
+        "description": "Retrieve registered clients",
+        "parameters": [
+          {
+            "$ref": "../schemas/parameters.json#/components/parameters/queryParams"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of clients"
+          }
+        }
+      }
+    }
   }
 }

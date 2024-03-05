@@ -191,4 +191,203 @@ Los siguientes parámetros de consulta pueden usarse para filtar los datos a la 
 
 </details>
 
-- [Authentication](docs/endpoints/auth.json)
+<details>
+<summary>
+<code>Authentication</code>
+</summary>
+Para iniciar sesión, el usuario debe enviar su nombre de usuario y contraseña. Si las credenciales son correctas, la API retornará los datos del usuario y un token JWT en el cuerpo de la respuesta. Además, se incluirá el accessToken y el refreshToken en la cookie, para que no sea necesario enviarlos en cada petición.
+
+#### Cuerpo de la Petición
+
+```json
+{
+  "email": "username",
+  "password": "password"
+}
+```
+
+#### Cuerpo de la Respuestas
+
+```typescript
+content={
+    statusCode: 200,
+    title: "Sesión iniciada correctamente",
+    "content": {
+        "userAuth": {
+            ...{IAuth},
+            "roles":Array<IRole>,
+            "permissions": Array<IPermission>,
+            "tenants": Array<Itenant>,
+            "company": ICompany
+        },
+        "token": string
+    }
+}
+```
+
+</details>
+
+### Schema Auth
+
+```Typescript
+interface IAuth {
+  id?: number;
+  email: string;
+  username: string;
+  password: string;
+  role_id: number;
+  name: string;
+  lastname: string;
+  lastlogin?: string;
+  role?: string;
+}
+
+interface IRole {
+  id?: number;
+  name: string;
+}
+
+interface IPermission {
+  id?: number;
+  name: string;
+}
+
+interface Itenant {
+  id?: number;
+  name: string;
+  key: string;
+}
+
+```
+
+<details>
+ <summary>
+ <code>POST</code>  <code>/api/auth/register</code></summary>
+
+##### Parameters
+
+> | name     | type     | data type | description                 |
+> |----------|----------|-----------|-----------------------------|
+> | email    | required | string    | Unique email to register    |
+> | username | required | string    | Unique username to register |
+> | password | required | string    | 6-25 length password        |
+> | name     | required | string    | 1-50 length name            |
+> | lastname | required | string    | 1-50 length lastname        |
+
+##### Responses
+
+> | http code | content-type     | response                                                     |
+> |-----------|------------------|--------------------------------------------------------------|
+> | `201`     | application/json | `{"statusCode":"201","title":"Usuario creado exitosamente"}` |
+> | `422`     | application/json | `{"statusCode":"422","content":"Unproccesable data"}`        |
+> | `500`     | application/json | `{"statusCode":"500","content":"Unkonown server error"}`     |
+
+##### Example Axios
+
+> ```Typescript
+> axios({
+>   method: "post",
+>   url: "/api/auth/register",
+>   data: {email: "email@example.com",username: "exampleuser", password: "password1234", name: "John",    lastname: "Doe"},});
+> ```
+
+</details>
+
+<details>
+<summary><code>POST </code> <code>/api/auth/login</code> </summary>
+
+##### Parameters
+
+> | name     | type     | data type | description          |
+> |----------|----------|-----------|----------------------|
+> | username | required | string    | Registered username  |
+> | password | required | string    | 6-25 length password |
+
+##### Responses
+
+> | http code | content-type     | response                                                                                   |
+> |-----------|------------------|--------------------------------------------------------------------------------------------|
+> | `200`     | application/json | `{"statusCode":"200", "title": "Sesión iniciada correctamente", ""content": auth: object}` |
+> | `422`     | application/json | `{"statusCode":"422","message":"Unproccesable data"}`                                      |
+> | `401`     | application/json | `{"statusCode":"401","message":"Credenciales incorrectas"}`                                |
+> | `500`     | application/json | `{"statusCode":"500","message":"Unkonown server error"}`                                   |
+
+##### Example Axios
+
+> ```javascript
+> axios({
+>   method: "post",
+>   url: "/api/auth/login",
+>   data: { username: "exampleuser", password: "password1234" },
+> });
+> ```
+
+</details>
+<details>
+
+<summary><code>POST </code> <code>/api/auth/logout</code> </summary>
+
+##### Headers
+
+> | name          | type     | data type    | description           |
+> |---------------|----------|--------------|-----------------------|
+> | Authorization | required | Bearer Token | Token provided by api |
+
+##### Parameters
+
+> NONE
+
+##### Responses
+
+> | http code | content-type     | response                                                  |
+> |-----------|------------------|-----------------------------------------------------------|
+> | `200`     | application/json | `{"code":"200","content": "Sesión cerrada exitosamente"}` |
+> | `401`     | application/json | `{"statusCode":"401","message":string}`                   |
+> | `500`     | application/json | `{"code":"500","message":"Unkonown server error"}`        |
+
+##### Example Axios
+
+> ```javascript
+> axios({
+>   method: "post",
+>   headers: {Authorization: `Bearer ${token}`},
+>   url: "/api/auth/logout",
+> });
+> ```
+
+</details>
+<details>
+
+<summary><code>POST </code> <code>/api/auth/logout/all</code> </summary>
+
+##### Headers
+
+> | name          | type     | data type    | description           |
+> |---------------|----------|--------------|-----------------------|
+> | Authorization | required | Bearer Token | Token provided by api |
+
+##### Parameters
+
+> NONE
+
+##### Responses
+
+> | http code | content-type     | response                                                        |
+> |-----------|------------------|-----------------------------------------------------------------|
+> | `200`     | application/json | `{"code":"200","content": "Se han cerrado todas las sesiones"}` |
+> | `401`     | application/json | `{"statusCode":"401","message":string}`                         |
+> | `500`     | application/json | `{"code":"500","message":"Unkonown server error"}`              |
+
+##### Example Axios
+
+> ```javascript
+> axios({
+>   method: "post",
+>   headers: {Authorization: `Bearer ${token}`},
+>   url: "/api/auth/logout/all",
+> });
+> ```
+
+</details>
+
+---

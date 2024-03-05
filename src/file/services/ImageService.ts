@@ -23,8 +23,7 @@ export default class ImageService {
 
   async findImage(imageId: number, params: IParams): Promise<Image> {
     try {
-      const image = await this.imageRepo.findById(imageId, params);
-      return image;
+      return await this.imageRepo.findById(imageId, params);
     } catch (error: any) {
       throw {
         code: error.code,

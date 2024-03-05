@@ -106,8 +106,7 @@ export class BaseRepository<T extends Model> {
         transaction: trans,
       });
 
-      const updated = this.model.findByPk(primaryKey, { transaction: trans });
-      return updated;
+      return this.model.findByPk(primaryKey, { transaction: trans });
     });
   }
 

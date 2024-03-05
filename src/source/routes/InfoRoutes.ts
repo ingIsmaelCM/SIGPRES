@@ -1,4 +1,3 @@
-import Controller from "@/app/controllers/Controller";
 import AbstractRoutes from "@/app/routes/AbstractRoutes";
 import InfoRequest from "../middlewares/InfoRequest";
 import { Request, Response } from "express";

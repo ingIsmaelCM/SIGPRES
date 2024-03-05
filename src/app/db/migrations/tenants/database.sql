@@ -319,12 +319,11 @@ CREATE INDEX idx_moras_loanId ON moras (loanId);
 CREATE INDEX idx_moras_clientId ON moras (clientId);
 CREATE INDEX idx_moras_paymentId ON moras (paymentId);
 
-DELIMITER //
+
 CREATE TRIGGER IF NOT EXISTS add_code_to_client BEFORE INSERT ON clients FOR EACH ROW BEGIN SET NEW.code = LPAD((SELECT IFNULL(MAX(id), 0) + 1 FROM clients), 5, '0'); END;
-//
+
 CREATE TRIGGER IF NOT EXISTS add_code_to_loan BEFORE INSERT ON loans FOR EACH ROW BEGIN SET NEW.code = LPAD((SELECT IFNULL(MAX(id), 0) + 1 FROM loans), 5, '0'); END;
-//
-DELIMITER ;
+
 
 
 TRUNCATE TABLE `preferences`;

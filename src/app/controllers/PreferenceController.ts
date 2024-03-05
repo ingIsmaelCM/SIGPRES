@@ -19,7 +19,7 @@ export default class PreferenceController
   }
 
   async getPreference(req: any, res: any) {
-    this.safeRun(async () => {
+    await  this.safeRun(async () => {
       const pref = await this.preferenceService.getPreference(
         req.params.key,
         req.query
@@ -28,14 +28,14 @@ export default class PreferenceController
     }, res);
   }
   async getPreferences(req: any, res: any) {
-    this.safeRun(async () => {
+    await this.safeRun(async () => {
       const pref = await this.preferenceService.getPreferences(req.query);
       response.success(res, 200, pref, "Preferencias");
     }, res);
   }
 
   async setPreference(req: any, res: any) {
-    this.safeRun(async () => {
+    await this.safeRun(async () => {
       const key = req.params.key;
       const value = req.body.value;
       const data = tools.setUserRelated(req, { key, value });

@@ -7,9 +7,7 @@ export default class InfoRepository extends BaseRepository<Info> {
   }
 
   async create(data: any, trans: any): Promise<Info> {
-    const newInfo: Info = await super.create(data, trans);
-
-    return newInfo;
+    return await super.create(data, trans);
   }
 
   async addRelated(newInfo: Info, data: any): Promise<any> {

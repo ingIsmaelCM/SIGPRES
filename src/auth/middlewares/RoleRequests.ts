@@ -1,5 +1,5 @@
 import BaseRequest from "@/app/middlewares/BaseRequest";
-import { ValidationChain, body, param } from "express-validator";
+import { ValidationChain, body } from "express-validator";
 
 class RoleRequests extends BaseRequest {
   public validateCreateRole(): Array<ValidationChain> {

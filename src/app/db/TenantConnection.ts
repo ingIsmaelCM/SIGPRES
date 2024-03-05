@@ -49,10 +49,9 @@ export default class TenantConnection {
 
   static async getTrans() {
     try {
-      const transaction = await TenantConnection.getConnection().transaction({
+      return await TenantConnection.getConnection().transaction({
         autocommit: false,
       });
-      return transaction;
     } catch (error: any) {
       throw {
         code: 500,

@@ -1,12 +1,10 @@
-import { Sequelize } from "sequelize";
 import BaseConnection from "../../BaseConnection";
 import TenantConnection from "../../TenantConnection";
 import path from "path";
 import fs from "fs";
-import config from "../../../app.config";
 
 export default class MigrateTenant {
-  private dbName: string;
+  private readonly dbName: string;
 
   constructor(dbName: string) {
     this.dbName = dbName;
@@ -19,10 +17,10 @@ export default class MigrateTenant {
                         WHERE SCHEMA_NAME = '${this.dbName}'`;
       const result = await BaseConnection.getConnection().query(checkDb);
       if (result[0].length > 0) {
-        throw {
+        await Promise.reject( {
           code: 500,
           message: "Esta base de datos ya existe",
-        };
+        });
       }
       const query = `CREATE DATABASE IF NOT EXISTS ${this.dbName};`;
       await BaseConnection.getConnection().query(query);
@@ -43,7 +41,7 @@ export default class MigrateTenant {
       files.sort();
       for (const file of files) {
         if (file.endsWith(".sql")) {
-          this.runSQLFile(path.join(folderPath, file), connection);
+          await this.runSQLFile(path.join(folderPath, file), connection);
         }
       }
     } catch (error: any) {

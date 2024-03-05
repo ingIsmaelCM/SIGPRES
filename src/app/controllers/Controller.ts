@@ -5,7 +5,6 @@ import tools from "../utils/tools";
 export default abstract class Controller {
   router: Router = Router();
 
-  constructor() {}
   protected async safeRun(method: () => Promise<any>, res: any): Promise<any> {
     try {
       return await method();

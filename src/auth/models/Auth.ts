@@ -18,8 +18,6 @@ class Auth
   declare password: string;
   declare name: string;
   declare lastname: string;
-  declare lastlogin: string;
-  declare sessionId: string;
   declare status: number;
   declare verifiedAt: string;
   declare createdAt: string;

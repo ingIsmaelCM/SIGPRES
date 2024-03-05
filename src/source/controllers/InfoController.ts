@@ -16,7 +16,7 @@ export default class InfoController extends Controller implements IController {
 
   @setAuthor
   async createInfo(req: Request, res: Response) {
-    this.safeRun(async () => {
+    await this.safeRun(async () => {
       const data = req.body;
       const newInfo = await this.infoService.createInfo(data);
       response.success(res, 201, newInfo, "Información registrada");
@@ -24,7 +24,7 @@ export default class InfoController extends Controller implements IController {
   }
   @setAuthor
   async updateInfo(req: Request, res: Response) {
-    this.safeRun(async () => {
+    await   this.safeRun(async () => {
       const data = req.body;
       const infoId = req.params.id;
       const updatedInfo = await this.infoService.updateInfo(

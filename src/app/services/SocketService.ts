@@ -1,4 +1,3 @@
-import AuthMiddleware from "@/auth/middlewares/AuthMiddleware";
 import { IAuth } from "@/auth/utils/AuthInterfaces";
 import { Server as HttpServer } from "http";
 import { Server } from "socket.io";
@@ -42,5 +41,4 @@ export default class SocketService {
     }
   }
 
-  public isAuth(token: string) {}
 }

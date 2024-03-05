@@ -1,7 +1,5 @@
 import { v2 as cloudinary } from "cloudinary";
 import config from "@app/app.config";
-import BaseConnection from "../db/BaseConnection";
-
 export default class AppService {
   public async getCloudSignature(): Promise<any> {
     try {
@@ -16,12 +14,11 @@ export default class AppService {
         params,
         cloudinary.config().api_secret!
       );
-      const result = {
+     return {
         signature: signature,
         timestamp: timestamp,
         api_key: config.cloudinary.api_key,
       };
-      return result;
     } catch (error: any) {
       throw {
         code: 500,

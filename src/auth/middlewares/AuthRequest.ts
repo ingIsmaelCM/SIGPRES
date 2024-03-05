@@ -1,7 +1,5 @@
-import { NextFunction, Request, Response } from "express";
-import { ValidationChain, body, param } from "express-validator";
+import { ValidationChain, body} from "express-validator";
 import BaseRequest from "@app/middlewares/BaseRequest";
-import moment from "moment";
 class AuthRequest extends BaseRequest {
   public validateAuthRegister(): Array<ValidationChain> {
     return [
@@ -58,21 +56,6 @@ class AuthRequest extends BaseRequest {
     ];
   }
 
-  public validateTaskCreation(): Array<ValidationChain> {
-    return [
-      body("tasks.*.title", "Cada tarea debe tener un título").notEmpty(),
-      body(
-        "tasks.*.due_at",
-        "Cada tarea debe tener una fecha de entrega"
-      ).notEmpty(),
-      body(
-        "tasks.*.due_at",
-        "La entrega de cada tarea debe ser posterior a la actual"
-      ).custom((value) => {
-        return moment(value).isAfter(moment.now());
-      }),
-    ];
-  }
 }
 
 export default new AuthRequest();

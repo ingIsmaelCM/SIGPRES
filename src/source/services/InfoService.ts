@@ -1,4 +1,3 @@
-import { IParams } from "@/app/utils/AppInterfaces";
 import InfoRepository from "../repositories/InfoRepository";
 import { IInfo } from "../utils/SourceInterfaces";
 import TenantConnection from "@/app/db/TenantConnection";
@@ -18,10 +17,10 @@ export default class InfoService {
         limit: 1,
       });
       if (exists) {
-        throw {
+        await Promise.reject( {
           code: 422,
           message: "El DNI o el email ya existen",
-        };
+        });
       }
       const newInfo = await this.infoRepo.create(info, trans);
       await trans.commit();

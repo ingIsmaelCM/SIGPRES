@@ -2,7 +2,7 @@ import Mail from "@app/services/MailService";
 export default class AuthMailService {
   private mailService: Mail = Mail.getMailInstance();
 
-  public async sendConfirmation(user: any) {
+ /* public async sendConfirmation(user: any) {
     const email = {
       to: user.email,
       subject: `Bienvenido(a) ${user.email}`,
@@ -16,7 +16,7 @@ export default class AuthMailService {
       .template(email.template)
       .attachment([])
       .send();
-  }
+  }*/
 
   public async sendRecoverLink(context: any) {
     const email = {

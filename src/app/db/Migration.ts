@@ -8,7 +8,7 @@ import config from "../app.config";
 class Migration {
   constructor(private sequelize: Sequelize) {}
 
-  private async runSQLFile(filePath: string): Promise<void> {
+  public async runSQLFile(filePath: string): Promise<void> {
     const sql = fs.readFileSync(filePath, { encoding: "utf8" });
     const queries = sql.split(/;\s*$/m); // Divide el script en consultas individuales basándose en punto y coma
     let runned = 0;
@@ -82,4 +82,6 @@ const sequelize = new Sequelize(
   }
 );
 const runner = new Migration(sequelize);
-runner.run(process.argv.slice(2));
+runner.run(process.argv.slice(2)).then(() => console.log("Finished"));
+
+export default Migration

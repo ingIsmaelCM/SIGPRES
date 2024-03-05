@@ -24,8 +24,7 @@ export default class PreferenceService {
 
   async getPreference(key: string, params: IParams): Promise<any> {
     try {
-      const pref = await this.preferenceRepo.get(key, params);
-      return pref;
+      return await this.preferenceRepo.get(key, params);
     } catch (error: any) {
       throw {
         code: error.code,
@@ -36,8 +35,7 @@ export default class PreferenceService {
 
   async getPreferences(params: IParams): Promise<any> {
     try {
-      const prefs = await this.preferenceRepo.getAll(params);
-      return prefs;
+     return await this.preferenceRepo.getAll(params);
     } catch (error: any) {
       throw {
         code: error.code,

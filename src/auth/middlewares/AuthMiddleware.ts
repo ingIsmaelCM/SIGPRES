@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from "express";
+import { NextFunction, Response } from "express";
 import response from "@app/utils/response";
 import jwt from "jsonwebtoken";
 import config from "@app/app.config";
@@ -8,6 +8,7 @@ import Permission from "../models/Permission";
 import Role from "../models/Role";
 import { request } from "express";
 import TenantConnection from "@/app/db/TenantConnection";
+import {IAuth} from "@auth/utils/AuthInterfaces";
 
 class AuthMiddleware extends Middleware {
   static request: any;
@@ -22,9 +23,8 @@ class AuthMiddleware extends Middleware {
   async auth(req: any, res: Response, next: NextFunction): Promise<any> {
     try {
       const authToken = await this.verifyTokenExists(req);
-      const decoded = this.verifyTokenIsValid(authToken, req);
-      const auth = await this.validateSessionId(decoded, res);
-      req.auth = auth;
+      const decoded = await this.verifyTokenIsValid(authToken);
+      req.auth = await this.validateSessionId(decoded);
       request.headers["tenant"] = req.cookies.tenant;
       TenantConnection.getConnection();
       next();
@@ -59,7 +59,7 @@ class AuthMiddleware extends Middleware {
   private async verifyTokenExists(req: any): Promise<any> {
     return new Promise((resolve, reject) => {
       const authToken: any =
-        req.headers.authorization || req.cookies.accessToken;
+        req.headers["authorization"] || req.cookies.accessToken;
       if (!authToken) {
         reject({
           code: 401,
@@ -70,20 +70,22 @@ class AuthMiddleware extends Middleware {
     });
   }
 
-  private verifyTokenIsValid(authToken: string, req: any) {
-    return jwt.verify(
-      authToken,
-      config.auth.secret,
-      (err: any, decoded: any) => {
-        if (err) {
-          throw {
-            code: 401,
-            message: err.message,
-          };
-        }
-        return decoded;
-      }
-    );
+  private verifyTokenIsValid(authToken: string) {
+    return new Promise((resolve: any, reject: any)=>{
+      jwt.verify(
+          authToken,
+          config.auth.secret,
+          (err: any, decoded: any) => {
+            if (err) {
+              reject({
+                code: 401,
+                message: "Token inválido",
+              })
+            }
+            resolve(decoded)
+          }
+      );
+    })
   }
 
   isUniqueEmail() {
@@ -104,18 +106,13 @@ class AuthMiddleware extends Middleware {
   }
 
   /* Check if token has not been invalidated */
-  private async validateSessionId(decoded: any, res: Response) {
+  private async validateSessionId(decoded: any, ) {
     try {
       const authRepository = new AuthRepository();
       const auth = await authRepository.find("id", decoded.id, false, {
         include: "roles.permissions,permissions",
       });
-      if (auth.sessionId !== decoded.sessionId) {
-        throw {
-          code: 401,
-          message: "El token suministrado ya no es válido",
-        };
-      }
+      this.checkSessionId(auth, decoded)
       let permissions: any[] = auth.permissions.map((p: Permission) => ({
         name: p.name,
         id: p.id,
@@ -127,16 +124,24 @@ class AuthMiddleware extends Middleware {
         permissions = permissions.concat(rP);
       });
       const roles = auth.roles.map((r: Role) => ({ name: r.name, id: r.id }));
-      const userAuth = {
+     return {
         ...auth.dataValues,
         password: null,
         permissions: [...new Set(permissions)],
         roles,
         company: config.company,
       };
-      return userAuth;
     } catch (error: any) {
       throw error;
+    }
+  }
+
+  checkSessionId(auth: IAuth, decoded: Record<any, any> ){
+    if (auth.sessionId !== decoded.sessionId) {
+      throw {
+        code: 401,
+        message: "El token suministrado ya no es válido",
+      };
     }
   }
 }

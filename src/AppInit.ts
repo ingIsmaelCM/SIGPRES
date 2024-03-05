@@ -1,4 +1,4 @@
-import express, { Express, Request, Response } from "express";
+import express from "express";
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 import cors from "cors";
@@ -6,9 +6,9 @@ import IController from "@app/controllers/IController";
 import session from "express-session";
 import config from "./app/app.config";
 import http from "http";
-import SocketService from "./app/services/SocketService";
-import AuthMiddleware from "./auth/middlewares/AuthMiddleware";
-import { AuthController } from "./auth/controllers/AuthController";
+import SocketService from "@app/services/SocketService";
+import AuthMiddleware from "@auth/middlewares/AuthMiddleware";
+import { AuthController } from "@auth/controllers/AuthController";
 
 export class App {
   public app: express.Application;

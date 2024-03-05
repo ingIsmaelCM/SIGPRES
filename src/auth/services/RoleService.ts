@@ -12,10 +12,10 @@ export default class RoleService {
     try {
       const existingRole = await this.roleRepo.find("name", role.name, true);
       if (existingRole) {
-        throw {
+        await Promise.reject({
           code: 422,
           message: "Este rol ya existe",
-        };
+        });
       }
       const newRole = await this.roleRepo.create(role, trans);
       await trans.commit();
@@ -33,10 +33,10 @@ export default class RoleService {
     try {
       const existingRole = await this.roleRepo.findById(roleId);
       if (!existingRole) {
-        throw {
+        await Promise.reject({
           code: 422,
           message: "Este rol no existe",
-        };
+        });
       }
       const newRole = await this.roleRepo.delete(roleId, trans);
       await trans.commit();
@@ -54,10 +54,10 @@ export default class RoleService {
       const auth = await this.authRepo.findById(authId, { include: "roles" });
       const role = await this.roleRepo.findById(roleId);
       if (!auth || !role) {
-        throw {
+        await Promise.reject({
           code: 404,
           message: "Usuario o rol no encontrado",
-        };
+        });
       }
       await this.authRepo.assingRole(auth, role);
     } catch (error: any) {
@@ -74,10 +74,10 @@ export default class RoleService {
         include: "permissions",
       });
       if (!auth) {
-        throw {
+        await Promise.reject({
           code: 404,
           message: "Usuario  no encontrado",
-        };
+        });
       }
       await this.authRepo.assingPermission(auth, permissionId);
     } catch (error: any) {
@@ -93,10 +93,10 @@ export default class RoleService {
         include: "permissions",
       });
       if (!auth) {
-        throw {
+        await Promise.reject({
           code: 404,
           message: "Usuario  no encontrado",
-        };
+        });
       }
       const permissions: IPermission[] = (
         await this.permissionRepo.getAll({
@@ -121,10 +121,10 @@ export default class RoleService {
         include: "permissions",
       });
       if (!role) {
-        throw {
+        await Promise.reject({
           code: 404,
           message: "Rol  no encontrado",
-        };
+        });
       }
       await this.roleRepo.assingPermission(role, permissionId);
     } catch (error: any) {
@@ -141,10 +141,10 @@ export default class RoleService {
         include: "permissions",
       });
       if (!role) {
-        throw {
+        await Promise.reject({
           code: 404,
           message: "Rol  no encontrado",
-        };
+        });
       }
       const permissions: IPermission[] = (
         await this.permissionRepo.getAll({

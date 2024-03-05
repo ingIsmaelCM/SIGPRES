@@ -15,7 +15,7 @@ export default class LoanController extends Controller implements IController {
   }
 
   async getLoans(req: Request, res: Response) {
-    this.safeRun(async () => {
+    await this.safeRun(async () => {
       const loans = await this.loanService.getLoans(req.query);
       response.success(res, 200, loans, "Listado de préstamos");
     }, res);
@@ -23,7 +23,7 @@ export default class LoanController extends Controller implements IController {
 
   @setAuthor
   async createLoan(req: Request, res: Response) {
-    this.safeRun(async () => {
+    await this.safeRun(async () => {
       const loans = await this.loanService.createLoan(req.body);
       response.success(res, 201, loans, "Préstamo Registrado");
     }, res);

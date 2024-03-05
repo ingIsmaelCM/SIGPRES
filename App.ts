@@ -1,7 +1,7 @@
 import "module-alias/register";
 
 import config from "@app/app.config";
-import { App } from "./src/AppInit";
+import { App } from "@/AppInit";
 import AppController from "@app/controllers/AppController";
 import Relation from "@app/models/Relations";
 import response from "@app/utils/response";
@@ -33,5 +33,4 @@ Relation.initRelations();
 app.app.use("/api/*", (req: any, res: any) => {
   response.error(res, 404, "Not Found");
 });
-export default app;
 app.listen();

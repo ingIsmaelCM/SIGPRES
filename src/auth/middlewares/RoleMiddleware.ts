@@ -1,6 +1,6 @@
 import Middleware from "@/app/middlewares/Middleware";
 import response from "@/app/utils/response";
-import { NextFunction, Request, Response } from "express";
+import { NextFunction, Response } from "express";
 
 type IPermission = {
   id: number;

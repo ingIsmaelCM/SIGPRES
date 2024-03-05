@@ -1,4 +1,3 @@
-import Permission from "../models/Permission";
 import Role from "../models/Role";
 import { BaseRepository } from "@app/repositories/BaseRepository";
 

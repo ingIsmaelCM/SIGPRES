@@ -3,7 +3,7 @@ export interface IAuth {
   email: string;
   username: string;
   password: string;
-  role_id: number;
+  sessionId: number;
   name: string;
   lastname: string;
   lastlogin?: string;

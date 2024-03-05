@@ -1,6 +1,5 @@
 import AbstractRoutes from "@/app/routes/AbstractRoutes";
 import ClientController from "../controllers/ClientController";
-import AuthMiddleware from "@/auth/middlewares/AuthMiddleware";
 import RoleMiddleware from "@/auth/middlewares/RoleMiddleware";
 import PermissionEnums from "@/app/utils/PermissionEnums";
 import ClientRequest from "../middlewares/ClientRequest";
@@ -28,7 +27,7 @@ export default class ClientRoutes extends AbstractRoutes<ClientController> {
       )
       .put(
         RoleMiddleware.hasPermission(PermissionEnums.editClients),
-        ClientRequest.createClientRequest(),
+        ClientRequest.updateClientRequest(),
         ClientRequest.validate,
         (req: any, res: any) => this.controller.updateClient(req, res)
       )

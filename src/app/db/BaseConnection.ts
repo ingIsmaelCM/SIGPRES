@@ -10,7 +10,7 @@ export default class BaseConnection<T> {
 
   constructor() {
     if (!BaseConnection.connection) {
-      const connection = new Sequelize(
+      BaseConnection.connection = new Sequelize(
         config.db.database,
         config.db.user,
         config.db.password,
@@ -22,8 +22,6 @@ export default class BaseConnection<T> {
           database: config.db.database,
         }
       );
-
-      BaseConnection.connection = connection;
     }
   }
 
@@ -41,10 +39,9 @@ export default class BaseConnection<T> {
 
   static async getTrans() {
     try {
-      const transaction = await BaseConnection.getConnection().transaction({
+      return  await BaseConnection.getConnection().transaction({
         autocommit: false,
       });
-      return transaction;
     } catch (error: any) {
       throw {
         code: 500,

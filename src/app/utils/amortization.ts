@@ -34,9 +34,7 @@ export default {
   },
   getCuota(amount: number, term: number, rate: number): number {
     const r = rate / 100;
-    const n = term;
-    const cuota = (amount * r) / (1 - Math.pow(1 + r, -n));
-    return cuota;
+    return (amount * r) / (1 - Math.pow(1 + r, -term));
   },
   getDateCuota(startAt: Date, period: string | number): Moment {
     let date = moment(startAt);

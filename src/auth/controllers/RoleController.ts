@@ -1,7 +1,7 @@
 import Controller from "@/app/controllers/Controller";
 import IController from "@/app/controllers/IController";
 import response from "@/app/utils/response";
-import { Request, Response, Router } from "express";
+import { Request, Response} from "express";
 import RoleService from "../services/RoleService";
 import RoleRoutes from "../routes/RoleRoutes";
 

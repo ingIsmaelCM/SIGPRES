@@ -16,7 +16,7 @@ export default class ImageController extends Controller implements IController {
   }
 
   async createImages(req: any, res: any) {
-    this.safeRun(async () => {
+    await this.safeRun(async () => {
       const images = req.body.images.map((image: IImage) =>
         tools.setUserRelated(req, image)
       );
@@ -25,7 +25,7 @@ export default class ImageController extends Controller implements IController {
     }, res);
   }
   async findImage(req: any, res: any) {
-    this.safeRun(async () => {
+    await this.safeRun(async () => {
       const imageId = req.params.id;
       const params = req.query;
       const image = await this.imageService.findImage(imageId, params);
@@ -33,7 +33,7 @@ export default class ImageController extends Controller implements IController {
     }, res);
   }
   async deleteImage(req: any, res: any) {
-    this.safeRun(async () => {
+    await this.safeRun(async () => {
       const imageId = req.params.id;
       const image = await this.imageService.deleteImage(imageId);
       response.success(res, 200, image, "Imagen eliminada");

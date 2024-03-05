@@ -1,4 +1,4 @@
-import { DataTypes, Model, ModelStatic } from "sequelize";
+import { DataTypes } from "sequelize";
 import { ICommonField } from "../utils/AppInterfaces";
 
 /* FIXED: Setting static and common interfaces */
@@ -16,8 +16,7 @@ export interface ITenantInterface<T, R> {
 }
 
 export function staticImplements<T, R>() {
-  return (constructor: ITenantInterface<T, R>) => {
-    constructor;
+  return (_constructor: ITenantInterface<T, R>) => {
   };
 }
 //TODO: Implements interface and declare on each model

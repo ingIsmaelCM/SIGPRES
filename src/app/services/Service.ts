@@ -1,6 +1,4 @@
 import TenantConnection from "../db/TenantConnection";
-import { request } from "express";
-import { Sequelize } from "sequelize";
 export default class Service {
   protected async safeRun(
     method: () => Promise<any>,

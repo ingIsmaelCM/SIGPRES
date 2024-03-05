@@ -26,11 +26,10 @@ class Scope {
   paginate(perPage: number, page: number): object {
     if (!isNaN(perPage) && !isNaN(page)) {
       const startIndex: number = (page - 1) * perPage;
-      const pagination: object = {
+      return {
         offset: tools.parseOrZero(startIndex),
         limit: tools.parseOrZero(perPage),
       };
-      return pagination;
     }
     return {};
   }
@@ -168,7 +167,6 @@ class Scope {
     includes: string,
     model: T
   ): object {
-    let included = {};
     const associations = new (model as any)().getRelations();
     associations.push("creator", "updator");
     let inclusions: Array<any> = includes.split(",");
@@ -181,11 +179,10 @@ class Scope {
         inclusions[key] = this.recursiveInclude(incl.split("."), 0);
       }
     });
-    included = {
+    return {
       distinct: "id",
       include: inclusions,
     };
-    return included;
   }
 
   recursiveInclude(incl: Array<any>, level: number): any {
@@ -305,7 +302,7 @@ class Scope {
     params: IParams,
     args: any
   ): Promise<any> {
-    let result = null;
+    let result;
     if (params.limit && params.limit == 1) {
       result = await model.findOne(args);
     } else {
@@ -323,10 +320,7 @@ class Scope {
     const cols = new (model as any)().getSearchables();
     const args = this.getQuery(params, cols, model);
     model = this.loadScopes(model, params);
-
-    const result = this.loadResults(model, params, args);
-
-    return result;
+   return this.loadResults(model, params, args);
   }
 }
 

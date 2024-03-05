@@ -65,7 +65,7 @@ A class for managing connections to a database using Sequelize.
 ### Constructor
 
 - Check if not exists a connecion and create a new connection with config.db properties.
-- Assign this new connection to BaseConnectio.connection static property.
+- Assign this new connection to `BaseConnectio.connection` static property.
 
 ### Properties
 
@@ -108,7 +108,7 @@ A class for managing connections to a database for each tenant using Sequelize.
 
 @ param dbName (optional) the name of the tenant
 
-- If tenant is not provided, gets it from request.headers object or default on config.bd.database
+- If tenant is not provided, gets it from `request.headers` object or default on config.bd.database
 - Check if not exists a connecion with given tenant on static connections property and create a new for it.
 - Set the created connection to connections map property.
 - Initialize models for this new connection.
@@ -146,9 +146,9 @@ Las respuestas a las llamadas de la API retornan dos formatos, dependiendo de si
 
 ```json
 {
-  "statusCode": `20X`,
-  "title": `string`,
-  "content": `any`
+  "statusCode": "20X",
+  "title": "string",
+  "content": "any"
 }
 ```
 
@@ -160,8 +160,8 @@ Las respuestas a las llamadas de la API retornan dos formatos, dependiendo de si
 
 ```json
 {
-  "statusCode": `40X|50X`,
-  "content": `any`
+  "statusCode": "40X|50X",
+  "content": "any"
 }
 ```
 
@@ -208,16 +208,16 @@ Para iniciar sesión, el usuario debe enviar su nombre de usuario y contraseña.
 
 #### Cuerpo de la Respuestas
 
-```Typescript
-{
-    "statusCode": 200,
-    "title": "Sesión iniciada correctamente",
+```typescript
+content={
+    statusCode: 200,
+    title: "Sesión iniciada correctamente",
     "content": {
         "userAuth": {
             ...{IAuth},
-            "roles":IRole[],
-            "permissions": IPermission[],
-            "tenants": Itenant[],
+            "roles":Array<IRole>,
+            "permissions": Array<IPermission>,
+            "tenants": Array<Itenant>,
             "company": ICompany
         },
         "token": string
@@ -267,7 +267,7 @@ interface Itenant {
 ##### Parameters
 
 > | name     | type     | data type | description                 |
-> | -------- | -------- | --------- | --------------------------- |
+> |----------|----------|-----------|-----------------------------|
 > | email    | required | string    | Unique email to register    |
 > | username | required | string    | Unique username to register |
 > | password | required | string    | 6-25 length password        |
@@ -277,7 +277,7 @@ interface Itenant {
 ##### Responses
 
 > | http code | content-type     | response                                                     |
-> | --------- | ---------------- | ------------------------------------------------------------ |
+> |-----------|------------------|--------------------------------------------------------------|
 > | `201`     | application/json | `{"statusCode":"201","title":"Usuario creado exitosamente"}` |
 > | `422`     | application/json | `{"statusCode":"422","content":"Unproccesable data"}`        |
 > | `500`     | application/json | `{"statusCode":"500","content":"Unkonown server error"}`     |
@@ -299,14 +299,14 @@ interface Itenant {
 ##### Parameters
 
 > | name     | type     | data type | description          |
-> | -------- | -------- | --------- | -------------------- |
+> |----------|----------|-----------|----------------------|
 > | username | required | string    | Registered username  |
 > | password | required | string    | 6-25 length password |
 
 ##### Responses
 
 > | http code | content-type     | response                                                                                   |
-> | --------- | ---------------- | ------------------------------------------------------------------------------------------ |
+> |-----------|------------------|--------------------------------------------------------------------------------------------|
 > | `200`     | application/json | `{"statusCode":"200", "title": "Sesión iniciada correctamente", ""content": auth: object}` |
 > | `422`     | application/json | `{"statusCode":"422","message":"Unproccesable data"}`                                      |
 > | `401`     | application/json | `{"statusCode":"401","message":"Credenciales incorrectas"}`                                |
@@ -330,7 +330,7 @@ interface Itenant {
 ##### Headers
 
 > | name          | type     | data type    | description           |
-> | ------------- | -------- | ------------ | --------------------- |
+> |---------------|----------|--------------|-----------------------|
 > | Authorization | required | Bearer Token | Token provided by api |
 
 ##### Parameters
@@ -340,7 +340,7 @@ interface Itenant {
 ##### Responses
 
 > | http code | content-type     | response                                                  |
-> | --------- | ---------------- | --------------------------------------------------------- |
+> |-----------|------------------|-----------------------------------------------------------|
 > | `200`     | application/json | `{"code":"200","content": "Sesión cerrada exitosamente"}` |
 > | `401`     | application/json | `{"statusCode":"401","message":string}`                   |
 > | `500`     | application/json | `{"code":"500","message":"Unkonown server error"}`        |
@@ -350,7 +350,7 @@ interface Itenant {
 > ```javascript
 > axios({
 >   method: "post",
->   headers: {Authorization: `Bearer ${token}`}
+>   headers: {Authorization: `Bearer ${token}`},
 >   url: "/api/auth/logout",
 > });
 > ```
@@ -363,7 +363,7 @@ interface Itenant {
 ##### Headers
 
 > | name          | type     | data type    | description           |
-> | ------------- | -------- | ------------ | --------------------- |
+> |---------------|----------|--------------|-----------------------|
 > | Authorization | required | Bearer Token | Token provided by api |
 
 ##### Parameters
@@ -373,7 +373,7 @@ interface Itenant {
 ##### Responses
 
 > | http code | content-type     | response                                                        |
-> | --------- | ---------------- | --------------------------------------------------------------- |
+> |-----------|------------------|-----------------------------------------------------------------|
 > | `200`     | application/json | `{"code":"200","content": "Se han cerrado todas las sesiones"}` |
 > | `401`     | application/json | `{"statusCode":"401","message":string}`                         |
 > | `500`     | application/json | `{"code":"500","message":"Unkonown server error"}`              |
@@ -383,7 +383,7 @@ interface Itenant {
 > ```javascript
 > axios({
 >   method: "post",
->   headers: {Authorization: `Bearer ${token}`}
+>   headers: {Authorization: `Bearer ${token}`},
 >   url: "/api/auth/logout/all",
 > });
 > ```

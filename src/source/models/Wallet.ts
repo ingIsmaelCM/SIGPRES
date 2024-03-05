@@ -2,7 +2,6 @@ import {
   DataTypes,
   Model,
   ModelAttributeColumnOptions,
-  Sequelize,
 } from "sequelize";
 import { IWallet, IWalletRelation } from "../utils/SourceInterfaces";
 import ITM from "@/app/models/ITenantModel";

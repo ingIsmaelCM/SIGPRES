@@ -1,4 +1,3 @@
-import { Router } from "express";
 import PreferenceController from "../controllers/PreferenceController";
 import AbstractRoutes from "./AbstractRoutes";
 import RoleMiddleware from "@/auth/middlewares/RoleMiddleware";

@@ -12,11 +12,13 @@ import AmortizationRepository from "../repositories/AmortizationRepository";
 import { Loan } from "../models";
 import ConditionRepository from "../repositories/ConditionRepository";
 import { Transaction } from "sequelize";
+import WalletRepository from "@source/repositories/WalletRepository";
 
 export default class LoanService extends Service {
   private loanRepo = new LoanRepository();
   private amortRepo = new AmortizationRepository();
   private conditionRepo = new ConditionRepository();
+  protected  walletRepo= new WalletRepository();
 
   async getLoans(params: IParams): Promise<any> {
     return this.safeRun(() => this.loanRepo.getAll(params));
@@ -24,6 +26,8 @@ export default class LoanService extends Service {
 
   async createLoan(data: ILoan & ICondition): Promise<any> {
     const trans = await TenantConnection.getTrans();
+
+
     return this.safeRun(
       async () => {
         let amorts = amortization.getAmortization(data);
@@ -34,6 +38,7 @@ export default class LoanService extends Service {
         const loan = await this.loanRepo.create(data, trans);
         await this.setAmortizations(amorts, loan, trans);
         await this.setCondition(data, loan, trans);
+
         await trans.commit();
         return loan;
       },
@@ -42,6 +47,12 @@ export default class LoanService extends Service {
       }
     );
   }
+  async  reduceWalletBalance(loan: Loan, trans: Transaction) {
+    const wallet = await this.walletRepo.findById(loan.walletId);
+    const newBalance = Number(wallet.balance) - Number(loan.amount);
+    await this.walletRepo.update({balance: newBalance}, wallet.id, trans);
+  }
+
 
   private async setCondition(data: any, loan: Loan, trans: Transaction) {
     const condition: ICondition = {

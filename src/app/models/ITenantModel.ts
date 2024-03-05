@@ -20,7 +20,7 @@ export function staticImplements<T, R>() {
     constructor;
   };
 }
-//TODO: Implemenst interface and declare on each model
+//TODO: Implements interface and declare on each model
 export const commonAttributes: Record<keyof ICommonField, any> = {
   id: {
     type: DataTypes.INTEGER,

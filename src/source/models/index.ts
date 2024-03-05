@@ -10,6 +10,7 @@ import Preference from "./Preference";
 import Loan from "./Loan";
 import Payment from "./Payment";
 import Lawyer from "./Lawyer";
+import Wallet from "./Wallet";
 
 export {
   Client,
@@ -24,4 +25,5 @@ export {
   Loan,
   Payment,
   Lawyer,
+  Wallet,
 };

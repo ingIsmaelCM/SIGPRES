@@ -240,6 +240,7 @@ export interface IWallet extends ICommonField {
 export interface IWalletRelation {
   payments: IPayment[];
   expenses: IExpense[];
+  loans: ILoan[];
 }
 
 export interface IPreference extends ICommonField {

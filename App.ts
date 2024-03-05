@@ -12,6 +12,7 @@ import TenantController from "@/auth/controllers/TenantController";
 import ClientController from "@/source/controllers/ClientController";
 import InfoController from "@/source/controllers/InfoController";
 import LoanController from "@/source/controllers/LoanController";
+import WalletController from "@/source/controllers/WalletController";
 const PORT = config.app.port;
 
 const controllers = [
@@ -23,6 +24,7 @@ const controllers = [
   new ClientController(),
   new InfoController(),
   new LoanController(),
+  new WalletController(),
 ];
 
 const app = new App(controllers, PORT);

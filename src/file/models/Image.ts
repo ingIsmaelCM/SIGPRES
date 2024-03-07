@@ -3,7 +3,16 @@ import ITM from "@/app/models/ITenantModel";
 import { IImage, IImageRelation } from "../utils/FileInterface";
 
 @ITM.staticImplements<IImage, IImageRelation>()
-class Image extends Model {
+class Image extends Model implements  IImage{
+  declare id?: number;
+  declare path: string;
+  declare caption: string;
+  declare size: number;
+  declare imageableType: string;
+  declare imageableId: number;
+  declare createdAt?: string;
+  declare updatedAt?: string;
+  declare deletedAt?: string;
   getSearchables(): Array<keyof IImage> {
     return ["caption", "path", "imageableType", "imageableId"];
   }

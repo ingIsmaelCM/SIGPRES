@@ -10,7 +10,7 @@ export default class WalletController
   implements IController
 {
   prefix: string = "wallets";
-  walletService = new WalletService();
+  mainService = new WalletService();
   constructor() {
     super();
     new WalletRoutes(this.router, this).initRoutes();
@@ -18,8 +18,7 @@ export default class WalletController
 
   async getWallets(req: Request, res: Response): Promise<any> {
     await this.safeRun(async () => {
-      const wallets = await this.walletService.getWallets(req.query);
-      response.success(res, 200, wallets, "Lista de cuentas");
-    }, res);
+     return await this.mainService.getWallets(req.query);
+    }, res, 200, "Lista de billeteras");
   }
 }

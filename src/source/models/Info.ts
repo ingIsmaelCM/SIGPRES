@@ -4,6 +4,7 @@ import { EInfoGender, IInfo, IInfoRelation } from "../utils/SourceInterfaces";
 
 @ITM.staticImplements<IInfo, IInfoRelation>()
 export default class Info extends Model implements IInfo {
+  [x:string]: any;
   declare setClient: Function;
   declare dni: string;
   declare phone: string;

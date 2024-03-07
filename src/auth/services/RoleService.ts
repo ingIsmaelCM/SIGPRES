@@ -3,7 +3,8 @@ import { AuthRepository } from "@auth/repositories/AuthRepository";
 import { IPermission, IRole } from "@/auth/utils/AuthInterfaces";
 import BaseConnection from "@app/db/BaseConnection";
 import PermissionRepository from "@auth/repositories/PermissionRepository";
-export default class RoleService {
+import Service from "@app/services/Service";
+export default class RoleService extends  Service{
   private roleRepo: RoleRepository = new RoleRepository();
   private authRepo: AuthRepository = new AuthRepository();
   private permissionRepo: PermissionRepository = new PermissionRepository();

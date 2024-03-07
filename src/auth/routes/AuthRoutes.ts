@@ -52,9 +52,6 @@ export default class AuthRoutes extends AbstractRoutes<AuthController> {
       (req: any, res: any) => this.controller.sendRecoverLink(req, res)
     );
 
-    this.router.get("/password/recover/:token", (req: any, res: any) =>
-      this.controller.renderRecoverForm(req, res)
-    );
 
     this.router.put(
       "/password/recover",

@@ -6,14 +6,6 @@ import ImageRequest from "../middlewares/ImageRequest";
 
 export default class ImageRoutes extends AbstractRoutes<ImageController> {
   initRoutes(): void {
-    this.router
-      .route("/")
-      .post(
-        RoleMiddleware.hasPermission(PermissionEnums.createImages),
-        ImageRequest.createImageRequest(),
-        ImageRequest.validate,
-        (req: any, res: any) => this.controller.createImages(req, res)
-      );
 
     this.router
       .route("/:id")

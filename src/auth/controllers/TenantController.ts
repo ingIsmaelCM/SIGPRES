@@ -11,7 +11,7 @@ export default class TenantController
 {
   prefix = "tenants";
 
-  tenantService = new TenantService();
+  mainService = new TenantService();
 
   constructor() {
     super();
@@ -21,14 +21,14 @@ export default class TenantController
   async getTenants(req: any, res: any) {
     await this.safeRun(async () => {
       const params = req.query;
-      const tenants = await this.tenantService.getTenants(params);
+      const tenants = await this.mainService.getTenants(params);
       response.success(res, 200, tenants, "Inquilinos del sistema");
     }, res);
   }
   async createTenant(req: any, res: any) {
     await  this.safeRun(async () => {
       const data: Itenant = req.body;
-      const tenants = await this.tenantService.createTenant(data);
+      const tenants = await this.mainService.createTenant(data);
       response.success(res, 200, tenants, "Nuevo Inquilino");
     }, res);
   }
@@ -36,7 +36,7 @@ export default class TenantController
     await  this.safeRun(async () => {
       const data: Itenant = req.body;
       const tenantId = req.params.id;
-      const tenants = await this.tenantService.updateTenant(tenantId, data);
+      const tenants = await this.mainService.updateTenant(tenantId, data);
       response.success(res, 200, tenants, "Inquilino actualizado");
     }, res);
   }

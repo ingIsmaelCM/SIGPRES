@@ -2,12 +2,11 @@ import Controller, { setAuthor } from "@/app/controllers/Controller";
 import IController from "@/app/controllers/IController";
 import LoanService from "../services/LoanService";
 import { Request, Response } from "express";
-import response from "@/app/utils/response";
 import LoanRoutes from "../routes/LoanRoutes";
 
 export default class LoanController extends Controller implements IController {
   prefix: string = "loans";
-  loanService = new LoanService();
+  mainService = new LoanService();
 
   constructor() {
     super();
@@ -16,16 +15,14 @@ export default class LoanController extends Controller implements IController {
 
   async getLoans(req: Request, res: Response) {
     await this.safeRun(async () => {
-      const loans = await this.loanService.getLoans(req.query);
-      response.success(res, 200, loans, "Listado de préstamos");
-    }, res);
+      return await this.mainService.getLoans(req.query);
+    }, res, 200, "Listado de préstamos");
   }
 
   @setAuthor
   async createLoan(req: Request, res: Response) {
     await this.safeRun(async () => {
-      const loans = await this.loanService.createLoan(req.body);
-      response.success(res, 201, loans, "Préstamo Registrado");
-    }, res);
+      return await this.mainService.createLoan(req.body);
+    }, res, 201, "Préstamo registrado");
   }
 }

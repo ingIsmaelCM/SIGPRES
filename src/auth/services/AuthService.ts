@@ -8,22 +8,16 @@ import {v4 as uuidv4} from "uuid";
 import {Response} from "express";
 import tools from "@app/utils/tools";
 import BaseConnection from "@app/db/BaseConnection";
-import path from "path";
 import {IAuth} from "@/auth/utils/AuthInterfaces";
 import Permission from "../models/Permission";
 import Role from "../models/Role";
+import Service from "@app/services/Service";
 
-export default class AuthService {
+export default class AuthService extends  Service{
     private authRepo: AuthRepository = new AuthRepository();
     private authMailService: AuthMailService = new AuthMailService();
-    basePath: string = config.app.url;
 
-    /**
-     * Creates a new authentication record in the database.
-     * @param auth - The authentication data to create.
-     * @returns The created authentication record.
-     * @throws An error if the email or username is already in use.
-     */
+
     async createAuth(auth: IAuth): Promise<Auth> {
         const trans: any = await BaseConnection.getTrans();
         try {
@@ -55,12 +49,7 @@ export default class AuthService {
         }
     }
 
-    /**
-     * Login a user
-     * @param auth - user credentials
-     * @param res - express response object
-     * @returns user object and access token
-     */
+
     async login(auth: any, res: Response) {
         const trans = await BaseConnection.getTrans();
         try {
@@ -116,10 +105,7 @@ export default class AuthService {
         tools.setCookie(res, "tenant", userAuth.tenants[0].key);
     }
 
-    /**
-     * Returns an object containing the user's permissions, roles, and company data.
-     * @param userAuth - The user authentication data.
-     */
+
     private async setAuthFields(userAuth: any) {
         let permissions: any[] = userAuth.permissions.map((p: Permission) => ({
             name: p.name,
@@ -139,10 +125,7 @@ export default class AuthService {
         return {permissions, roles};
     }
 
-    /**
-     * Verifies user account
-     * @param authId -The user authentication id.
-     */
+
     async verifyAuth(authId: number) {
         const trans = await BaseConnection.getTrans();
         try {
@@ -161,11 +144,7 @@ export default class AuthService {
         }
     }
 
-    /**
-     * Generate tokens for the user
-     * @param userAuth - The user authentication data
-     * @returns An object containing the access and refresh tokens
-     */
+
     public generateTokens(userAuth: any) {
         const token = tools.getToken(
             {...userAuth.dataValues, roles: undefined, permissions: undefined},
@@ -178,13 +157,7 @@ export default class AuthService {
         return {token, refreshToken};
     }
 
-    /**
-     * Verifies the user authentication account.
-     * @param auth - The user authentication data.
-     * @param pwd - The user password.
-     * @returns A boolean indicating whether the password is valid.
-     * @throws An error if the account is not verified or if the password is incorrect.
-     */
+
     private async validateAuthAccount(auth: any, pwd: string): Promise<Boolean> {
         const isValidPassword = await bcrypt.compare(
             pwd,
@@ -200,11 +173,7 @@ export default class AuthService {
         tools.setCookie(res, "accessToken", "null");
     }
 
-    /**
-     * Logs out the user and removes their access token from the session.
-     * @param req - The request object.
-     * @param res - The response object.
-     */
+
     public async logoutAll(req: any, res: Response) {
         const trans = await BaseConnection.getTrans();
         try {
@@ -255,19 +224,21 @@ export default class AuthService {
 
     public async sendRecoverLink(authEmail: string): Promise<any> {
         try {
-            const token = tools.getToken(
-                {
-                    email: authEmail,
-                },
-                600
-            );
+            const numbers=[]
+            for (let i=0; i<2; i++){
+                const num=Math.floor(Math.random() * 999)
+                numbers.push(String(num).padStart(3, "0"))
+            }
+            const auth=await this.authRepo.find("email",authEmail);
+            await auth.update({sessionId: numbers.join("")})
             const context = {
                 email: authEmail,
-                recoverURL: `${this.basePath}/api/auth/password/recover/${token}`,
+                firstPart: numbers[0],
+                secondPart: numbers[1],
             };
-            await this.authMailService.sendRecoverLink(context);
 
-            return context;
+            await this.authMailService.sendRecoverLink(context);
+            return "Código enviado exitosamente";
         } catch (error: any) {
             throw {
                 code: 500,
@@ -276,51 +247,33 @@ export default class AuthService {
         }
     }
 
-    async renderRecoverForm(token: string) {
-        try {
-            const recover = path.join(config.app.views, "recoverPassword.html");
-            jwt.verify(token, config.auth.secret, (err: any) => {
-                if (err) {
-                    throw {
-                        code: 401,
-                        message: "El token ya no es válido",
-                    };
-                }
-            });
-            return recover;
-        } catch (error: any) {
-            throw {
-                code: error.code,
-                message: error.message,
-            };
-        }
+
+
+    async recoverPassword(data: any): Promise<any> {
+     return this.safeRun(async()=>{
+         const auth = await this.authRepo.find("email", data.email);
+         if(auth.sessionId!=data.code){
+             return Promise.reject({
+                 code: 422,
+                 message: "El código ingresado no es válido"
+             })
+         }
+         await auth.update({sessionId: null})
+         const password= this.generatePassword();
+        await this.resetPassword(auth.id, password);
+        return password;
+     })
     }
 
-    async recoverPassword(newData: any): Promise<any> {
-        try {
-            const decoded: any = await new Promise((resolve: Function, reject: Function) => {
-                jwt.verify(
-                    newData.token,
-                    config.auth.secret,
-                    (err: any, decoded: any) => {
-                        if (err) {
-                            reject({
-                                code: 401,
-                                message: "El token ya no es válido",
-                            })
-                        }
-                        resolve(decoded);
-                    }
-                )
-            });
-            const auth = await this.authRepo.find("email", decoded.email);
-            await this.resetPassword(auth.id, newData.password);
-        } catch (error: any) {
-            throw {
-                code: error.code,
-                message: error.message,
-            };
+    private generatePassword() {
+        let chars = "0123456789abcdefghijklmnopqrstuvwxyz@#$&()ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        let passwordLength = 16;
+        let password = "";
+        for (let i = 0; i <= passwordLength; i++) {
+            let randomNumber = Math.floor(Math.random() * chars.length);
+            password += chars.substring(randomNumber, randomNumber + 1);
         }
+        return password;
     }
 
     public async refreshToken(req: any, res: Response): Promise<any> {

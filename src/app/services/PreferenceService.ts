@@ -2,8 +2,9 @@ import BaseConnection from "@app/db/BaseConnection";
 import PreferenceRepository from "@app/repositories/PrefenceRepository";
 import { IParams } from "@/app/utils/AppInterfaces";
 import { IPreference } from "@/source/utils/SourceInterfaces";
+import Service from "@app/services/Service";
 
-export default class PreferenceService {
+export default class PreferenceService extends  Service{
   private preferenceRepo = new PreferenceRepository();
 
   async setPreference(data: IPreference): Promise<any> {

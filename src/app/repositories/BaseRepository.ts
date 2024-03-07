@@ -2,6 +2,7 @@ import { Model, ModelStatic, Sequelize } from "sequelize";
 import Scope from "../utils/scopes";
 import { IParams } from "../utils/AppInterfaces";
 import tools from "../utils/tools";
+import logger from "@/logger";
 
 export class BaseRepository<T extends Model> {
   protected model;
@@ -15,8 +16,12 @@ export class BaseRepository<T extends Model> {
     try {
       this.primaryKeyName = this.model.primaryKeyAttribute;
       return await method();
-    } catch (error) {
-      throw error;
+    } catch (error: any) {
+      logger.error(String(error))
+      throw {
+        code: 500,
+        message: error.message
+      };
     }
   }
 
@@ -83,6 +88,13 @@ export class BaseRepository<T extends Model> {
 
   public async create(data: any, trans: any): Promise<T> {
     return this.safeRun(() => this.model.create(data, { transaction: trans }));
+  }
+
+  public async updateOrCreate(data: any,  trans: any): Promise<T> {
+    const newData= await this.safeRun(() => this.model.upsert(data,{
+      transaction: trans,
+    }));
+    return newData[0]
   }
   public async bulkCreate(data: any[], trans: any): Promise<T> {
     return this.safeRun(() =>

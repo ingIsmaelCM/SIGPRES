@@ -1,0 +1,159 @@
+openapi : 3.0.3
+info :
+  title : Clients
+  description : Endpoints to manage clients on app
+  version : 1.0.0
+  license :
+    name : MIT
+    url : https://github.com/AtrionTechSD/SIGPRES?tab=MIT-1-ov-file#readme
+  contact :
+    name : Ismael Contreras Michel
+    email : developer@ismaelcm.dev
+    url : https://atriontechsd.com
+servers :
+  - url : 'http://localhost:3001/api/'
+
+security :
+  - BearerToken : [ admin ]
+
+components :
+  securitySchemes :
+    BearerToken :
+      $ref : "../schemas/general.yaml#/components/securitySchemes/BearerAuth"
+
+paths :
+  /clients/ :
+    get :
+      summary : List all clients
+      parameters :
+          - $ref : "../schemas/const.yaml#/components/parameters/search"
+      responses :
+        200 :
+          description : "Lista de clientes"
+        500 :
+          $ref : "../schemas/general.yaml#/components/schemas/Error"
+      operationId : clients
+
+    post :
+      summary : Create new client
+      operationId : clients-create
+      responses :
+        201 :
+          description : "Cliente Registrado"
+        500 :
+          $ref : "../schemas/general.yaml#/components/schemas/Error"
+      requestBody :
+        content :
+          application/json :
+            schema :
+              $ref : "../schemas/models.yaml#/components/schemas/Client"
+
+  /clients/{id} :
+
+    get :
+      summary : Get an especific client by id or code
+      operationId : clients-show
+
+
+      responses :
+        200 :
+          description : "Detalles del cliente"
+        500 :
+          $ref : "../schemas/general.yaml#/components/schemas/Error"
+
+    put :
+      summary : Update existing client
+      operationId : clients-update
+      responses :
+        201 :
+          description : "Cliente Actualizado"
+        500 :
+          $ref : "../schemas/general.yaml#/components/schemas/Error"
+        404 :
+          description : "Cliente no encontrado"
+      parameters :
+        - name : id
+          schema :
+            type : integer
+          in : path
+          required : true
+
+    delete :
+      summary : Soft delete client data
+      operationId : clients-delete
+      responses :
+        201 :
+          description : "Cliente Eliminado"
+        500 :
+          $ref : "../schemas/general.yaml#/components/schemas/Error"
+        404 :
+          description : "Cliente no encontrado"
+      parameters :
+        - name : id
+          schema :
+            type : integer
+          in : path
+          required : true
+    post :
+      summary : Restore deleted client
+      operationId : clients-restore
+      responses :
+        201 :
+          description : "Cliente Restaurado"
+        500 :
+          $ref : "../schemas/general.yaml#/components/schemas/Error"
+        404 :
+          description : "Cliente no encontrado"
+      parameters :
+        - name : id
+          schema :
+            type : integer
+          in : path
+          required : true
+
+  /clients/{id}/info :
+    post :
+      summary : Create or update client info
+      operationId : client.info
+      responses :
+        201 :
+          description : "Información registrada"
+        500 :
+          $ref : "../schemas/general.yaml#/components/schemas/Error"
+        404 :
+          description : "Cliente no encontrado"
+      parameters :
+        - name : id
+          schema :
+            type : integer
+          in : path
+          required : true
+
+
+  /clients/{id}/profile :
+    post :
+      summary : Set or update client profile image
+      operationId : client.profile
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                images:
+                  type: array
+                  items :
+                    $ref: "../schemas/models.yaml#/components/schemas/Image"
+      responses :
+        201 :
+          description : "Imagen de perfil establecida"
+        500 :
+          $ref : "../schemas/general.yaml#/components/schemas/Error"
+        404 :
+          description : "Cliente no encontrado"
+      parameters :
+        - name : id
+          schema :
+            type : integer
+          in : path
+          required : true
+

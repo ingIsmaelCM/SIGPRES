@@ -3,8 +3,9 @@ import TenantRepository from "../repositories/TenantRepository";
 import {Itenant} from "../utils/AuthInterfaces";
 import BaseConnection from "@/app/db/BaseConnection";
 import MigrateTenant from "@/app/db/migrations/tenants/MigrateTenant";
+import Service from "@app/services/Service";
 
-export default class TenantService {
+export default class TenantService extends  Service{
     tenantRepo = new TenantRepository();
 
     async getTenants(param: IParams): Promise<any> {

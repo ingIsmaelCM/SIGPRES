@@ -7,8 +7,7 @@ import RoleRoutes from "../routes/RoleRoutes";
 
 export default class RoleController extends Controller implements IController {
   prefix: string = "roles";
-
-  private roleService: RoleService = new RoleService();
+   mainService: RoleService = new RoleService();
 
   constructor() {
     super();
@@ -17,7 +16,7 @@ export default class RoleController extends Controller implements IController {
   async createRole(req: Request, res: Response) {
     try {
       const role = req.body;
-      await this.roleService.createRole(role);
+      await this.mainService.createRole(role);
       response.success(res, 201, "Rol creado correctamente");
     } catch (error: any) {
       response.error(res, error.code, error.message);
@@ -26,7 +25,7 @@ export default class RoleController extends Controller implements IController {
   async deleteRole(req: Request, res: Response) {
     try {
       const role = req.params.id;
-      await this.roleService.deleteRole(Number(role));
+      await this.mainService.deleteRole(Number(role));
       response.success(res, 201, "Rol borrado correctamente");
     } catch (error: any) {
       response.error(res, error.code, error.message);
@@ -35,7 +34,7 @@ export default class RoleController extends Controller implements IController {
   async assignRoleToAuth(req: Request, res: Response) {
     try {
       const { authId, roleId } = req.body;
-      await this.roleService.assingRoleToAuth(Number(authId), Number(roleId));
+      await this.mainService.assingRoleToAuth(Number(authId), Number(roleId));
       response.success(res, 201, "Rol asignado correctamente");
     } catch (error: any) {
       response.error(res, error.code, error.message);
@@ -45,7 +44,7 @@ export default class RoleController extends Controller implements IController {
   async assignPermissionToAuth(req: Request, res: Response) {
     try {
       const { authId, permissionId } = req.body;
-      await this.roleService.assingPermissionToAuth(
+      await this.mainService.assingPermissionToAuth(
         Number(authId),
         permissionId
       );
@@ -57,7 +56,7 @@ export default class RoleController extends Controller implements IController {
   async grantAllToAuth(req: Request, res: Response) {
     try {
       const { authId } = req.body;
-      await this.roleService.grantAllToAuth(Number(authId));
+      await this.mainService.grantAllToAuth(Number(authId));
       response.success(res, 201, "Todos los permisos asignados al usuario");
     } catch (error: any) {
       response.error(res, error.code, error.message);
@@ -66,7 +65,7 @@ export default class RoleController extends Controller implements IController {
   async assignPermissionToRole(req: Request, res: Response) {
     try {
       const { roleId, permissionId } = req.body;
-      await this.roleService.assingPermissionToRole(
+      await this.mainService.assingPermissionToRole(
         Number(roleId),
         permissionId
       );
@@ -78,7 +77,7 @@ export default class RoleController extends Controller implements IController {
   async grantAllToRole(req: Request, res: Response) {
     try {
       const { roleId } = req.body;
-      await this.roleService.grantAllToRole(Number(roleId));
+      await this.mainService.grantAllToRole(Number(roleId));
       response.success(res, 201, "Todos los permisos asignados");
     } catch (error: any) {
       response.error(res, error.code, error.message);

@@ -4,45 +4,41 @@ import PreferenceService from "@app/services/PreferenceService";
 import response from "@app/utils/response";
 import PreferenceRoutes from "@app/routes/PreferenceRoutes";
 import tools from "@app/utils/tools";
-import { IPreference } from "@/source/utils/SourceInterfaces";
+import {IPreference} from "@/source/utils/SourceInterfaces";
 
 export default class PreferenceController
-  extends Controller
-  implements IController
-{
-  prefix: string = "app/preferences";
-  private preferenceService: PreferenceService = new PreferenceService();
+    extends Controller
+    implements IController {
+    prefix: string = "app/preferences";
+    mainService: PreferenceService = new PreferenceService();
 
-  constructor() {
-    super();
-    new PreferenceRoutes(this.router, this).initRoutes();
-  }
+    constructor() {
+        super();
+        new PreferenceRoutes(this.router, this).initRoutes();
+    }
 
-  async getPreference(req: any, res: any) {
-    await  this.safeRun(async () => {
-      const pref = await this.preferenceService.getPreference(
-        req.params.key,
-        req.query
-      );
-      response.success(res, 200, pref, "Preferencia");
-    }, res);
-  }
-  async getPreferences(req: any, res: any) {
-    await this.safeRun(async () => {
-      const pref = await this.preferenceService.getPreferences(req.query);
-      response.success(res, 200, pref, "Preferencias");
-    }, res);
-  }
+    async getPreference(req: any, res: any) {
+        return this.safeRun(async () => {
+            return await this.mainService.getPreference(
+                req.params.key,
+                req.query
+            );
+        }, res, 200, "Preferencia");
+    }
 
-  async setPreference(req: any, res: any) {
-    await this.safeRun(async () => {
-      const key = req.params.key;
-      const value = req.body.value;
-      const data = tools.setUserRelated(req, { key, value });
-      const pref = await this.preferenceService.setPreference(
-        data as IPreference
-      );
-      response.success(res, 201, pref, "Preferencia registrada");
-    }, res);
-  }
+    async getPreferences(req: any, res: any) {
+        return this.safeRun(async () => await this.mainService.getPreferences(req.query),
+            res, 200, "Lista de Preferencias");
+    }
+
+    async setPreference(req: any, res: any) {
+        return  this.safeRun(async () => {
+            const key = req.params.key;
+            const value = req.body.value;
+            const data = tools.setUserRelated(req, {key, value});
+            return  await this.mainService.setPreference(
+                data as IPreference
+            );
+        }, res, 201, "Preferencia registrada");
+    }
 }

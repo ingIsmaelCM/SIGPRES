@@ -1,0 +1,34 @@
+openapi : 3.0.3
+info :
+  title : Models
+  description : Models
+  version : 1.0.0
+servers :
+  - url : 'https'
+paths :
+
+components :
+  schemas :
+    Client :
+      type : object
+      properties :
+        name :
+          type : string
+        lastname :
+          type : string
+      required :
+        - name
+        - lastname
+    Image :
+      type : object
+      properties :
+        path :
+          type : string
+        size :
+          type : number
+      required :
+        - path
+        - size
+      example :
+        path : "imageurl"
+        size : 2.5

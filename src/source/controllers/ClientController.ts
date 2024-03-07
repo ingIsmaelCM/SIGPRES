@@ -1,59 +1,79 @@
-import Controller, { setAuthor } from "@/app/controllers/Controller";
+import Controller, {setAuthor} from "@/app/controllers/Controller";
+import {Request} from "express"
 import IController from "@/app/controllers/IController";
 import ClientService from "../services/ClientService";
-import response from "@/app/utils/response";
 import ClientRoutes from "../routes/ClientRoutes";
+import InfoService from "@source/services/InfoService";
+import {EInfoModels} from "@source/utils/SourceInterfaces";
 
 export default class ClientController
-  extends Controller
-  implements IController
-{
-  prefix: string = "clients";
-  private clientService = new ClientService();
+    extends Controller
+    implements IController {
+    prefix: string = "clients";
+    mainService = new ClientService();
+    private infoService = new InfoService();
 
-  constructor() {
-    super();
-    new ClientRoutes(this.router, this).initRoutes();
-  }
+    constructor() {
+        super();
+        new ClientRoutes(this.router, this).initRoutes();
+    }
 
-  async getClients(req: any, res: any) {
-    await this.safeRun(async () => {
-      const clients = await this.clientService.getClients(req.query);
-      response.success(res, 200, clients, "Lista de clientes");
-    }, res);
-  }
-  async findClient(req: any, res: any) {
-    await this.safeRun(async () => {
-      const clientId = req.params.id;
-      const params = req.query;
-      const client = await this.clientService.findClient(clientId, params);
-      response.success(res, 200, client, "Detalles del Cliente");
-    }, res);
-  }
+    async getClients(req: Request, res: any) {
+        await this.safeRun(async () => {
+            return await this.mainService.getClients(req.query);
+        }, res, 200, "Lista de cliente");
+    }
 
-  @setAuthor
-  async createClient(req: any, res: any) {
-    await this.safeRun(async () => {
-      const client = await this.clientService.createClient(req.body);
-      response.success(res, 201, client, "Cliente Registrado");
-    }, res);
-  }
+    async findClient(req: Request, res: any) {
+        await this.safeRun(async () => {
+            const clientId = req.params.id;
+            const params = req.query;
+            return await this.mainService.findClient(Number(clientId), params);
+        }, res, 200, "Detalles del Cliente");
+    }
 
-  @setAuthor
-  async updateClient(req: any, res: any) {
-   await  this.safeRun(async () => {
-      const oldClient = req.body;
-      const clientId = req.params.id;
-      const client = await this.clientService.updateClient(oldClient, clientId);
-      response.success(res, 201, client, "Cliente Actualizado");
-    }, res);
-  }
+    @setAuthor
+    async createClient(req: Request, res: any) {
+        await this.safeRun(async () => {
+            return await this.mainService.createClient(req.body);
+        }, res, 201, "Cliente Registrado");
+    }
 
-  async deleteClient(req: any, res: any) {
-   await this.safeRun(async () => {
-      const clientId = req.params.id;
-      const client = await this.clientService.deleteClient(clientId);
-      response.success(res, 201, client, "Cliente Eliminado");
-    }, res);
-  }
+    @setAuthor
+    async updateClient(req: Request, res: any) {
+        await this.safeRun(async () => {
+            const oldClient = req.body;
+            const clientId = req.params.id;
+            return await this.mainService.updateClient(oldClient, Number(clientId));
+        }, res, 201, "Cliente Actualizado");
+    }
+
+    @setAuthor
+    async setClientInfo(req: Request, res: any) {
+        await this.safeRun(async () => {
+            const info = req.body;
+            const clientId = req.params.id;
+            return await this.infoService.addRelated(info, EInfoModels.Client, Number(clientId));
+        }, res, 201, "Información actualizada");
+    }
+
+    async deleteClient(req: Request, res: any) {
+        await this.safeRun(async () => {
+            const clientId = req.params.id;
+            return await this.mainService.deleteClient(Number(clientId));
+        }, res, 200, "Cliente Eliminado");
+    }
+
+    async restoreClient(req: Request, res: any) {
+        await this.safeRun(async () => {
+            const clientId = req.params.id;
+            return await this.mainService.restoreClient(Number(clientId));
+        }, res, 200, "Cliente Restaurado");
+    }
+
+    async setProfilePhoto(req: Request, res: any) {
+        await this.safeRun(async () => {
+            return await this.mainService.setProfilePhoto(req.body.images[0], Number(req.params.id))
+        }, res, 201, "Foto asignada al cliente")
+    }
 }

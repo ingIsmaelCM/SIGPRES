@@ -19,7 +19,7 @@
       "@app/*": ["./src/app/*"],
       "@auth/*": ["./src/auth/*"],
       "@file/*": ["./src/file/*"],
-      "@source/*": ["./src/source/*"]
+      "@source/*": ["./src/source/*"],
     }
   },
   "include": ["src/**/*", "App.ts", "src/app/app.config.ts"],

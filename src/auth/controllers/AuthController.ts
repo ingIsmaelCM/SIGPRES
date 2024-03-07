@@ -1,4 +1,4 @@
-import {Request, Response, Router } from "express";
+import {Request, Response, Router} from "express";
 import AuthService from "../services/AuthService";
 import response from "@app/utils/response";
 import IController from "@app/controllers/IController";
@@ -8,107 +8,71 @@ import AuthRoutes from "../routes/AuthRoutes";
 import Controller from "@/app/controllers/Controller";
 
 export class AuthController extends Controller implements IController {
-  private authService: AuthService = new AuthService();
-  public prefix: string = "auth";
-  public router: Router = Router();
-  constructor() {
-    super();
-    new AuthRoutes(this.router, this).initRoutes();
-  }
+    mainService: AuthService = new AuthService();
+    public prefix: string = "auth";
 
-  async registerAuth(req: Request, res: Response) {
-    try {
-      const newAuth = await this.authService.createAuth(req.body);
-      response.success(res, 201, newAuth, "Cuenta creada exitosamente");
-    } catch (error: any) {
-      response.error(res, error.code, error.message);
+    constructor() {
+        super();
+        new AuthRoutes(this.router, this).initRoutes();
     }
-  }
 
-  async loginAuth(req: Request, res: Response) {
-    try {
-      const auth = await this.authService.login(req.body, res);
-      response.success(res, 200, auth, "Sesión iniciada correctamente");
-    } catch (error: any) {
-      response.error(res, error.code, error.message);
+    async registerAuth(req: Request, res: Response) {
+        return await this.safeRun(async () => {
+            return await this.mainService.createAuth(req.body);
+        }, res, 201, "Cuenta registrada exitosamente")
     }
-  }
-  async verifyAuth(req: Request, res: Response) {
-    try {
-      const authId = req.params.id;
-      await this.authService.verifyAuth(Number(authId));
-      response.success(res, 200, "Usuario verificado exitosamente");
-    } catch (error: any) {
-      response.error(res, error.code, error.message);
-    }
-  }
-  async refreshToken(req: Request, res: Response) {
-    try {
-      const auth = await this.authService.refreshToken(req, res);
-      response.success(res, 200, auth, "Token actualizado con éxito");
-    } catch (error: any) {
-      response.error(res, error.code, error.message);
-    }
-  }
 
-  async logoutAuth(req: any, res: Response) {
-    await this.authService.logout(res);
-    response.success(res, 200, "Sesión cerrada exitosamente");
-  }
-
-  async logoutAllAuth(req: any, res: Response) {
-    try {
-      await this.authService.logoutAll(req, res);
-      response.success(res, 200, "Se han cerrado todas las sesiones");
-    } catch (error: any) {
-      response.error(res, error.code, error.message);
+    async loginAuth(req: Request, res: Response) {
+        return await this.safeRun(async () => await this.mainService.login(req.body, res),
+            res, 200, "Sesión iniciada correctamente")
     }
-  }
 
-  async resetPassword(req: any, res: Response) {
-    try {
-      const updatedAuth = await this.authService.resetPassword(
-        req.auth.id,
-        req.body.password
-      );
-      await this.authService.logoutAll(req, res);
-      response.success(res, 200, updatedAuth, "Contraseña actualizada");
-    } catch (error: any) {
-      response.error(res, error.code, error.message);
+    async verifyAuth(req: Request, res: Response) {
+        return await this.safeRun(async () => {
+            const authId = req.params.id;
+            return await this.mainService.verifyAuth(Number(authId));
+        }, res, 200, "Usuario verificado exitosamente")
     }
-  }
 
-  async sendRecoverLink(req: any, res: Response) {
-    try {
-      const context = await this.authService.sendRecoverLink(req.body.email);
-      response.success(res, 200, context, "Correo de recuperación enviado");
-    } catch (error: any) {
-      response.error(res, error.code, error.message);
+    async refreshToken(req: Request, res: Response) {
+        return await this.safeRun(async () =>
+                await this.mainService.refreshToken(req, res),
+            res, 200, "Token actualizado con éxito")
     }
-  }
 
-  async renderRecoverForm(req: any, res: Response) {
-    try {
-      const recover = await this.authService.renderRecoverForm(
-        req.params.token
-      );
-      res.sendFile(recover);
-    } catch (error: any) {
-      const errorConfirmation = path.join(
-        config.app.views,
-        "errorRecovering.html"
-      );
-      res.status(error.code).sendFile(errorConfirmation);
+    async logoutAuth(req: any, res: Response) {
+        return await this.safeRun(async () =>
+                await this.mainService.logout(res),
+            res, 200, "Sesión cerrada exitosamente")
     }
-  }
 
-  async recoverPassword(req: any, res: Response) {
-    try {
-      const newData = req.body;
-      await this.authService.recoverPassword(newData);
-      response.success(res, 200, "Ha recuperado su contraseña exitosamente");
-    } catch (error: any) {
-      response.error(res, error.code, error.message);
+    async logoutAllAuth(req: any, res: Response) {
+        return await this.safeRun(async () =>
+                await this.mainService.logoutAll(req, res),
+            res, 200, "Se han cerrado todas las sesiones")
     }
-  }
+
+    async resetPassword(req: any, res: Response) {
+
+        return this.safeRun(async () => {
+            const updatedAuth = await this.mainService.resetPassword(
+                req.auth.id,
+                req.body.password
+            );
+            return await this.mainService.logoutAll(req, res)
+        }, res, 201, "Contraseña Actualizada")
+    }
+
+    async sendRecoverLink(req: any, res: Response) {
+        return await this.safeRun(async () =>
+                await this.mainService.sendRecoverLink(req.body.email),
+            res, 200, "Correo de recuperación enviado")
+    }
+
+
+    async recoverPassword(req: any, res: Response) {
+        return await this.safeRun(async()=> await this.mainService.recoverPassword(req.body),
+            res, 200, "Su contraseña ha sido cambiada")
+
+    }
 }

@@ -1,0 +1,28 @@
+openapi : 3.0.3
+info :
+  title : Query Parameters
+  description : Query Parameters
+  version : 1.0.0
+  license :
+    name : MIT
+servers :
+  - url : 'https'
+paths :
+
+components :
+  securitySchemes :
+    BearerAuth :
+      type : http
+      scheme : bearer
+
+  schemas :
+    Error :
+      type : object
+      description: Server Error
+      example :
+        code: 500
+        message: Server Error
+
+
+
+

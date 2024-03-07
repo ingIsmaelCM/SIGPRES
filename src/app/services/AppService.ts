@@ -1,6 +1,7 @@
 import { v2 as cloudinary } from "cloudinary";
 import config from "@app/app.config";
-export default class AppService {
+import Service from "@app/services/Service";
+export default class AppService extends  Service{
   public async getCloudSignature(): Promise<any> {
     try {
       const timestamp = Math.round(new Date().getTime() / 1000);

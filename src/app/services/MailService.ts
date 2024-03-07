@@ -66,11 +66,11 @@ export default class MailService {
       hbs({
         viewEngine: {
           extname: ".hbs",
-          partialsDir: path.join(__dirname, "../views", "templates"),
-          layoutsDir: path.join(__dirname, "../views", "templates", "layouts"),
+          partialsDir: path.join(config.app.views, "templates"),
+          layoutsDir: path.join(config.app.views, "layouts"),
           defaultLayout: "",
         },
-        viewPath: path.join(__dirname, "../views", "templates"),
+        viewPath: path.join(config.app.views, "templates"),
         extName: ".hbs",
       })
     );

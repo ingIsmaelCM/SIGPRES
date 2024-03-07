@@ -1,0 +1,4 @@
+{"level":"error","service":"user-service"}
+{"level":"error","service":"user-service"}
+{"level":"error","message":"Error: Association with alias \"moras\" does not exist on Client","service":"user-service"}
+{"level":"error","message":"SequelizeDatabaseError: Table 'sigpres_main.clients' doesn't exist","service":"user-service"}

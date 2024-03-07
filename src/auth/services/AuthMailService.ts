@@ -22,7 +22,7 @@ export default class AuthMailService {
     const email = {
       to: context.email,
       subject: `Recupere su contraseña: ${context.email}`,
-      template: "recover",
+      template: "recoverPassword",
       context: context,
     };
     return await this.mailService

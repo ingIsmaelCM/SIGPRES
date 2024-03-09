@@ -9,8 +9,9 @@ export default {
     });
   },
 
-  error(res: Response, status: number, error: any): void {
+  error(res: Response, status: number, error: any, title?:string): void {
     res.status(status || 500).json({
+      title: title,
       statusCode: status,
       content: error,
     });

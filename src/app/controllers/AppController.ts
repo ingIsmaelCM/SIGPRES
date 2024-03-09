@@ -1,6 +1,5 @@
 import { Router } from "express";
 import IController from "./IController";
-import AppRoutes from "../routes/AppRoutes";
 import AppService from "../services/AppService";
 import response from "../utils/response";
 import Controller from "./Controller";
@@ -10,12 +9,6 @@ export default class AppController extends Controller implements IController {
   router: Router = Router();
 
   mainService: AppService = new AppService();
-
-  constructor() {
-    super();
-    new AppRoutes(this.router, this).initRoutes();
-  }
-
   public async getCloudSignature(req: any, res: any) {
     try {
       const cloudinarySignature = await this.mainService.getCloudSignature();

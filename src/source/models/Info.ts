@@ -6,6 +6,9 @@ import { EInfoGender, IInfo, IInfoRelation } from "../utils/SourceInterfaces";
 export default class Info extends Model implements IInfo {
   [x:string]: any;
   declare setClient: Function;
+  declare setContact: Function;
+  declare setLawyer: Function;
+  declare setJob: Function;
   declare dni: string;
   declare phone: string;
   declare email?: string;

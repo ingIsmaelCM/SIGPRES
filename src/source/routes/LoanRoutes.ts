@@ -7,6 +7,11 @@ import LoanRequest from "../middlewares/LoanRequest";
 import ConditionRequest from "../middlewares/ConditionRequest";
 
 export default class LoanRoutes extends AbstractRoutes<LoanController> {
+
+  constructor() {
+    super(new LoanController());
+  }
+
   initRoutes(): void {
     this.router
       .route("/")

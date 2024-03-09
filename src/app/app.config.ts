@@ -13,6 +13,8 @@ let config: any = {
     views: path.resolve(__dirname, "../../views"),
     env,
     allowedUrl: process.env.ALLOWED_URL,
+    rateLimit: process.env.REQUEST_RATE_LIMIT||100,
+    rateTime: process.env.REQUEST_RATE_TIME||(30*60*10000)
   },
 
   db: {
@@ -41,7 +43,7 @@ let config: any = {
 
   auth: {
     secret: process.env.PRIVATE_KEY || "<PRIVATE_KEY>",
-    expiresIn: Number(process.env.EXPIRES_IN) || 84600,
+    expiresIn: Number(process.env.EXPIRES_IN) || 6000,
     loginField: process.env.AUTH_LOGIN_FIELD || "email",
   },
 

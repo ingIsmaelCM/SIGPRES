@@ -1,83 +1,136 @@
-import Client from "./Client";
-import Info from "./Info";
+import {DataTypes} from "sequelize";
+import Client from "@source/models/Client";
+import Info from "@source/models/Info";
 import Image from "@file/models/Image";
-import Loan from "./Loan";
-import Lawyer from "./Lawyer";
-import Contact from "./Contact";
-import Condition from "./Condition";
-import Payment from "./Payment";
-import Amortization from "./Amortization";
+import Loan from "@source/models/Loan";
+import Lawyer from "@source/models/Lawyer";
+import Contact from "@source/models/Contact";
+import Condition from "@source/models/Condition";
+import Payment from "@source/models/Payment";
+import Amortization from "@source/models/Amortization";
+import Job from "@source/models/Job";
 
 /* TODO: Define relations for each Source Models */
 export default class SourceRelation {
-  static initRelation() {
-    /* Client */
-    Client.belongsTo(Info, {
-      as: "info",
-      foreignKey: "infoId",
-    });
+    static initRelation() {
 
-    Client.hasMany(Image, {
-      foreignKey: "imageableId",
-      as: "images",
-      scope: {
-        imageableType: "client",
-      },
-    });
-    Client.hasOne(Image, {
-      foreignKey: "imageableId",
-      as: "profile",
-      scope: {
-        imageableType: "client",
-        caption: "Perfil Cliente",
-      },
-    });
+        const Client_Contact = Client.sequelize!.define("Client_Contact", {
+            createdBy: {
+                type: DataTypes.INTEGER
+            },
+            updatedBy: {
+                type: DataTypes.INTEGER
+            }
+        })
 
-    Client.hasMany(Loan, {
-      foreignKey: "clientId",
-      as: "loans",
-    });
+        /* Client */
+        Client.belongsTo(Info, {
+            as: "info",
+            foreignKey: "infoId",
+        });
 
-    /* Info */
+        Client.hasMany(Image, {
+            foreignKey: "imageableId",
+            as: "images",
+            scope: {
+                imageableType: "client",
+            },
+        });
+        Client.hasOne(Image, {
+            foreignKey: "imageableId",
+            as: "profile",
+            scope: {
+                imageableType: "client",
+                caption: "Perfil Cliente",
+            },
+        });
 
-    Info.hasOne(Client, {
-      as: "client",
-      foreignKey: "infoId",
-    });
+        Client.hasMany(Loan, {
+            foreignKey: "clientId",
+            as: "loans",
+        });
 
-    /* Loan */
-    Loan.belongsTo(Contact, {
-      foreignKey: "lawyerId",
-      as: "guarantor",
-    });
-    Loan.belongsTo(Lawyer, {
-      foreignKey: "lawyerId",
-      as: "lawyer",
-    });
-    Loan.hasOne(Condition, {
-      foreignKey: "loanId",
-      as: "condition",
-    });
-    Loan.hasMany(Image, {
-      foreignKey: "imageableId",
-      as: "images",
-      scope: {
-        imageableType: "loan",
-      },
-    });
-    Loan.hasMany(Payment, {
-      as: "payments",
-      foreignKey: "loanId",
-    });
-    Loan.hasMany(Amortization, {
-      as: "amortizations",
-      foreignKey: "loanId",
-    });
-    Loan.belongsTo(Client, {
-      foreignKey: "clientId",
-      as: "client",
-    });
-  }
+        Client.belongsToMany(Contact, {
+            foreignKey: "clientId",
+            through: Client_Contact,
+            as: "contacts"
+        })
+
+        Client.hasMany(Job,
+            {
+                foreignKey: "clientId",
+                as: "jobs"
+            })
+        // Contact
+
+        Contact.belongsToMany(Client, {
+            through: Client_Contact,
+            foreignKey: "contactId",
+            as: "clients"
+        })
+
+        Contact.belongsTo(Info,
+            {
+                as: "info",
+                foreignKey: "infoId",
+
+            })
+
+        /* Info */
+
+        Info.hasOne(Client, {
+            as: "client",
+            foreignKey: "infoId",
+        });
+
+        Info.hasOne(Contact, {
+            as: "contact",
+            foreignKey: "infoId",
+        });
+
+        Info.hasOne(Lawyer, {
+            as: "laywer",
+            foreignKey: "infoId",
+        });
+
+        Info.hasOne(Job, {
+            as: "job",
+            foreignKey: "infoId",
+        });
+
+        /* Loan */
+        Loan.belongsTo(Contact, {
+            foreignKey: "lawyerId",
+            as: "guarantor",
+        });
+        Loan.belongsTo(Lawyer, {
+            foreignKey: "lawyerId",
+            as: "lawyer",
+        });
+        Loan.hasOne(Condition, {
+            foreignKey: "loanId",
+            as: "condition",
+        });
+        Loan.hasMany(Image, {
+            foreignKey: "imageableId",
+            as: "images",
+            scope: {
+                imageableType: "loan",
+            },
+        });
+        Loan.hasMany(Payment, {
+            as: "payments",
+            foreignKey: "loanId",
+        });
+        Loan.hasMany(Amortization, {
+            as: "amortizations",
+            foreignKey: "loanId",
+        });
+        Loan.belongsTo(Client, {
+            foreignKey: "clientId",
+            as: "client",
+        });
+    }
 } /* 
       "documents",
       "moras",

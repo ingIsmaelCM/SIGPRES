@@ -41,6 +41,7 @@ export interface IClientRelation {
   images: IImage[];
   profile?: IImage;
   contacts: IContact[];
+  jobs: IJob[]
 
   payments: IPayment[];
   moras: IMora[];
@@ -103,9 +104,9 @@ export interface IInfoRelation {
 }
 
 export enum EInfoModels {
-  Client = "client",
-  Lawyer = "lawyer",
-  Contact = "contact",
+  Client = "Client",
+  Lawyer = "Cawyer",
+  Contact = "Contact",
 }
 
 export enum EInfoGender {

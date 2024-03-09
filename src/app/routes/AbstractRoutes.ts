@@ -1,12 +1,18 @@
 import { Router } from "express";
 import Controller from "../controllers/Controller";
 
+/**
+ * @constructor
+ * @param controller
+ */
 export default abstract class AbstractRoutes<T extends Controller> {
   router: Router;
   controller: T;
   abstract initRoutes(): void;
-  constructor(router: Router, controller: T) {
-    this.router = router;
+  constructor( controller: T) {
+    this.router = controller.router;
     this.controller = controller;
+    this.initRoutes();
+
   }
 }

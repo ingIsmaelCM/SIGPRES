@@ -6,10 +6,10 @@ import RoleMiddleware from "@/auth/middlewares/RoleMiddleware";
 import PermissionEnums from "../utils/PermissionEnums";
 
 export default class AppRoutes extends AbstractRoutes<AppController> {
-    constructor(router: Router, controller: AppController) {
-        super(router, controller);
-    }
 
+    constructor() {
+        super(new AppController());
+    }
     initRoutes(): void {
         this.router.post(
             "/cloudinary/signature",

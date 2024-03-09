@@ -3,7 +3,18 @@ import { DataTypes, Model } from "sequelize";
 import { IContact, IContactRelation } from "../utils/SourceInterfaces";
 
 @ITM.staticImplements<IContact, IContactRelation>()
-export default class Contact extends Model {
+export default class Contact extends Model implements  IContact{
+
+  declare addClient: Function;
+  declare id: number;
+  declare infoId: number;
+  declare lastname: string;
+  declare name: string;
+  declare createdAt?: string;
+  declare createdBy?: number;
+  declare deletedAt?: string;
+  declare updatedAt?: string;
+  declare updatedBy?: number;
   getSearchables(): Array<keyof IContact> {
     return ["name", "lastname", "infoId"];
   }
@@ -16,7 +27,6 @@ export default class Contact extends Model {
   static modelName = "Contact";
 
   static attributes = {
-    ...ITM.commonAttributes,
     name: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -29,5 +39,7 @@ export default class Contact extends Model {
       type: DataTypes.INTEGER,
       allowNull: true,
     },
+    ...ITM.commonAttributes,
   };
+
 }

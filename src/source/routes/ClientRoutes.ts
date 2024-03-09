@@ -8,6 +8,10 @@ import {Request, Response} from "express";
 import ImageRequest from "@file/middlewares/ImageRequest";
 
 export default class ClientRoutes extends AbstractRoutes<ClientController> {
+
+    constructor() {
+        super(new ClientController());
+    }
     initRoutes(): void {
         this.router
             .route("/")
@@ -17,11 +21,12 @@ export default class ClientRoutes extends AbstractRoutes<ClientController> {
             )
             .post(
                 RoleMiddleware.hasPermission(PermissionEnums.createClients),
-                ClientRequest.createClientRequest(),
+                ClientRequest.upsertClientRequest(),
                 ClientRequest.validate,
                 (req: any, res: any) => this.controller.createClient(req, res)
             );
         this.router.post("/:id/info",
+            RoleMiddleware.hasPermission(PermissionEnums.createClients),
             InfoRequest.createInfoRequest(),
             InfoRequest.validate,
             (req: Request, res: Response)=>this.controller.setClientInfo(req, res)
@@ -40,7 +45,8 @@ export default class ClientRoutes extends AbstractRoutes<ClientController> {
             )
             .put(
                 RoleMiddleware.hasPermission(PermissionEnums.editClients),
-                ClientRequest.updateClientRequest(),
+                ClientRequest.upsertClientRequest(),
+                ClientRequest.requireIdRequest(),
                 ClientRequest.validate,
                 (req: any, res: any) => this.controller.updateClient(req, res)
             )

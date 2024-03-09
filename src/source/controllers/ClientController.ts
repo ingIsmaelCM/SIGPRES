@@ -2,7 +2,6 @@ import Controller, {setAuthor} from "@/app/controllers/Controller";
 import {Request} from "express"
 import IController from "@/app/controllers/IController";
 import ClientService from "../services/ClientService";
-import ClientRoutes from "../routes/ClientRoutes";
 import InfoService from "@source/services/InfoService";
 import {EInfoModels} from "@source/utils/SourceInterfaces";
 
@@ -12,11 +11,6 @@ export default class ClientController
     prefix: string = "clients";
     mainService = new ClientService();
     private infoService = new InfoService();
-
-    constructor() {
-        super();
-        new ClientRoutes(this.router, this).initRoutes();
-    }
 
     async getClients(req: Request, res: any) {
         await this.safeRun(async () => {
@@ -54,7 +48,7 @@ export default class ClientController
             const info = req.body;
             const clientId = req.params.id;
             return await this.infoService.addRelated(info, EInfoModels.Client, Number(clientId));
-        }, res, 201, "Información actualizada");
+        }, res, 201, "Información Registrada");
     }
 
     async deleteClient(req: Request, res: any) {

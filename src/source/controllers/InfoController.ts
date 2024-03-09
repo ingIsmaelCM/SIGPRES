@@ -8,11 +8,6 @@ export default class InfoController extends Controller implements IController {
     prefix: string = "infos";
     mainService = new InfoService();
 
-    constructor() {
-        super();
-        new InfoRoutes(this.router, this).initRoutes();
-    }
-
     @setAuthor
     async createInfo(req: Request, res: Response) {
         await this.safeRun(async () => {

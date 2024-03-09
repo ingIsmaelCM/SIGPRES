@@ -4,6 +4,10 @@ import { Request, Response } from "express";
 import InfoController from "../controllers/InfoController";
 
 export default class InfoRoutes extends AbstractRoutes<InfoController> {
+
+  constructor() {
+    super(new InfoController());
+  }
   initRoutes(): void {
     this.router
       .route("/")

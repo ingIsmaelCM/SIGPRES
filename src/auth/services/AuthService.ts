@@ -249,7 +249,7 @@ export default class AuthService extends  Service{
 
 
 
-    async recoverPassword(data: any): Promise<any> {
+    async recoverPassword(data: any, res: Response): Promise<any> {
      return this.safeRun(async()=>{
          const auth = await this.authRepo.find("email", data.email);
          if(auth.sessionId!=data.code){
@@ -261,7 +261,7 @@ export default class AuthService extends  Service{
          await auth.update({sessionId: null})
          const password= this.generatePassword();
         await this.resetPassword(auth.id, password);
-        return password;
+        return this.login({ username: auth.username, password: password}, res);
      })
     }
 
@@ -294,9 +294,7 @@ export default class AuthService extends  Service{
                     }
                 )
             });
-            let userAuth = await this.authRepo.find("email", decoded.email, false, {
-                include: "role,user.institute,user.image",
-            });
+            let userAuth = await this.authRepo.find("email", decoded.email, false, );
             const {token, refreshToken} = this.generateTokens(userAuth);
             tools.setCookie(res, "refreshToken", `${refreshToken}`);
             tools.setCookie(res, "accessToken", `Bearer ${token}`);

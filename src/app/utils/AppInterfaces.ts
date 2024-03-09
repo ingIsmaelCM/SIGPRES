@@ -25,3 +25,14 @@ export interface ICommonField {
   updatedAt?: string;
   deletedAt?: string;
 }
+
+
+export enum EStatusCode{
+  OK = 200,
+  Creado = 201,
+  NoAutorizado = 401,
+  Prohibido = 403,
+  NoEncontrado = 404,
+  EntidadNoProcesable = 422,
+  ErrorInterno = 500
+}

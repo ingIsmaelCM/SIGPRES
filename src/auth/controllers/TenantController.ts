@@ -2,7 +2,6 @@ import Controller from "@/app/controllers/Controller";
 import IController from "@/app/controllers/IController";
 import TenantService from "../services/TenantService";
 import response from "@/app/utils/response";
-import TenantRoutes from "../routes/TenantRoutes";
 import { Itenant } from "../utils/AuthInterfaces";
 
 export default class TenantController
@@ -13,10 +12,7 @@ export default class TenantController
 
   mainService = new TenantService();
 
-  constructor() {
-    super();
-    new TenantRoutes(this.router, this).initRoutes();
-  }
+
 
   async getTenants(req: any, res: any) {
     await this.safeRun(async () => {

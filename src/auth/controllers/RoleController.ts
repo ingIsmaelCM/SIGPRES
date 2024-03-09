@@ -3,16 +3,12 @@ import IController from "@/app/controllers/IController";
 import response from "@/app/utils/response";
 import { Request, Response} from "express";
 import RoleService from "../services/RoleService";
-import RoleRoutes from "../routes/RoleRoutes";
 
 export default class RoleController extends Controller implements IController {
   prefix: string = "roles";
    mainService: RoleService = new RoleService();
 
-  constructor() {
-    super();
-    new RoleRoutes(this.router, this).initRoutes();
-  }
+
   async createRole(req: Request, res: Response) {
     try {
       const role = req.body;

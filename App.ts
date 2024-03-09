@@ -2,35 +2,38 @@ import "module-alias/register";
 
 import config from "@app/app.config";
 import {App} from "@/AppInit";
-import AppController from "@app/controllers/AppController";
 import Relation from "@app/models/Relations";
 import response from "@app/utils/response";
-import RoleController from "@/auth/controllers/RoleController";
-import ImageController from "@/file/controllers/ImageController";
-import PreferenceController from "@/app/controllers/PreferenceController";
-import TenantController from "@/auth/controllers/TenantController";
-import ClientController from "@/source/controllers/ClientController";
-import InfoController from "@/source/controllers/InfoController";
-import LoanController from "@/source/controllers/LoanController";
-import WalletController from "@/source/controllers/WalletController";
-import ContactController from "@source/controllers/ContactController";
+import AppRoutes from "@app/routes/AppRoutes";
+import RoleRoutes from "@auth/routes/RoleRoutes";
+import ImageRoutes from "@file/routes/ImageRoutes";
+import PreferenceRoutes from "@app/routes/PreferenceRoutes";
+import TenantRoutes from "@auth/routes/TenantRoutes";
+import ClientRoutes from "@source/routes/ClientRoutes";
+import InfoRoutes from "@source/routes/InfoRoutes";
+import LoanRoutes from "@source/routes/LoanRoutes";
+import WalletRoutes from "@source/routes/WalletRoutes";
+import ContactRoutes from "@source/routes/ContactRoutes";
+import JobRoutes from "@source/routes/JobRoutes";
 
 const PORT = config.app.port;
 
-const controllers = [
-    new AppController(),
-    new RoleController(),
-    new ImageController(),
-    new PreferenceController(),
-    new TenantController(),
-    new ClientController(),
-    new InfoController(),
-    new LoanController(),
-    new WalletController(),
-    new ContactController()
+const routes = [
+    new AppRoutes(),
+    new RoleRoutes(),
+    new ImageRoutes(),
+    new PreferenceRoutes(),
+    new TenantRoutes(),
+    new ClientRoutes(),
+    new InfoRoutes(),
+    new LoanRoutes(),
+    new WalletRoutes(),
+    new ContactRoutes(),
+    new JobRoutes()
+
 ];
 
-const app = new App(controllers, PORT);
+const app = new App(routes, PORT);
 Relation.initRelations();
 
 app.app.use("/api/*", (req: any, res: any) => {

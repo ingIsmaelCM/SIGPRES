@@ -5,6 +5,11 @@ import PermissionEnums from "@/app/utils/PermissionEnums";
 import TenantRequest from "../middlewares/TenantRequest";
 
 export default class TenantRoutes extends AbstractRoutes<TenantController> {
+
+  constructor() {
+    super(new TenantController());
+  }
+
   initRoutes(): void {
     this.router
       .route("/")

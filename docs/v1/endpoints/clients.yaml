@@ -1,0 +1,191 @@
+openapi : 3.0.3
+info :
+  title : Clients
+  description : Crear, Editar, ver y gestionar contactos
+  version : 1.0.0
+  license :
+    name : MIT
+    url : https://github.com/AtrionTechSD/SIGPRES?tab=MIT-1-ov-file#readme
+  contact :
+    name : Ismael Contreras Michel
+    email : developer@ismaelcm.dev
+    url : https://atriontechsd.com
+servers :
+  - url : 'http://localhost:3001/api/'
+
+security :
+  - BearerToken : [ admin ]
+
+components :
+
+  securitySchemes :
+    BearerToken :
+      $ref : "../schemas/general.yaml#/components/securitySchemes/BearerAuth"
+
+
+paths :
+  /clients/ :
+    get :
+      summary : List all clients
+      parameters :
+        - $ref : "../schemas/const.yaml#/components/parameters/search"
+      responses :
+        200 :
+          $ref : "../schemas/general.yaml#/components/responses/200"
+        401 :
+          $ref : "../schemas/general.yaml#/components/responses/401"
+        403 :
+          $ref : "../schemas/general.yaml#/components/responses/403"
+        500 :
+          $ref : "../schemas/general.yaml#/components/responses/500"
+      operationId : clients
+
+    post :
+      summary : Create new client
+      operationId : clients-create
+      responses :
+        201 :
+          $ref : "../schemas/general.yaml#/components/responses/201"
+        401 :
+          $ref : "../schemas/general.yaml#/components/responses/401"
+        403 :
+          $ref : "../schemas/general.yaml#/components/responses/403"
+        422 :
+          $ref : "../schemas/general.yaml#/components/responses/422"
+        500 :
+          $ref : "../schemas/general.yaml#/components/responses/500"
+      requestBody :
+        content :
+          application/json :
+            schema :
+              $ref : "../schemas/models.yaml#/components/schemas/Client"
+
+  /clients/{id} :
+    get :
+      summary : Get an especific client by id or code
+      operationId : clients-show
+      responses :
+        200 :
+          $ref : "../schemas/general.yaml#/components/responses/200"
+        401 :
+          $ref : "../schemas/general.yaml#/components/responses/401"
+        403 :
+          $ref : "../schemas/general.yaml#/components/responses/403"
+        500 :
+          $ref : "../schemas/general.yaml#/components/responses/500"
+
+    put :
+      summary : Update existing client
+      operationId : clients-update
+      responses :
+        201 :
+          $ref : "../schemas/general.yaml#/components/responses/201"
+        401 :
+          $ref : "../schemas/general.yaml#/components/responses/401"
+        403 :
+          $ref : "../schemas/general.yaml#/components/responses/403"
+        422 :
+          $ref : "../schemas/general.yaml#/components/responses/422"
+        500 :
+          $ref : "../schemas/general.yaml#/components/responses/500"
+
+    delete :
+      summary : Soft delete client data
+      operationId : clients-delete
+      responses :
+        200 :
+          $ref : "../schemas/general.yaml#/components/responses/200"
+        401 :
+          $ref : "../schemas/general.yaml#/components/responses/401"
+        403 :
+          $ref : "../schemas/general.yaml#/components/responses/403"
+        404 :
+          $ref : "../schemas/general.yaml#/components/responses/404"
+        500 :
+          $ref : "../schemas/general.yaml#/components/responses/500"
+      parameters :
+        - name : id
+          schema :
+            type : integer
+          in : path
+          required : true
+    post :
+      summary : Restore deleted client
+      operationId : clients-restore
+      responses :
+        200 :
+          $ref : "../schemas/general.yaml#/components/responses/200"
+        401 :
+          $ref : "../schemas/general.yaml#/components/responses/401"
+        403 :
+          $ref : "../schemas/general.yaml#/components/responses/403"
+        422 :
+          $ref : "../schemas/general.yaml#/components/responses/422"
+        500 :
+          $ref : "../schemas/general.yaml#/components/responses/500"
+      parameters :
+        - name : id
+          schema :
+            type : integer
+          in : path
+          required : true
+
+  /clients/{id}/info :
+    post :
+      summary : Create or update client info
+      operationId : client.info
+      requestBody :
+        content :
+          application/json :
+            schema :
+              $ref : "../schemas/models.yaml#/components/schemas/Info"
+      responses :
+        201 :
+          $ref : "../schemas/general.yaml#/components/responses/201"
+        401 :
+          $ref : "../schemas/general.yaml#/components/responses/401"
+        403 :
+          $ref : "../schemas/general.yaml#/components/responses/403"
+        422 :
+          $ref : "../schemas/general.yaml#/components/responses/422"
+        500 :
+          $ref : "../schemas/general.yaml#/components/responses/500"
+      parameters :
+        - name : id
+          schema :
+            type : integer
+          in : path
+          required : true
+
+
+  /clients/{id}/profile :
+    post :
+      summary : Set or update client profile image
+      operationId : client.profile
+      requestBody :
+        content :
+          application/json :
+            schema :
+              properties :
+                images :
+                  type : array
+                  items :
+                    $ref : "../schemas/models.yaml#/components/schemas/Image"
+      responses :
+        201 :
+          $ref : "../schemas/general.yaml#/components/responses/201"
+        401 :
+          $ref : "../schemas/general.yaml#/components/responses/401"
+        403 :
+          $ref : "../schemas/general.yaml#/components/responses/403"
+        422 :
+          $ref : "../schemas/general.yaml#/components/responses/422"
+        500 :
+          $ref : "../schemas/general.yaml#/components/responses/500"
+      parameters :
+        - name : id
+          schema :
+            type : integer
+          in : path
+          required : true
+

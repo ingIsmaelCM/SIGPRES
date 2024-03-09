@@ -5,6 +5,10 @@ import PermissionEnums from "@/app/utils/PermissionEnums";
 import { Request, Response } from "express";
 
 export default class WalletRoutes extends AbstractRoutes<WalletController> {
+
+  constructor() {
+    super(new WalletController());
+  }
   initRoutes(): void {
     this.router
       .route("/")

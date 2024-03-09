@@ -1,0 +1,193 @@
+openapi : 3.0.3
+info :
+  title : Contacts
+  description : Crear, Editar, ver y gestionar contactos
+  version : 1.0.0
+  license :
+    name : MIT
+    url : https://github.com/AtrionTechSD/SIGPRES?tab=MIT-1-ov-file#readme
+  contact :
+    name : Ismael Contreras Michel
+    email : developer@ismaelcm.dev
+    url : https://atriontechsd.com
+servers :
+  - url : 'http://localhost:3001/api/'
+
+security :
+  - BearerToken : [ admin ]
+
+components :
+  securitySchemes :
+    BearerToken :
+      $ref : "../schemas/general.yaml#/components/securitySchemes/BearerAuth"
+
+paths :
+  /contacts :
+    get :
+      summary : List all contacts
+      operationId : contacts
+      parameters :
+        - $ref : "../schemas/const.yaml#/components/parameters/search"
+      responses :
+        200 :
+          $ref : "../schemas/general.yaml#/components/responses/200"
+        401 :
+          $ref : "../schemas/general.yaml#/components/responses/401"
+        403 :
+          $ref : "../schemas/general.yaml#/components/responses/403"
+        500 :
+          $ref : "../schemas/general.yaml#/components/responses/500"
+
+    post :
+      summary : Create a new Contact
+      operationId : contact.create
+      requestBody :
+        content :
+          application/json :
+            schema :
+              $ref : "../schemas/models.yaml#/components/schemas/Contact"
+      responses :
+        201 :
+          $ref : "../schemas/general.yaml#/components/responses/201"
+        401 :
+          $ref : "../schemas/general.yaml#/components/responses/401"
+        403 :
+          $ref : "../schemas/general.yaml#/components/responses/403"
+        422 :
+          $ref : "../schemas/general.yaml#/components/responses/422"
+        500 :
+          $ref : "../schemas/general.yaml#/components/responses/500"
+
+  /contacts/{id} :
+    get :
+      summary : Get an especific contact by id or code
+      operationId : contacts-show
+      responses :
+        200 :
+          $ref : "../schemas/general.yaml#/components/responses/200"
+        401 :
+          $ref : "../schemas/general.yaml#/components/responses/401"
+        403 :
+          $ref : "../schemas/general.yaml#/components/responses/403"
+        500 :
+          $ref : "../schemas/general.yaml#/components/responses/500"
+
+    put :
+      summary : Update existing contact
+      operationId : contacts-update
+      responses :
+        201 :
+          $ref : "../schemas/general.yaml#/components/responses/201"
+        401 :
+          $ref : "../schemas/general.yaml#/components/responses/401"
+        403 :
+          $ref : "../schemas/general.yaml#/components/responses/403"
+        422 :
+          $ref : "../schemas/general.yaml#/components/responses/422"
+        500 :
+          $ref : "../schemas/general.yaml#/components/responses/500"
+
+    delete :
+      summary : Soft delete contact data
+      operationId : contacts-delete
+      responses :
+        200 :
+          $ref : "../schemas/general.yaml#/components/responses/200"
+        401 :
+          $ref : "../schemas/general.yaml#/components/responses/401"
+        403 :
+          $ref : "../schemas/general.yaml#/components/responses/403"
+        404 :
+          $ref : "../schemas/general.yaml#/components/responses/404"
+        500 :
+          $ref : "../schemas/general.yaml#/components/responses/500"
+      parameters :
+        - name : id
+          schema :
+            type : integer
+          in : path
+          required : true
+    post :
+      summary : Restore deleted contact
+      operationId : contacts-restore
+      responses :
+        200 :
+          $ref : "../schemas/general.yaml#/components/responses/200"
+        401 :
+          $ref : "../schemas/general.yaml#/components/responses/401"
+        403 :
+          $ref : "../schemas/general.yaml#/components/responses/403"
+        422 :
+          $ref : "../schemas/general.yaml#/components/responses/422"
+        500 :
+          $ref : "../schemas/general.yaml#/components/responses/500"
+      parameters :
+        - name : id
+          schema :
+            type : integer
+          in : path
+          required : true
+
+
+
+  /contacts/{id}/info :
+    post :
+      summary : Create or update contact info
+      operationId : contact.info
+      requestBody :
+        content :
+          application/json :
+            schema :
+              $ref : "../schemas/models.yaml#/components/schemas/Info"
+      responses :
+        200 :
+          $ref : "../schemas/general.yaml#/components/responses/200"
+        201 :
+          $ref : "../schemas/general.yaml#/components/responses/201"
+        401 :
+          $ref : "../schemas/general.yaml#/components/responses/401"
+        403 :
+          $ref : "../schemas/general.yaml#/components/responses/403"
+        404 :
+          $ref : "../schemas/general.yaml#/components/responses/404"
+        422 :
+          $ref : "../schemas/general.yaml#/components/responses/422"
+        500 :
+          $ref : "../schemas/general.yaml#/components/responses/500"
+      parameters :
+        - name : id
+          schema :
+            type : integer
+          in : path
+          required : true
+
+  /contacts/{id}/profile :
+    post :
+      summary : Set or update contact profile image
+      operationId : contact.profile
+      requestBody :
+        content :
+          application/json :
+            schema :
+              properties :
+                images :
+                  type : array
+                  items :
+                    $ref : "../schemas/models.yaml#/components/schemas/Image"
+      responses :
+        201 :
+          $ref : "../schemas/general.yaml#/components/responses/201"
+        401 :
+          $ref : "../schemas/general.yaml#/components/responses/401"
+        403 :
+          $ref : "../schemas/general.yaml#/components/responses/403"
+        422 :
+          $ref : "../schemas/general.yaml#/components/responses/422"
+        500 :
+          $ref : "../schemas/general.yaml#/components/responses/500"
+      parameters :
+        - name : id
+          schema :
+            type : integer
+          in : path
+          required : true

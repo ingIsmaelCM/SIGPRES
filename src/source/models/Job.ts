@@ -16,7 +16,6 @@ export default class Job extends Model {
   static modelName = "Job";
 
   static attributes: Record<keyof IJob, any> = {
-    ...ITM.commonAttributes,
     startAt: {
       type: DataTypes.DATE,
       allowNull: false,
@@ -41,5 +40,6 @@ export default class Job extends Model {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
+    ...ITM.commonAttributes,
   };
 }

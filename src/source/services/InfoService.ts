@@ -3,8 +3,12 @@ import {EInfoModels, IInfo} from "../utils/SourceInterfaces";
 import TenantConnection from "@/app/db/TenantConnection";
 import Service from "@app/services/Service";
 import tools from "@app/utils/tools";
+import {Info} from "@source/models";
 
-
+/**
+ * @extends Service
+ * @property infoRepo
+ */
 export default class InfoService extends Service {
     infoRepo = new InfoRepository();
 
@@ -33,14 +37,23 @@ export default class InfoService extends Service {
         }
     }
 
-    async addRelated(info: IInfo, modelType: EInfoModels, modelId: number): Promise<any> {
+    /**
+     * Create a new Info record and update related model's infoId column.
+     *
+     * @param info - Data set with fields for info
+     * @param {EInfoModels} modelType - Name of related model
+     * @param {Info} modelId - Id for related model instance
+     * @return {Info} info
+     */
+    async addRelated(info: IInfo, modelType: EInfoModels, modelId: number): Promise<Info> {
         const trans = await TenantConnection.getTrans();
         return this.safeRun(async () => {
                 const methodName = `set${tools.uppercaseFirst(modelType)}`;
                 const newInfo = await this.infoRepo.updateOrCreate(info, trans);
+                await newInfo[methodName](modelId);
+                console.log(methodName, modelId)
                 await trans.commit();
-                 await newInfo[methodName](modelId);
-                 return newInfo;
+                return newInfo;
             },
             async () => {
                 await trans.rollback();

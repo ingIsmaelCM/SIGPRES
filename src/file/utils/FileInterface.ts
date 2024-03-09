@@ -30,8 +30,9 @@ export interface IDocumentRelation {
 
 
 export enum EImageable {
-    Client = "client",
-    Loan = "loan",
-    Payment = "payment",
-    Lawyer = "lawyer"
+    Client = "Client",
+    Contact = "Contact",
+    Loan = "Loan",
+    Payment = "Payment",
+    Lawyer = "Lawyer"
 }

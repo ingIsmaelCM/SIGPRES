@@ -4,6 +4,10 @@ import RoleRequests from "@auth/middlewares/RoleRequests";
 import RoleMiddleware from "../middlewares/RoleMiddleware";
 
 export default class RoleRoutes extends AbstractRoutes<RoleController> {
+
+  constructor() {
+    super(new RoleController());
+  }
   initRoutes(): void {
     this.router
       .route("/")

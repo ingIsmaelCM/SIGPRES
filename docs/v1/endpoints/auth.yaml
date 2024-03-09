@@ -1,0 +1,93 @@
+openapi : 3.0.3
+info :
+  title : Contacts
+  description : Endpoints to manage contacts on app
+  version : 1.0.0
+  license :
+    name : MIT
+    url : https://github.com/AtrionTechSD/SIGPRES?tab=MIT-1-ov-file#readme
+  contact :
+    name : Ismael Contreras Michel
+    email : developer@ismaelcm.dev
+    url : https://atriontechsd.com
+servers :
+  - url : 'http://localhost:3001/api/'
+
+components :
+  securitySchemes :
+    BearerToken :
+      $ref: "../schemas/general.yaml#/components/securitySchemes/BearerAuth"
+
+paths :
+  /auth/register :
+    post :
+      operationId : auth.register
+      summary : Create a new user account
+      requestBody :
+        content :
+          application/json :
+            schema :
+              $ref : "../schemas/models.yaml#/components/schemas/AuthRegister"
+      responses :
+        200 :
+          description : "Cuenta registrada exitosamente"
+        422 :
+          description : "Error de validación"
+        401 :
+          description : "Unauthenticated"
+        500 :
+          description : "Server Error"
+  /auth/login :
+    post :
+      operationId : auth.login
+      summary : Create new session
+      requestBody :
+        content :
+          application/json :
+            schema :
+              $ref : "../schemas/models.yaml#/components/schemas/AuthLogin"
+      responses :
+        200 :
+          description : "Sesión iniciada correctamente"
+        422 :
+          description : "Error de validación"
+        401 :
+          description : "Unauthenticated"
+        500 :
+          description : "Server Error"
+
+  /auth/refreshtoken :
+    post :
+      operationId : auth.refreshtoken
+      summary : Refresk auth token
+      parameters :
+        - name : refreshToken
+          in : cookie
+          required : true
+      security:
+        - BearerToken : [ admin ]
+      responses :
+        200 :
+          description : "Token actualizado correctamente"
+        422 :
+          description : "Error de validación"
+        401 :
+          description : "Unauthenticated"
+        500 :
+          description : "Server Error"
+
+  /auth/verify/{id} :
+    post :
+      operationId : auth.verify
+      summary : Set verification on auth user
+      security :
+        - BearerToken : [ admin ]
+      responses :
+        200 :
+          description : "Usuario verificado correctamente"
+        422 :
+          description : "Error de validación"
+        401 :
+          description : "Unauthenticated"
+        500 :
+          description : "Server Error"

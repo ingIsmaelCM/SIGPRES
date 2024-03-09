@@ -1,0 +1,134 @@
+openapi : 3.0.3
+info :
+  title : Query Parameters
+  description : Query Parameters
+  version : 1.0.0
+  license :
+    name : MIT
+servers :
+  - url : 'https'
+paths :
+
+
+components :
+
+  schemas :
+
+    Version :
+      type : string
+      enum :
+        - 1.0.0
+  securitySchemes :
+    BearerAuth :
+      type : http
+      scheme : bearer
+      in : cookie
+  responses :
+    200 :
+      description : "Operación exitosa"
+      content :
+        application/json :
+          schema :
+            properties :
+              title :
+                type : string
+              content :
+                oneOf :
+                  - type : string
+                  - type : object
+              statusCode :
+                type : number
+                example : 200
+
+    201 :
+      description : "Registro creado/actualizado"
+      content :
+        application/json :
+          schema :
+            properties :
+              title :
+                type : string
+              content :
+                type : object
+              statusCode :
+                type : number
+                example : 201
+    401 :
+      description : "No autenticado"
+      content :
+        application/json :
+          schema :
+            properties :
+              title :
+                type : string
+              content :
+                type : string
+                example : "Token inválido"
+              statusCode :
+                type : number
+                example : 401
+    403 :
+      description : "No tienes permiso para esta acción"
+      content :
+        application/json :
+          schema :
+            properties :
+              title :
+                type : string
+              content :
+                type : string
+                example : "No tienes permiso para Ver Clientes"
+              statusCode :
+                type : number
+                example : 403
+    422 :
+      description : "Error de validación"
+      content :
+        application/json :
+          schema :
+            properties :
+              title :
+                type : string
+              content :
+                type : array
+                example : [
+                  "Ingrese un nombre válido",
+                  "El monto debe ser mayor a 0"
+                ]
+              statusCode :
+                type : number
+                example : 422
+    404 :
+      description : "Recurso no encontrado"
+      content :
+        application/json :
+          schema :
+            properties :
+              title :
+                type : string
+              content :
+                type : string
+                example : "Usuario no encontrado"
+              statusCode :
+                type : number
+                example : 404
+    500 :
+      description : "Server Error"
+      content :
+        application/json :
+          schema :
+            properties :
+              title :
+                type : string
+              content :
+                type : string
+                example : "No pudo conectarse al servidor"
+              statusCode :
+                type : number
+                example : 500
+
+
+
+
+
+

@@ -32,6 +32,7 @@ export default class Client extends Model implements IClient {
       "images",
       "profile",
       "contacts",
+        "jobs"
     ];
   }
 

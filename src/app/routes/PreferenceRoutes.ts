@@ -5,6 +5,10 @@ import PermissionEnums from "../utils/PermissionEnums";
 import PreferenceRequest from "../middlewares/PreferenceRequest";
 
 export default class PreferenceRoutes extends AbstractRoutes<PreferenceController> {
+
+  constructor() {
+    super(new PreferenceController());
+  }
   initRoutes(): void {
     this.router.get(
       "/",

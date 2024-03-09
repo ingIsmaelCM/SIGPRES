@@ -1,0 +1,131 @@
+openapi : 3.0.3
+info :
+  title : Models
+  description : Models
+  version : 1.0.0
+servers :
+  - url : 'https'
+paths :
+
+components :
+  schemas :
+    "AuthLogin" : {
+      "type" : "object",
+      "required" : [
+        "username",
+        "password"
+      ],
+      "properties" : {
+        "username" : {
+          "type" : "string"
+        },
+        "password" : {
+          "type" : "string",
+          "minimum" : 6,
+          "maximum" : 25
+        }
+      }
+    }
+    "AuthRegister" : {
+      "type" : "object",
+      "required" : [
+        "username",
+        "password",
+        "email",
+        "name",
+        "lastname"
+      ],
+      "properties" : {
+        "username" : {
+          "type" : "string"
+        },
+        "password" : {
+          "type" : "string",
+          "minimum" : 6,
+          "maximum" : 25
+        },
+        "email" : {
+          "type" : "string"
+        },
+        "name" : {
+          "type" : "string"
+        },
+        "lastname" : {
+          "type" : "string"
+        }
+      }
+    }
+    Client :
+      type : object
+      properties :
+        name :
+          type : string
+        lastname :
+          type : string
+      required :
+        - name
+        - lastname
+    Contact :
+      type : object
+      properties :
+        name :
+          type : string
+        lastname :
+          type : string
+        clientId :
+          type : integer
+      required :
+        - name
+        - lastname
+    Image :
+      type : object
+      properties :
+        path :
+          type : string
+        size :
+          type : number
+      required :
+        - path
+        - size
+      example :
+        path : "imageurl"
+        size : 2.5
+    Info :
+      type : object
+      properties :
+        dni :
+          type : string
+        email :
+          type : string
+        phone :
+          type : string
+        birthdate :
+          type : string
+        address :
+          type : string
+        gender :
+          type : string
+        country :
+          type : string
+      required :
+        - dni
+        - phone
+    Job :
+      type : object
+      properties :
+        startAt :
+          type : string
+        salary :
+          type : number
+        position :
+          type : string
+        company :
+          type : string
+        clientId :
+          type : number
+      required :
+        - startAt
+        - salary
+        - position
+        - company
+        - clientId

@@ -30,9 +30,10 @@ class InfoRequest extends BaseRequest {
                 min: 1,
                 max: 125,
             }),
-            body("gender", "Ingrese un género válud")
+            body("gender", "Ingrese un género válido")
                 .optional()
                 .isIn(Object.values(EInfoGender)),
+            body("country", "El nombre de país no es válido").optional().isString().isLength({max: 75})
         ];
     }
 }

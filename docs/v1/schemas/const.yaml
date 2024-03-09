@@ -1,4 +1,5 @@
 components:
+
   parameters :
     search:
       name : search
@@ -38,3 +39,16 @@ parameters:
   - $ref : '#/components/parameters/order'
   - $ref : '#/components/parameters/desc'
   - $ref : '#/components/parameters/fields'
+
+info :
+  title : Contacts
+  description : Crear, Editar, ver y gestionar contactos
+  version : v1
+  license :
+    name : MIT
+    url : https://github.com/AtrionTechSD/SIGPRES?tab=MIT-1-ov-file#readme
+  termsOfService :
+  contact :
+    name : Ismael Contreras Michel
+    email : developer@ismaelcm.dev
+    url : https://atriontechsd.com

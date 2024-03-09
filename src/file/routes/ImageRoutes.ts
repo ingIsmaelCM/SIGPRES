@@ -5,8 +5,13 @@ import PermissionEnums from "@/app/utils/PermissionEnums";
 import ImageRequest from "../middlewares/ImageRequest";
 
 export default class ImageRoutes extends AbstractRoutes<ImageController> {
-  initRoutes(): void {
 
+
+  constructor() {
+    super(new ImageController());
+  }
+
+  initRoutes(): void {
     this.router
       .route("/:id")
       .get(RoleMiddleware.hasPermission("Ver Imágenes"), (req: any, res: any) =>

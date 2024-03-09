@@ -1,8 +1,6 @@
 import Controller from "@app/controllers/Controller";
 import IController from "@app/controllers/IController";
 import PreferenceService from "@app/services/PreferenceService";
-import response from "@app/utils/response";
-import PreferenceRoutes from "@app/routes/PreferenceRoutes";
 import tools from "@app/utils/tools";
 import {IPreference} from "@/source/utils/SourceInterfaces";
 
@@ -11,11 +9,6 @@ export default class PreferenceController
     implements IController {
     prefix: string = "app/preferences";
     mainService: PreferenceService = new PreferenceService();
-
-    constructor() {
-        super();
-        new PreferenceRoutes(this.router, this).initRoutes();
-    }
 
     async getPreference(req: any, res: any) {
         return this.safeRun(async () => {

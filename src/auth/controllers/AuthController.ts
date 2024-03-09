@@ -1,20 +1,12 @@
-import {Request, Response, Router} from "express";
+import {Request, Response} from "express";
 import AuthService from "../services/AuthService";
-import response from "@app/utils/response";
 import IController from "@app/controllers/IController";
-import path from "path";
-import config from "@/app/app.config";
-import AuthRoutes from "../routes/AuthRoutes";
+
 import Controller from "@/app/controllers/Controller";
 
 export class AuthController extends Controller implements IController {
     mainService: AuthService = new AuthService();
     public prefix: string = "auth";
-
-    constructor() {
-        super();
-        new AuthRoutes(this.router, this).initRoutes();
-    }
 
     async registerAuth(req: Request, res: Response) {
         return await this.safeRun(async () => {
@@ -71,8 +63,8 @@ export class AuthController extends Controller implements IController {
 
 
     async recoverPassword(req: any, res: Response) {
-        return await this.safeRun(async()=> await this.mainService.recoverPassword(req.body),
-            res, 200, "Su contraseña ha sido cambiada")
+        return await this.safeRun(async()=> await this.mainService.recoverPassword(req.body, res),
+            res, 200, "Código Verificado correctamente")
 
     }
 }

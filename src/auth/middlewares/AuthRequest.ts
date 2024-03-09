@@ -35,6 +35,9 @@ class AuthRequest extends BaseRequest {
                 min: 6,
                 max: 25,
             }),
+            body("password", "La contraseña ingresada es muy débil").custom((value: string) => {
+                return value.match(`^(((?=.*[a-z])(?=.*[A-Z]))|((?=.*[a-z])(?=.*[0-9]))|((?=.*[A-Z])(?=.*[0-9])))(?=.{6,})`)
+            }),
             body("password_confirmation", "Se requiere la confirmación").notEmpty(),
             body("password_confirmation", "Las contraseñas no coinciden").custom(
                 (value, {req}) => {

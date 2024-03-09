@@ -6,15 +6,18 @@ import IController from "@app/controllers/IController";
 import session from "express-session";
 import config from "./app/app.config";
 import http from "http";
+import rateLimit from "express-rate-limit";
 import SocketService from "@app/services/SocketService";
 import AuthMiddleware from "@auth/middlewares/AuthMiddleware";
 import { AuthController } from "@auth/controllers/AuthController";
-
+import helmet from "helmet"
+import AbstractRoutes from "@app/routes/AbstractRoutes";
+import AuthRoutes from "@auth/routes/AuthRoutes";
 export class App {
   public app: express.Application;
   public port: number;
   public server: http.Server;
-  constructor(controllers: Array<any>, port: number) {
+  constructor(routes: Array<any>, port: number) {
     this.app = express();
     this.server = http.createServer(this.app);
     new SocketService(this.server);
@@ -23,15 +26,16 @@ export class App {
     this.app.get("/api", (req, res) => {
       res.status(200).send(`El api está corriendo en el puerdo ${this.port}`);
     });
-    this.initControllers(controllers);
+    this.initRoutes(routes);
   }
-
+  
   private initApp() {
     this.app.use(bodyParser.urlencoded({ extended: false }));
     this.app.use(bodyParser.json());
     this.app.use(cookieParser());
     this.app.use("/api/public", express.static("public"));
     this.app.use("/api/views", express.static("views"));
+    this.secureApp();
     this.app.use(
       session({
         secret: config.auth.secret,
@@ -46,12 +50,22 @@ export class App {
       })
     );
   }
-  private initControllers(controllers: Array<IController>) {
-    const authController = new AuthController();
-    this.app.use(`/api/${authController.prefix}`, authController.router);
+
+  private secureApp() {
+    this.app.use(rateLimit({
+      limit: config.app.rateLimit,
+      windowMs: config.app.rateTime,
+      message: "Ha excedido el límite de solicitudes"
+    }))
+    this.app.use(helmet())
+  }
+
+  private initRoutes(routes: Array<AbstractRoutes<any>>) {
+    const authRoute= new AuthRoutes();
+    this.app.use(`/api/${authRoute.controller.prefix}`, authRoute.router);
     this.app.use(AuthMiddleware.auth);
-    controllers.forEach((controller: IController) => {
-      this.app.use(`/api/${controller.prefix}`, controller.router);
+    routes.forEach((route) => {
+      this.app.use(`/api/${route.controller.prefix}`, route.router);
     });
   }
 

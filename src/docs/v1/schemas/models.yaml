@@ -84,12 +84,32 @@ components :
           type : string
         size :
           type : number
+        caption :
+          type : string
       required :
         - path
         - size
       example :
         path : "imageurl"
         size : 2.5
+
+    Document :
+      type : object
+      properties :
+        path :
+          type : string
+        size :
+          type : number
+        title :
+          type : string
+      required :
+        - path
+        - size
+        - title
+      example :
+        path : "imageurl"
+        size : 2.5
+
     Info :
       type : object
       properties :

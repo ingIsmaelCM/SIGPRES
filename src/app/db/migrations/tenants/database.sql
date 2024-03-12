@@ -60,7 +60,7 @@ CREATE TABLE `clients`(
     `code` VARCHAR(10),
     `name` VARCHAR(50) NOT NULL,
     `lastname` VARCHAR(50) NOT NULL,
-    `clientType` ENUM('Persona', 'Negocio') NOT NULL DEFAULT 'Persona',
+    `clienttype` ENUM('Persona', 'Negocio') NOT NULL DEFAULT 'Persona',
     `infoId` INT,
     `createdBy` INT NOT NULL,
     `updatedBy` INT NOT NULL,
@@ -111,6 +111,8 @@ CREATE TABLE `client_contacts`(
 CREATE TABLE `jobs`(
     `id` INT AUTO_INCREMENT PRIMARY KEY,
     `startAt` DATE NOT NULL,
+    `endAt` DATE,
+    `status` ENUM('Actual', 'Anterior') NOT NULL DEFAULT 'Actual',
     `salary` DECIMAL(10,2) NOT NULL,
     `position` VARCHAR(50) NOT NULL,
     `company` VARCHAR(75) NOT NULL,
@@ -199,7 +201,6 @@ CREATE TABLE `payments`(
     `balanceAfter` DECIMAL(10,2) NOT NULL,
     `dueAt` DATE NOT NULL,
     `payedAt` DATE NOT NULL,
-
     `note` VARCHAR(75),
     `walletId` INT NOT NULL,
     `loanId` INT NOT NULL,
@@ -241,7 +242,6 @@ CREATE TABLE `moras`(
     `loanId` INT NOT NULL,
     `clientId` INT NOT NULL,
     `paymentId` INT NOT NULL,
-
     `createdBy` INT NOT NULL,
     `updatedBy` INT NOT NULL,
     `createdAt` TIMESTAMP NOT NULL DEFAULT current_timestamp,
@@ -321,10 +321,13 @@ CREATE INDEX idx_moras_clientId ON moras (clientId);
 CREATE INDEX idx_moras_paymentId ON moras (paymentId);
 
 
+DELIMITER //
 CREATE TRIGGER IF NOT EXISTS add_code_to_client BEFORE INSERT ON clients FOR EACH ROW BEGIN SET NEW.code = LPAD((SELECT IFNULL(MAX(id), 0) + 1 FROM clients), 5, '0'); END;
-
+//
 CREATE TRIGGER IF NOT EXISTS add_code_to_loan BEFORE INSERT ON loans FOR EACH ROW BEGIN SET NEW.code = LPAD((SELECT IFNULL(MAX(id), 0) + 1 FROM loans), 5, '0'); END;
+//
 
+DELIMITER ;
 
 
 TRUNCATE TABLE `preferences`;

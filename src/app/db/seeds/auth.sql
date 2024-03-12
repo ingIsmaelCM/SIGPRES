@@ -47,10 +47,10 @@ INSERT INTO `permissions` (name) VALUES
 ('Editar Datos Laborales'),
 ('Eliminar Datos Laborales'),
 ('Ver Datos Laborales'),
-('Crear Documentos de Clientes'),
-('Ver Documentos de Clientes'),
-('Editar Documentos de Clientes'),
-('Eliminar Documentos de Clientes'),
+('Crear Documentos'),
+('Ver Documentos'),
+('Editar Documentos'),
+('Eliminar Documentos'),
 ('Ver Reportes de Clientes'),
 ('Enviar Mensajes'),
 ('Crear Amortizaciones'),
@@ -83,6 +83,8 @@ INSERT INTO `permissions` (name) VALUES
 ('Crear Métodos de Pago'),
 ('Ver Métodos de Pago'),
 ('Editar Métodos de Pago'),
+('Ver Papelera'),
+('Restaurar Datos'),
 ('Eliminar Métodos de Pago');
 
 INSERT INTO `auths` (email, password, username, name, lastname, verifiedAt)

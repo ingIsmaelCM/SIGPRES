@@ -80,7 +80,7 @@ export default class ContactService extends Service {
     async setProfilePhoto(image: IImage, clientId: number) {
         return this.safeRun(async () => {
             image.caption = "Perfil Contacto";
-            const existingImage = await ImageService.getImage({
+            const existingImage = await ImageService.getImages({
                 filter: [`imageableId:eq:${clientId}:and`,
                     `imageableType:eq:${EImageable.Client}:and`,
                     `caption:eq:${image.caption}:and`

@@ -217,7 +217,7 @@ class Scope {
           deletedAt: {
             [Op.not]: null,
           },
-        },
+        }
       };
     }
     return {};
@@ -259,6 +259,9 @@ class Scope {
       ...(params.fields ? this.fields(params.fields, fields) : {}),
       ...(params.order ? this.order(cols, params.order, params.desc) : {}),
       ...(params.withtrashed ? this.withTrashed(params.withtrashed) : {}),
+      ...(params.onlytrashed ? this.withTrashed(String(params.onlytrashed)=="true") : {}),// Need to get data where deletedAt not null
+
+
     };
 
     const like: any = params.like ? this.isLike(params.like, cols) : null;
@@ -276,9 +279,8 @@ class Scope {
         ...filter,
         ...(params.isNull ? this.isNull(params.isNull, cols) : {}),
         ...(params.notNUll ? this.notNull(params.notNUll, cols) : {}),
-      },
-
       ...(params.onlytrashed ? this.onlyTrashed(params.onlytrashed) : {}),
+      },
     };
     if (!params.limit && (!params.page || !params.perpage)) {
       query.limit = 1000;

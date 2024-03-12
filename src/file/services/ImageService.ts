@@ -2,28 +2,24 @@ import ImageRepository from "@file/repositories/ImageRepository";
 import {IParams} from "@/app/utils/AppInterfaces";
 import Image from "../models/Image";
 import TenantConnection from "@/app/db/TenantConnection";
-import image from "../models/Image";
 import {IImage} from "@file/utils/FileInterface";
 import Service from "@app/services/Service";
 
-class ImageService extends  Service{
+//TODO Refactor to use `this.safeRun`
+class ImageService extends Service {
     imageRepo: ImageRepository = new ImageRepository();
 
     async createImages(images: IImage[], imageableType: string, imageableId: number): Promise<any> {
         const trans = await TenantConnection.getTrans();
-        try {
-            images = images.map(image => ({...image, imageableType, imageableId}))
-            const newImages = await this.imageRepo.bulkCreate(images, trans);
-            await trans.commit();
-            return newImages;
-        } catch (error: any) {
-            await trans.rollback();
-            throw {
-                code: error.code,
-                message: error.message,
-            };
-        }
+        return await this.safeRun(async () => {
+                images = images.map(image => ({...image, imageableType, imageableId}))
+                const newImages = await this.imageRepo.bulkCreate(images, trans);
+                await trans.commit();
+                return newImages;
+            },
+            async () => await trans.rollback())
     }
+
     async updateImage(image: IImage, imageId: number): Promise<any> {
         const trans = await TenantConnection.getTrans();
         try {
@@ -50,7 +46,7 @@ class ImageService extends  Service{
         }
     }
 
-    async getImage(params: IParams): Promise<Image> {
+    async getImages(params: IParams): Promise<Image> {
         try {
             return await this.imageRepo.getAll(params);
         } catch (error: any) {

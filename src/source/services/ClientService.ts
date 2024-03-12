@@ -3,19 +3,25 @@ import ClientRepository from "../repositories/ClientRespository";
 import {IClient} from "../utils/SourceInterfaces";
 import TenantConnection from "@/app/db/TenantConnection";
 import Service from "@/app/services/Service";
-import {EImageable, IImage} from "@file/utils/FileInterface";
+import {EDocumentable, EImageable, IDocument, IImage} from "@file/utils/FileInterface";
 import ImageService from "@file/services/ImageService";
+import ImageRepository from "@file/repositories/ImageRepository";
+import DocumentRepository from "@source/repositories/DocumentRepository";
+import DocumentService from "@file/services/DocumentService";
+import config from "@app/app.config";
 
 /*TODO deleteClient and restoreClient functions */
 export default class ClientService extends Service {
     private clientRepo = new ClientRepository();
 
     async getClients(params: IParams): Promise<any> {
-        return await this.safeRun(() => this.clientRepo.getAll(params));
+        return await this.safeRun(() =>
+            this.clientRepo.getAll(params));
     }
 
     async findClient(clientId: number, params: IParams): Promise<any> {
-        return await this.safeRun(() => this.clientRepo.findById(clientId, params));
+        return await this.safeRun(() =>
+            this.clientRepo.findById(clientId, params));
     }
 
     async createClient(client: IClient): Promise<any> {
@@ -73,7 +79,7 @@ export default class ClientService extends Service {
     async setProfilePhoto(image: IImage, clientId: number) {
         return this.safeRun(async () => {
             image.caption = "Perfil Cliente";
-            const existingImage = await ImageService.getImage({
+            const existingImage = await ImageService.getImages({
                 filter: [`imageableId:eq:${clientId}:and`,
                     `imageableType:eq:${EImageable.Client}:and`,
                     `caption:eq:${image.caption}:and`
@@ -86,5 +92,19 @@ export default class ClientService extends Service {
                 return await ImageService.createImages([image], EImageable.Client, Number(clientId));
             }
         })
+    }
+
+    async setClientImages(images: IImage[], clientId: number): Promise<Array<IImage>> {
+        return this.safeRun(async () =>
+            await ImageService.createImages(images,
+                EImageable.Client, clientId)
+        )
+    }
+
+    async setClientDocuments(documents: IDocument[], clientId: number): Promise<Array<IImage>> {
+        return this.safeRun(async () =>
+            await DocumentService.createDocuments(documents,
+                EDocumentable.Client, clientId)
+        )
     }
 }

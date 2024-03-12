@@ -29,7 +29,7 @@ export default class ContactRoutes extends AbstractRoutes<ContactController> {
 
         this.router.post("/:id/info",
             RoleMiddleware.hasPermission(PermissionEnums.createContact),
-            InfoRequest.createInfoRequest(),
+            InfoRequest.upsertInfoRequest(),
             InfoRequest.validate,
             (req: Request, res: Response) => this.controller.setContactInfo(req, res)
         )
@@ -59,7 +59,7 @@ export default class ContactRoutes extends AbstractRoutes<ContactController> {
                 (req: Request, res: Response) => this.controller.deleteContact(req, res)
             )
             .post(
-                RoleMiddleware.hasPermission(PermissionEnums.deleteContact),
+                RoleMiddleware.hasPermission(PermissionEnums.restoreData),
                 ContactRequest.requireIdRequest(),
                 ContactRequest.validate,
                 (req: Request, res: Response) => this.controller.restoreContact(req, res)

@@ -1,74 +1,86 @@
 import ITM from "@/app/models/ITenantModel";
-import { DataTypes, Model } from "sequelize";
+import {DataTypes, Model, ModelAttributeColumnOptions} from "sequelize";
 import {
-  EClientType,
-  IClient,
-  IClientRelation,
+    EClientType,
+    IClient,
+    IClientRelation,
 } from "@source/utils/SourceInterfaces";
+import tools from "@app/utils/tools";
 
 @ITM.staticImplements<IClient, IClientRelation>()
 export default class Client extends Model implements IClient {
-  declare name: string;
-  declare code?: string;
-  declare lastname: string;
-  declare infoId?: number;
-  declare clienttype: EClientType;
-  declare id?: number;
-  declare createdBy?: number;
-  declare updatedBy?: number;
-  declare createdAt?: string;
-  declare updatedAt?: string;
-  declare deletedAt?: string;
-  getSearchables(): Array<keyof IClient> {
-    return ["code", "name", "lastname", "infoId", "clienttype"];
-  }
+    declare name: string;
+    declare code?: string;
+    declare lastname: string;
+    declare infoId?: number;
+    declare clienttype: EClientType;
+    declare id?: number;
+    declare createdBy?: number;
+    declare updatedBy?: number;
+    declare createdAt?: string;
+    declare updatedAt?: string;
+    declare deletedAt?: string;
 
-  getRelations(): (keyof IClientRelation)[] {
-    return [
-      "info",
-      "loans",
-      "moras",
-      "payments",
-      "images",
-      "profile",
-      "contacts",
-        "jobs"
-    ];
-  }
+    getSearchables(): Array<keyof IClient> {
+        return ["code", "name", "lastname", "infoId", "clienttype"];
+    }
 
-  static tableName = "clients";
-  static modelName = "Client";
+    getRelations(): (keyof IClientRelation)[] {
+        return [
+            "info",
+            "loans",
+            "moras",
+            "payments",
+            "images",
+            "documents",
+            "profile",
+            "contacts",
+            "jobs",
+            "contacts.info",
+            "jobs.info",
+            "loans.payments",
+            "payments.mora"
+        ];
+    }
+    static tableName = "clients";
+    static modelName = "Client";
 
-  static attributes = {
-    ...ITM.commonAttributes,
-    code: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
-    name: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    lastname: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    infoId: {
-      type: DataTypes.NUMBER,
-      allowNull: true,
-    },
-    clienttype: {
-      type: DataTypes.ENUM(...Object.values(EClientType)),
-      allowNull: false,
-      defaultValue: EClientType.Persona,
-    },
-    fullname: {
-      type: DataTypes.VIRTUAL,
-      get(this: Client) {
-        return `${this.name} ${this.lastname}`;
-      },
-    },
-  };
+    static attributes: Record<keyof IClient, ModelAttributeColumnOptions> = {
+        code: {
+            type: DataTypes.STRING,
+            allowNull: true,
+        },
+        name: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            set(this: Client, value: string){
+                this.setDataValue("name",tools.initialToUpper(value))
+            }
+        },
+        lastname: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            set(this: Client, value: string){
+                this.setDataValue("lastname",tools.initialToUpper(value))
+            }
+        },
+        infoId: {
+            type: DataTypes.NUMBER,
+            allowNull: true,
+        },
+        clienttype: {
+            type: DataTypes.ENUM(...Object.values(EClientType)),
+            allowNull: false,
+            defaultValue: EClientType.Persona,
+        },
+        fullname: {
+            type: DataTypes.VIRTUAL,
+            get(this: Client) {
+                return `${this.name} ${this.lastname}`;
+            },
+        },
+        ...ITM.commonAttributes,
+    };
 }
 
 /* 

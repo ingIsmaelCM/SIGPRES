@@ -38,10 +38,10 @@ enum PermissionEnums {
   editJob = "Editar Datos Laborales",
   deleteJob = "Eliminar Datos Laborales",
   getJob = "Ver Datos Laborales",
-  createClientDocument = "Crear Documentos de Clientes",
-  getClientDocument = "Ver Documentos de Clientes",
-  editClientDocument = "Editar Documentos de Clientes",
-  deleteClientDocument = "Eliminar Documentos de Clientes",
+  createDocument = "Crear Documentos",
+  getDocument = "Ver Documentos",
+  editDocument = "Editar Documentos",
+  deleteDocument = "Eliminar Documentos",
   getCientReport = "Ver Reportes de Clientes",
   sendMessage = "Enviar Mensajes",
   crateAmortization = "Crear Amortizaciones",
@@ -75,6 +75,8 @@ enum PermissionEnums {
   getWallet = "Ver Métodos de Pago",
   editWallet = "Editar Métodos de Pago",
   deleteWallet = "Eliminar Métodos de Pago",
+  getTrash="Ver Papelera",
+  restoreData="Restaurar Datos",
 }
 
 export default PermissionEnums;

@@ -4,7 +4,8 @@ import {Sequelize} from "sequelize";
 import fs from "fs";
 import path from "path";
 import config from "../app.config";
-import Migration from "@app/db/Migration";
+import Migration from "./Migration";
+import tools from "../utils/tools";
 
 class Seed {
     constructor(private sequelize: Sequelize) {
@@ -30,12 +31,12 @@ class Seed {
             const files = fs.readdirSync(folderPath);
             for (const file of files) {
                 if (file.endsWith(".sql")) {
-                    await new Migration(this.sequelize).runSQLFile(path.join(folderPath, file));
+                    await tools.runSQLFile(path.join(folderPath, file), this.sequelize);
                 }
             }
         } else {
             const filePath = path.join(__dirname, `seeds/${seed}.sql`);
-            await new Migration(this.sequelize).runSQLFile(filePath);
+            await tools.runSQLFile(filePath, this.sequelize);
         }
     }
 }

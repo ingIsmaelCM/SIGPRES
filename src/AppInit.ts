@@ -2,14 +2,13 @@ import express from "express";
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 import cors from "cors";
-import IController from "@app/controllers/IController";
 import session from "express-session";
 import config from "./app/app.config";
 import http from "http";
 import rateLimit from "express-rate-limit";
 import SocketService from "@app/services/SocketService";
 import AuthMiddleware from "@auth/middlewares/AuthMiddleware";
-import { AuthController } from "@auth/controllers/AuthController";
+import initSwagger from "@/docs/jsdoc";
 import helmet from "helmet"
 import AbstractRoutes from "@app/routes/AbstractRoutes";
 import AuthRoutes from "@auth/routes/AuthRoutes";
@@ -35,6 +34,7 @@ export class App {
     this.app.use(cookieParser());
     this.app.use("/api/public", express.static("public"));
     this.app.use("/api/views", express.static("views"));
+    initSwagger(this.app)
     this.secureApp();
     this.app.use(
       session({

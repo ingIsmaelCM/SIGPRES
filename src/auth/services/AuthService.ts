@@ -152,7 +152,7 @@ export default class AuthService extends  Service{
         );
         const refreshToken = tools.getToken(
             {email: userAuth.email},
-            7 * 24 * 60 * 60
+            "7d"
         );
         return {token, refreshToken};
     }

@@ -27,7 +27,6 @@ export default class RoleRoutes extends AbstractRoutes<RoleController> {
 
     this.router.post(
       "/auth",
-
       RoleMiddleware.hasPermission("Asignar Rol a Usuario"),
       RoleRequests.validateAssignRole(),
       RoleRequests.validate,

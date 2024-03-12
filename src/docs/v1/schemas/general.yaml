@@ -1,15 +1,3 @@
-openapi : 3.0.3
-info :
-  title : Query Parameters
-  description : Query Parameters
-  version : 1.0.0
-  license :
-    name : MIT
-servers :
-  - url : 'https'
-paths :
-
-
 components :
 
   schemas :

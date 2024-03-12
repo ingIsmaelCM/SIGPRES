@@ -6,6 +6,7 @@ import Expense from "./Expense";
 import Info from "./Info";
 import Job from "./Job";
 import Image from "@/file/models/Image";
+import Document from "@file/models/Document";
 import Preference from "./Preference";
 import Loan from "./Loan";
 import Payment from "./Payment";
@@ -13,17 +14,18 @@ import Lawyer from "./Lawyer";
 import Wallet from "./Wallet";
 
 export {
-  Client,
-  Amortization,
-  Condition,
-  Contact,
-  Expense,
-  Info,
-  Job,
-  Image,
-  Preference,
-  Loan,
-  Payment,
-  Lawyer,
-  Wallet,
+    Client,
+    Amortization,
+    Condition,
+    Contact,
+    Expense,
+    Info,
+    Job,
+    Image,
+    Preference,
+    Loan,
+    Payment,
+    Lawyer,
+    Wallet,
+    Document
 };

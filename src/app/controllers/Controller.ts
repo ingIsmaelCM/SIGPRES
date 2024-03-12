@@ -14,15 +14,21 @@ export default abstract class Controller {
     try {
       return response.success(res, code, await method(), title||mensajesEstado[code] );
     } catch (error: any) {
-      response.error(res, error.code, error.message, mensajesEstado[code]);
+      response.error(res, error.code, error.message, mensajesEstado[error.code||500]);
       return error;
     }
   }
 }
 
+/**
+ * Set fields createdBy and updatedBy on `req.body` from `req.auth`
+ * @param _target
+ * @param _propertyKey
+ * @param descriptor
+ */
 export function setAuthor(
-  target: any,
-  propertyKey: string,
+  _target: any,
+  _propertyKey: string,
   descriptor: PropertyDescriptor
 ): any {
   const originalMethod = descriptor.value;

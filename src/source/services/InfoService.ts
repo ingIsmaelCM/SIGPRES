@@ -50,9 +50,8 @@ export default class InfoService extends Service {
         return this.safeRun(async () => {
                 const methodName = `set${tools.uppercaseFirst(modelType)}`;
                 const newInfo = await this.infoRepo.updateOrCreate(info, trans);
-                await newInfo[methodName](modelId);
-                console.log(methodName, modelId)
                 await trans.commit();
+                await newInfo[methodName](modelId);
                 return newInfo;
             },
             async () => {
@@ -61,6 +60,8 @@ export default class InfoService extends Service {
     }
 
     async updateInfo(info: IInfo, infoId: number): Promise<any> {
+        console.log(info)
+
         const trans = await TenantConnection.getTrans();
         try {
             const updatedInfo = await this.infoRepo.update(info, infoId, trans);

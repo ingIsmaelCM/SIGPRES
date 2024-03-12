@@ -9,6 +9,8 @@ import Condition from "@source/models/Condition";
 import Payment from "@source/models/Payment";
 import Amortization from "@source/models/Amortization";
 import Job from "@source/models/Job";
+import {EDocumentable, EImageable} from "@file/utils/FileInterface";
+import Document from "@file/models/Document";
 
 /* TODO: Define relations for each Source Models */
 export default class SourceRelation {
@@ -33,14 +35,22 @@ export default class SourceRelation {
             foreignKey: "imageableId",
             as: "images",
             scope: {
-                imageableType: "client",
+                imageableType:  EImageable.Client,
             },
         });
+
+        Client.hasMany(Document,{
+            foreignKey: "documentableId",
+            as: "documents",
+            scope:{
+                documentableType: EDocumentable.Client
+            }
+        })
         Client.hasOne(Image, {
             foreignKey: "imageableId",
             as: "profile",
             scope: {
-                imageableType: "client",
+                imageableType: EImageable.Client,
                 caption: "Perfil Cliente",
             },
         });

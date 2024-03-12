@@ -14,11 +14,11 @@ export default class ImageRoutes extends AbstractRoutes<ImageController> {
   initRoutes(): void {
     this.router
       .route("/:id")
-      .get(RoleMiddleware.hasPermission("Ver Imágenes"), (req: any, res: any) =>
+      .get(RoleMiddleware.hasPermission(PermissionEnums.getImages), (req: any, res: any) =>
         this.controller.findImage(req, res)
       )
       .delete(
-        RoleMiddleware.hasPermission("Eliminar Imágenes"),
+        RoleMiddleware.hasPermission(PermissionEnums.deleteImages),
         (req: any, res: any) => this.controller.deleteImage(req, res)
       );
   }

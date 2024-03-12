@@ -12,7 +12,7 @@ export default {
   error(res: Response, status: number, error: any, title?:string): void {
     res.status(status || 500).json({
       title: title,
-      statusCode: status,
+      statusCode: status||500,
       content: error,
     });
   },

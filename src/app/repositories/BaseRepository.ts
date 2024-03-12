@@ -29,7 +29,7 @@ export class BaseRepository<T extends Model> {
             this.primaryKeyName = this.model.primaryKeyAttribute;
             return await method();
         } catch (error: any) {
-            logger.error(String(error))
+            logger.error(JSON.stringify(error))
             throw {
                 code: error.code || 500,
                 message: error.message
@@ -109,7 +109,7 @@ export class BaseRepository<T extends Model> {
         return newData[0]
     }
 
-    public async bulkCreate(data: any[], trans: any): Promise<T> {
+    public async bulkCreate(data: any[], trans: any): Promise<T[]> {
         return this.safeRun(() =>
             this.model.bulkCreate(data, {transaction: trans})
         );

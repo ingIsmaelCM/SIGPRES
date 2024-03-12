@@ -3,7 +3,7 @@ import {ValidationChain, body} from "express-validator";
 import {EInfoGender, EInfoModels} from "../utils/SourceInterfaces";
 
 class InfoRequest extends BaseRequest {
-    createInfoRequest(): Array<ValidationChain> {
+    upsertInfoRequest(): Array<ValidationChain> {
         return [
             body("dni", "Se requiere un DNI/ID").exists().notEmpty(),
             body("dni", "Revise el formato de DNI").isLength({min: 10, max: 18}),
@@ -12,20 +12,13 @@ class InfoRequest extends BaseRequest {
                 min: 10,
                 max: 15,
             }),
+
             body("email", "Revise el formado de correo")
                 .optional()
-                .isEmail()
-                .custom((value: string) => {
-                    return value.length > 5 || !value;
-                }),
+                .isEmail(),
             body("birthdate", "La fecha de nacimiento no es válida")
                 .optional()
-                .isDate()
-                .custom((value: string) => {
-                    const date = new Date(value);
-                    return !isNaN(date.getTime()) || !value;
-
-                }),
+                .isISO8601().toDate(),
             body("address", "La dirección es muy extensa").optional().isLength({
                 min: 1,
                 max: 125,

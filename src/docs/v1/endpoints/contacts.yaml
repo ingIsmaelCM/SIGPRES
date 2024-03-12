@@ -19,7 +19,9 @@ security :
 components :
   securitySchemes :
     BearerToken :
-      $ref : "../schemas/general.yaml#/components/securitySchemes/BearerAuth"
+      type : http
+      scheme : bearer
+      in : cookie
 
 paths :
   /contacts :

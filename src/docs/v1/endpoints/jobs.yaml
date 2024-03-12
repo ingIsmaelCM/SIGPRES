@@ -1,7 +1,7 @@
 openapi : 3.0.3
 info :
-  title : Clients
-  description : Crear, Editar, ver y gestionar contactos
+  title : Job Facts
+  description : Crear, Editar, ver y gestionar datos laborales del cliente
   version : 1.0.0
   license :
     name : MIT
@@ -17,16 +17,17 @@ security :
   - BearerToken : [ admin ]
 
 components :
-
   securitySchemes :
     BearerToken :
-      $ref : "../schemas/general.yaml#/components/securitySchemes/BearerAuth"
-
+      type : http
+      scheme : bearer
+      in : cookie
 
 paths :
-  /clients/ :
+  /jobs :
     get :
-      summary : List all clients
+      summary : List all jobs
+      operationId : jobs
       parameters :
         - $ref : "../schemas/const.yaml#/components/parameters/search"
       responses :
@@ -38,11 +39,15 @@ paths :
           $ref : "../schemas/general.yaml#/components/responses/403"
         500 :
           $ref : "../schemas/general.yaml#/components/responses/500"
-      operationId : clients
 
     post :
-      summary : Create new client
-      operationId : clients-create
+      summary : Create a new job
+      operationId : job.create
+      requestBody :
+        content :
+          application/json :
+            schema :
+              $ref : "../schemas/models.yaml#/components/schemas/Job"
       responses :
         201 :
           $ref : "../schemas/general.yaml#/components/responses/201"
@@ -54,16 +59,11 @@ paths :
           $ref : "../schemas/general.yaml#/components/responses/422"
         500 :
           $ref : "../schemas/general.yaml#/components/responses/500"
-      requestBody :
-        content :
-          application/json :
-            schema :
-              $ref : "../schemas/models.yaml#/components/schemas/Client"
 
-  /clients/{id} :
+  /jobs/{id} :
     get :
-      summary : Get an especific client by id or code
-      operationId : clients-show
+      summary : Get an especific job by id or code
+      operationId : jobs-show
       responses :
         200 :
           $ref : "../schemas/general.yaml#/components/responses/200"
@@ -75,8 +75,8 @@ paths :
           $ref : "../schemas/general.yaml#/components/responses/500"
 
     put :
-      summary : Update existing client
-      operationId : clients-update
+      summary : Update existing job
+      operationId : jobs-update
       responses :
         201 :
           $ref : "../schemas/general.yaml#/components/responses/201"
@@ -90,8 +90,8 @@ paths :
           $ref : "../schemas/general.yaml#/components/responses/500"
 
     delete :
-      summary : Soft delete client data
-      operationId : clients-delete
+      summary : Soft delete job data
+      operationId : jobs-delete
       responses :
         200 :
           $ref : "../schemas/general.yaml#/components/responses/200"
@@ -110,8 +110,8 @@ paths :
           in : path
           required : true
     post :
-      summary : Restore deleted client
-      operationId : clients-restore
+      summary : Restore deleted job
+      operationId : jobs-restore
       responses :
         200 :
           $ref : "../schemas/general.yaml#/components/responses/200"
@@ -130,22 +130,28 @@ paths :
           in : path
           required : true
 
-  /clients/{id}/info :
+
+
+  /jobs/{id}/info :
     post :
-      summary : Create or update client info
-      operationId : client.info
+      summary : Create or update job info
+      operationId : job.info
       requestBody :
         content :
           application/json :
             schema :
               $ref : "../schemas/models.yaml#/components/schemas/Info"
       responses :
+        200 :
+          $ref : "../schemas/general.yaml#/components/responses/200"
         201 :
           $ref : "../schemas/general.yaml#/components/responses/201"
         401 :
           $ref : "../schemas/general.yaml#/components/responses/401"
         403 :
           $ref : "../schemas/general.yaml#/components/responses/403"
+        404 :
+          $ref : "../schemas/general.yaml#/components/responses/404"
         422 :
           $ref : "../schemas/general.yaml#/components/responses/422"
         500 :
@@ -157,11 +163,10 @@ paths :
           in : path
           required : true
 
-
-  /clients/{id}/profile :
+  /jobs/{id}/images :
     post :
-      summary : Set or update client profile image
-      operationId : client.profile
+      summary : Set job images
+      operationId : job.images
       requestBody :
         content :
           application/json :
@@ -189,3 +194,32 @@ paths :
           in : path
           required : true
 
+  /jobs/{id}/close :
+    patch :
+      summary : Set a job as closed
+      operationId : job.close
+      requestBody :
+        content :
+          application/json :
+            schema :
+              properties :
+                endAt:
+                  type: string
+                  required : true
+      responses :
+        201 :
+          $ref : "../schemas/general.yaml#/components/responses/201"
+        401 :
+          $ref : "../schemas/general.yaml#/components/responses/401"
+        403 :
+          $ref : "../schemas/general.yaml#/components/responses/403"
+        422 :
+          $ref : "../schemas/general.yaml#/components/responses/422"
+        500 :
+          $ref : "../schemas/general.yaml#/components/responses/500"
+      parameters :
+        - name : id
+          schema :
+            type : integer
+          in : path
+          required : true

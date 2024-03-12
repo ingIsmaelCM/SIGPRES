@@ -16,7 +16,7 @@ export interface IDocument {
     title: string;
     size: number;
     documentableType: string;
-    documentableId: string;
+    documentableId: number;
     createdAt: string;
     updatedAt: string;
     deletedAt: string;
@@ -34,5 +34,15 @@ export enum EImageable {
     Contact = "Contact",
     Loan = "Loan",
     Payment = "Payment",
-    Lawyer = "Lawyer"
+    Lawyer = "Lawyer",
+    Job = "Job"
+}
+
+export enum EDocumentable {
+    Client = "Client",
+    Contact = "Contact",
+    Loan = "Loan",
+    Payment = "Payment",
+    Lawyer = "Lawyer",
+    Job = "Job",
 }

@@ -1,6 +1,7 @@
 import ITM from "@/app/models/ITenantModel";
 import { DataTypes, Model } from "sequelize";
 import { IContact, IContactRelation } from "../utils/SourceInterfaces";
+import Client from "@source/models/Client";
 
 @ITM.staticImplements<IContact, IContactRelation>()
 export default class Contact extends Model implements  IContact{
@@ -9,6 +10,7 @@ export default class Contact extends Model implements  IContact{
   declare id: number;
   declare infoId: number;
   declare lastname: string;
+  declare fullname?: string;
   declare name: string;
   declare createdAt?: string;
   declare createdBy?: number;
@@ -38,6 +40,12 @@ export default class Contact extends Model implements  IContact{
     infoId: {
       type: DataTypes.INTEGER,
       allowNull: true,
+    },
+    fullname: {
+      type: DataTypes.VIRTUAL,
+      get(this: Client) {
+        return `${this.name} ${this.lastname}`;
+      },
     },
     ...ITM.commonAttributes,
   };

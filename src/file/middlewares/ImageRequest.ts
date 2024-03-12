@@ -12,6 +12,7 @@ class ImageRequest extends BaseRequest {
                 .notEmpty()
                 .isURL(),
             param("id", "Ingrese el id del modelo").exists().isInt(),
+            body("caption", "Ingrese una caption válida").optional().isString().isLength({max: 150}),
             body("images.*.size", "Cada imagen debe tener un tamaño no mayor a 5.5mb")
                 .exists()
                 .notEmpty()

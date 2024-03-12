@@ -43,7 +43,7 @@ let config: any = {
 
   auth: {
     secret: process.env.PRIVATE_KEY || "<PRIVATE_KEY>",
-    expiresIn: Number(process.env.EXPIRES_IN) || 6000,
+    expiresIn: process.env.EXPIRES_IN || '1h',
     loginField: process.env.AUTH_LOGIN_FIELD || "email",
   },
 

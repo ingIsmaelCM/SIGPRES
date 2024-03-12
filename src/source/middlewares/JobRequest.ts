@@ -3,7 +3,7 @@ import {ValidationChain, body} from "express-validator"
 
  class JobRequest extends BaseRequest {
 
-    createJobRequest(): Array<ValidationChain>{
+    upsertJobRequest(): Array<ValidationChain>{
         return [
             body("startAt", "Ingrese una fecha de inicio").exists().notEmpty(),
             body("startAt", "La fecha de inicio es inválida").isISO8601().toDate(),
@@ -14,6 +14,13 @@ import {ValidationChain, body} from "express-validator"
             body("clientId","Indique el Id del cliente").exists().notEmpty(),
             body("clientId","El Id de cliente no es válido").isInt({min:1}),
 
+        ]
+    }
+
+    closeJobRequest(): Array<ValidationChain>{
+        return [
+            body("endAt", "Ingrese una fecha de cierre").exists().notEmpty(),
+            body("endAt", "La fecha de cierre es inválida").isISO8601().toDate(),
         ]
     }
 }

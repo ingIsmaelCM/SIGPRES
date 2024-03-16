@@ -45,6 +45,7 @@ export interface IClientRelation {
     documents: IDocument[];
     contacts: IContact[];
     jobs: IJob[]
+    social: ISocial;
 
     payments: IPayment[];
     moras: IMora[];
@@ -247,6 +248,17 @@ export interface IPaymentRelation {
     client: IClient;
     mora?: IMora;
     images: IImage[];
+}
+
+export interface ISocial extends  ICommonField{
+    facebook: string;
+    instagram: string;
+    whatsapp: string;
+    clientId: number;
+}
+
+export interface  ISocialRelation{
+    client: IClient
 }
 
 export interface IWallet extends ICommonField {

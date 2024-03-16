@@ -3,6 +3,7 @@ import Scope from "../utils/scopes";
 import {IParams} from "../utils/AppInterfaces";
 import tools from "../utils/tools";
 import logger from "@/logger";
+import SocketService from "@app/services/SocketService";
 
 /**
  * @template T - Generic thats extends from model
@@ -14,6 +15,7 @@ export class BaseRepository<T extends Model> {
      * @protected
      */
     protected model;
+    protected socketService: SocketService;
     /**
      * Name of col that is primary key. Default: id
      * @private
@@ -22,6 +24,7 @@ export class BaseRepository<T extends Model> {
 
     constructor(model: ModelStatic<T>) {
         this.model = model;
+        this.socketService = new SocketService(String(this.model.tableName));
     }
 
     protected async safeRun(method: () => Promise<any>): Promise<any> {
@@ -131,7 +134,9 @@ export class BaseRepository<T extends Model> {
                 transaction: trans,
             });
 
-            return this.model.findByPk(primaryKey, {transaction: trans});
+            const updated = await this.model.findByPk(primaryKey, {transaction: trans});
+            this.socketService.emit(`update${this.model.tableName}`, updated)
+            return updated;
         });
     }
 

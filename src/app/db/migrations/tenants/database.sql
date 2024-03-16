@@ -1,6 +1,8 @@
 /* FIXED: Add code to loans, changed deadline for term, move rate and grace from loans to conditions */
 
 SET foreign_key_checks = 0;
+
+
 CREATE TABLE `images`(
 `id` INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
 `path` VARCHAR(150) NOT NULL,
@@ -69,6 +71,18 @@ CREATE TABLE `clients`(
     `deletedAt` TIMESTAMP
 );
 
+CREATE TABLE `socials`(
+    `id` INT AUTO_INCREMENT PRIMARY KEY,
+    `instagram` VARCHAR(50),
+    `facebook` VARCHAR(50),
+    `whatsapp` VARCHAR(50),
+    `clientId` INT NOT NULL,
+    `createdBy` INT NOT NULL,
+    `updatedBy` INT NOT NULL,
+    `createdAt` TIMESTAMP NOT NULL DEFAULT current_timestamp,
+    `updatedAt` TIMESTAMP NOT NULL DEFAULT current_timestamp,
+    `deletedAt` TIMESTAMP
+);
 
 CREATE TABLE `lawyers`(
     `id` INT AUTO_INCREMENT PRIMARY KEY,
@@ -249,32 +263,56 @@ CREATE TABLE `moras`(
     `deletedAt` TIMESTAMP
 );
 
-ALTER TABLE `clients` ADD CONSTRAINT `FK_clients_infos` FOREIGN KEY (`infoId`) REFERENCES `infos` (`id`);
-ALTER TABLE `lawyers` ADD CONSTRAINT `FK_lawyers_infos` FOREIGN KEY (`infoId`) REFERENCES `infos` (`id`);
-ALTER TABLE `contacts` ADD CONSTRAINT `FK_contacts_infos` FOREIGN KEY (`infoId`) REFERENCES `infos` (`id`);
+ALTER TABLE `clients` ADD CONSTRAINT `FK_clients_infos` FOREIGN KEY (`infoId`) REFERENCES `infos` (`id`)
+ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `lawyers` ADD CONSTRAINT `FK_lawyers_infos` FOREIGN KEY (`infoId`) REFERENCES `infos` (`id`)
+ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `contacts` ADD CONSTRAINT `FK_contacts_infos` FOREIGN KEY (`infoId`) REFERENCES `infos` (`id`)
+ON DELETE CASCADE ON UPDATE CASCADE;
 ALTER TABLE `client_contacts` ADD CONSTRAINT `FK_client_contacts_client` FOREIGN KEY (`clientId`) REFERENCES `clients` (`id`)
 ON DELETE CASCADE ON UPDATE CASCADE;
 ALTER TABLE `client_contacts` ADD CONSTRAINT `FK_client_contacts_contact` FOREIGN KEY (`contactId`) REFERENCES `contacts` (`id`)
 ON DELETE CASCADE ON UPDATE CASCADE;
-ALTER TABLE `jobs` ADD CONSTRAINT `FK_jobs_clients` FOREIGN KEY (`clientId`) REFERENCES `clients` (`id`);
-ALTER TABLE `jobs` ADD CONSTRAINT `FK_jobs_wallets` FOREIGN KEY (`infoId`) REFERENCES `wallets` (`id`);
-ALTER TABLE `expenses` ADD CONSTRAINT `FK_expenses_wallets` FOREIGN KEY (`walletId`) REFERENCES `wallets` (`id`);
-ALTER TABLE `expenses` ADD CONSTRAINT `FK_expenses_lawyers` FOREIGN KEY (`lawyerId`) REFERENCES `lawyers` (`id`);
-ALTER TABLE `loans` ADD CONSTRAINT `FK_loans_clients` FOREIGN KEY (`clientId`) REFERENCES `clients` (`id`);
-ALTER TABLE `loans` ADD CONSTRAINT `FK_loans_wallets` FOREIGN KEY (`walletId`) REFERENCES `wallets` (`id`);
-ALTER TABLE `loans` ADD CONSTRAINT `FK_loans_lawyers` FOREIGN KEY (`lawyerId`) REFERENCES `lawyers` (`id`);
-ALTER TABLE `loans` ADD CONSTRAINT `FK_loans_guarantor` FOREIGN KEY (`guarantorId`) REFERENCES `contacts` (`id`);
-ALTER TABLE `conditions` ADD CONSTRAINT `FK_conditions_loans` FOREIGN KEY (`loanId`) REFERENCES `loans` (`id`);
-ALTER TABLE `conditions` ADD CONSTRAINT `FK_conditions_clients` FOREIGN KEY (`clientId`) REFERENCES `clients` (`id`);
-ALTER TABLE `amortizations` ADD CONSTRAINT `FK_amortizations_loans` FOREIGN KEY (`loanId`) REFERENCES `loans` (`id`);
-ALTER TABLE `amortizations` ADD CONSTRAINT `FK_amortizations_clients` FOREIGN KEY (`clientId`) REFERENCES `clients` (`id`);
-ALTER TABLE `payments` ADD CONSTRAINT `FK_payments_wallets` FOREIGN KEY (`walletId`) REFERENCES `wallets` (`id`);
-ALTER TABLE `payments` ADD CONSTRAINT `FK_payments_loans` FOREIGN KEY (`loanId`) REFERENCES `loans` (`id`);
-ALTER TABLE `payments` ADD CONSTRAINT `FK_payments_clients` FOREIGN KEY (`clientId`) REFERENCES `clients` (`id`);
-ALTER TABLE `payments` ADD CONSTRAINT `FK_payments_lawyers` FOREIGN KEY (`lawyerId`) REFERENCES `lawyers` (`id`);
-ALTER TABLE `moras` ADD CONSTRAINT `FK_moras_loans` FOREIGN KEY (`loanId`) REFERENCES `loans` (`id`);
-ALTER TABLE `moras` ADD CONSTRAINT `FK_moras_clients` FOREIGN KEY (`clientId`) REFERENCES `clients` (`id`);
-ALTER TABLE `moras` ADD CONSTRAINT `FK_moras_payments` FOREIGN KEY (`paymentId`) REFERENCES `payments` (`id`);
+ALTER TABLE `jobs` ADD CONSTRAINT `FK_jobs_clients` FOREIGN KEY (`clientId`) REFERENCES `clients` (`id`)
+ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `jobs` ADD CONSTRAINT `FK_jobs_wallets` FOREIGN KEY (`infoId`) REFERENCES `wallets` (`id`)
+ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `expenses` ADD CONSTRAINT `FK_expenses_wallets` FOREIGN KEY (`walletId`) REFERENCES `wallets` (`id`)
+ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `expenses` ADD CONSTRAINT `FK_expenses_lawyers` FOREIGN KEY (`lawyerId`) REFERENCES `lawyers` (`id`)
+ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `loans` ADD CONSTRAINT `FK_loans_clients` FOREIGN KEY (`clientId`) REFERENCES `clients` (`id`)
+ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `loans` ADD CONSTRAINT `FK_loans_wallets` FOREIGN KEY (`walletId`) REFERENCES `wallets` (`id`)
+ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `loans` ADD CONSTRAINT `FK_loans_lawyers` FOREIGN KEY (`lawyerId`) REFERENCES `lawyers` (`id`)
+ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `loans` ADD CONSTRAINT `FK_loans_guarantor` FOREIGN KEY (`guarantorId`) REFERENCES `contacts` (`id`)
+ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `conditions` ADD CONSTRAINT `FK_conditions_loans` FOREIGN KEY (`loanId`) REFERENCES `loans` (`id`)
+ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `conditions` ADD CONSTRAINT `FK_conditions_clients` FOREIGN KEY (`clientId`) REFERENCES `clients` (`id`)
+ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `amortizations` ADD CONSTRAINT `FK_amortizations_loans` FOREIGN KEY (`loanId`) REFERENCES `loans` (`id`)
+ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `amortizations` ADD CONSTRAINT `FK_amortizations_clients` FOREIGN KEY (`clientId`) REFERENCES `clients` (`id`)
+ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `payments` ADD CONSTRAINT `FK_payments_wallets` FOREIGN KEY (`walletId`) REFERENCES `wallets` (`id`)
+ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `payments` ADD CONSTRAINT `FK_payments_loans` FOREIGN KEY (`loanId`) REFERENCES `loans` (`id`)
+ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `payments` ADD CONSTRAINT `FK_payments_clients` FOREIGN KEY (`clientId`) REFERENCES `clients` (`id`)
+ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `payments` ADD CONSTRAINT `FK_payments_lawyers` FOREIGN KEY (`lawyerId`) REFERENCES `lawyers` (`id`)
+ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `moras` ADD CONSTRAINT `FK_moras_loans` FOREIGN KEY (`loanId`) REFERENCES `loans` (`id`)
+ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `moras` ADD CONSTRAINT `FK_moras_clients` FOREIGN KEY (`clientId`) REFERENCES `clients` (`id`)
+ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `moras` ADD CONSTRAINT `FK_moras_payments` FOREIGN KEY (`paymentId`) REFERENCES `payments` (`id`)
+ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `socials` ADD CONSTRAINT `FK_clients_socials` FOREIGN KEY (`clientId`) REFERENCES `clients` (`id`)
+ON DELETE CASCADE ON UPDATE CASCADE;
 
 
 CREATE INDEX idx_images_imageableId ON images (imageableId);
@@ -349,5 +387,6 @@ INSERT INTO `preferences` (`key`, label, createdBy, updatedBy, value) VALUES
 TRUNCATE TABLE `wallets`;
 
 INSERT INTO `wallets` (name, balance, createdBy, updatedBy) VALUES
-('Efectivo', 150000, 1, 1);
+('Efectivo', 0, 1, 1);
+
 SET foreign_key_checks = 1;

@@ -11,6 +11,7 @@ import Amortization from "@source/models/Amortization";
 import Job from "@source/models/Job";
 import {EDocumentable, EImageable} from "@file/utils/FileInterface";
 import Document from "@file/models/Document";
+import Social from "@source/models/Social";
 
 /* TODO: Define relations for each Source Models */
 export default class SourceRelation {
@@ -35,14 +36,14 @@ export default class SourceRelation {
             foreignKey: "imageableId",
             as: "images",
             scope: {
-                imageableType:  EImageable.Client,
+                imageableType: EImageable.Client,
             },
         });
 
-        Client.hasMany(Document,{
+        Client.hasMany(Document, {
             foreignKey: "documentableId",
             as: "documents",
-            scope:{
+            scope: {
                 documentableType: EDocumentable.Client
             }
         })
@@ -54,6 +55,10 @@ export default class SourceRelation {
                 caption: "Perfil Cliente",
             },
         });
+        Client.hasOne(Social, {
+            foreignKey: "clientId",
+            as: "social"
+        })
 
         Client.hasMany(Loan, {
             foreignKey: "clientId",
@@ -140,6 +145,11 @@ export default class SourceRelation {
             foreignKey: "clientId",
             as: "client",
         });
+
+        Social.belongsTo(Client, {
+            foreignKey: "clientId",
+            as: "client"
+        })
     }
 } /* 
       "documents",

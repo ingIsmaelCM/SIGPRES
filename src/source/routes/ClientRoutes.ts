@@ -76,9 +76,21 @@ export default class ClientRoutes extends AbstractRoutes<ClientController> {
     }
 }
 
-
 /**
- * @openapi
+ * @swagger
+ *  components:
+ *   schemas:
+ *    Client :
+ *      type : object
+ *      properties :
+ *        name :
+ *         type : string
+ *        lastname :
+ *         type : string
+ *      required :
+ *        - name
+ *        - lastname
+ * @swagger
  *  /clients/:
  *     get:
  *       summary: List all clients
@@ -114,7 +126,6 @@ export default class ClientRoutes extends AbstractRoutes<ClientController> {
  *           application/json:
  *             schema:
  *               $ref: "#/components/schemas/Client"
- *
  * /clients/{id}:
  *     get:
  *       summary: Get an especific client by id or code

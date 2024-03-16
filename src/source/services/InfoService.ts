@@ -60,8 +60,6 @@ export default class InfoService extends Service {
     }
 
     async updateInfo(info: IInfo, infoId: number): Promise<any> {
-        console.log(info)
-
         const trans = await TenantConnection.getTrans();
         try {
             const updatedInfo = await this.infoRepo.update(info, infoId, trans);

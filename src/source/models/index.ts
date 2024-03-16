@@ -12,6 +12,7 @@ import Loan from "./Loan";
 import Payment from "./Payment";
 import Lawyer from "./Lawyer";
 import Wallet from "./Wallet";
+import Social from "@source/models/Social";
 
 export {
     Client,
@@ -27,5 +28,6 @@ export {
     Payment,
     Lawyer,
     Wallet,
-    Document
+    Document,
+    Social
 };

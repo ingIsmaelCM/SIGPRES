@@ -1,44 +1,46 @@
-import { IAuth } from "@/auth/utils/AuthInterfaces";
-import { Server as HttpServer } from "http";
-import { Server } from "socket.io";
+import {IAuth} from "@/auth/utils/AuthInterfaces";
+import {Server as HttpServer} from "http";
+import {Server} from "socket.io";
 
 export default class SocketService {
-  socket: Server;
+    private static socket: Server;
+    room: string = "global";
 
-  constructor(server: HttpServer) {
-    this.socket = new Server(server, {
-      cors: {
-        origin: "*",
-      },
-      path: "/api/socket",
-    });
-    this.setMiddelware();
-    this.sockectListen();
-  }
-
-  private setMiddelware() {
-    this.socket.use((socket, next) => {
-      next();
-    });
-  }
-
-  private sockectListen() {
-    try {
-      this.socket.on("connection", (socket: any) => {
-        socket.on("message", (socket: any) => {
-          const auth: IAuth = socket.auth;
-          const sender = {
-            name: auth.name + " " + auth.lastname,
-            email: auth.email,
-            username: auth.username,
-            lastlogin: auth.lastlogin,
-          };
-          this.socket.emit("message", { ...socket, sender, auth: undefined });
-        });
-      });
-    } catch (error) {
-      console.log(error);
+    constructor(room: string) {
+        this.room = room;
     }
-  }
+
+    static createSocket(server: HttpServer) {
+        if (!SocketService.socket) {
+            SocketService.socket = new Server(server, {
+                cors: {
+                    origin: "*",
+                },
+                path: "/api/socket",
+            });
+            SocketService.setMiddelware();
+            SocketService.sockectListen();
+        }
+
+    }
+    private static setMiddelware() {
+        this.socket.use((socket, next) => {
+            next();
+        });
+    }
+
+    private static sockectListen() {
+        try {
+            this.socket.on("connection", (socket: any) => {
+
+            });
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+     emit(channel: string, content: any) {
+       SocketService.socket.timeout(5000).emit(channel, content)
+    }
 
 }

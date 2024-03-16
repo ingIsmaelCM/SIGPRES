@@ -1,0 +1,53 @@
+import {ISocial, ISocialRelation} from "@source/utils/SourceInterfaces";
+import {Model, ModelAttributeColumnOptions, DataTypes} from "sequelize"
+import ITM from "@app/models/ITenantModel";
+
+@ITM.staticImplements<ISocial, ISocialRelation>()
+export default class Social extends Model implements ISocial {
+    declare clientId: number;
+    declare createdAt: string;
+    declare createdBy: number;
+    declare deletedAt: string;
+    declare facebook: string;
+    declare id: number;
+    declare instagram: string;
+    declare updatedAt: string;
+    declare updatedBy: number;
+    declare whatsapp: string;
+
+    static tableName = "socials";
+    static modelName = "Social";
+
+    getSearchables(): Array<keyof ISocial> {
+        return [
+            "facebook", "instagram", "whatsapp"
+        ]
+    }
+
+    getRelations(): Array<keyof ISocialRelation> {
+        return ["client"]
+    }
+
+    static attributes: Record<keyof ISocial, ModelAttributeColumnOptions> =
+        {
+            facebook: {
+                type: DataTypes.STRING,
+                allowNull: true
+            },
+            instagram: {
+                type: DataTypes.STRING,
+                allowNull: true
+            },
+            whatsapp: {
+                type: DataTypes.STRING,
+                allowNull: true
+            },
+            clientId: {
+                type: DataTypes.INTEGER,
+                allowNull: false
+            },
+            ...ITM.commonAttributes
+        }
+
+
+}

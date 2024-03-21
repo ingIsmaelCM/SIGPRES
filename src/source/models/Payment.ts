@@ -1,5 +1,5 @@
 import { DataTypes, Model } from "sequelize";
-import { IPayment, IPaymentRelation } from "../utils/SourceInterfaces";
+import { IPayment, IPaymentRelation } from "@app/interfaces/SourceInterfaces";
 import ITM from "@/app/models/ITenantModel";
 
 @ITM.staticImplements<IPayment, IPaymentRelation>()

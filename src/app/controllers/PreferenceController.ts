@@ -1,8 +1,8 @@
 import Controller from "@app/controllers/Controller";
 import IController from "@app/controllers/IController";
-import PreferenceService from "@app/services/PreferenceService";
+import PreferenceService from "@source/services/PreferenceService";
 import tools from "@app/utils/tools";
-import {IPreference} from "@/source/utils/SourceInterfaces";
+import {IPreference} from "@app/interfaces/SourceInterfaces";
 
 export default class PreferenceController
     extends Controller

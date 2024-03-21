@@ -1,5 +1,5 @@
 import AuthRelation from "@/auth/models/AuthRelations";
-import FileRelation from "@/file/models/FIleRelations";
+import FileRelation from "@source/models/FIleRelations";
 
 export default class Relation {
   static initRelations() {

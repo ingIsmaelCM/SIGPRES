@@ -2,7 +2,7 @@ import { Router } from "express";
 import response from "../utils/response";
 import tools from "../utils/tools";
 import Service from "@app/services/Service";
-import {EStatusCode} from "@app/utils/AppInterfaces";
+import {EStatusCode} from "@app/interfaces/AppInterfaces";
 
 
 //TODO: Remove title parameter from each call to this method

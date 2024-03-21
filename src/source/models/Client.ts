@@ -4,11 +4,13 @@ import {
     EClientType,
     IClient,
     IClientRelation,
-} from "@source/utils/SourceInterfaces";
+} from "@app/interfaces/SourceInterfaces";
 import tools from "@app/utils/tools";
 
 @ITM.staticImplements<IClient, IClientRelation>()
 export default class Client extends Model implements IClient {
+
+    declare setInfo:(id: number)=> any;
     declare name: string;
     declare code?: string;
     declare lastname: string;

@@ -1,4 +1,4 @@
-import {ISocial, ISocialRelation} from "@source/utils/SourceInterfaces";
+import {ISocial, ISocialRelation} from "@app/interfaces/SourceInterfaces";
 import {Model, ModelAttributeColumnOptions, DataTypes} from "sequelize"
 import ITM from "@app/models/ITenantModel";
 

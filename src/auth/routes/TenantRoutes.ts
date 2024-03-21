@@ -1,10 +1,10 @@
-import AbstractRoutes from "@/app/routes/AbstractRoutes";
+import BaseRoutes from "@app/routes/BaseRoutes";
 import TenantController from "../controllers/TenantController";
 import RoleMiddleware from "../middlewares/RoleMiddleware";
-import PermissionEnums from "@/app/utils/PermissionEnums";
-import TenantRequest from "../middlewares/TenantRequest";
+import PermissionEnums from "@app/interfaces/PermissionEnums";
+import TenantRequest from "../requests/TenantRequest";
 
-export default class TenantRoutes extends AbstractRoutes<TenantController> {
+export default class TenantRoutes extends BaseRoutes<TenantController> {
 
   constructor() {
     super(new TenantController());
@@ -14,7 +14,7 @@ export default class TenantRoutes extends AbstractRoutes<TenantController> {
     this.router
       .route("/")
       .get(
-        RoleMiddleware.hasPermission(PermissionEnums.getTenant),
+        RoleMiddleware.hasPermission(PermissionEnums.getTenants),
         (req: any, res: any) => this.controller.getTenants(req, res)
       )
       .post(

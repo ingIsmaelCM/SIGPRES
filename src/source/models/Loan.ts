@@ -5,7 +5,7 @@ import {
   ELoanStatus,
   ILoan,
   ILoanRelation,
-} from "../utils/SourceInterfaces";
+} from "@app/interfaces/SourceInterfaces";
 
 @ITM.staticImplements<ILoan, ILoanRelation>()
 export default class Loan extends Model implements ILoan {

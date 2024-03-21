@@ -1,13 +1,11 @@
 import {IAuth} from "@/auth/utils/AuthInterfaces";
 import {Server as HttpServer} from "http";
-import {Server} from "socket.io";
+import {RemoteSocket, Server} from "socket.io";
 
 export default class SocketService {
     private static socket: Server;
-    room: string = "global";
 
-    constructor(room: string) {
-        this.room = room;
+    constructor() {
     }
 
     static createSocket(server: HttpServer) {

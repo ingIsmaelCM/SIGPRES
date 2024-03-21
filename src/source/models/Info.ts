@@ -1,6 +1,6 @@
 import ITM from "@/app/models/ITenantModel";
 import { DataTypes, Model } from "sequelize";
-import { EInfoGender, IInfo, IInfoRelation } from "../utils/SourceInterfaces";
+import { EInfoGender, IInfo, IInfoRelation } from "@app/interfaces/SourceInterfaces";
 
 @ITM.staticImplements<IInfo, IInfoRelation>()
 export default class Info extends Model implements IInfo {

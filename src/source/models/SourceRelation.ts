@@ -1,7 +1,7 @@
 import {DataTypes} from "sequelize";
 import Client from "@source/models/Client";
 import Info from "@source/models/Info";
-import Image from "@file/models/Image";
+import Image from "@source/models/Image";
 import Loan from "@source/models/Loan";
 import Lawyer from "@source/models/Lawyer";
 import Contact from "@source/models/Contact";
@@ -9,8 +9,8 @@ import Condition from "@source/models/Condition";
 import Payment from "@source/models/Payment";
 import Amortization from "@source/models/Amortization";
 import Job from "@source/models/Job";
-import {EDocumentable, EImageable} from "@file/utils/FileInterface";
-import Document from "@file/models/Document";
+import {EDocumentable, EImageable} from "@app/interfaces/FileInterface";
+import Document from "@source/models/Document";
 import Social from "@source/models/Social";
 
 /* TODO: Define relations for each Source Models */

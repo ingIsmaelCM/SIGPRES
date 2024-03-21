@@ -3,7 +3,7 @@ import {
   Model,
   ModelAttributeColumnOptions,
 } from "sequelize";
-import { IWallet, IWalletRelation } from "../utils/SourceInterfaces";
+import { IWallet, IWalletRelation } from "@app/interfaces/SourceInterfaces";
 import ITM from "@/app/models/ITenantModel";
 
 @ITM.staticImplements<IWallet, IWalletRelation>()

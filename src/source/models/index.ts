@@ -5,14 +5,15 @@ import Contact from "./Contact";
 import Expense from "./Expense";
 import Info from "./Info";
 import Job from "./Job";
-import Image from "@/file/models/Image";
-import Document from "@file/models/Document";
+import Image from "@source/models/Image";
+import Document from "@source/models/Document";
 import Preference from "./Preference";
 import Loan from "./Loan";
 import Payment from "./Payment";
 import Lawyer from "./Lawyer";
 import Wallet from "./Wallet";
 import Social from "@source/models/Social";
+import Mora from "@source/models/Mora";
 
 export {
     Client,
@@ -29,5 +30,6 @@ export {
     Lawyer,
     Wallet,
     Document,
-    Social
+    Social,
+    Mora
 };

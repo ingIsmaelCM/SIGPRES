@@ -1,4 +1,4 @@
-import ClientRepository from "@source/repositories/ClientRespository";
+import ClientRepository from "../../src/source/repositories/ClientRepository";
 import interceptor from "../interceptor";
 
 describe('Testing unset clients', () => {

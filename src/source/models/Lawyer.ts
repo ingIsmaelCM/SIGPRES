@@ -1,6 +1,6 @@
 import ITM from "@/app/models/ITenantModel";
 import { DataTypes, Model } from "sequelize";
-import { ILawyer, ILawyerRelation } from "../utils/SourceInterfaces";
+import { ILawyer, ILawyerRelation } from "@app/interfaces/SourceInterfaces";
 
 @ITM.staticImplements<ILawyer, ILawyerRelation>()
 export default class Lawyer extends Model {

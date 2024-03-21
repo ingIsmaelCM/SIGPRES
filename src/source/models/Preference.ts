@@ -3,7 +3,7 @@ import { staticImplements, commonAttributes } from "@app/models/ITenantModel";
 import {
   IPreference,
   IPreferenceRelation,
-} from "@source/utils/SourceInterfaces";
+} from "@app/interfaces/SourceInterfaces";
 
 @staticImplements<IPreference, IPreferenceRelation>()
 export default class Preference extends Model {

@@ -1,4 +1,4 @@
-import BaseRequest from "@app/middlewares/BaseRequest";
+import BaseRequest from "@app/requests/BaseRequest";
 import { ValidationChain, body, param } from "express-validator";
 
 class PreferenceRequest extends BaseRequest {

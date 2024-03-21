@@ -1,5 +1,5 @@
 import { DataTypes } from "sequelize";
-import { ICommonField } from "../utils/AppInterfaces";
+import { ICommonField } from "../interfaces/AppInterfaces";
 
 /* FIXED: Setting static and common interfaces */
 

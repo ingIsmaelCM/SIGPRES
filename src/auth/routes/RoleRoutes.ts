@@ -1,9 +1,9 @@
-import AbstractRoutes from "@/app/routes/AbstractRoutes";
+import BaseRoutes from "@app/routes/BaseRoutes";
 import RoleController from "@auth/controllers/RoleController";
-import RoleRequests from "@auth/middlewares/RoleRequests";
+import RoleRequests from "@auth/requests/RoleRequests";
 import RoleMiddleware from "../middlewares/RoleMiddleware";
 
-export default class RoleRoutes extends AbstractRoutes<RoleController> {
+export default class RoleRoutes extends BaseRoutes<RoleController> {
 
   constructor() {
     super(new RoleController());
@@ -59,7 +59,6 @@ export default class RoleRoutes extends AbstractRoutes<RoleController> {
     );
     this.router.post(
       "/permissions/grantall",
-
       RoleMiddleware.hasPermission("Asignar Permiso a Rol"),
       RoleRequests.validateAssingPermissionToRole().slice(0, 1),
       RoleRequests.validate,

@@ -1,6 +1,6 @@
 import ITM from "@/app/models/ITenantModel";
 import {DataTypes, Model, ModelAttributeColumnOptions} from "sequelize";
-import {EJobStatus, IJob, IJobRelation} from "../utils/SourceInterfaces";
+import {EJobStatus, IJob, IJobRelation} from "@app/interfaces/SourceInterfaces";
 
 @ITM.staticImplements<IJob, IJobRelation>()
 export default class Job extends Model implements IJob {

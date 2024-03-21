@@ -1,80 +1,69 @@
 import Controller, {setAuthor} from "@/app/controllers/Controller";
 import {Request, Response} from "express"
 import IController from "@/app/controllers/IController";
-import ClientService from "../services/ClientService";
-import InfoService from "@source/services/InfoService";
-import {EInfoModels} from "@source/utils/SourceInterfaces";
+import ClientService from "@source/services/ClientService";
 
-export default class ClientController
-    extends Controller
-    implements IController {
-    prefix: string = "clients";
-    mainService = new ClientService();
-    private infoService = new InfoService();
+export default class ClientController extends Controller implements IController {
+    prefix: string = 'clients';
+    mainService = new ClientService()
 
-    async getClients(req: Request, res: Response) {
-        await this.safeRun(async () =>
-                await this.mainService.getClients(req.query),
-            res, 200, "Lista de cliente");
+
+    async index(req: Request, res: Response) {
+        //@ts-ignore
+        return this.safeRun(async () =>
+                this.mainService.getClients(req.query),
+            res, 200, "Listado de clientes"
+        )
     }
 
-    async findClient(req: Request, res: Response) {
-        await this.safeRun(async () =>
-                await this.mainService.findClient(Number(req.params.id), req.query),
-            res, 200, "Detalles del Cliente");
-    }
-
-    @setAuthor
-    async createClient(req: Request, res: Response) {
-        await this.safeRun(async () =>
-                await this.mainService.createClient(req.body),
-            res, 201, "Cliente Registrado");
+    async show(req: Request, res: Response) {
+        return this.safeRun(async () =>
+                this.mainService.findClient(Number(req.params.id), req.query),
+            res, 200, "Detalles del cliente"
+        )
     }
 
     @setAuthor
-    async updateClient(req: Request, res: Response) {
-        await this.safeRun(async () =>
-                await this.mainService.updateClient(req.body, Number(req.params.id)),
-            res, 201, "Cliente Actualizado");
+    async store(req: Request, res: Response) {
+        return this.safeRun(async () =>
+                this.mainService.createClient(req.body),
+            res, 201, "Cliente registrado"
+        )
     }
 
     @setAuthor
-    async setClientInfo(req: Request, res: Response) {
-        await this.safeRun(async () =>
-                await this.infoService.addRelated(req.body,
-                    EInfoModels.Client,
-                    Number(req.params.id)),
-            res, 201, "Información Registrada");
+    async update(req: Request, res: Response) {
+        return this.safeRun(async () =>
+                this.mainService.updateClient(Number(req.params.id), req.body),
+            res, 201, "Cliente Actualizado"
+        )
     }
 
-    async deleteClient(req: Request, res: Response) {
-        await this.safeRun(async () =>
-                await this.mainService.deleteClient(Number(req.params.id)),
-            res, 200, "Cliente Eliminado");
-    }
-
-    async restoreClient(req: Request, res: Response) {
-        await this.safeRun(async () =>
-                await this.mainService.restoreClient(Number(req.params.id)),
-            res, 200, "Cliente Restaurado");
+    @setAuthor
+    async setInfoToClient(req: Request, res: Response) {
+        return this.safeRun(async () =>
+                this.mainService.setInfoToClient(Number(req.params.id), req.body),
+            res, 201, "Información Actualizada"
+        )
     }
 
     async setProfilePhoto(req: Request, res: Response) {
-        await this.safeRun(async () =>
-                await this.mainService.setProfilePhoto(req.body.images[0], Number(req.params.id)),
-            res, 201, "Foto asignada al cliente")
+        return this.safeRun(async () =>
+                this.mainService.setProfilePhoto(Number(req.params.id), req.body),
+            res, 201, "Foto de perfil añadida")
     }
 
-    async setClientImages(req: Request, res: Response) {
-        return await this.safeRun(async () =>
-                await this.mainService.setClientImages(req.body.images, Number(req.params.id)),
-            res, 201, "Imágenes asignadas")
+    async delete(req: Request, res: Response) {
+        return this.safeRun(async () =>
+                this.mainService.deleteClient(Number(req.params.id)),
+            res, 200, "Cliente Eliminado"
+        )
     }
 
-    async setClientDocuments(req: Request, res: Response) {
-        return await this.safeRun(async () =>
-                await this.mainService.setClientDocuments(req.body.documents, Number(req.params.id)),
-            res, 201, "Documento(s) Asignado(s)")
+    async restore(req: Request, res: Response) {
+        return this.safeRun(async () =>
+                this.mainService.restoreClient(Number(req.params.id)),
+            res, 200, "Cliente Restaurado"
+        )
     }
-
 }

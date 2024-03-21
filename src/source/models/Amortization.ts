@@ -6,7 +6,7 @@ import {
 import {
     IAmortization,
     IAmortizationRelation,
-} from "../utils/SourceInterfaces";
+} from "@app/interfaces/SourceInterfaces";
 
 @ITM.staticImplements<IAmortization, IAmortizationRelation>()
 export default class Amortization extends Model {

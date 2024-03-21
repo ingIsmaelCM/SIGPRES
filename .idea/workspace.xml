@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="4c09f163-013a-4abe-ad01-27681f9e9f9b" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/app/requests/BaseRequest.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/utils/locale/en.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/utils/locale/es.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/auth/routes/index.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/source/controllers/AmortizationController.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/source/controllers/ConditionController.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/source/controllers/DocumentController.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/source/controllers/ExpenseController.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/source/controllers/LawyerController.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/source/controllers/MoraController.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/source/controllers/PaymentController.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/source/controllers/PreferenceController.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/source/controllers/SocialController.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/source/models/Mora.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/source/repositories/LawyerRepository.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/source/repositories/MoraRepository.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/source/repositories/PaymentRepository.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/source/requests/AmortizationRequest.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/source/requests/ClientRequest.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/source/requests/ConditionRequest.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/source/requests/ContactRequest.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/source/requests/ExpenseRequest.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/source/requests/InfoRequest.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/source/requests/JobRequest.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/source/requests/LawyerRequest.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/source/requests/LoanRequest.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/source/requests/MoraRequest.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/source/requests/PaymentRequest.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/source/requests/PreferenceRequest.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/source/requests/SocialRequest.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/source/requests/WalletRequest.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/source/routes/AmortizationRoute.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/source/routes/ClientRoute.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/source/routes/ConditionRoute.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/source/routes/ContactRoute.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/source/routes/DocumentRoute.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/source/routes/ExpenseRoute.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/source/routes/ImageRoute.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/source/routes/InfoRoute.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/source/routes/JobRoute.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/source/routes/LawyerRoute.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/source/routes/LoanRoute.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/source/routes/MoraRoute.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/source/routes/PaymentRoute.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/source/routes/PreferenceRoute.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/source/routes/SocialRoute.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/source/routes/WalletRoute.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/source/routes/index.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/source/services/AmortizationService.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/source/services/ConditionService.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/source/services/DocumentService.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/source/services/EventService.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/source/services/ExpenseService.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/source/services/ImageService.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/source/services/LawyerService.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/source/services/MoraService.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/source/services/PaymentService.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/source/services/SocialService.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sigpres.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sigpres.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/swagger-settings.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/webResources.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.vscode/settings.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/App.ts" beforeDir="false" afterPath="$PROJECT_DIR$/App.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/error.log" beforeDir="false" afterPath="$PROJECT_DIR$/error.log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/AppInit.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/AppInit.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/controllers/Controller.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/controllers/Controller.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/controllers/PreferenceController.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/controllers/PreferenceController.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/db/seeds/auth.sql" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/db/seeds/auth.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/middlewares/BaseRequest.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/middlewares/PreferenceRequest.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/middlewares/PreferenceRequest.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/models/ITenantModel.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/models/ITenantModel.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/models/Relations.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/models/Relations.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/repositories/BaseRepository.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/repositories/BaseRepository.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/repositories/PrefenceRepository.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/source/repositories/PrefenceRepository.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/routes/AbstractRoutes.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/routes/BaseRoutes.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/routes/AppRoutes.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/routes/AppRoutes.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/routes/PreferenceRoutes.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/source/routes/PreferenceRoutes.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/services/PreferenceService.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/source/services/PreferenceService.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/services/SocketService.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/services/SocketService.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/utils/AppInterfaces.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/interfaces/AppInterfaces.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/utils/PermissionEnums.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/interfaces/PermissionEnums.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/utils/scopes.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/utils/scopes.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/utils/tools.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/utils/tools.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/auth/middlewares/AuthRequest.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/auth/requests/AuthRequest.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/auth/middlewares/RoleMiddleware.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/auth/middlewares/RoleMiddleware.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/auth/middlewares/RoleRequests.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/auth/requests/RoleRequests.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/auth/middlewares/TenantRequest.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/auth/requests/TenantRequest.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/auth/routes/AuthRoutes.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/auth/routes/AuthRoutes.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/auth/routes/RoleRoutes.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/auth/routes/RoleRoutes.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/auth/routes/TenantRoutes.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/auth/routes/TenantRoutes.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/auth/services/TenantService.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/auth/services/TenantService.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/file/controllers/DocumentController.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/file/controllers/ImageController.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/source/controllers/ImageController.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/file/middlewares/DocumentRequest.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/source/requests/DocumentRequest.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/file/middlewares/ImageRequest.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/source/requests/ImageRequest.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/file/models/Document.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/source/models/Document.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/file/models/FIleRelations.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/source/models/FIleRelations.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/file/models/Image.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/source/models/Image.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/file/repositories/ImageRepository.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/source/repositories/ImageRepository.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/file/routes/DocumentRoutes.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/file/routes/ImageRoutes.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/file/services/DocumentService.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/file/services/ImageService.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/file/utils/FileInterface.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/interfaces/FileInterface.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/source/controllers/ClientController.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/source/controllers/ClientController.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/source/controllers/ContactController.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/source/controllers/ContactController.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/source/controllers/InfoController.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/source/controllers/InfoController.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/source/controllers/JobController.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/source/controllers/JobController.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/source/controllers/LoanController.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/source/controllers/LoanController.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/source/controllers/WalletController.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/source/controllers/WalletController.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/source/middlewares/ClientRequest.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/source/middlewares/ConditionRequest.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/source/middlewares/ContactRequest.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/source/middlewares/InfoRequest.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/source/middlewares/JobRequest.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/source/middlewares/LoanRequest.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/source/models/Amortization.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/source/models/Amortization.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/source/models/Client.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/source/models/Client.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/source/models/Condition.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/source/models/Condition.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/source/models/Contact.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/source/models/Contact.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/source/models/Expense.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/source/models/Expense.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/source/models/Info.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/source/models/Info.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/source/models/Job.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/source/models/Job.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/source/models/Lawyer.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/source/models/Lawyer.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/source/models/Loan.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/source/models/Loan.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/source/models/Payment.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/source/models/Payment.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/source/models/Preference.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/source/models/Preference.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/source/models/Social.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/source/models/Social.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/source/models/SourceRelation.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/source/models/SourceRelation.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/source/models/Wallet.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/source/models/Wallet.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/source/models/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/source/models/index.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/source/repositories/AmortizationRepository.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/source/repositories/AmortizationRepository.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/source/repositories/ClientRespository.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/source/repositories/ClientRepository.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/source/repositories/DocumentRepository.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/source/repositories/DocumentRepository.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/source/repositories/InfoRepository.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/source/repositories/InfoRepository.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/source/repositories/LoanRepository.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/source/repositories/LoanRepository.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/source/repositories/WalletRepository.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/source/repositories/WalletRepository.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/source/routes/ClientRoutes.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/source/routes/ContactRoutes.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/source/routes/InfoRoutes.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/source/routes/JobRoutes.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/source/routes/LoanRoutes.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/source/routes/WalletRoutes.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/source/services/ClientService.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/source/services/ClientService.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/source/services/ContactService.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/source/services/ContactService.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/source/services/InfoService.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/source/services/InfoService.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/source/services/JobService.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/source/services/JobService.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/source/services/LoanService.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/source/services/LoanService.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/source/services/WalletService.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/source/services/WalletService.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/source/utils/SourceInterfaces.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/interfaces/SourceInterfaces.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/clients/setClient.spec.ts" beforeDir="false" afterPath="$PROJECT_DIR$/tests/clients/setClient.spec.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/clients/unsetClient.spec.ts" beforeDir="false" afterPath="$PROJECT_DIR$/tests/clients/unsetClient.spec.ts" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Request" />
+        <option value="Respository" />
+        <option value="Repository" />
+        <option value="Controller" />
+        <option value="Route" />
+        <option value="Service" />
+        <option value="TypeScript File" />
+        <option value="DTO" />
+      </list>
+    </option>
+    <option name="SCHEME" value="Project" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 0
+}]]></component>
+  <component name="ProjectId" id="2dxN4FlKODeo13BvZL7EjeacCzX" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_ADD_EXTERNAL_FILES": "true",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "main",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "fileTemplates",
+    "ts.external.directory.path": "C:\\Users\\20200\\OneDrive\\Documents\\MEGA\\Proyectos\\Backend\\SIGPRES\\node_modules\\typescript\\lib",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\20200\OneDrive\Documents\MEGA\Proyectos\Backend\SIGPRES\src\app\dto" />
+      <recent name="C:\Users\20200\OneDrive\Documents\MEGA\Proyectos\Backend\SIGPRES\src\app\interfaces" />
+      <recent name="C:\Users\20200\OneDrive\Documents\MEGA\Proyectos\Backend\SIGPRES\src\source\routes" />
+      <recent name="C:\Users\20200\OneDrive\Documents\MEGA\Proyectos\Backend\SIGPRES\src\source\services" />
+      <recent name="C:\Users\20200\OneDrive\Documents\MEGA\Proyectos\Backend\SIGPRES\src\source\repositories" />
+    </key>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="4c09f163-013a-4abe-ad01-27681f9e9f9b" name="Changes" comment="" />
+      <created>1710945576670</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1710945576670</updated>
+      <workItem from="1710945587082" duration="25604000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>

@@ -1,10 +1,10 @@
 import AuthMiddleware from "../middlewares/AuthMiddleware";
-import AbstractRoutes from "@app/routes/AbstractRoutes";
-import AuthRequests from "@/auth/middlewares/AuthRequest";
+import BaseRoutes from "@app/routes/BaseRoutes";
+import AuthRequests from "@auth/requests/AuthRequest";
 import {AuthController} from "@auth/controllers/AuthController";
 import RoleMiddleware from "../middlewares/RoleMiddleware";
 
-export default class AuthRoutes extends AbstractRoutes<AuthController> {
+export default class AuthRoutes extends BaseRoutes<AuthController> {
 
     constructor() {
         super(new AuthController());

@@ -1,6 +1,6 @@
 import {Model, ModelStatic, Sequelize} from "sequelize";
 import Scope from "../utils/scopes";
-import {IParams} from "../utils/AppInterfaces";
+import {IParams} from "../interfaces/AppInterfaces";
 import tools from "../utils/tools";
 import logger from "@/logger";
 import SocketService from "@app/services/SocketService";
@@ -24,7 +24,7 @@ export class BaseRepository<T extends Model> {
 
     constructor(model: ModelStatic<T>) {
         this.model = model;
-        this.socketService = new SocketService(String(this.model.tableName));
+        this.socketService = new SocketService();
     }
 
     protected async safeRun(method: () => Promise<any>): Promise<any> {

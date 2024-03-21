@@ -1,5 +1,5 @@
-import ClientRepository from "@source/repositories/ClientRespository";
-import {EClientType, IClient} from "@source/utils/SourceInterfaces";
+import ClientRepository from "../../src/source/repositories/ClientRepository";
+import {EClientType, IClient} from "../../src/app/interfaces/SourceInterfaces";
 import interceptor from "../interceptor";
 
 const token = interceptor.getAuthenticated();

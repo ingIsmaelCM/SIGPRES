@@ -1,4 +1,4 @@
-import {IParams} from "@/app/utils/AppInterfaces";
+import {IParams} from "@app/interfaces/AppInterfaces";
 import TenantRepository from "../repositories/TenantRepository";
 import {Itenant} from "../utils/AuthInterfaces";
 import BaseConnection from "@/app/db/BaseConnection";

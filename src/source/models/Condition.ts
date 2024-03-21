@@ -1,6 +1,6 @@
 import ITM from "@/app/models/ITenantModel";
 import { DataTypes, Model } from "sequelize";
-import { ICondition, IConditionRelation } from "../utils/SourceInterfaces";
+import { ICondition, IConditionRelation } from "@app/interfaces/SourceInterfaces";
 
 @ITM.staticImplements<ICondition, IConditionRelation>()
 export default class Condition extends Model implements ICondition {

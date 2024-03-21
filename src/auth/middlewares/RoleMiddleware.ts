@@ -45,6 +45,30 @@ class RoleMiddleware extends Middleware {
       }
     };
   }
+
+  hasAllPermission(permissions: string[]) {
+    return (req: any, res: Response, next: NextFunction) => {
+      const userPermissions: IPermission[] = req.auth.permissions;
+      try {
+        const hasAll = permissions.every((perm: string) => {
+          return userPermissions.some((userPerm: IPermission) => {
+            return userPerm.name == perm;
+          });
+        });
+        if (hasAll) {
+          return next();
+        }
+        return response.error(
+            res,
+            419,
+            `No tienes ninguno de estos permisos: ${permissions.join(", ")}`
+        );
+      } catch (error: any) {
+        response.error(res, 500, error.message);
+        return;
+      }
+    };
+  }
 }
 
 export default new RoleMiddleware();

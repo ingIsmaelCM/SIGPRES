@@ -1,0 +1,6 @@
+{
+  "required": "El campo es requerido",
+  "invalidType": "Sólo se acepta {{types}}",
+  "invalidLength": "El valor debe estar entre {{min}} y {{max}}",
+  "isFloat": "Se aceptan flotantes entre  {{min}} y {{max}}"
+}

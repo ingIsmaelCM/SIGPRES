@@ -1,31 +1,54 @@
 import Controller, {setAuthor} from "@/app/controllers/Controller";
+import {Request, Response} from "express"
 import IController from "@/app/controllers/IController";
-import {Request, Response} from "express";
-import InfoService from "../services/InfoService";
-import InfoRoutes from "../routes/InfoRoutes";
+import InfoService from "@source/services/InfoService";
 
 export default class InfoController extends Controller implements IController {
-    prefix: string = "infos";
-    mainService = new InfoService();
+    prefix: string = 'infos';
+    mainService = new InfoService()
 
-    @setAuthor
-    async createInfo(req: Request, res: Response) {
-        await this.safeRun(async () => {
-            const data = req.body;
-            return await this.mainService.createInfo(data);
-        }, res, 201, "Información Registrada");
+
+    async index(req: Request, res: Response) {
+        return this.safeRun(async () =>
+                this.mainService.getInfos(req.query),
+            res, 200, ""
+        )
+    }
+
+    async show(req: Request, res: Response) {
+        return this.safeRun(async () =>
+                this.mainService.findInfo(Number(req.params.id), req.query),
+            res, 200, ""
+        )
     }
 
     @setAuthor
-    async updateInfo(req: Request, res: Response) {
-        await this.safeRun(async () => {
-            const data = req.body;
-            const infoId = req.params.id;
-            return await this.mainService.updateInfo(
-                data,
-                Number(infoId)
-            );
+    async store(req: Request, res: Response) {
+        return this.safeRun(async () =>
+                this.mainService.createInfo(req.body),
+            res, 201, ""
+        )
+    }
 
-        }, res, 201, "Información actualizada");
+    @setAuthor
+    async update(req: Request, res: Response) {
+        return this.safeRun(async () =>
+                this.mainService.updateInfo(Number(req.params.id), req.body),
+            res, 201, ""
+        )
+    }
+
+    async delete(req: Request, res: Response) {
+        return this.safeRun(async () =>
+                this.mainService.deleteInfo(Number(req.params.id)),
+            res, 200, ""
+        )
+    }
+
+    async restore(req: Request, res: Response) {
+        return this.safeRun(async () =>
+                this.mainService.restoreInfo(Number(req.params.id)),
+            res, 200, ""
+        )
     }
 }

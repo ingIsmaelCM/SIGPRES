@@ -1,6 +1,6 @@
 import ITM from "@/app/models/ITenantModel";
 import { DataTypes, Model } from "sequelize";
-import { IExpense, IExpenseRelation } from "../utils/SourceInterfaces";
+import { IExpense, IExpenseRelation } from "@app/interfaces/SourceInterfaces";
 
 @ITM.staticImplements<IExpense, IExpenseRelation>()
 export default class Expense extends Model {

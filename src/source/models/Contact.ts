@@ -1,6 +1,6 @@
 import ITM from "@/app/models/ITenantModel";
 import { DataTypes, Model } from "sequelize";
-import { IContact, IContactRelation } from "../utils/SourceInterfaces";
+import { IContact, IContactRelation } from "@app/interfaces/SourceInterfaces";
 import Client from "@source/models/Client";
 
 @ITM.staticImplements<IContact, IContactRelation>()

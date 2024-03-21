@@ -1,6 +1,6 @@
 import { BaseRepository } from "@/app/repositories/BaseRepository";
 import { Info } from "../models";
-import { EInfoModels } from "../utils/SourceInterfaces";
+import { EInfoModels } from "@app/interfaces/SourceInterfaces";
 export default class InfoRepository extends BaseRepository<Info> {
 
 

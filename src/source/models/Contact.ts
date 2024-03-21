@@ -1,12 +1,14 @@
 import ITM from "@/app/models/ITenantModel";
-import { DataTypes, Model } from "sequelize";
+import { DataTypes, Model, ModelAttributeColumnOptions } from "sequelize";
 import { IContact, IContactRelation } from "@app/interfaces/SourceInterfaces";
 import Client from "@source/models/Client";
 
+// TODO: Add relationship field to contact table. (Parent, Siblinh, Friend, other
 @ITM.staticImplements<IContact, IContactRelation>()
 export default class Contact extends Model implements  IContact{
 
-  declare addClient: Function;
+  declare addClient: (clientId: number, options:Record<string, any>)=>any;
+  declare setInfo:(infoId: number, options:Record<string, any>)=>any;
   declare id: number;
   declare infoId: number;
   declare lastname: string;
@@ -22,13 +24,13 @@ export default class Contact extends Model implements  IContact{
   }
 
   getRelations(): (keyof IContactRelation)[] {
-    return ["clients", "info"];
+    return ["clients", "info", "clients.info"];
   }
 
   static tableName = "contacts";
   static modelName = "Contact";
 
-  static attributes = {
+  static attributes: Record<keyof IContact, ModelAttributeColumnOptions> = {
     name: {
       type: DataTypes.STRING,
       allowNull: false,

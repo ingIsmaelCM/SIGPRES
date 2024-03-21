@@ -12,19 +12,12 @@ import Job from "@source/models/Job";
 import {EDocumentable, EImageable} from "@app/interfaces/FileInterface";
 import Document from "@source/models/Document";
 import Social from "@source/models/Social";
+import TenantConnection from "@app/db/TenantConnection";
+import {ClientContact} from "@source/models/index";
 
 /* TODO: Define relations for each Source Models */
 export default class SourceRelation {
     static initRelation() {
-
-        const Client_Contact = Client.sequelize!.define("Client_Contact", {
-            createdBy: {
-                type: DataTypes.INTEGER
-            },
-            updatedBy: {
-                type: DataTypes.INTEGER
-            }
-        })
 
         /* Client */
         Client.belongsTo(Info, {
@@ -66,8 +59,7 @@ export default class SourceRelation {
         });
 
         Client.belongsToMany(Contact, {
-            foreignKey: "clientId",
-            through: Client_Contact,
+            through: ClientContact,
             as: "contacts"
         })
 
@@ -79,8 +71,7 @@ export default class SourceRelation {
         // Contact
 
         Contact.belongsToMany(Client, {
-            through: Client_Contact,
-            foreignKey: "contactId",
+            through: ClientContact,
             as: "clients"
         })
 

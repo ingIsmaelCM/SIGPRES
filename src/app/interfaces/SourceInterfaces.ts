@@ -78,7 +78,7 @@ export interface IContact extends ICommonField {
 }
 
 export interface IContactRelation {
-    info?: IInfo;
+    info: IInfo;
     clients: IClient[];
     "clients.info": IClient[]
 }

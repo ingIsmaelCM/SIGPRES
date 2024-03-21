@@ -21,7 +21,6 @@ class ClientRequest extends BaseRequest {
             this.RequestMessage.isLength("lastname",2,50).optional(),
             this.RequestMessage.isIn("clientType",`${EClientType.Persona} | ${EClientType.Negocio}`,
                 [EClientType.Persona, EClientType.Negocio]).optional(),
-            ...this.requireIdRequest()
         ]
     }
 

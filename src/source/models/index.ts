@@ -14,6 +14,7 @@ import Lawyer from "./Lawyer";
 import Wallet from "./Wallet";
 import Social from "@source/models/Social";
 import Mora from "@source/models/Mora";
+import ClientContact from "@source/models/ClientContact";
 
 export {
     Client,
@@ -31,5 +32,5 @@ export {
     Wallet,
     Document,
     Social,
-    Mora
+    Mora, ClientContact
 };

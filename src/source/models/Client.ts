@@ -10,7 +10,7 @@ import tools from "@app/utils/tools";
 @ITM.staticImplements<IClient, IClientRelation>()
 export default class Client extends Model implements IClient {
 
-    declare setInfo:(id: number)=> any;
+    declare setInfo:(id: number, options: Record<string, any>)=> any;
     declare name: string;
     declare code?: string;
     declare lastname: string;

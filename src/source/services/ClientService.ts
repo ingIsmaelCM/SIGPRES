@@ -29,7 +29,9 @@ export default class ClientService extends Service {
                 data.info.updatedBy = data.updatedBy;
                 const newClient = await this.mainRepo.create(data, trans);
                 const newInfo = await this.infoRepo.create(data.info, trans);
-                newClient.setInfo(Number(newInfo.id));
+                await newClient.setInfo(Number(newInfo.id), {
+                    transaction: trans
+                });
                 await trans.commit();
                 return {...newClient.dataValues, info: newInfo};
             },

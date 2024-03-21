@@ -4,6 +4,7 @@ import {Request, Response} from "express";
 import ContactRequest from "@source/requests/ContactRequest";
 import RoleMiddleware from "@/auth/middlewares/RoleMiddleware";
 import PermissionEnums from "@app/interfaces/PermissionEnums";
+import InfoRequest from "@source/requests/InfoRequest";
 
 export default class ContactRoutes extends BaseRoutes<ContactController> {
     constructor() {
@@ -19,6 +20,7 @@ export default class ContactRoutes extends BaseRoutes<ContactController> {
             .post(
                 RoleMiddleware.hasPermission(PermissionEnums.createContact),
                 ContactRequest.contactCreateRequest(),
+                InfoRequest.relatedInfoRequest(),
                 ContactRequest.validate,
                 (req: Request, res: Response) => this.controller.store(req, res)
             );

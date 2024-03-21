@@ -50,6 +50,7 @@ export default class ClientRoutes extends BaseRoutes<ClientController> {
             .put(
                 RoleMiddleware.hasPermission(PermissionEnums.editClient),
                 ClientRequest.clientUpdateRequest(),
+                ClientRequest.requireIdRequest(),
                 ClientRequest.validate,
                 (req: Request, res: Response) => this.controller.update(req, res)
             )

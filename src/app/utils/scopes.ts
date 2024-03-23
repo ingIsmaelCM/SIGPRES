@@ -215,11 +215,9 @@ class Scope {
     onlyTrashed(trashed: boolean | string): object {
         if (trashed == true || trashed == "true") {
             return {
-                [Op.and]: {
                     deletedAt: {
                         [Op.not]: null,
                     },
-                }
             };
         }
         return {};
@@ -282,10 +280,11 @@ class Scope {
         query.where = {
             ...(params.search ? this.search(params.search, searchables) : {}),
             [Op.and]: {
+
+                ...(params.onlytrashed ? this.onlyTrashed(params.onlytrashed) : {}),
                 ...filter,
                 ...(params.isNull ? this.isNull(params.isNull, cols) : {}),
                 ...(params.notNUll ? this.notNull(params.notNUll, cols) : {}),
-                ...(params.onlytrashed ? this.onlyTrashed(params.onlytrashed) : {}),
             },
         };
         if (!params.limit && (!params.page || !params.perpage)) {

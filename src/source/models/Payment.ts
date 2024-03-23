@@ -46,7 +46,7 @@ export default class Payment extends Model implements IPayment {
 
   static tableName = "payments";
   static modelName = "Payment";
-
+  static additionalOptions={}
   static attributes: Record<keyof IPayment, any> = {
     ...ITM.commonAttributes,
     amount: {

@@ -92,7 +92,7 @@ class Tool {
         return `${str[0].toUpperCase()}${str.substring(1)}`;
     }
 
-    initialToUpper = (sentence: string) => sentence.toLocaleLowerCase().replace(/\b[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ]+\b/gi,
+    initialToUpper = (sentence: string="") => sentence.toLocaleLowerCase().replace(/\b[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ]+\b/gi,
         (match: string) => match.toLowerCase().replace(match.charAt(0),
             match.charAt(0).toUpperCase()));
 

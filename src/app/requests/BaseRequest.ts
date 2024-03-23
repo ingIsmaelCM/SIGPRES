@@ -30,6 +30,7 @@ export default class BaseRequest {
     }
 
     public validate(req: Request, res: Response, next: NextFunction) {
+        
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
             const messages: any = {};

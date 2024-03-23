@@ -32,6 +32,23 @@ export interface IClient extends ICommonField {
     clienttype: EClientType;
 }
 
+export interface IClientView extends IClient, IInfo {
+}
+
+export interface IContactView extends IContact, IInfo {
+}
+
+export interface ILawyerView extends ILawyer, IInfo {
+}
+
+export interface IJobView extends IJob, IInfo {
+}
+
+export interface IClientContactView extends IContactView, IClientContact {
+    relationId: number
+}
+
+
 export enum EClientType {
     Persona = "Persona",
     Negocio = "Negocio",
@@ -53,6 +70,26 @@ export interface IClientRelation {
     "payments.mora": IPayment[];
     "contacts.info": IContact[];
     "jobs.info": IJob[];
+}
+
+export interface IClientContact extends ICommonField {
+    clientId: number,
+    contactId: number,
+    relationship: EClientContactRelationship,
+    isGarante: 0 | 1
+}
+
+export enum EClientContactRelationship {
+    Conyuge = "Conyuge",
+    Familiar = "Familiar",
+    Amigo = "Amigo",
+    Conocido = "Conocido",
+    Otro = "Otro",
+}
+
+export default interface IClientContactRelation {
+    client: IClient,
+    contact: IContact
 }
 
 export interface ICondition extends ICommonField {
@@ -131,8 +168,8 @@ export interface IJob extends ICommonField {
     salary: number;
     position: string;
     company: string;
-    infoId?: string;
-    clientId: string;
+    infoId?: number;
+    clientId: number;
 }
 
 export enum EJobStatus {
@@ -141,7 +178,7 @@ export enum EJobStatus {
 }
 
 export interface IJobRelation {
-    info?: IInfo;
+    info: IInfo;
     client: IClient;
     image: IImage;
     document: IDocument;
@@ -152,10 +189,11 @@ export interface ILawyer extends ICommonField {
     lastname: string;
     exequatur?: string;
     infoId?: number;
+    fullname?: string;
 }
 
 export interface ILawyerRelation {
-    info?: IInfo;
+    info: IInfo;
     loans: ILoan[];
     payments: IPayment[];
     expenses: IExpense[];
@@ -250,14 +288,14 @@ export interface IPaymentRelation {
     images: IImage[];
 }
 
-export interface ISocial extends  ICommonField{
+export interface ISocial extends ICommonField {
     facebook: string;
     instagram: string;
     whatsapp: string;
     clientId: number;
 }
 
-export interface  ISocialRelation{
+export interface ISocialRelation {
     client: IClient
 }
 

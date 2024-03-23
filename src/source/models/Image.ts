@@ -19,7 +19,7 @@ class Image extends Model implements  IImage{
   getRelations(): (keyof IImageRelation)[] {
     return [];
   }
-
+  static additionalOptions={}
   static attributes = {
     id: {
       type: DataTypes.INTEGER,

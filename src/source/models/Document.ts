@@ -21,7 +21,7 @@ export default class Document extends  Model implements  IDocument{
     getRelations():Array<keyof IDocumentRelation>{
         return []
     }
-
+    static additionalOptions={}
     static tableName="documents";
     static modelName="Document"
 

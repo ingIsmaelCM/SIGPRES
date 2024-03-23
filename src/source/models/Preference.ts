@@ -15,6 +15,7 @@ export default class Preference extends Model {
   }
   static modelName = "Preference";
   static tableName = "preferences";
+  static additionalOptions={}
   static attributes = {
     key: {
       type: DataTypes.STRING,

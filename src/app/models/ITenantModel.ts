@@ -1,4 +1,4 @@
-import { DataTypes } from "sequelize";
+import { DataTypes, InitOptions } from "sequelize";
 import { ICommonField } from "../interfaces/AppInterfaces";
 
 /* FIXED: Setting static and common interfaces */
@@ -13,6 +13,7 @@ export interface ITenantInterface<T, R> {
   modelName: string;
   tableName: string;
   attributes: Record<keyof T, any>;
+  additionalOptions:Partial<InitOptions>
 }
 
 export function staticImplements<T, R>() {

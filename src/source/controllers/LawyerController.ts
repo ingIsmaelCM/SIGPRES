@@ -11,14 +11,14 @@ export default class LawyerController extends Controller implements IController 
     async index(req: Request, res: Response) {
         return this.safeRun(async () =>
                 this.mainService.getLawyers(req.query),
-            res, 200, ""
+            res, 200, "Listado de abogados"
         )
     }
 
     async show(req: Request, res: Response) {
         return this.safeRun(async () =>
                 this.mainService.findLawyer(Number(req.params.id), req.query),
-            res, 200, ""
+            res, 200, "Detalles del abogado"
         )
     }
 
@@ -26,7 +26,7 @@ export default class LawyerController extends Controller implements IController 
     async store(req: Request, res: Response) {
         return this.safeRun(async () =>
                 this.mainService.createLawyer(req.body),
-            res, 201, ""
+            res, 201, "Abogado registrado"
         )
     }
 
@@ -34,21 +34,21 @@ export default class LawyerController extends Controller implements IController 
     async update(req: Request, res: Response) {
         return this.safeRun(async () =>
                 this.mainService.updateLawyer(Number(req.params.id), req.body),
-            res, 201, ""
+            res, 201, "Abogado actualizado"
         )
     }
 
     async delete(req: Request, res: Response) {
         return this.safeRun(async () =>
                 this.mainService.deleteLawyer(Number(req.params.id)),
-            res, 200, ""
+            res, 200, "Abogado eliminado"
         )
     }
 
     async restore(req: Request, res: Response) {
         return this.safeRun(async () =>
                 this.mainService.restoreLawyer(Number(req.params.id)),
-            res, 200, ""
+            res, 200, "Abogado restaurado"
         )
     }
 }

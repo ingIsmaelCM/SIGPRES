@@ -36,7 +36,7 @@ export default class ClientRoutes extends BaseRoutes<ClientController> {
 
         this.controller.router.post("/:id/info",
             RoleMiddleware.hasAllPermission([PermissionEnums.createInfo, PermissionEnums.editClient]),
-            InfoRequest.infoCreateRequest(),
+            InfoRequest.relatedInfoRequest(),
             InfoRequest.requireIdRequest(),
             InfoRequest.validate,
             (req: Request, res: Response) => this.controller.setInfoToClient(req, res)
@@ -50,6 +50,7 @@ export default class ClientRoutes extends BaseRoutes<ClientController> {
             .put(
                 RoleMiddleware.hasPermission(PermissionEnums.editClient),
                 ClientRequest.clientUpdateRequest(),
+                InfoRequest.relatedInfoRequest(),
                 ClientRequest.requireIdRequest(),
                 ClientRequest.validate,
                 (req: Request, res: Response) => this.controller.update(req, res)

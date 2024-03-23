@@ -11,7 +11,7 @@ export default class Expense extends Model {
   getRelations(): Array<keyof IExpenseRelation> {
     return ["wallet", "lawyer"];
   }
-
+  static additionalOptions={}
   static modelName = "Expense";
   static tableName = "expenses";
 

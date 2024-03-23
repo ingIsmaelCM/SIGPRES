@@ -9,7 +9,7 @@ class ImageRequest extends BaseRequest {
             this.RequestMessage.required("caption"),
             this.RequestMessage.isLength("caption",2,50),
             this.RequestMessage.required("size"),
-            this.RequestMessage.isFloat("size", 0.1, 5.5),
+            this.RequestMessage.isFloat("size", 0.001, 5.5),
         ];
     }
     imageSBulkCreateRequest(): Array<ValidationChain> {
@@ -23,7 +23,7 @@ class ImageRequest extends BaseRequest {
             this.RequestMessage.isString("images.*.caption"),
             this.RequestMessage.isLength("images.*.caption",2,50),
             this.RequestMessage.required("images.*.size"),
-            this.RequestMessage.isFloat("images.*.size", 0.1, 5.5),
+            this.RequestMessage.isFloat("images.*.size", 0.001, 5.5),
         ];
     }
     imageUpdateRequest(): Array<ValidationChain> {

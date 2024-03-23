@@ -24,7 +24,7 @@ export default class Condition extends Model implements ICondition {
   getRelations(): (keyof IConditionRelation)[] {
     return ["loan", "client"];
   }
-
+  static additionalOptions={}
   static tableName = "conditions";
   static modelName = "Condition";
 

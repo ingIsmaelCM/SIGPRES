@@ -11,14 +11,14 @@ export default class SocialController extends Controller implements IController 
     async index(req: Request, res: Response) {
         return this.safeRun(async () =>
                 this.mainService.getSocials(req.query),
-            res, 200, ""
+            res, 200, "Listado de Redes Sociales"
         )
     }
 
     async show(req: Request, res: Response) {
         return this.safeRun(async () =>
                 this.mainService.findSocial(Number(req.params.id), req.query),
-            res, 200, ""
+            res, 200, "Detalles de redes sociales"
         )
     }
 
@@ -26,29 +26,8 @@ export default class SocialController extends Controller implements IController 
     async store(req: Request, res: Response) {
         return this.safeRun(async () =>
                 this.mainService.createSocial(req.body),
-            res, 201, ""
+            res, 201, "Redes sociales registradas"
         )
     }
 
-    @setAuthor
-    async update(req: Request, res: Response) {
-        return this.safeRun(async () =>
-                this.mainService.updateSocial(Number(req.params.id), req.body),
-            res, 201, ""
-        )
-    }
-
-    async delete(req: Request, res: Response) {
-        return this.safeRun(async () =>
-                this.mainService.deleteSocial(Number(req.params.id)),
-            res, 200, ""
-        )
-    }
-
-    async restore(req: Request, res: Response) {
-        return this.safeRun(async () =>
-                this.mainService.restoreSocial(Number(req.params.id)),
-            res, 200, ""
-        )
-    }
 }

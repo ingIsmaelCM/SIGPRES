@@ -9,7 +9,7 @@ class ClientRequest extends BaseRequest {
             this.RequestMessage.isLength("name",0,50),
             this.RequestMessage.required("lastname"),
             this.RequestMessage.isLength("lastname",0,50),
-            this.RequestMessage.isIn("clientType",`${EClientType.Persona} | ${EClientType.Negocio}`,
+            this.RequestMessage.isIn("clienttype",`${EClientType.Persona} | ${EClientType.Negocio}`,
                 [EClientType.Persona, EClientType.Negocio]).optional(),
 
         ]
@@ -19,11 +19,11 @@ class ClientRequest extends BaseRequest {
         return [
             this.RequestMessage.isLength("name",2,50).optional(),
             this.RequestMessage.isLength("lastname",2,50).optional(),
-            this.RequestMessage.isIn("clientType",`${EClientType.Persona} | ${EClientType.Negocio}`,
+            this.RequestMessage.isInt("infoId").optional(),
+            this.RequestMessage.isIn("clienttype",`${EClientType.Persona} | ${EClientType.Negocio}`,
                 [EClientType.Persona, EClientType.Negocio]).optional(),
         ]
     }
-
 }
 
 export default new ClientRequest();

@@ -27,19 +27,6 @@ export class BaseRepository<T extends Model> {
         this.socketService = new SocketService();
     }
 
-    protected async safeRun(method: () => Promise<any>): Promise<any> {
-        try {
-            this.primaryKeyName = this.model.primaryKeyAttribute;
-            return await method();
-        } catch (error: any) {
-            logger.error(JSON.stringify(error))
-            throw {
-                code: error.code || 500,
-                message: error.message
-            };
-        }
-    }
-
     public async getAll(params: IParams): Promise<any> {
         return this.safeRun(() => Scope.get(this.model, params));
     }
@@ -108,6 +95,7 @@ export class BaseRepository<T extends Model> {
     public async updateOrCreate(data: any, trans: any): Promise<T> {
         const newData = await this.safeRun(() => this.model.upsert(data, {
             transaction: trans,
+
         }));
         return newData[0]
     }
@@ -125,7 +113,7 @@ export class BaseRepository<T extends Model> {
         key?: string
     ): Promise<T> {
         return this.safeRun(async () => {
-            const {updatedAt, createdAt, deletedAt, ...newData} = data;
+            const {updatedAt, createdAt, deletedAt, id, ...newData} = data;
             await this.model.update(newData, {
                 where: Sequelize.where(
                     Sequelize.col(key || this.primaryKeyName),
@@ -181,5 +169,31 @@ export class BaseRepository<T extends Model> {
                 transaction: trans,
             });
         });
+    }
+
+    async validateBeforeInsertRelation(model: ModelStatic<any>, id: number): Promise<any> {
+        return this.safeRun(async () => {
+            const exists = await model.findByPk(id);
+            if (!exists) {
+                return Promise.reject({
+                    code: 404,
+                    message: "No se encontró el registro relacionado"
+                })
+            }
+            return exists;
+        })
+    }
+
+    protected async safeRun(method: () => Promise<any>): Promise<any> {
+        try {
+            this.primaryKeyName = this.model.primaryKeyAttribute;
+            return await method();
+        } catch (error: any) {
+            logger.error(JSON.stringify(error))
+            throw {
+                code: error.code || 500,
+                message: error.message
+            };
+        }
     }
 }

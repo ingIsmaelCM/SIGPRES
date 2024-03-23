@@ -5,7 +5,6 @@ import moment from "moment";
 
 /* BUG Send page, perpage and limit at the same time throw error */
 class Scope {
-    inclusiones: any = null;
 
     operators: any = {
         eq: Op.eq,
@@ -276,7 +275,9 @@ class Scope {
         }
         const searchables = Object.entries(model.getAttributes())
             .filter(([key, value]) => {
-                return value.type !instanceof  DataTypes.DATE && value.type !instanceof  DataTypes.DATEONLY
+                return !(value.type instanceof  DataTypes.DATE)
+                    && !(value.type instanceof  DataTypes.DATEONLY)
+                    && !(value.type instanceof  DataTypes.VIRTUAL)
             }).map(([key])=>key);
         query.where = {
             ...(params.search ? this.search(params.search, searchables) : {}),

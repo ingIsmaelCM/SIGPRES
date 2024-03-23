@@ -25,17 +25,19 @@ export default class TenantConnection {
     return TenantConnection.connections.get(tenant)!;
   }
 
-  static initModels(instanceConection: Sequelize) {
+  static initModels(instanceConnection: Sequelize) {
     try {
       const modelos = Object.values(models).filter(
-        (model: any) => !instanceConection.models[model]
+        (model: any) => !instanceConnection.models[model]
       );
       for (let model of modelos) {
         (model as any).init(model.attributes, {
-          sequelize: instanceConection,
+          sequelize: instanceConnection,
           modelName: model.modelName,
           tableName: model.tableName,
           paranoid: true,
+          ...model.additionalOptions
+
         });
       }
       SourceRelation.initRelation();

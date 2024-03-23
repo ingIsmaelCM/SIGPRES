@@ -63,7 +63,7 @@ CREATE TABLE `clients`(
     `name` VARCHAR(50) NOT NULL,
     `lastname` VARCHAR(50) NOT NULL,
     `clienttype` ENUM('Persona', 'Negocio') NOT NULL DEFAULT 'Persona',
-    `infoId` INT,
+    `infoId` INT NOT NULL,
     `createdBy` INT NOT NULL,
     `updatedBy` INT NOT NULL,
     `createdAt` TIMESTAMP NOT NULL DEFAULT current_timestamp,
@@ -73,10 +73,10 @@ CREATE TABLE `clients`(
 
 CREATE TABLE `socials`(
     `id` INT AUTO_INCREMENT PRIMARY KEY,
-    `instagram` VARCHAR(50),
-    `facebook` VARCHAR(50),
-    `whatsapp` VARCHAR(50),
-    `clientId` INT NOT NULL,
+    `instagram` VARCHAR(50) UNIQUE,
+    `facebook` VARCHAR(50) UNIQUE,
+    `whatsapp` VARCHAR(50) UNIQUE,
+    `clientId` INT NOT NULL UNIQUE,
     `createdBy` INT NOT NULL,
     `updatedBy` INT NOT NULL,
     `createdAt` TIMESTAMP NOT NULL DEFAULT current_timestamp,
@@ -89,7 +89,7 @@ CREATE TABLE `lawyers`(
     `name` VARCHAR(50) NOT NULL,
     `lastname` VARCHAR(50) NOT NULL,
     `exequatur` VARCHAR(20),
-    `infoId` INT,
+    `infoId` INT NOT NULL,
     `createdBy` INT NOT NULL,
     `updatedBy` INT NOT NULL,
     `createdAt` TIMESTAMP NOT NULL DEFAULT current_timestamp,
@@ -102,7 +102,7 @@ CREATE TABLE `contacts`(
     `id` INT AUTO_INCREMENT PRIMARY KEY,
     `name` VARCHAR(50) NOT NULL,
     `lastname` VARCHAR(50) NOT NULL,
-    `infoId` INT,
+    `infoId` INT NOT NULL,
     `createdBy` INT NOT NULL,
     `updatedBy` INT NOT NULL,
     `createdAt` TIMESTAMP NOT NULL DEFAULT current_timestamp,
@@ -114,6 +114,8 @@ CREATE TABLE `client_contacts`(
       `id` INT AUTO_INCREMENT PRIMARY KEY,
       `clientId` INT NOT NULL,
       `contactId` INT NOT NULL,
+      `relationship` ENUM('Conyuge','Familiar','Amigo','Conocido','Otro') NOT NULL DEFAULT 'OTro',
+      `isGarante` TINYINT NOT NULL DEFAULT 0,
       `createdBy` INT NOT NULL,
       `updatedBy` INT NOT NULL,
       `createdAt` TIMESTAMP NOT NULL DEFAULT current_timestamp,
@@ -130,7 +132,7 @@ CREATE TABLE `jobs`(
     `salary` DECIMAL(10,2) NOT NULL,
     `position` VARCHAR(50) NOT NULL,
     `company` VARCHAR(75) NOT NULL,
-    `infoId` INT,
+    `infoId` INT NOT NULL,
     `clientId` INT NOT NULL,
     `createdBy` INT NOT NULL,
     `updatedBy` INT NOT NULL,
@@ -263,6 +265,28 @@ CREATE TABLE `moras`(
     `deletedAt` TIMESTAMP
 );
 
+
+CREATE OR REPLACE VIEW clientView
+AS SELECT c.*, i.dni, i.address,i.phone, i.email, i.birthdate, i.gender, i.country
+FROM clients c LEFT JOIN infos i ON c.infoId=i.id;
+
+
+CREATE OR REPLACE VIEW contactView
+AS SELECT c.*, i.dni, i.address,i.phone, i.email, i.birthdate, i.gender, i.country
+FROM contacts c LEFT JOIN infos i ON c.infoId=i.id;
+
+CREATE OR REPLACE VIEW lawyerView
+AS SELECT l.*, i.dni, i.address,i.phone, i.email, i.birthdate, i.gender, i.country
+FROM lawyers l LEFT JOIN infos i ON l.infoId=i.id;
+
+CREATE OR REPLACE VIEW jobView
+AS SELECT j.*, i.dni, i.address,i.phone, i.email, i.birthdate, i.gender, i.country
+FROM jobs j LEFT JOIN infos i ON j.infoId=i.id;
+
+CREATE OR REPLACE VIEW clientContactView
+AS SELECT con.*, cc.clientId, cc.contactId, cc.isGarante, cc.relationship, cc.id as relationId
+FROM contactView con LEFT JOIN client_contacts cc ON cc.contactId=con.id
+
 ALTER TABLE `clients` ADD CONSTRAINT `FK_clients_infos` FOREIGN KEY (`infoId`) REFERENCES `infos` (`id`)
 ON DELETE CASCADE ON UPDATE CASCADE;
 ALTER TABLE `lawyers` ADD CONSTRAINT `FK_lawyers_infos` FOREIGN KEY (`infoId`) REFERENCES `infos` (`id`)
@@ -275,7 +299,7 @@ ALTER TABLE `client_contacts` ADD CONSTRAINT `FK_client_contacts_contact` FOREIG
 ON DELETE CASCADE ON UPDATE CASCADE;
 ALTER TABLE `jobs` ADD CONSTRAINT `FK_jobs_clients` FOREIGN KEY (`clientId`) REFERENCES `clients` (`id`)
 ON DELETE CASCADE ON UPDATE CASCADE;
-ALTER TABLE `jobs` ADD CONSTRAINT `FK_jobs_wallets` FOREIGN KEY (`infoId`) REFERENCES `wallets` (`id`)
+ALTER TABLE `jobs` ADD CONSTRAINT `FK_jobs_infos` FOREIGN KEY (`infoId`) REFERENCES `infos` (`id`)
 ON DELETE CASCADE ON UPDATE CASCADE;
 ALTER TABLE `expenses` ADD CONSTRAINT `FK_expenses_wallets` FOREIGN KEY (`walletId`) REFERENCES `wallets` (`id`)
 ON DELETE CASCADE ON UPDATE CASCADE;
@@ -332,6 +356,7 @@ CREATE INDEX idx_contacts_infoId ON contacts (infoId);
 
 CREATE INDEX idx_contacts_clientId ON client_contacts (clientId);
 CREATE INDEX idx_contacts_contactId ON client_contacts (contactId);
+CREATE INDEX idx_contacts_isGarante ON client_contacts (isGarante);
 
 CREATE INDEX idx_jobs_clientId ON jobs (clientId);
 CREATE INDEX idx_jobs_infoId ON jobs (infoId);

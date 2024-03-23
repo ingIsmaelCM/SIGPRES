@@ -2,36 +2,53 @@ import {DataTypes, Model} from "sequelize";
 import Client from "@source/models/Client";
 import Contact from "@source/models/Contact";
 import ITM from "@app/models/ITenantModel";
+import IClientContactRelation, {EClientContactRelationship, IClientContact} from "@app/interfaces/SourceInterfaces";
 
+@ITM.staticImplements<IClientContact, IClientContactRelation>()
+export default class ClientContact extends Model implements IClientContact {
 
-export default  class ClientContact extends  Model{
-
-    static tableName="client_contacts";
-    static modelName="ClientContact";
-
-    getSearchables(){
-        return []
-    }
-
-    getRelations(){
-        return []
-    }
-
-    static attributes={
-        clientId:{
+    static tableName = "client_contacts";
+    static modelName = "ClientContact";
+    static attributes = {
+        clientId: {
             type: DataTypes.INTEGER,
-            references:{
+            references: {
                 model: Client,
                 key: "id"
             }
         },
-        contactId:{
+        contactId: {
             type: DataTypes.INTEGER,
-            references:{
+            references: {
                 model: Contact,
                 key: "id"
             }
         },
+        relationship: {
+            type: DataTypes.ENUM(...Object.values(EClientContactRelationship)),
+            allowNull: false,
+            defaultValue: EClientContactRelationship.Otro
+        },
+        isGarante: {
+            type: DataTypes.TINYINT,
+            allowNull: false,
+            defaultValue: 0
+        },
         ...ITM.commonAttributes
+    };
+
+    static additionalOptions = {}
+    declare clientId: number;
+    declare contactId: number;
+    declare relationship: EClientContactRelationship;
+    declare isGarante: 0 | 1;
+
+    getSearchables(): Array<keyof IClientContact> {
+        return ["clientId","contactId","isGarante","relationship"]
+    }
+
+    getRelations(): Array<keyof IClientContactRelation> {
+        return ["client", "contact"]
     }
 }
+

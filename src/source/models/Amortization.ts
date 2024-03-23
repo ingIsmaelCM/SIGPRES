@@ -26,7 +26,7 @@ export default class Amortization extends Model {
     getRelations(): Array<keyof IAmortizationRelation> {
         return ["loan", "client"];
     }
-
+    static additionalOptions={}
     static tableName = "amortizations";
     static modelName = "Amortization";
 

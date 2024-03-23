@@ -3,6 +3,8 @@ import {IParams} from "@app/interfaces/AppInterfaces";
 import InfoRepository from "@source/repositories/InfoRepository";
 import TenantConnection from "@app/db/TenantConnection";
 import {IInfo} from "@app/interfaces/SourceInterfaces";
+import {Transaction} from "sequelize";
+import {Info} from "@source/models";
 
 export default class InfoService extends Service {
     private mainRepo = new InfoRepository();
@@ -17,9 +19,8 @@ export default class InfoService extends Service {
 
     async createInfo(data: IInfo): Promise<IInfo> {
         const trans = await TenantConnection.getTrans();
-        return this.safeRun(async () =>
-            {
-                const newInfo=await this.mainRepo.create(data, trans);
+        return this.safeRun(async () => {
+                const newInfo = await this.mainRepo.create(data, trans);
                 await trans.commit();
                 return newInfo;
             },
@@ -27,10 +28,26 @@ export default class InfoService extends Service {
         )
     }
 
+    async setFromRelated(data: Partial<IInfo>, trans: Transaction): Promise<Info> {
+        return this.safeRun(async () => {
+                return await this.mainRepo.create(data, trans);
+            }
+        )
+    }
+
+    async updateFromRelated(data: Partial<IInfo> & {
+        updatedBy?: number,
+    }, infoId: number, trans: Transaction): Promise<Info> {
+        return this.safeRun(async () => {
+                return await this.mainRepo.update(data, infoId, trans);
+            }
+        )
+    }
+
     async updateInfo(infoId: number, data: IInfo): Promise<IInfo> {
         const trans = await TenantConnection.getTrans();
         return this.safeRun(async () => {
-                const updatedInfo=await this.mainRepo.update(data,infoId, trans);
+                const updatedInfo = await this.mainRepo.update(data, infoId, trans);
                 await trans.commit();
                 return updatedInfo;
             },

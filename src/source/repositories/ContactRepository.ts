@@ -9,15 +9,5 @@ export default class ContactRepository extends BaseRepository<Contact> {
 
     }
 
-    async addClient(clientId: number, contact: Contact, trans: Transaction) {
-       return await this.safeRun(async () => {
-            return await contact.addClient(clientId, {
-                through: {
-                    createdBy: contact.createdBy,
-                    updatedBy: contact.updatedBy
-                },
-                transaction: trans
-            })
-        })
-    }
+
 }

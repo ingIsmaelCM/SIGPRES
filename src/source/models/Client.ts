@@ -6,11 +6,10 @@ import {
     IClientRelation,
 } from "@app/interfaces/SourceInterfaces";
 import tools from "@app/utils/tools";
+import Info from "@source/models/Info";
 
 @ITM.staticImplements<IClient, IClientRelation>()
 export default class Client extends Model implements IClient {
-
-    declare setInfo:(id: number, options: Record<string, any>)=> any;
     declare name: string;
     declare code?: string;
     declare lastname: string;
@@ -46,7 +45,9 @@ export default class Client extends Model implements IClient {
     }
     static tableName = "clients";
     static modelName = "Client";
+    static additionalOptions={
 
+    }
     static attributes: Record<keyof IClient, ModelAttributeColumnOptions> = {
         code: {
             type: DataTypes.STRING,
@@ -84,8 +85,7 @@ export default class Client extends Model implements IClient {
         ...ITM.commonAttributes,
     };
 }
-
-/* 
+/*
 
 FIXED Add clienttype `[Personal, Negocio]
 TODO: create guarantees table (name, description) (relation image or document) status (consignado, devuelto), type (física, nominal)

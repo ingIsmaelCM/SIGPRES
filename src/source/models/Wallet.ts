@@ -19,7 +19,7 @@ export default class Wallet extends Model implements IWallet {
 
   static tableName = "wallets";
   static modelName = "Wallet";
-
+  static additionalOptions={}
   getSearchables(): Array<keyof IWallet> {
     return ["name", "balance"];
   }

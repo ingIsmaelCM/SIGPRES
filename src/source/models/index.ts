@@ -15,6 +15,11 @@ import Wallet from "./Wallet";
 import Social from "@source/models/Social";
 import Mora from "@source/models/Mora";
 import ClientContact from "@source/models/ClientContact";
+import ClientView from "@source/models/views/ClientView";
+import ContactView from "@source/models/views/ContactView";
+import JobView from "@source/models/views/JobView";
+import LawyerView from "@source/models/views/LawyerView";
+import ClientContactView from "@source/models/views/ClientContactView";
 
 export {
     Client,
@@ -32,5 +37,11 @@ export {
     Wallet,
     Document,
     Social,
-    Mora, ClientContact
+    Mora,
+    ClientContact,
+    ClientView,
+    ContactView,
+    JobView,
+    LawyerView,
+    ClientContactView
 };

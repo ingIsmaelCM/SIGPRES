@@ -15,6 +15,7 @@ import PaymentRoutes from "@source/routes/PaymentRoute";
 import SocialRoutes from "@source/routes/SocialRoute";
 import WalletRoutes from "@source/routes/WalletRoute";
 import BaseRoutes from "@app/routes/BaseRoutes";
+import ClientContactRoutes from "@source/routes/ClientContactRoute";
 
 const sourceRoutes: BaseRoutes<any>[]=[
     new PreferenceRoutes(),
@@ -33,7 +34,8 @@ const sourceRoutes: BaseRoutes<any>[]=[
     new PaymentRoutes(),
     new PreferenceRoutes(),
     new SocialRoutes(),
-    new WalletRoutes()
+    new WalletRoutes(),
+    new ClientContactRoutes(),
 ]
 
 export default  sourceRoutes;

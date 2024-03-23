@@ -12,77 +12,75 @@ class InfoRequest extends BaseRequest {
             this.RequestMessage.isLength("dni", 10, 18),
             body("dni", "Este dni ya está registrado")
                 .custom(async (val: string, meta: any) =>
-                    await this.checkUnique("dni", val, meta.req.params)),
+                    await this.checkUnique("dni", val)),
             this.RequestMessage.required("phone"),
-            this.RequestMessage.isLength("phone", 10, 15).optional(),
+            this.RequestMessage.isLength("phone", 10, 15).optional({values: "falsy"}),
             body("phone", "Este teléfono ya está registrado")
                 .custom(async (val: string, meta: any) =>
-                    await this.checkUnique("phone", val, meta.req.params)),
-            this.RequestMessage.isEmail("info.email").optional(),
+                    await this.checkUnique("phone", val)),
+            this.RequestMessage.isEmail("email").optional({values: "falsy"}),
             body("email", "Este correo ya está registrado")
                 .custom(async (val: string, meta: any) =>
-                    await this.checkUnique("email", val, meta.req.params)),
-            this.RequestMessage.isDate("birthdate").optional(),
+                    await this.checkUnique("email", val)),
+            this.RequestMessage.isDate("birthdate").optional({values: "falsy"}),
             this.RequestMessage.isIn("gender", "Masculino | Femenino | Ninguno",
-                [EInfoGender.Masculino, EInfoGender.Femenino, EInfoGender.Ninguno]).optional(),
-            this.RequestMessage.isLength("address", 2, 125).optional(),
-            this.RequestMessage.isString("country").optional(),
+                [EInfoGender.Masculino, EInfoGender.Femenino, EInfoGender.Ninguno]).optional({values: "falsy"}),
+            this.RequestMessage.isLength("address", 2, 125).optional({values: "falsy"}),
+            this.RequestMessage.isString("country").optional({values: "falsy"}),
         ]
     }
 
     infoUpdateRequest(): Array<ValidationChain> {
         return [
-            this.RequestMessage.isLength("dni", 10, 18).optional(),
+            this.RequestMessage.isLength("dni", 10, 18).optional({values: "falsy"}),
             body("dni", "Este dni ya está registrado")
                 .custom(async (val: string, meta: any) =>
-                    await this.checkUnique("dni", val, meta.req.params)),
-            this.RequestMessage.isLength("phone", 10, 15).optional(),
+                    await this.checkUnique("dni", val, meta.req.params.id)),
+            this.RequestMessage.isLength("phone", 10, 15).optional({values: "falsy"}),
             body("phone", "Este teléfono ya está registrado")
                 .custom(async (val: string, meta: any) =>
-                    await this.checkUnique("phone", val, meta.req.params)),
-            this.RequestMessage.isEmail("info.email").optional(),
+                    await this.checkUnique("phone", val, meta.req.params.id)),
+            this.RequestMessage.isEmail("email").optional({values: "falsy"}),
             body("email", "Este correo ya está registrado")
                 .custom(async (val: string, meta: any) =>
-                    await this.checkUnique("email", val, meta.req.params)),
-            this.RequestMessage.isDate("birthdate").optional(),
+                    await this.checkUnique("email", val, meta.req.params.id)),
+            this.RequestMessage.isDate("birthdate").optional({values: "falsy"}),
             this.RequestMessage.isIn("gender", "Masculino | Femenino | Ninguno",
-                [EInfoGender.Masculino, EInfoGender.Femenino, EInfoGender.Ninguno]).optional(),
-            this.RequestMessage.isLength("address", 2, 125).optional(),
-            this.RequestMessage.isString("country").optional(),
+                [EInfoGender.Masculino, EInfoGender.Femenino, EInfoGender.Ninguno]).optional({values: "falsy"}),
+            this.RequestMessage.isLength("address", 2, 125).optional({values: "falsy"}),
+            this.RequestMessage.isString("country").optional({values: "falsy"}),
         ]
     }
 
     relatedInfoRequest(): Array<ValidationChain> {
         return [
-            this.RequestMessage.required("info"),
-            body("info", "Formato de info inválido").isObject(),
-            this.RequestMessage.required("info.dni"),
-            this.RequestMessage.isLength("info.dni", 10, 18),
-            body("info.dni", "Este dni ya está registrado")
+            this.RequestMessage.required("dni"),
+            this.RequestMessage.isLength("dni", 10, 18),
+            body("dni", "Este dni ya está registrado")
                 .custom(async (val: string, meta: any) =>
-                    await this.checkUnique("dni", val)),
-            this.RequestMessage.required("info.phone"),
-            this.RequestMessage.isLength("info.phone", 10, 15),
-            body("info.phone", "Este teléfono ya está registrado")
+                    await this.checkUnique("dni", val, meta.req.body.infoId)),
+            this.RequestMessage.required("phone"),
+            this.RequestMessage.isLength("phone", 10, 15),
+            body("phone", "Este teléfono ya está registrado")
                 .custom(async (val: string, meta: any) =>
-                    await this.checkUnique("phone", val)),
-            this.RequestMessage.isEmail("info.email").optional(),
-            body("info.email", "Este correo ya está registrado")
+                    await this.checkUnique("phone", val, meta.req.body.infoId)),
+            this.RequestMessage.isEmail("email").optional({values: "falsy"}),
+            body("email", "Este correo ya está registrado")
                 .custom(async (val: string, meta: any) =>
-                    await this.checkUnique("email", val)),
-            this.RequestMessage.isDate("info.birthdate").optional(),
+                    await this.checkUnique("email", val, meta.req.body.infoId)),
+            this.RequestMessage.isDate("birthdate").optional({values: "falsy"}),
             this.RequestMessage.isIn("gender", "Masculino | Femenino | Ninguno",
-                [EInfoGender.Masculino, EInfoGender.Femenino, EInfoGender.Ninguno]).optional(),
-            this.RequestMessage.isLength("address", 2, 125).optional(),
-            this.RequestMessage.isString("country").optional(),
+                [EInfoGender.Masculino, EInfoGender.Femenino, EInfoGender.Ninguno]).optional({values: "falsy"}),
+            this.RequestMessage.isLength("address", 2, 125).optional({values: "falsy"}),
+            this.RequestMessage.isString("country").optional({values: "falsy"}),
         ]
     }
 
-    private async checkUnique(field: string, value: string, params?: { id: any }) {
+    private async checkUnique(field: string, value: string, column?:string) {
         const existingInfo = await this.infoRepo.getAll({
             filter: [
                 `${field}:eq:${value}:and`,
-                `id:ne:${params?.id || 0}:and`,
+                `id:ne:${column|| 0}:and`,
             ],
             limit: 1
         });

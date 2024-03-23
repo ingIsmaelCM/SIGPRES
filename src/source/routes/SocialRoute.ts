@@ -17,7 +17,7 @@ export default class SocialRoutes extends BaseRoutes<SocialController> {
                 (req: Request, res: Response) => this.controller.index(req, res)
             )
             .post(
-                RoleMiddleware.hasPermission(PermissionEnums.createSocial),
+                RoleMiddleware.hasAllPermission([PermissionEnums.createSocial, PermissionEnums.editSocial]),
                 SocialRequest.socialCreateRequest(),
                 SocialRequest.validate,
                 (req: Request, res: Response) => this.controller.store(req, res)
@@ -28,20 +28,7 @@ export default class SocialRoutes extends BaseRoutes<SocialController> {
                 RoleMiddleware.hasPermission(PermissionEnums.getSocials),
                 (req: Request, res: Response) => this.controller.show(req, res)
             )
-            .put(
-                RoleMiddleware.hasPermission(PermissionEnums.editSocial),
-                SocialRequest.socialUpdateRequest(),
-                SocialRequest.validate,
-                (req: Request, res: Response) => this.controller.update(req, res)
-            )
-            .delete(
-                RoleMiddleware.hasPermission(PermissionEnums.deleteSocial),
-                (req: Request, res: Response) => this.controller.delete(req, res)
-            )
-            .patch(
-                RoleMiddleware.hasPermission(PermissionEnums.restoreData),
-                (req: Request, res: Response) => this.controller.restore(req, res)
-            );
+
     }
 
 }

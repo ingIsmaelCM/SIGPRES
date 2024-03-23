@@ -4,6 +4,7 @@ import {Request, Response} from "express";
 import LawyerRequest from "@source/requests/LawyerRequest";
 import RoleMiddleware from "@/auth/middlewares/RoleMiddleware";
 import PermissionEnums from "@app/interfaces/PermissionEnums";
+import InfoRequest from "@source/requests/InfoRequest";
 
 export default class LawyerRoutes extends BaseRoutes<LawyerController> {
     constructor() {
@@ -19,6 +20,7 @@ export default class LawyerRoutes extends BaseRoutes<LawyerController> {
             .post(
                 RoleMiddleware.hasPermission(PermissionEnums.createLawyer),
                 LawyerRequest.lawyerCreateRequest(),
+                InfoRequest.relatedInfoRequest(),
                 LawyerRequest.validate,
                 (req: Request, res: Response) => this.controller.store(req, res)
             );
@@ -31,6 +33,7 @@ export default class LawyerRoutes extends BaseRoutes<LawyerController> {
             .put(
                 RoleMiddleware.hasPermission(PermissionEnums.editLawyer),
                 LawyerRequest.lawyerUpdateRequest(),
+                InfoRequest.relatedInfoRequest(),
                 LawyerRequest.validate,
                 (req: Request, res: Response) => this.controller.update(req, res)
             )

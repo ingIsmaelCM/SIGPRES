@@ -4,6 +4,7 @@ import {Request, Response} from "express";
 import JobRequest from "@source/requests/JobRequest";
 import RoleMiddleware from "@/auth/middlewares/RoleMiddleware";
 import PermissionEnums from "@app/interfaces/PermissionEnums";
+import InfoRequest from "@source/requests/InfoRequest";
 
 export default class JobRoutes extends BaseRoutes<JobController> {
     constructor() {
@@ -19,6 +20,7 @@ export default class JobRoutes extends BaseRoutes<JobController> {
             .post(
                 RoleMiddleware.hasPermission(PermissionEnums.createJob),
                 JobRequest.jobCreateRequest(),
+                InfoRequest.relatedInfoRequest(),
                 JobRequest.validate,
                 (req: Request, res: Response) => this.controller.store(req, res)
             );
@@ -31,6 +33,7 @@ export default class JobRoutes extends BaseRoutes<JobController> {
             .put(
                 RoleMiddleware.hasPermission(PermissionEnums.editJob),
                 JobRequest.jobUpdateRequest(),
+                InfoRequest.relatedInfoRequest(),
                 JobRequest.validate,
                 (req: Request, res: Response) => this.controller.update(req, res)
             )

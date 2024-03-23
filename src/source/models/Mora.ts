@@ -2,12 +2,13 @@ import {DataTypes, Model, ModelAttributeColumnOptions} from "sequelize";
 import ITM from "@app/models/ITenantModel";
 import {EMoraStatus, IMora, IMoraRelation} from "@app/interfaces/SourceInterfaces";
 
-
+//TODO add setter for totalPayed if(status="Pagada")
 @ITM.staticImplements<IMora, IMoraRelation>()
 export default class Mora extends Model implements IMora {
 
     static tableName = "moras";
     static modelName: "Mora";
+    static additionalOptions={}
     static attributes: Record<keyof IMora, ModelAttributeColumnOptions> = {
         initAmount: {
             type: DataTypes.DECIMAL,

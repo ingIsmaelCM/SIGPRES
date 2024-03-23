@@ -31,7 +31,7 @@ export default class Loan extends Model implements ILoan {
 
   static tableName = "loans";
   static modelName = "Loan";
-
+  static additionalOptions={}
   getSearchables(): Array<keyof ILoan> {
     return [
       "code",

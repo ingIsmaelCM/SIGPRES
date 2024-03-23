@@ -2,36 +2,32 @@ import Service from "@app/services/Service";
 import {IParams} from "@app/interfaces/AppInterfaces";
 import ClientRepository from "@source/repositories/ClientRepository";
 import TenantConnection from "@app/db/TenantConnection";
-import {IClient, IClientRelation, IInfo} from "@app/interfaces/SourceInterfaces";
-import InfoRepository from "@source/repositories/InfoRepository";
+import {IClient, IClientRelation, IClientView, IInfo} from "@app/interfaces/SourceInterfaces";
 import {EImageable, IImage} from "@app/interfaces/FileInterface";
 import ImageService from "@source/services/ImageService";
 import InfoService from "@source/services/InfoService";
+import ClientViewRepository from "@source/repositories/ClientViewRepository";
 
 export default class ClientService extends Service {
     private mainRepo = new ClientRepository();
-    private infoRepo = new InfoRepository();
-    private imageService = new ImageService();
     private infoService = new InfoService();
+    private clientViewRepo = new ClientViewRepository();
+    private imageService = new ImageService();
+
 
     async getClients(params: IParams) {
-        return await this.mainRepo.getAll(params)
+        return await this.clientViewRepo.getAll(params)
     }
 
     async findClient(clientId: number, params: IParams) {
-        return await this.mainRepo.findById(clientId, params)
+        return await this.clientViewRepo.findById(clientId, params)
     }
 
-    async createClient(data: IClient & IClientRelation): Promise<IClient> {
+    async createClient(data: IClientView): Promise<IClient> {
         const trans = await TenantConnection.getTrans();
         return this.safeRun(async () => {
-                data.info.createdBy = data.createdBy;
-                data.info.updatedBy = data.updatedBy;
-                const newClient = await this.mainRepo.create(data, trans);
-                const newInfo = await this.infoRepo.create(data.info, trans);
-                await newClient.setInfo(Number(newInfo.id), {
-                    transaction: trans
-                });
+                const newInfo = await this.infoService.setFromRelated(data, trans);
+                const newClient = await this.mainRepo.create({...data, infoId: newInfo.id}, trans);
                 await trans.commit();
                 return {...newClient.dataValues, info: newInfo};
             },
@@ -39,10 +35,13 @@ export default class ClientService extends Service {
         )
     }
 
-    async updateClient(clientId: number, data: IClient): Promise<IClient> {
+    async updateClient(clientId: number, data: IClient & IClientRelation): Promise<IClient> {
         const trans = await TenantConnection.getTrans();
         return this.safeRun(async () => {
                 const updatedClient = await this.mainRepo.update(data, clientId, trans);
+                if(data.infoId){
+                    await this.infoService.updateFromRelated(data, data.infoId, trans);
+                }
                 await trans.commit();
                 return updatedClient;
             },

@@ -25,6 +25,11 @@ export default class ContactRoutes extends BaseRoutes<ContactController> {
                 (req: Request, res: Response) => this.controller.store(req, res)
             );
 
+        this.controller.router.get("/from_relation",
+            RoleMiddleware.hasAllPermission([PermissionEnums.getContacts, PermissionEnums.getClients]),
+            (req: Request, res: Response) => this.controller.fromRelation(req, res)
+        )
+
         this.controller.router.route("/:id")
             .get(
                 RoleMiddleware.hasPermission(PermissionEnums.getContacts),
@@ -33,6 +38,7 @@ export default class ContactRoutes extends BaseRoutes<ContactController> {
             .put(
                 RoleMiddleware.hasPermission(PermissionEnums.editContact),
                 ContactRequest.contactUpdateRequest(),
+                InfoRequest.relatedInfoRequest(),
                 ContactRequest.validate,
                 (req: Request, res: Response) => this.controller.update(req, res)
             )

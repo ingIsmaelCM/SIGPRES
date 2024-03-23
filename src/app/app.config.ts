@@ -13,7 +13,7 @@ let config: any = {
     views: path.resolve(__dirname, "../../views"),
     env,
     allowedUrl: process.env.ALLOWED_URL,
-    rateLimit: process.env.REQUEST_RATE_LIMIT||100,
+    rateLimit: process.env.REQUEST_RATE_LIMIT||1500,
     rateTime: process.env.REQUEST_RATE_TIME||(30*60*10000)
   },
 

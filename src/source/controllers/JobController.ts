@@ -11,14 +11,14 @@ export default class JobController extends Controller implements IController {
     async index(req: Request, res: Response) {
         return this.safeRun(async () =>
                 this.mainService.getJobs(req.query),
-            res, 200, ""
+            res, 200, "Lista de datos laborales"
         )
     }
 
     async show(req: Request, res: Response) {
         return this.safeRun(async () =>
                 this.mainService.findJob(Number(req.params.id), req.query),
-            res, 200, ""
+            res, 200, "Detalles laborales"
         )
     }
 
@@ -26,7 +26,7 @@ export default class JobController extends Controller implements IController {
     async store(req: Request, res: Response) {
         return this.safeRun(async () =>
                 this.mainService.createJob(req.body),
-            res, 201, ""
+            res, 201, "Datos laborales registrados"
         )
     }
 
@@ -34,21 +34,21 @@ export default class JobController extends Controller implements IController {
     async update(req: Request, res: Response) {
         return this.safeRun(async () =>
                 this.mainService.updateJob(Number(req.params.id), req.body),
-            res, 201, ""
+            res, 201, "Datos laborales actualizados"
         )
     }
 
     async delete(req: Request, res: Response) {
         return this.safeRun(async () =>
                 this.mainService.deleteJob(Number(req.params.id)),
-            res, 200, ""
+            res, 200, "Datos laborales eliminados"
         )
     }
 
     async restore(req: Request, res: Response) {
         return this.safeRun(async () =>
                 this.mainService.restoreJob(Number(req.params.id)),
-            res, 200, ""
+            res, 200, "Datos laborales restaurados"
         )
     }
 }

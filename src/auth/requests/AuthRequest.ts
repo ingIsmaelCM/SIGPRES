@@ -1,30 +1,42 @@
-import {ValidationChain, body} from "express-validator";
+import {body, ValidationChain} from "express-validator";
 import BaseRequest from "@app/requests/BaseRequest";
+import {AuthRepository} from "@auth/repositories/AuthRepository";
 
 class AuthRequest extends BaseRequest {
+    PASSREGEX = `^(((?=.*[a-z])(?=.*[A-Z]))|((?=.*[a-z])(?=.*[0-9]))|((?=.*[A-Z])(?=.*[0-9])))(?=.{6,25})`
+    private authRepo = new AuthRepository();
+
     public validateAuthRegister(): Array<ValidationChain> {
         return [
-            body("email", "Se requiere un correo electrónico").notEmpty(),
-            body("email", "El formato del correo no es válido").isEmail(),
-            body("password", "Se requiere una contraseña").exists(),
-            body("password", "La contraseña debe estar entre 6 y 25").isLength({
-                min: 6,
-                max: 25,
-            }),
-            body("username", "Se requiere un nombre de usuario").notEmpty(),
-            body("name", "Se requiere un primer nombre").notEmpty(),
-            body("lastname", "Se requiere un apellido").notEmpty(),
+            this.RequestMessage.required("email"),
+            this.RequestMessage.isEmail("email"),
+            body("email", "Este correo ya está registrado")
+                .custom(async (value: string) =>
+                    await this.checkUnique("email", value)),
+            body("username", "Este usuario ya está registrado")
+                .custom(async (value: string) =>
+                    await this.checkUnique("username", value)),
+            this.RequestMessage.required("password"),
+            body("password", "La contraseña ingresada es muy débil")
+                .custom((value: string) => {
+                    return value.match(this.PASSREGEX)
+                }),
+            this.RequestMessage.required("username"),
+            this.RequestMessage.required("name"),
+            this.RequestMessage.isLength("name",5,50),
+            this.RequestMessage.required("lastname"),
+            this.RequestMessage.isLength("lastname",5,50),
         ];
     }
 
     public validateAuthLogin(): Array<ValidationChain> {
         return [
-            body("username", "Se requiere un nombre de usuario").not().isEmpty(),
-            body("password", "Se requiere una contraseña").exists(),
-            body("password", "La contraseña debe estar entre 6 y 25").isLength({
-                min: 6,
-                max: 25,
-            }),
+            this.RequestMessage.required("password"),
+            body("password", "La contraseña ingresada es muy débil")
+                .custom((value: string) => {
+                    return value.match(this.PASSREGEX)
+                }),
+            this.RequestMessage.required("username"),
         ];
     }
 
@@ -36,7 +48,7 @@ class AuthRequest extends BaseRequest {
                 max: 25,
             }),
             body("password", "La contraseña ingresada es muy débil").custom((value: string) => {
-                return value.match(`^(((?=.*[a-z])(?=.*[A-Z]))|((?=.*[a-z])(?=.*[0-9]))|((?=.*[A-Z])(?=.*[0-9])))(?=.{6,})`)
+                return value.match(this.PASSREGEX)
             }),
             body("password_confirmation", "Se requiere la confirmación").notEmpty(),
             body("password_confirmation", "Las contraseñas no coinciden").custom(
@@ -61,6 +73,18 @@ class AuthRequest extends BaseRequest {
             body("email", "Se requiere el correo electrónico").notEmpty(),
             body("email", "El formato del correo no es válido").isEmail(),
         ];
+    }
+
+    private async checkUnique(field: string, value: string, params?: { id: any }) {
+        const existingInfo = await this.authRepo.getAll({
+            filter: [
+                `${field}:eq:${value}:and`,
+                `id:ne:${params?.id || 0}:and`,
+            ],
+            limit: 1
+        });
+        if (existingInfo) return Promise.reject(false);
+        return Promise.resolve(true);
     }
 
 }

@@ -10,8 +10,8 @@ export default class Job extends Model implements IJob {
     declare salary: number;
     declare position: string;
     declare company: string;
-    declare infoId?: string;
-    declare clientId: string;
+    declare infoId?: number;
+    declare clientId: number;
     declare id?: number;
     declare createdBy?: number;
     declare updatedBy?: number;
@@ -29,7 +29,7 @@ export default class Job extends Model implements IJob {
 
     static tableName = "jobs";
     static modelName = "Job";
-
+    static additionalOptions={}
     static attributes: Record<keyof IJob, ModelAttributeColumnOptions> = {
         startAt: {
             type: DataTypes.DATE,

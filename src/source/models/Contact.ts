@@ -25,7 +25,7 @@ export default class Contact extends Model implements  IContact{
   }
 
   getRelations(): (keyof IContactRelation)[] {
-    return ["clients", "info", "clients.info"];
+    return ["clients", "info",];
   }
 
   static tableName = "contacts";

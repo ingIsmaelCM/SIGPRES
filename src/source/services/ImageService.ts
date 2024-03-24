@@ -7,6 +7,12 @@ import {EImageable, IImage} from "@app/interfaces/FileInterface";
 export default class ImageService extends Service {
     private mainRepo = new ImageRepository();
 
+
+    async getImages(params: IParams): Promise<any> {
+        return this.safeRun(async () =>
+            this.mainRepo.getAll(params))
+    }
+
     async createSingleImage(data: IImage, relatedModel: EImageable, relatedId: number, upsert?: boolean) {
         const trans = await TenantConnection.getTrans();
         return this.safeRun(async () => {

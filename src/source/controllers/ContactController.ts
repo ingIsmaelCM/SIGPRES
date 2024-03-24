@@ -45,6 +45,12 @@ export default class ContactController extends Controller implements IController
         )
     }
 
+    async setProfilePhoto(req: Request, res: Response) {
+        return this.safeRun(async () =>
+                this.mainService.setProfilePhoto(Number(req.params.id), req.body),
+            res, 201, "Foto de perfil añadida")
+    }
+
     async delete(req: Request, res: Response) {
         return this.safeRun(async () =>
                 this.mainService.deleteContact(Number(req.params.id)),

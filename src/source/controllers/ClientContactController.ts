@@ -14,6 +14,7 @@ export default class ClientContactController extends Controller implements ICont
             res, 200, "Listado de Relación Cliente-Contacto"
         )
     }
+
     @setAuthor
     async store(req: Request, res: Response) {
         return this.safeRun(async () =>
@@ -22,5 +23,10 @@ export default class ClientContactController extends Controller implements ICont
         )
     }
 
+    async delete(req: Request, res: Response) {
+        return this.safeRun(async () =>
+                this.mainService.deleteFromRelation(Number(req.params.id))
+            , res, 200, "Contacto Removido")
+    }
 
 }

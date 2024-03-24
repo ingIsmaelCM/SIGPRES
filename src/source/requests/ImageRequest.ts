@@ -16,12 +16,10 @@ class ImageRequest extends BaseRequest {
         return [
             this.RequestMessage.required("images"),
             this.RequestMessage.isArray("images"),
-            this.RequestMessage.isLength("images",1,5),
+            body("images","Debe subir entre 1 y 10 imágenes").isArray({min: 1, max:10}),
             this.RequestMessage.required("images.*.path"),
             this.RequestMessage.isUrl("images.*.path"),
-            this.RequestMessage.required("images.*.caption"),
-            this.RequestMessage.isString("images.*.caption"),
-            this.RequestMessage.isLength("images.*.caption",2,50),
+            this.RequestMessage.isLength("images.*.caption",2,50).optional(),
             this.RequestMessage.required("images.*.size"),
             this.RequestMessage.isFloat("images.*.size", 0.001, 5.5),
         ];

@@ -20,7 +20,8 @@ export default class ClientView extends Model {
     }
 
     getRelations(): Array<keyof IClientRelation> {
-        return ["contacts", "profile"]
+        return ["contacts", "profile", "images", "loans", "payments", "documents",
+            "jobs", "moras", "social"]
     }
 
 }

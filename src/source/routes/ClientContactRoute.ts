@@ -25,6 +25,11 @@ export default class ClientContactRoutes extends BaseRoutes<ClientContactControl
                 (req: Request, res: Response) => this.controller.store(req, res)
             );
 
+        this.controller.router.route("/:id")
+            .delete(
+                RoleMiddleware.hasPermission(PermissionEnums.deleteContact),
+                (req: Request, res: Response) => this.controller.delete(req, res)
+            )
 
     }
 

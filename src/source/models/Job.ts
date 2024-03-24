@@ -1,6 +1,8 @@
 import ITM from "@/app/models/ITenantModel";
 import {DataTypes, Model, ModelAttributeColumnOptions} from "sequelize";
 import {EJobStatus, IJob, IJobRelation} from "@app/interfaces/SourceInterfaces";
+import * as util from "util";
+import tools from "@app/utils/tools";
 
 @ITM.staticImplements<IJob, IJobRelation>()
 export default class Job extends Model implements IJob {
@@ -47,14 +49,23 @@ export default class Job extends Model implements IJob {
         salary: {
             type: DataTypes.DECIMAL,
             allowNull: false,
+            get(this: Job){
+                return Number(this.getDataValue("salary"))
+            }
         },
         position: {
             type: DataTypes.STRING,
             allowNull: false,
+            set(this: Job, value: string){
+                this.setDataValue("position", tools.initialToUpper(value))
+            }
         },
         company: {
             type: DataTypes.STRING,
             allowNull: false,
+            set(this: Job, value: string){
+                this.setDataValue("company", tools.initialToUpper(value))
+            }
         },
         infoId: {
             type: DataTypes.INTEGER,

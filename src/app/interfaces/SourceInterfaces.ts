@@ -116,8 +116,8 @@ export interface IContact extends ICommonField {
 
 export interface IContactRelation {
     info: IInfo;
-    clients: IClient[];
-    "clients.info": IClient[]
+    clients: IClientView[];
+    profile?: IImage;
 }
 
 export interface IExpense extends ICommonField {

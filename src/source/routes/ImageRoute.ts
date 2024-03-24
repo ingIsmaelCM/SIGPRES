@@ -12,6 +12,12 @@ export default class ImageRoutes extends BaseRoutes<ImageController> {
 
     initRoutes(): void {
 
+        this.controller.router.route("/")
+            .get(
+                RoleMiddleware.hasPermission(PermissionEnums.getImages),
+                (req: Request, res: Response) => this.controller.index(req, res)
+            )
+
         this.controller.router.route("/:id")
             .get(
                 RoleMiddleware.hasPermission(PermissionEnums.getImages),

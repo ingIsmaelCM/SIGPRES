@@ -34,6 +34,14 @@ export default class ClientRoutes extends BaseRoutes<ClientController> {
             (req: Request, res: Response) => this.controller.setProfilePhoto(req, res)
         )
 
+        this.controller.router.post("/:id/images",
+            RoleMiddleware.hasAllPermission([PermissionEnums.createImage, PermissionEnums.editClient]),
+            ImageRequest.imageSBulkCreateRequest(),
+            ImageRequest.requireIdRequest(),
+            ImageRequest.validate,
+            (req: Request, res: Response) => this.controller.setClientImages(req, res)
+        )
+
         this.controller.router.post("/:id/info",
             RoleMiddleware.hasAllPermission([PermissionEnums.createInfo, PermissionEnums.editClient]),
             InfoRequest.relatedInfoRequest(),

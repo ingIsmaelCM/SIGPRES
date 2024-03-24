@@ -8,14 +8,14 @@ import ContactRepository from "@source/repositories/ContactRepository";
 
 export default class ClientContactService extends Service {
     private mainRepo = new ClientContactRepository();
-    private clientRepo=new ClientRepository();
-    private contactRepo= new ContactRepository();
+    private clientRepo = new ClientRepository();
+    private contactRepo = new ContactRepository();
 
     async getClientContacts(params: IParams) {
-        if (params.include){
-            params.include+=",client,contact"
-        } else{
-            params.include="client,contact"
+        if (params.include) {
+            params.include += ",client,contact"
+        } else {
+            params.include = "client,contact"
         }
         return await this.mainRepo.getAll(params)
     }
@@ -23,16 +23,17 @@ export default class ClientContactService extends Service {
     async createClientContact(data: IClientContact): Promise<IClientContact> {
         const trans = await TenantConnection.getTrans();
         return this.safeRun(async () => {
-            const {clientId, contactId}= data;
-                const client=await this.clientRepo.findById(clientId);
-                const contact=await this.contactRepo.findById(contactId);
-                if(!client || !contact){
+                const {clientId, contactId} = data;
+                const client = await this.clientRepo.findById(clientId);
+                const contact = await this.contactRepo.findById(contactId);
+                if (!client || !contact) {
                     return Promise.reject({
                         code: 404,
                         message: "Recursos no encontrado"
                     })
                 }
-                const newClientContact=await this.mainRepo.create(data, trans);
+                const newClientContact = await this.mainRepo
+                    .updateOrCreate({...data, deletedAt: null}, trans);
                 await trans.commit();
                 return newClientContact;
             },
@@ -40,5 +41,17 @@ export default class ClientContactService extends Service {
         )
     }
 
+
+    async deleteFromRelation(contactId: number): Promise<any> {
+        const trans = await TenantConnection.getTrans();
+        return this.safeRun(async () => {
+                const removedContact = await this.mainRepo.delete(contactId, trans);
+                console.log(removedContact)
+                await trans.commit();
+                return removedContact;
+            },
+            async () => await trans.rollback()
+        )
+    }
 
 }

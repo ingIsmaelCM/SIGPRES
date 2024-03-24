@@ -284,8 +284,10 @@ AS SELECT j.*, i.dni, i.address,i.phone, i.email, i.birthdate, i.gender, i.count
 FROM jobs j LEFT JOIN infos i ON j.infoId=i.id;
 
 CREATE OR REPLACE VIEW clientContactView
-AS SELECT con.*, cc.clientId, cc.contactId, cc.isGarante, cc.relationship, cc.id as relationId
-FROM contactView con LEFT JOIN client_contacts cc ON cc.contactId=con.id
+AS SELECT con.id, con.name, con.lastname, con.infoId, con.createdBy, con.updatedBy, con.createdAt,
+ con.updatedAt, con.dni, con.address, con.phone, con.email,con.birthdate, con.gender, con.country,
+ cc.clientId, cc.contactId, cc.isGarante, cc.relationship, cc.id as relationId, cc.deletedAt as deletedAt
+    FROM contactView con LEFT JOIN client_contacts cc ON cc.contactId=con.id
 
 ALTER TABLE `clients` ADD CONSTRAINT `FK_clients_infos` FOREIGN KEY (`infoId`) REFERENCES `infos` (`id`)
 ON DELETE CASCADE ON UPDATE CASCADE;
@@ -382,6 +384,10 @@ CREATE INDEX idx_payments_lawyerId ON payments (lawyerId);
 CREATE INDEX idx_moras_loanId ON moras (loanId);
 CREATE INDEX idx_moras_clientId ON moras (clientId);
 CREATE INDEX idx_moras_paymentId ON moras (paymentId);
+
+
+ALTER TABLE `client_contacts` ADD UNIQUE (`contactId`, `clientId`);
+
 
 
 DELIMITER //

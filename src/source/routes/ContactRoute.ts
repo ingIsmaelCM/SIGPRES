@@ -5,6 +5,7 @@ import ContactRequest from "@source/requests/ContactRequest";
 import RoleMiddleware from "@/auth/middlewares/RoleMiddleware";
 import PermissionEnums from "@app/interfaces/PermissionEnums";
 import InfoRequest from "@source/requests/InfoRequest";
+import ImageRequest from "@source/requests/ImageRequest";
 
 export default class ContactRoutes extends BaseRoutes<ContactController> {
     constructor() {
@@ -28,6 +29,14 @@ export default class ContactRoutes extends BaseRoutes<ContactController> {
         this.controller.router.get("/from_relation",
             RoleMiddleware.hasAllPermission([PermissionEnums.getContacts, PermissionEnums.getClients]),
             (req: Request, res: Response) => this.controller.fromRelation(req, res)
+        )
+
+        this.controller.router.post("/:id/profile",
+            RoleMiddleware.hasAllPermission([PermissionEnums.createImage, PermissionEnums.editContact]),
+            ImageRequest.imageSingleCreateRequest(),
+            ImageRequest.requireIdRequest(),
+            ImageRequest.validate,
+            (req: Request, res: Response) => this.controller.setProfilePhoto(req, res)
         )
 
         this.controller.router.route("/:id")

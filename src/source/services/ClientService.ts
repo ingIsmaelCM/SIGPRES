@@ -7,6 +7,7 @@ import {EImageable, IImage} from "@app/interfaces/FileInterface";
 import ImageService from "@source/services/ImageService";
 import InfoService from "@source/services/InfoService";
 import ClientViewRepository from "@source/repositories/ClientViewRepository";
+import moment from "moment";
 
 export default class ClientService extends Service {
     private mainRepo = new ClientRepository();
@@ -39,7 +40,7 @@ export default class ClientService extends Service {
         const trans = await TenantConnection.getTrans();
         return this.safeRun(async () => {
                 const updatedClient = await this.mainRepo.update(data, clientId, trans);
-                if(data.infoId){
+                if (data.infoId) {
                     await this.infoService.updateFromRelated(data, data.infoId, trans);
                 }
                 await trans.commit();
@@ -71,6 +72,20 @@ export default class ClientService extends Service {
                 data.caption = "Perfil Cliente"
                 return await this.imageService.createSingleImage(data,
                     EImageable.Client, clientId, true)
+            }
+        )
+    }
+
+    async setClientImages(clientId: number, data: IImage[]): Promise<IImage> {
+        return this.safeRun(async () => {
+
+                data = data.map((image: IImage) => ({
+                    ...image,
+                    caption: moment().format("YYYYMMDDHHiSS")
+
+                }))
+                return await this.imageService
+                    .createMultipleImages(data, EImageable.Client, clientId)
             }
         )
     }

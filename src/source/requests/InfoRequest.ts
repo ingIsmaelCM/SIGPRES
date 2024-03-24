@@ -9,7 +9,7 @@ class InfoRequest extends BaseRequest {
     infoCreateRequest(): Array<ValidationChain> {
         return [
             this.RequestMessage.required("dni"),
-            this.RequestMessage.isLength("dni", 10, 18),
+            this.RequestMessage.isLength("dni", 8, 18),
             body("dni", "Este dni ya está registrado")
                 .custom(async (val: string, meta: any) =>
                     await this.checkUnique("dni", val)),
@@ -32,11 +32,12 @@ class InfoRequest extends BaseRequest {
 
     infoUpdateRequest(): Array<ValidationChain> {
         return [
-            this.RequestMessage.isLength("dni", 10, 18).optional({values: "falsy"}),
+            this.RequestMessage.isLength("dni", 8, 18).optional({values: "falsy"}),
             body("dni", "Este dni ya está registrado")
                 .custom(async (val: string, meta: any) =>
                     await this.checkUnique("dni", val, meta.req.params.id)),
             this.RequestMessage.isLength("phone", 10, 15).optional({values: "falsy"}),
+
             body("phone", "Este teléfono ya está registrado")
                 .custom(async (val: string, meta: any) =>
                     await this.checkUnique("phone", val, meta.req.params.id)),
@@ -55,7 +56,7 @@ class InfoRequest extends BaseRequest {
     relatedInfoRequest(): Array<ValidationChain> {
         return [
             this.RequestMessage.required("dni"),
-            this.RequestMessage.isLength("dni", 10, 18),
+            this.RequestMessage.isLength("dni", 8, 18),
             body("dni", "Este dni ya está registrado")
                 .custom(async (val: string, meta: any) =>
                     await this.checkUnique("dni", val, meta.req.body.infoId)),

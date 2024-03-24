@@ -10,21 +10,24 @@ class LawyerRequest extends BaseRequest {
             this.RequestMessage.isLength("name", 0, 50),
             this.RequestMessage.required("lastname"),
             this.RequestMessage.isLength("lastname", 0, 50),
-            this.RequestMessage.isLength("exequatur", 2, 20).optional(),
+            this.RequestMessage.isLength("exequatur", 2, 20).optional({values: "falsy"}),
             body("exequatur", "Este exequátur ya está registrado")
                 .custom((value: string) =>
                     this.checkUnique("exequatur", value))
+                .optional({values: "falsy"})
         ]
     }
 
     lawyerUpdateRequest(): Array<ValidationChain> {
         return [
             this.RequestMessage.isLength("name", 0, 50).optional(),
-            this.RequestMessage.isLength("lastname", 0, 50).optional().optional(),
-            this.RequestMessage.isLength("exequatur", 2, 20),
+            this.RequestMessage.isLength("lastname", 0, 50).optional(),
+            this.RequestMessage.isLength("exequatur", 2, 20).optional({values: "falsy"}),
+            this.RequestMessage.isInt("infoId").optional(),
             body("exequatur", "Este exequátur ya está registrado")
                 .custom((value: string, meta: any) =>
                     this.checkUnique("exequatur", value, meta.req.params))
+                .optional({values: "falsy"})
         ]
     }
 

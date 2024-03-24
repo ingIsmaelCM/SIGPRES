@@ -7,6 +7,8 @@ import ClientContactRepository from "@source/repositories/ClientContactRepositor
 import ContactViewRepository from "@source/repositories/ContactViewRepository";
 import InfoService from "@source/services/InfoService";
 import ClientContactViewRepository from "@source/repositories/ClientContactViewRepository";
+import {EImageable, IImage} from "@app/interfaces/FileInterface";
+import ImageService from "@source/services/ImageService";
 
 export default class ContactService extends Service {
     private mainRepo = new ContactRepository();
@@ -14,7 +16,7 @@ export default class ContactService extends Service {
     private infoService = new InfoService();
     private clientContactRepo = new ClientContactRepository();
     private clientContactViewRepo= new ClientContactViewRepository();
-
+    private imageService=new ImageService();
     async getContacts(params: IParams) {
         return await this.contactViewRepo.getAll(params)
     }
@@ -61,6 +63,16 @@ export default class ContactService extends Service {
                 return updatedContact;
             },
             async () => await trans.rollback()
+        )
+    }
+
+    async setProfilePhoto(contactId: number, data: IImage): Promise<IImage> {
+        return this.safeRun(async () => {
+
+                data.caption = "Perfil Contacto"
+                return await this.imageService.createSingleImage(data,
+                    EImageable.Contact, contactId, true)
+            }
         )
     }
 

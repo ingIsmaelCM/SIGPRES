@@ -1,4 +1,4 @@
-import {DataTypes, Model, ModelAttributeColumnOptions} from "sequelize";
+import {DataTypes, InitOptions, Model, ModelAttributeColumnOptions} from "sequelize";
 import {
     EClientContactRelationship,
     EInfoGender,
@@ -19,7 +19,9 @@ export default class ClientContactView extends Model implements IClientContactVi
             type: DataTypes.INTEGER
         }
     }
-    static additionalOptions={}
+    static additionalOptions: Partial<InitOptions>={
+
+    }
     declare clientId: number;
     declare contactId: number;
     declare relationId: number;
@@ -38,8 +40,8 @@ export default class ClientContactView extends Model implements IClientContactVi
         return ["contactId", "clientId", "relationship", "lastname", "name", "address", "email", "phone", "isGarante"]
     }
 
-    getRelations(): Array<keyof IContactRelation> {
-        return []
+    getRelations(): Array<keyof IContactRelation|"profile"> {
+        return ["clients", "profile"]
     }
 
 }

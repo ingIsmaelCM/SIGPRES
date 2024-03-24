@@ -19,7 +19,7 @@ export default class ContactView extends Model {
     }
 
     getRelations(): Array<keyof  IContactRelation> {
-        return ["clients"]
+        return ["clients", "profile"]
     }
 
 }

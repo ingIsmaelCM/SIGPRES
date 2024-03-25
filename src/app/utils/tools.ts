@@ -1,10 +1,16 @@
 import {Request, Response} from "express";
 import config from "../app.config";
+import appConfig from "../app.config";
 import jwt from "jsonwebtoken";
 import moment from "moment";
 import "moment/locale/es";
 import {Sequelize} from "sequelize";
 import fs from "fs";
+import AppService from "@app/services/AppService";
+import cloudinary from "cloudinary"
+import logger from "@/logger";
+
+
 
 class Tool {
     parseOrZero(value: string | number | undefined): number {
@@ -92,7 +98,7 @@ class Tool {
         return `${str[0].toUpperCase()}${str.substring(1)}`;
     }
 
-    initialToUpper = (sentence: string="") => sentence.toLocaleLowerCase().replace(/\b[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ]+\b/gi,
+    initialToUpper = (sentence: string = "") => sentence.toLocaleLowerCase().replace(/\b[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ]+\b/gi,
         (match: string) => match.toLowerCase().replace(match.charAt(0),
             match.charAt(0).toUpperCase()));
 
@@ -115,6 +121,8 @@ class Tool {
         const arr = Object.values(myEnum);
         return arr.slice(0, arr.length / 2);
     }
+
+
 }
 
 export default new Tool();

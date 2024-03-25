@@ -1,4 +1,4 @@
-import Controller, {setAuthor} from "@/app/controllers/Controller";
+import Controller from "@/app/controllers/Controller";
 import {Request, Response} from "express"
 import IController from "@/app/controllers/IController";
 import DocumentService from "@source/services/DocumentService";
@@ -7,48 +7,27 @@ export default class DocumentController extends Controller implements IControlle
     prefix: string = 'documents';
     mainService = new DocumentService()
 
-
     async index(req: Request, res: Response) {
-        return this.safeRun(async () =>
-                this.mainService.getDocuments(req.query),
-            res, 200, ""
-        )
+        await this.safeRun(async () =>
+                this.mainService.getDocuments(req.query)
+            , res, 200, "Listado de Documentos")
     }
 
-    async show(req: Request, res: Response) {
-        return this.safeRun(async () =>
-                this.mainService.findDocument(Number(req.params.id), req.query),
-            res, 200, ""
-        )
+    async show(req: any, res: any) {
+        await this.safeRun(async () =>
+                await this.mainService.findDocument(Number(req.params.id), req.query),
+            res, 200, "Detalles del documento");
     }
 
-    @setAuthor
-    async store(req: Request, res: Response) {
-        return this.safeRun(async () =>
-                this.mainService.createDocument(req.body),
-            res, 201, ""
-        )
+    async delete(req: any, res: any) {
+        await this.safeRun(async () =>
+                await this.mainService.deleteDocument(Number(req.params.id)),
+            res, 200, "Documento Eliminada");
     }
 
-    @setAuthor
-    async update(req: Request, res: Response) {
-        return this.safeRun(async () =>
-                this.mainService.updateDocument(Number(req.params.id), req.body),
-            res, 201, ""
-        )
-    }
-
-    async delete(req: Request, res: Response) {
-        return this.safeRun(async () =>
-                this.mainService.deleteDocument(Number(req.params.id)),
-            res, 200, ""
-        )
-    }
-
-    async restore(req: Request, res: Response) {
-        return this.safeRun(async () =>
-                this.mainService.restoreDocument(Number(req.params.id)),
-            res, 200, ""
-        )
+    async restore(req: any, res: any) {
+        await this.safeRun(async () =>
+                await this.mainService.deleteDocument(Number(req.params.id)),
+            res, 200, "Documento Eliminada");
     }
 }

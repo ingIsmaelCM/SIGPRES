@@ -6,6 +6,7 @@ import RoleMiddleware from "@/auth/middlewares/RoleMiddleware";
 import PermissionEnums from "@app/interfaces/PermissionEnums";
 import InfoRequest from "@source/requests/InfoRequest";
 import ImageRequest from "@source/requests/ImageRequest";
+import DocumentRequest from "@source/requests/DocumentRequest";
 
 export default class ClientRoutes extends BaseRoutes<ClientController> {
     constructor() {
@@ -39,7 +40,15 @@ export default class ClientRoutes extends BaseRoutes<ClientController> {
             ImageRequest.imageSBulkCreateRequest(),
             ImageRequest.requireIdRequest(),
             ImageRequest.validate,
-            (req: Request, res: Response) => this.controller.setClientImages(req, res)
+            (req: Request, res: Response) => this.controller.setImagesToClient(req, res)
+        )
+
+        this.controller.router.post("/:id/documents",
+            RoleMiddleware.hasAllPermission([PermissionEnums.createDocument, PermissionEnums.editClient]),
+            DocumentRequest.documentCreateRequest(),
+            DocumentRequest.requireIdRequest(),
+            DocumentRequest.validate,
+            (req: Request, res: Response) => this.controller.setDocumentsToClient(req, res)
         )
 
         this.controller.router.post("/:id/info",

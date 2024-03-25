@@ -1,5 +1,6 @@
 import dotenv from "dotenv";
 import path from "path";
+import * as process from "process";
 
 dotenv.config();
 process.env.TZ = "-04:00";
@@ -58,6 +59,7 @@ let config: any = {
     cloud_name: process.env.CLOUD_NAME,
     api_key: process.env.CLOUD_API_KEY,
     api_secret: process.env.CLOUD_API_SECRET,
+    upload_preset: process.env.CLOUD_UPLOAD_PRESET
   },
 
   company: {

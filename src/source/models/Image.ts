@@ -7,6 +7,7 @@ class Image extends Model implements  IImage{
   declare id?: number;
   declare path: string;
   declare caption: string;
+  declare publicId: string;
   declare size: number;
   declare imageableType: string;
   declare imageableId: number;
@@ -31,7 +32,10 @@ class Image extends Model implements  IImage{
     },
     caption: {
       type: DataTypes.STRING,
-      defaultValue: new Date(),
+      defaultValue: new Date().getTime().toString(),
+    },
+    publicId: {
+      type: DataTypes.STRING,
     },
     size: {
       type: DataTypes.DECIMAL,

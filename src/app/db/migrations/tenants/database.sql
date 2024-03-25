@@ -6,7 +6,8 @@ SET foreign_key_checks = 0;
 CREATE TABLE `images`(
 `id` INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
 `path` VARCHAR(150) NOT NULL,
-`caption` VARCHAR(150) NOT NULL,
+`caption` VARCHAR(50) NOT NULL,
+`publicId` VARCHAR(50) NOT NULL,
 `imageableType` VARCHAR(150) NOT NULL,
 `imageableId` INT NOT NULL,
 `size` DECIMAL(10,2),
@@ -19,6 +20,7 @@ CREATE TABLE `documents`(
 `id` INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
 `path` VARCHAR(150) NOT NULL,
 `title` VARCHAR(150) NOT NULL,
+`publicId` VARCHAR(50) NOT NULL,
 `documentableType` VARCHAR(150) NOT NULL,
 `documentableId` INT NOT NULL,
 `size` DECIMAL(10,2) NOT NULL,

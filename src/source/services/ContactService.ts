@@ -9,14 +9,16 @@ import InfoService from "@source/services/InfoService";
 import ClientContactViewRepository from "@source/repositories/ClientContactViewRepository";
 import {EImageable, IImage} from "@app/interfaces/FileInterface";
 import ImageService from "@source/services/ImageService";
+import CloudinaryService from "@app/services/CloudinaryService";
 
 export default class ContactService extends Service {
     private mainRepo = new ContactRepository();
     private contactViewRepo = new ContactViewRepository();
     private infoService = new InfoService();
     private clientContactRepo = new ClientContactRepository();
-    private clientContactViewRepo= new ClientContactViewRepository();
-    private imageService=new ImageService();
+    private clientContactViewRepo = new ClientContactViewRepository();
+    private imageService = new ImageService();
+
     async getContacts(params: IParams) {
         return await this.contactViewRepo.getAll(params)
     }
@@ -25,7 +27,7 @@ export default class ContactService extends Service {
         return await this.contactViewRepo.findById(contactId, params)
     }
 
-    async getContactFromRelation(params: IParams){
+    async getContactFromRelation(params: IParams) {
         return await this.clientContactViewRepo.getAll(params)
     }
 
@@ -53,7 +55,7 @@ export default class ContactService extends Service {
         const trans = await TenantConnection.getTrans();
         return this.safeRun(async () => {
                 const updatedContact = await this.mainRepo.update(data, contactId, trans);
-                if(data.infoId){
+                if (data.infoId) {
                     await this.infoService.updateFromRelated(data, data.infoId, trans);
                 }
                 if ((data as any).relationId) {
@@ -66,11 +68,12 @@ export default class ContactService extends Service {
         )
     }
 
-    async setProfilePhoto(contactId: number, data: IImage): Promise<IImage> {
+    async setProfilePhoto(contactId: number, data: any): Promise<IImage> {
         return this.safeRun(async () => {
-
-                data.caption = "Perfil Contacto"
-                return await this.imageService.createSingleImage(data,
+                const res = await CloudinaryService.getInstance().uploadFilesToCloudinary<IImage>(data)
+                const image: IImage = res[0]
+                image.caption = "Perfil Contacto"
+                return await this.imageService.createSingleImage(image,
                     EImageable.Contact, contactId, true)
             }
         )

@@ -3,6 +3,8 @@ import {IParams} from "@app/interfaces/AppInterfaces";
 import ImageRepository from "@source/repositories/ImageRepository";
 import TenantConnection from "@app/db/TenantConnection";
 import {EImageable, IImage} from "@app/interfaces/FileInterface";
+import tools from "@app/utils/tools";
+import CloudinaryService from "@app/services/CloudinaryService";
 
 export default class ImageService extends Service {
     private mainRepo = new ImageRepository();
@@ -58,6 +60,13 @@ export default class ImageService extends Service {
     async deleteImage(imageId: number): Promise<IImage> {
         const trans = await TenantConnection.getTrans();
         return this.safeRun(async () => {
+                const image = await this.mainRepo.findById(imageId);
+                if (image) {
+                    await CloudinaryService.getInstance().destroyFileFromCloudinary(image.publicId);
+                }
+                const deletedImage = await this.mainRepo.delete(imageId, trans)
+                await trans.commit();
+                return deletedImage;
             },
             async () => await trans.rollback()
         )

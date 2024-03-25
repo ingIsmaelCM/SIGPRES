@@ -7,8 +7,6 @@ export default class ImageController extends Controller implements IController {
     prefix: string = "files/images";
     mainService = new ImageService();
 
-
-
     async index(req: Request, res: Response){
         await  this.safeRun(async()=>
             this.mainService.getImages(req.query)

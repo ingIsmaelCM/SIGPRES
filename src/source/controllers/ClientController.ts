@@ -49,13 +49,20 @@ export default class ClientController extends Controller implements IController 
 
     async setProfilePhoto(req: Request, res: Response) {
         return this.safeRun(async () =>
-                this.mainService.setProfilePhoto(Number(req.params.id), req.body),
+                this.mainService.setProfilePhoto(Number(req.params.id), req.files),
             res, 201, "Foto de perfil añadida")
     }
-    async setClientImages(req: Request, res: Response) {
+
+    async setImagesToClient(req: Request, res: Response) {
         return this.safeRun(async () =>
-                this.mainService.setClientImages(Number(req.params.id), req.body.images),
+                this.mainService.setImagesToClient(Number(req.params.id), req.files),
             res, 201, "Fotos añadidas al cliente")
+    }
+
+    async setDocumentsToClient(req: Request, res: Response) {
+        return this.safeRun(async () =>
+                this.mainService.setDocumentsToClient(Number(req.params.id), req.files),
+            res, 201, "Documentos añadidos al cliente")
     }
 
     async delete(req: Request, res: Response) {

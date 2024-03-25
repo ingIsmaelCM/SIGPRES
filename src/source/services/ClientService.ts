@@ -3,17 +3,20 @@ import {IParams} from "@app/interfaces/AppInterfaces";
 import ClientRepository from "@source/repositories/ClientRepository";
 import TenantConnection from "@app/db/TenantConnection";
 import {IClient, IClientRelation, IClientView, IInfo} from "@app/interfaces/SourceInterfaces";
-import {EImageable, IImage} from "@app/interfaces/FileInterface";
+import {EDocumentable, EImageable, IDocument, IImage} from "@app/interfaces/FileInterface";
 import ImageService from "@source/services/ImageService";
 import InfoService from "@source/services/InfoService";
 import ClientViewRepository from "@source/repositories/ClientViewRepository";
-import moment from "moment";
+import tools from "@app/utils/tools";
+import CloudinaryService from "@app/services/CloudinaryService";
+import DocumentService from "@source/services/DocumentService";
 
 export default class ClientService extends Service {
     private mainRepo = new ClientRepository();
     private infoService = new InfoService();
     private clientViewRepo = new ClientViewRepository();
     private imageService = new ImageService();
+    private documentService = new DocumentService();
 
 
     async getClients(params: IParams) {
@@ -51,6 +54,7 @@ export default class ClientService extends Service {
     }
 
     async setInfoToClient(clientId: number, info: IInfo): Promise<IClient> {
+        const trans = await TenantConnection.getTrans();
         return this.safeRun(async () => {
                 const client = await this.mainRepo.findById(clientId);
                 if (client.infoId) {
@@ -60,32 +64,39 @@ export default class ClientService extends Service {
                     })
                 }
                 const newInfo = await this.infoService.createInfo(info);
-                await client.setInfo(newInfo.id!);
+                await this.mainRepo.update({infoId: newInfo.id}, clientId, trans)
+                await trans.commit();
                 return {...client, info: newInfo}
-            }
+            },
+            async () => await trans.rollback()
         )
     }
 
-    async setProfilePhoto(clientId: number, data: IImage): Promise<IImage> {
+    async setProfilePhoto(clientId: number, data: any): Promise<IImage> {
         return this.safeRun(async () => {
-
-                data.caption = "Perfil Cliente"
-                return await this.imageService.createSingleImage(data,
+                const res = await CloudinaryService.getInstance().uploadFilesToCloudinary<IImage>(data);
+                const image: IImage = res[0]
+                image.caption = "Perfil Cliente"
+                return await this.imageService.createSingleImage(image,
                     EImageable.Client, clientId, true)
             }
         )
     }
 
-    async setClientImages(clientId: number, data: IImage[]): Promise<IImage> {
+    async setImagesToClient(clientId: number, data: any): Promise<IImage> {
         return this.safeRun(async () => {
-
-                data = data.map((image: IImage) => ({
-                    ...image,
-                    caption: moment().format("YYYYMMDDHHiSS")
-
-                }))
+                const res = await CloudinaryService.getInstance().uploadFilesToCloudinary<IImage>(data);
                 return await this.imageService
-                    .createMultipleImages(data, EImageable.Client, clientId)
+                    .createMultipleImages(res, EImageable.Client, clientId)
+            }
+        )
+    }
+
+    async setDocumentsToClient(clientId: number, data: any): Promise<IImage> {
+        return this.safeRun(async () => {
+                const res = await CloudinaryService.getInstance().uploadFilesToCloudinary<IDocument>(data);
+                return await this.documentService
+                    .createMultipleDocuments(res, EDocumentable.Client, clientId)
             }
         )
     }

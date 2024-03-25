@@ -15,6 +15,7 @@ import AuthRoutes from "@auth/routes/AuthRoutes";
 import i18next from "i18next";
 import Backend from "i18next-fs-backend";
 import i18nextMiddleware from "i18next-http-middleware"
+import Multer from "@app/middlewares/Multer";
 
 export class App {
     public app: express.Application;
@@ -37,6 +38,7 @@ export class App {
         this.app.use(bodyParser.urlencoded({extended: false}));
         this.app.use(bodyParser.json());
         this.app.use(cookieParser());
+        this.app.use(new Multer().config())
         this.internationalize();
         this.app.use("/api/public", express.static("public"));
         this.app.use("/api/views", express.static("views"));

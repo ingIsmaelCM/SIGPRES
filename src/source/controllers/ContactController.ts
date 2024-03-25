@@ -47,7 +47,7 @@ export default class ContactController extends Controller implements IController
 
     async setProfilePhoto(req: Request, res: Response) {
         return this.safeRun(async () =>
-                this.mainService.setProfilePhoto(Number(req.params.id), req.body),
+                this.mainService.setProfilePhoto(Number(req.params.id), req.files),
             res, 201, "Foto de perfil añadida")
     }
 

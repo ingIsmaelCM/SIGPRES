@@ -13,7 +13,7 @@ import Permission from "../models/Permission";
 import Role from "../models/Role";
 import Service from "@app/services/Service";
 
-export default class AuthService extends  Service{
+export default class AuthService extends Service {
     private authRepo: AuthRepository = new AuthRepository();
     private authMailService: AuthMailService = new AuthMailService();
 
@@ -27,10 +27,10 @@ export default class AuthService extends  Service{
                 auth.username
             );
             if (emailExists || usernameExists) {
-               await Promise.reject({
-                   code: 422,
-                   message: "The provided email or username is already in use.",
-               })
+                await Promise.reject({
+                    code: 422,
+                    message: "The provided email or username is already in use.",
+                })
             }
             const hashedPWD = await bcrypt.hash(auth.password, 10);
             const newAuth: Auth = await this.authRepo.create(
@@ -64,9 +64,9 @@ export default class AuthService extends  Service{
                 (await this.validateAuthAccount(userAuth, auth.password))
             ) {
                 if (!userAuth.tenants || userAuth.tenants.length == 0) {
-                    await Promise.reject ({
+                    await Promise.reject({
                         code: 401,
-                            message: "The user does not have a DB associated with them",
+                        message: "The user does not have a DB associated with them",
                     });
                 }
                 const updateData = {lastlogin: new Date(), status: 1};
@@ -84,7 +84,7 @@ export default class AuthService extends  Service{
                 };
                 return {userAuth: result, token};
             }
-            await Promise.reject ({
+            await Promise.reject({
                 code: 401,
                 message: "Invalid credentials",
             });
@@ -94,44 +94,12 @@ export default class AuthService extends  Service{
         }
     }
 
-    private setLoginCookies(
-        res: Response,
-        refreshToken: String,
-        token: String,
-        userAuth: any
-    ) {
-        tools.setCookie(res, "refreshToken", `${refreshToken}`);
-        tools.setCookie(res, "accessToken", `Bearer ${token}`);
-        tools.setCookie(res, "tenant", userAuth.tenants[0].key);
-    }
-
-
-    private async setAuthFields(userAuth: any) {
-        let permissions: any[] = userAuth.permissions.map((p: Permission) => ({
-            name: p.name,
-            id: p.id,
-        }));
-        const rolePermissions: any[] = userAuth.roles.map((r: Role) =>
-            r.permissions.map((p: Permission) => ({name: p.name, id: p.id}))
-        );
-        rolePermissions.forEach((rP) => {
-            permissions = permissions.concat(rP);
-        });
-        const roles = userAuth.roles.map((r: Role) => ({
-            name: r.name,
-            id: r.id,
-        }));
-
-        return {permissions, roles};
-    }
-
-
     async verifyAuth(authId: number) {
         const trans = await BaseConnection.getTrans();
         try {
             const auth = await this.authRepo.findById(authId);
             if (!auth) {
-                await Promise.reject ({
+                await Promise.reject({
                     code: 404,
                     message: "No existe este usuario",
                 });
@@ -143,7 +111,6 @@ export default class AuthService extends  Service{
             throw {code: error.code, message: error.message};
         }
     }
-
 
     public generateTokens(userAuth: any) {
         const token = tools.getToken(
@@ -157,22 +124,9 @@ export default class AuthService extends  Service{
         return {token, refreshToken};
     }
 
-
-    private async validateAuthAccount(auth: any, pwd: string): Promise<Boolean> {
-        const isValidPassword = await bcrypt.compare(
-            pwd,
-            auth["_previousDataValues"].password
-        );
-        const isAccountVerified = auth.verifiedAt != null;
-        if (!isAccountVerified)
-            throw {code: 401, message: "Cuenta no verificada"};
-        return isValidPassword;
-    }
-
     public async logout(res: Response) {
         tools.setCookie(res, "accessToken", "null");
     }
-
 
     public async logoutAll(req: any, res: Response) {
         const trans = await BaseConnection.getTrans();
@@ -224,62 +178,64 @@ export default class AuthService extends  Service{
 
     public async sendRecoverLink(authEmail: string): Promise<any> {
         try {
-            const numbers=[]
-            for (let i=0; i<2; i++){
-                const num=Math.floor(Math.random() * 999)
-                numbers.push(String(num).padStart(3, "0"))
-            }
-            const auth=await this.authRepo.find("email",authEmail);
-            await auth.update({sessionId: numbers.join("")})
-            const context = {
-                email: authEmail,
-                firstPart: numbers[0],
-                secondPart: numbers[1],
-            };
-
-            await this.authMailService.sendRecoverLink(context);
+            const context = await this.getContextForSendCodeToEmail(authEmail);
+            await this.authMailService.sendEmail({
+                to: authEmail,
+                context,
+                subject: "Recupere su Contraseña",
+                template: "recoverPassword"
+            });
             return "Código enviado exitosamente";
         } catch (error: any) {
             throw {
-                code: 500,
+                code: error.code||500,
                 message: error.message,
             };
         }
     }
 
-
-
-    async recoverPassword(data: any, res: Response): Promise<any> {
-     return this.safeRun(async()=>{
-         const auth = await this.authRepo.find("email", data.email);
-         if(auth.sessionId!=data.code){
-             return Promise.reject({
-                 code: 422,
-                 message: "El código ingresado no es válido"
-             })
-         }
-         await auth.update({sessionId: null})
-         const password= this.generatePassword();
-        await this.resetPassword(auth.id, password);
-        return this.login({ username: auth.username, password: password}, res);
-     })
+    public async getContextForSendCodeToEmail(authEmail: string) {
+        const numbers = []
+        for (let i = 0; i < 2; i++) {
+            const num = Math.floor(Math.random() * 999)
+            numbers.push(String(num).padStart(3, "0"))
+        }
+        const auth = await this.authRepo.find("email", authEmail);
+        if(!auth){
+            return Promise.reject({
+                code: 404,
+                message: "No se encontró el usuario"
+            })
+        }
+        const newSessionId=await bcrypt.hash(numbers.join(""),10)
+        await auth.update({sessionId: newSessionId})
+        return {
+            email: authEmail,
+            firstPart: numbers[0],
+            secondPart: numbers[1],
+        };
     }
 
-    private generatePassword() {
-        let chars = "0123456789abcdefghijklmnopqrstuvwxyz@#$&()ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        let passwordLength = 16;
-        let password = "";
-        for (let i = 0; i <= passwordLength; i++) {
-            let randomNumber = Math.floor(Math.random() * chars.length);
-            password += chars.substring(randomNumber, randomNumber + 1);
-        }
-        return password;
+    async recoverPassword(data: any, res: Response): Promise<any> {
+        return this.safeRun(async () => {
+            const auth = await this.authRepo.find("email", data.email);
+            if (!await bcrypt.compare(data.code, auth.sessionId)) {
+                return Promise.reject({
+                    code: 422,
+                    message: "El código ingresado no es válido"
+                })
+            }
+            await auth.update({sessionId: null})
+            const password = this.generatePassword();
+            await this.resetPassword(auth.id, password);
+            return this.login({username: auth.username, password: password}, res);
+        })
     }
 
     public async refreshToken(req: any, res: Response): Promise<any> {
         try {
             const freshToken = tools.getCookies(req)?.refreshToken || "none";
-            const decoded: any = await  new Promise((resolve: Function, reject: Function)=>{
+            const decoded: any = await new Promise((resolve: Function, reject: Function) => {
                 jwt.verify(
                     freshToken,
                     config.auth.secret,
@@ -294,7 +250,7 @@ export default class AuthService extends  Service{
                     }
                 )
             });
-            let userAuth = await this.authRepo.find("email", decoded.email, false, );
+            let userAuth = await this.authRepo.find("email", decoded.email, false,);
             const {token, refreshToken} = this.generateTokens(userAuth);
             tools.setCookie(res, "refreshToken", `${refreshToken}`);
             tools.setCookie(res, "accessToken", `Bearer ${token}`);
@@ -305,5 +261,57 @@ export default class AuthService extends  Service{
                 message: error.message,
             };
         }
+    }
+
+    private setLoginCookies(
+        res: Response,
+        refreshToken: String,
+        token: String,
+        userAuth: any
+    ) {
+        tools.setCookie(res, "refreshToken", `${refreshToken}`);
+        tools.setCookie(res, "accessToken", `Bearer ${token}`);
+        tools.setCookie(res, "tenant", userAuth.tenants[0].key);
+    }
+
+    private async setAuthFields(userAuth: any) {
+        let permissions: any[] = userAuth.permissions.map((p: Permission) => ({
+            name: p.name,
+            id: p.id,
+        }));
+        const rolePermissions: any[] = userAuth.roles.map((r: Role) =>
+            r.permissions.map((p: Permission) => ({name: p.name, id: p.id}))
+        );
+        rolePermissions.forEach((rP) => {
+            permissions = permissions.concat(rP);
+        });
+        const roles = userAuth.roles.map((r: Role) => ({
+            name: r.name,
+            id: r.id,
+        }));
+
+        return {permissions, roles};
+    }
+
+    private async validateAuthAccount(auth: any, pwd: string): Promise<Boolean> {
+        const isValidPassword = await bcrypt.compare(
+            pwd,
+            auth["_previousDataValues"].password
+        );
+        const isAccountVerified = auth.verifiedAt != null;
+        if (!isAccountVerified)
+            throw {code: 401, message: "Cuenta no verificada"};
+        return isValidPassword;
+    }
+
+    private generatePassword() {
+        let chars = "0123456789abcdefghijklmnopqrstuvwxyz@#$&()ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        let passwordLength = 16;
+        let password = "";
+        for (let i = 0; i <= passwordLength; i++) {
+            let randomNumber = Math.floor(Math.random() * chars.length);
+            password += chars.substring(randomNumber, randomNumber + 1);
+        }
+        return password;
     }
 }

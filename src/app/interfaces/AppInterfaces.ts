@@ -36,3 +36,12 @@ export enum EStatusCode{
   EntidadNoProcesable = 422,
   ErrorInterno = 500
 }
+
+export interface IMailOptions{
+  subject: string,
+  to: string,
+  context?: Record<string, any>,
+  template: string,
+  attachment?: any[],
+
+}

@@ -37,6 +37,9 @@ export default class Wallet extends Model implements IWallet {
     balance: {
       type: DataTypes.DECIMAL,
       allowNull: false,
+      get(this: Wallet){
+        return Number(this.getDataValue('balance'))
+      }
     },
     ...ITM.commonAttributes,
   };

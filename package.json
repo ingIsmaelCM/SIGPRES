@@ -41,6 +41,7 @@
     "email-templates": "^11.1.1",
     "express": "^4.18.2",
     "express-handlebars": "^7.1.2",
+    "express-idempotency": "^1.0.5",
     "express-rate-limit": "^7.2.0",
     "express-session": "^1.18.0",
     "express-validator": "^7.0.1",

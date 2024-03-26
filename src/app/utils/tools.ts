@@ -58,12 +58,12 @@ class Tool {
         );
     }
 
-    setCookie(res: Response, name: string, value: string) {
+    setCookie(res: Response, name: string, value: string, expiration?: number) {
         res.cookie(name, value, {
             httpOnly: true,
             sameSite: false,
             secure: true,
-            expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
+            expires: new Date(Date.now() + (expiration||24 * 60 * 60 * 1000)),
         });
     }
 

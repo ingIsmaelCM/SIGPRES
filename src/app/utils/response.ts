@@ -2,6 +2,7 @@ import { Response } from "express";
 
 export default {
   success(res: Response, status: number, body: any, title?: string): void {
+    status=isNaN(Number(status))?200:Number(status);
     res.status(status).json({
       statusCode: status,
       title: title,
@@ -10,6 +11,7 @@ export default {
   },
 
   error(res: Response, status: number, error: any, title?:string): void {
+    status=isNaN(Number(status))?500:Number(status);
     res.status(status || 500).json({
       title: title,
       statusCode: status||500,

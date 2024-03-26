@@ -30,6 +30,10 @@ export default class ClientContactRoutes extends BaseRoutes<ClientContactControl
                 RoleMiddleware.hasPermission(PermissionEnums.deleteContact),
                 (req: Request, res: Response) => this.controller.delete(req, res)
             )
+            .patch(
+                RoleMiddleware.hasPermission(PermissionEnums.deleteContact),
+                (req: Request, res: Response) => this.controller.restore(req, res)
+            )
 
     }
 

@@ -1,7 +1,6 @@
 import BaseRoutes from "@app/routes/BaseRoutes";
 import ImageController from "@source/controllers/ImageController";
 import {Request, Response} from "express";
-import ImageRequest from "@source/requests/ImageRequest";
 import RoleMiddleware from "@/auth/middlewares/RoleMiddleware";
 import PermissionEnums from "@app/interfaces/PermissionEnums";
 
@@ -16,6 +15,10 @@ export default class ImageRoutes extends BaseRoutes<ImageController> {
             .get(
                 RoleMiddleware.hasPermission(PermissionEnums.getImages),
                 (req: Request, res: Response) => this.controller.index(req, res)
+            )
+            .post(
+                RoleMiddleware.hasPermission(PermissionEnums.createImage),
+                (req: Request, res: Response) => this.controller.uploadNotSave(req, res)
             )
 
         this.controller.router.route("/:id")

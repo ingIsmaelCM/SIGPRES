@@ -15,6 +15,14 @@ export default class ImageService extends Service {
             this.mainRepo.getAll(params))
     }
 
+
+    async uploadImageButNotSave(file: any){
+        return this.safeRun(async()=>{
+            const res = await CloudinaryService.getInstance().uploadFilesToCloudinary<IImage>(file);
+            return res[0]
+        })
+    }
+
     async createSingleImage(data: IImage, relatedModel: EImageable, relatedId: number, upsert?: boolean) {
         const trans = await TenantConnection.getTrans();
         return this.safeRun(async () => {
@@ -27,6 +35,7 @@ export default class ImageService extends Service {
                 const oldImage = await this.checkOldImageExists(relatedModel, relatedId);
                 if (oldImage && upsert) {
                     newImage = await this.mainRepo.update(data, oldImage.id, trans);
+                    await  CloudinaryService.getInstance().destroyFileFromCloudinary(oldImage.publicId)
                 } else {
                     newImage = await this.mainRepo.create(data, trans);
                 }
@@ -71,6 +80,8 @@ export default class ImageService extends Service {
             async () => await trans.rollback()
         )
     }
+
+
 
     async restoreImage(imageId: number): Promise<IImage> {
         const trans = await TenantConnection.getTrans();

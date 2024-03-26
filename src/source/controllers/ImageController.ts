@@ -4,7 +4,7 @@ import ImageService from "@source/services/ImageService";
 import {Request, Response} from "express"
 
 export default class ImageController extends Controller implements IController {
-    prefix: string = "files/images";
+    prefix: string = "images";
     mainService = new ImageService();
 
     async index(req: Request, res: Response){
@@ -13,12 +13,18 @@ export default class ImageController extends Controller implements IController {
         , res, 200, "Listado de Imágenes")
     }
 
+
     async show(req: any, res: any) {
         await this.safeRun(async () =>
                 await this.mainService.findImage(Number(req.params.id), req.query),
             res, 200, "Detalles de la imagen");
     }
 
+    async uploadNotSave(req: Request, res: Response){
+        await this.safeRun(async () =>
+                await this.mainService.uploadImageButNotSave(req.files),
+            res, 200, "Imagen subida al servidor");
+    }
     async delete(req: any, res: any) {
         await this.safeRun(async () =>
                 await this.mainService.deleteImage(Number(req.params.id)),

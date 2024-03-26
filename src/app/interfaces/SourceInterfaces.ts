@@ -314,6 +314,7 @@ export interface IPreference extends ICommonField {
     key: string;
     value: string;
     label: string;
+    type: string
 }
 
 export interface IPreferenceRelation {

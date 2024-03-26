@@ -5,7 +5,7 @@ import response from "@app/utils/response";
 import {IsNumericOptions} from "validator";
 
 export default class BaseRequest {
-    RequestMessage = {
+    RequestCheck = {
         required: (field: string) => body(field, 'required').exists().notEmpty(),
         isUrl: (field: string) => body(field, `invalidType: {{url}} `).isURL(),
         isEmail: (field: string) => body(field, `invalidType: {{email}} `).isEmail(),

@@ -16,17 +16,18 @@ export default class PreferenceRoutes extends BaseRoutes<PreferenceController> {
                 RoleMiddleware.hasPermission(PermissionEnums.getPreferences),
                 (req: Request, res: Response) => this.controller.index(req, res)
             )
-            .post(
-                RoleMiddleware.hasPermission(PermissionEnums.setPreference),
-                PreferenceRequest.preferenceCreateRequest(),
-                PreferenceRequest.validate,
-                (req: Request, res: Response) => this.controller.store(req, res)
-            );
+
 
         this.controller.router.route("/:key")
             .get(
                 RoleMiddleware.hasPermission(PermissionEnums.getPreferences),
                 (req: Request, res: Response) => this.controller.show(req, res)
+            )
+            .put(
+                RoleMiddleware.hasPermission(PermissionEnums.setPreference),
+                PreferenceRequest.preferenceUpdateRequest(),
+                PreferenceRequest.validate,
+                (req: Request, res: Response) => this.controller.update(req, res)
             )
 
     }

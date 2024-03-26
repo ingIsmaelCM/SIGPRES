@@ -1,5 +1,5 @@
 import BaseRequest from "@app/requests/BaseRequest";
-import {body, ValidationChain} from "express-validator";
+import {param, ValidationChain} from "express-validator";
 
 class PreferenceRequest extends BaseRequest {
     preferenceCreateRequest(): Array<ValidationChain> {
@@ -7,7 +7,11 @@ class PreferenceRequest extends BaseRequest {
     }
 
     preferenceUpdateRequest(): Array<ValidationChain> {
-        return []
+        return [
+            param("key", "Se requiere la clave de preferencia").exists().notEmpty(),
+            this.RequestCheck.required("value"),
+            this.RequestCheck.isString("value")
+        ]
     }
 
 }

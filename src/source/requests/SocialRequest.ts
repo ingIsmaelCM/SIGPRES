@@ -4,19 +4,19 @@ import {body, ValidationChain} from "express-validator";
 class SocialRequest extends BaseRequest {
     socialCreateRequest(): Array<ValidationChain> {
         return [
-            this.RequestMessage.required("clientId"),
-            this.RequestMessage.isLength("instagram",5,50).optional(),
-            this.RequestMessage.isLength("facebook",5,50).optional(),
-            this.RequestMessage.isLength("whatsapp",5,50).optional(),
+            this.RequestCheck.required("clientId"),
+            this.RequestCheck.isLength("instagram",5,50).optional(),
+            this.RequestCheck.isLength("facebook",5,50).optional(),
+            this.RequestCheck.isLength("whatsapp",5,50).optional(),
         ]
     }
 
     socialUpdateRequest(): Array<ValidationChain> {
         return [
-            this.RequestMessage.isInt("clientId").optional(),
-            this.RequestMessage.isLength("instagram",5,50).optional(),
-            this.RequestMessage.isLength("facebook",5,50).optional(),
-            this.RequestMessage.isLength("whatsapp",5,50).optional(),
+            this.RequestCheck.isInt("clientId").optional(),
+            this.RequestCheck.isLength("instagram",5,50).optional(),
+            this.RequestCheck.isLength("facebook",5,50).optional(),
+            this.RequestCheck.isLength("whatsapp",5,50).optional(),
         ]
     }
 

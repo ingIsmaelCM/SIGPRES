@@ -18,6 +18,9 @@ export default class WalletService extends Service {
     async createWallet(data: IWallet): Promise<IWallet> {
         const trans = await TenantConnection.getTrans();
         return this.safeRun(async () => {
+            const newWallet= await  this.mainRepo.create(data, trans);
+            await trans.commit();
+            return newWallet;
             },
             async () => await trans.rollback()
         )

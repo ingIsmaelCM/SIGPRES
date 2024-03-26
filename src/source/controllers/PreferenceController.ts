@@ -11,24 +11,23 @@ export default class PreferenceController extends Controller implements IControl
     async index(req: Request, res: Response) {
         return this.safeRun(async () =>
                 this.mainService.getPreferences(req.query),
-            res, 200, ""
+            res, 200, "Listado de preferencias"
         )
     }
 
     async show(req: Request, res: Response) {
         return this.safeRun(async () =>
                 this.mainService.getPreference(req.params.key, req.query),
-            res, 200, ""
+            res, 200, "Detalles de la preferencia"
         )
     }
 
     @setAuthor
-    async store(req: Request, res: Response) {
+    async update(req: Request, res: Response) {
         return this.safeRun(async () =>
-                this.mainService.setPreference(req.body),
-            res, 201, ""
+                this.mainService.setPreference(req.params.key, req.body),
+            res, 201, "Preferencia actualizada"
         )
     }
-
 
 }

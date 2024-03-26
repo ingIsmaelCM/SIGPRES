@@ -29,4 +29,10 @@ export default class ClientContactController extends Controller implements ICont
             , res, 200, "Contacto Removido")
     }
 
+    async restore(req: Request, res: Response) {
+        return this.safeRun(async () =>
+                this.mainService.restoreFromRelation(Number(req.params.id))
+            , res, 200, "Contacto Restaurado")
+    }
+
 }

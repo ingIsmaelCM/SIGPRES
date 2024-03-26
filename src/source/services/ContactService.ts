@@ -94,6 +94,7 @@ export default class ContactService extends Service {
         const trans = await TenantConnection.getTrans();
         return this.safeRun(async () => {
                 const restoredContact = await this.mainRepo.restore(contactId, trans);
+                console.log("Fue aquí")
                 await trans.commit();
                 return restoredContact;
             },

@@ -5,11 +5,11 @@ import {EClientType} from "@app/interfaces/SourceInterfaces";
 class ClientRequest extends BaseRequest {
     clientCreateRequest(): Array<ValidationChain> {
         return [
-            this.RequestMessage.required("name"),
-            this.RequestMessage.isLength("name",0,50),
-            this.RequestMessage.required("lastname"),
-            this.RequestMessage.isLength("lastname",0,50),
-            this.RequestMessage.isIn("clienttype",`${EClientType.Persona} | ${EClientType.Negocio}`,
+            this.RequestCheck.required("name"),
+            this.RequestCheck.isLength("name",0,50),
+            this.RequestCheck.required("lastname"),
+            this.RequestCheck.isLength("lastname",0,50),
+            this.RequestCheck.isIn("clienttype",`${EClientType.Persona} | ${EClientType.Negocio}`,
                 [EClientType.Persona, EClientType.Negocio]).optional(),
 
         ]
@@ -17,10 +17,10 @@ class ClientRequest extends BaseRequest {
 
     clientUpdateRequest(): Array<ValidationChain> {
         return [
-            this.RequestMessage.isLength("name",2,50).optional(),
-            this.RequestMessage.isLength("lastname",2,50).optional(),
-            this.RequestMessage.isInt("infoId").optional(),
-            this.RequestMessage.isIn("clienttype",`${EClientType.Persona} | ${EClientType.Negocio}`,
+            this.RequestCheck.isLength("name",2,50).optional(),
+            this.RequestCheck.isLength("lastname",2,50).optional(),
+            this.RequestCheck.isInt("infoId").optional(),
+            this.RequestCheck.isIn("clienttype",`${EClientType.Persona} | ${EClientType.Negocio}`,
                 [EClientType.Persona, EClientType.Negocio]).optional(),
         ]
     }

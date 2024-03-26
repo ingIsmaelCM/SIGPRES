@@ -8,35 +8,35 @@ class AuthRequest extends BaseRequest {
 
     public validateAuthRegister(): Array<ValidationChain> {
         return [
-            this.RequestMessage.required("email"),
-            this.RequestMessage.isEmail("email"),
+            this.RequestCheck.required("email"),
+            this.RequestCheck.isEmail("email"),
             body("email", "Este correo ya está registrado")
                 .custom(async (value: string) =>
                     await this.checkUnique("email", value)),
             body("username", "Este usuario ya está registrado")
                 .custom(async (value: string) =>
                     await this.checkUnique("username", value)),
-            this.RequestMessage.required("password"),
+            this.RequestCheck.required("password"),
             body("password", "La contraseña ingresada es muy débil")
                 .custom((value: string) => {
                     return value.match(this.PASSREGEX)
                 }),
-            this.RequestMessage.required("username"),
-            this.RequestMessage.required("name"),
-            this.RequestMessage.isLength("name",5,50),
-            this.RequestMessage.required("lastname"),
-            this.RequestMessage.isLength("lastname",5,50),
+            this.RequestCheck.required("username"),
+            this.RequestCheck.required("name"),
+            this.RequestCheck.isLength("name",5,50),
+            this.RequestCheck.required("lastname"),
+            this.RequestCheck.isLength("lastname",5,50),
         ];
     }
 
     public validateAuthLogin(): Array<ValidationChain> {
         return [
-            this.RequestMessage.required("password"),
+            this.RequestCheck.required("password"),
             body("password", "La contraseña ingresada es muy débil")
                 .custom((value: string) => {
                     return value.match(this.PASSREGEX)
                 }),
-            this.RequestMessage.required("username"),
+            this.RequestCheck.required("username"),
         ];
     }
 

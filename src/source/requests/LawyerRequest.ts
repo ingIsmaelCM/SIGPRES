@@ -6,11 +6,11 @@ class LawyerRequest extends BaseRequest {
     lawyerRepo = new LawyerRepository();
     lawyerCreateRequest(): Array<ValidationChain> {
         return [
-            this.RequestMessage.required("name"),
-            this.RequestMessage.isLength("name", 0, 50),
-            this.RequestMessage.required("lastname"),
-            this.RequestMessage.isLength("lastname", 0, 50),
-            this.RequestMessage.isLength("exequatur", 2, 20).optional({values: "falsy"}),
+            this.RequestCheck.required("name"),
+            this.RequestCheck.isLength("name", 0, 50),
+            this.RequestCheck.required("lastname"),
+            this.RequestCheck.isLength("lastname", 0, 50),
+            this.RequestCheck.isLength("exequatur", 2, 20).optional({values: "falsy"}),
             body("exequatur", "Este exequátur ya está registrado")
                 .custom((value: string) =>
                     this.checkUnique("exequatur", value))
@@ -20,10 +20,10 @@ class LawyerRequest extends BaseRequest {
 
     lawyerUpdateRequest(): Array<ValidationChain> {
         return [
-            this.RequestMessage.isLength("name", 0, 50).optional(),
-            this.RequestMessage.isLength("lastname", 0, 50).optional(),
-            this.RequestMessage.isLength("exequatur", 2, 20).optional({values: "falsy"}),
-            this.RequestMessage.isInt("infoId").optional(),
+            this.RequestCheck.isLength("name", 0, 50).optional(),
+            this.RequestCheck.isLength("lastname", 0, 50).optional(),
+            this.RequestCheck.isLength("exequatur", 2, 20).optional({values: "falsy"}),
+            this.RequestCheck.isInt("infoId").optional(),
             body("exequatur", "Este exequátur ya está registrado")
                 .custom((value: string, meta: any) =>
                     this.checkUnique("exequatur", value, meta.req.params))

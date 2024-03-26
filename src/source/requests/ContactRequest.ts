@@ -5,13 +5,13 @@ import {EClientContactRelationship} from "@app/interfaces/SourceInterfaces";
 class ContactRequest extends BaseRequest {
     contactCreateRequest(): Array<ValidationChain> {
         return [
-            this.RequestMessage.required("name"),
-            this.RequestMessage.isLength("name",0,50),
-            this.RequestMessage.required("lastname"),
-            this.RequestMessage.isLength("lastname",0,50),
-            this.RequestMessage.isInt("clientId").optional(),
-            this.RequestMessage.isInt("relationId").optional(),
-            this.RequestMessage.isIn("relationship",
+            this.RequestCheck.required("name"),
+            this.RequestCheck.isLength("name",0,50),
+            this.RequestCheck.required("lastname"),
+            this.RequestCheck.isLength("lastname",0,50),
+            this.RequestCheck.isInt("clientId").optional(),
+            this.RequestCheck.isInt("relationId").optional(),
+            this.RequestCheck.isIn("relationship",
                 Object.values(EClientContactRelationship).join(" | "),
                 Object.values(EClientContactRelationship)).optional()
         ]
@@ -19,11 +19,11 @@ class ContactRequest extends BaseRequest {
 
     contactUpdateRequest(): Array<ValidationChain> {
         return [
-            this.RequestMessage.isLength("name",0,50),
-            this.RequestMessage.isLength("lastname",0,50),
-            this.RequestMessage.isInt("relationId").optional(),
-            this.RequestMessage.isInt("infoId").optional(),
-            this.RequestMessage.isIn("relationship",
+            this.RequestCheck.isLength("name",0,50),
+            this.RequestCheck.isLength("lastname",0,50),
+            this.RequestCheck.isInt("relationId").optional(),
+            this.RequestCheck.isInt("infoId").optional(),
+            this.RequestCheck.isIn("relationship",
                 Object.values(EClientContactRelationship).join(" | "),
                 Object.values(EClientContactRelationship)).optional()
         ]

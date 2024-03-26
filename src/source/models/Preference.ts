@@ -6,7 +6,13 @@ import {
 } from "@app/interfaces/SourceInterfaces";
 
 @staticImplements<IPreference, IPreferenceRelation>()
-export default class Preference extends Model {
+export default class Preference extends Model implements  IPreference{
+
+  declare key: string;
+  declare label: string;
+  declare value: string;
+  declare type: string;
+
   getSearchables(): Array<keyof IPreference> {
     return ["key", "value", "label"];
   }
@@ -28,6 +34,10 @@ export default class Preference extends Model {
     },
     label: {
       type: DataTypes.TEXT,
+      allowNull: false,
+    },
+    type: {
+      type: DataTypes.STRING,
       allowNull: false,
     },
     ...commonAttributes,

@@ -35,6 +35,7 @@ CREATE TABLE `preferences`
     `key` VARCHAR(50) NOT NULL UNIQUE,
     `label` VARCHAR(150) NOT NULL,
     `value` LONGTEXT,
+    `type` ENUM ('number, string, object, array, boolean') NOT NULL,
     `createdBy` INT NOT NULL,
     `updatedBy` INT NOT NULL,
     `createdAt` TIMESTAMP NOT NULL DEFAULT current_timestamp,
@@ -402,19 +403,19 @@ DELIMITER ;
 
 
 TRUNCATE TABLE `preferences`;
-INSERT INTO `preferences` (`key`, label, createdBy, updatedBy, value) VALUES 
-('initTerm', 'Días de Mora Inicial', 1,1, NULL),
-('initRateMora', 'Tasa de Mora Inicial', 1,1, NULL),
-('finalRateMora','Tasa de Mora Resto de Días',1,1, NULL),
-('loanRate','Tasa de Interés de Préstamos',1,1, NULL),
-('loanterm','Plazo de Pago de Préstamos',1,1, NULL),
-('loanGrace','Días de Gracia de Pago',1,1, NULL),
-('loanPeriodArray','Períodos de Pagos',1,1, '[{"key":"Diario","value":"diario"},{"key":"Semanal","value":"semanal"},{"key":"Quincenal","value":"quincenal"},{"key":"Mensual","value":"mensual"}]' ),
-('loanPeriod','Forma de Pago Predeterminada',1,1, NULL),
-('capitalCompany','Capital de Trabajo',1,1, 0),
-('cargePerSaldo','Cargo Por Saldo Adelantado',1,1, 0), 
-('percenToChargePerSaldo','Porcentaje de Préstamo Cargable',1,1, 0),
-('companyData','Detalles del negocio',1,1, '{"name":"SIGPRES","longName":"Sistema Integrado Para la Gestión de Préstamos","address":"Located at Word Wide Web","phone":"(809) 000-0000","email":"info@atriontechsd.com","logo":"https://res.cloudinary.com/atriontechsd/image/upload/v1708904993/logo_long_oraqpj.png","rnc":"000-00000-0"}');
+INSERT INTO `preferences` (`key`, label, createdBy, updatedBy, value, type) VALUES
+('initTerm', 'Días de Mora Inicial', 1,1, 0, 'number'),
+('initRateMora', 'Tasa de Mora Inicial', 1,1, 0, 'number'),
+('finalRateMora','Tasa de Mora Resto de Días',1,1, 0, 'number'),
+('loanRate','Tasa de Interés de Préstamos',1,1, 0, 'number'),
+('loanterm','Plazo de Pago de Préstamos',1,1, 0, 'number'),
+('loanGrace','Días de Gracia de Pago',1,1, 0, 'number'),
+('loanPeriodArray','Períodos de Pagos',1,1, '[{"key":"Diario","value":"diario"},{"key":"Semanal","value":"semanal"},{"key":"Quincenal","value":"quincenal"},{"key":"Mensual","value":"mensual"}]', 'array' ),
+('loanPeriod','Forma de Pago Predeterminada',1,1, NULL, 'string'),
+('capitalCompany','Capital de Trabajo',1,1, 0, 'number'),
+('cargePerSaldo','Cargo Por Saldo Adelantado',1,1, 0, 'number'),
+('percenToChargePerSaldo','Porcentaje de Préstamo Cargable',1,1, 0, 'number'),
+('companyData','Detalles del negocio',1,1, '{"name":"SIGPRES","longName":"Sistema Integrado Para la Gestión de Préstamos","address":"Located at Word Wide Web","phone":"(809) 000-0000","email":"info@atriontechsd.com","logo":"https://res.cloudinary.com/atriontechsd/image/upload/v1708904993/logo_long_oraqpj.png","rnc":"000-00000-0"}','object');
 
 
 TRUNCATE TABLE `wallets`;

@@ -7,13 +7,13 @@ export default class PreferenceRepository extends BaseRepository<Preference> {
     super(Preference);
   }
 
-  async set(newPref: any, trans: any) {
+  async set(newPref: any, preferenceKey: string, trans: any) {
     return this.safeRun(async () => {
-      const data = await this.get(newPref.key, {});
+      const data = await this.get(preferenceKey, {});
       if (data) {
         return await this.update(
-          { ...newPref, createdBy: undefined },
-          newPref.key,
+          newPref,
+            preferenceKey,
           trans,
           "key"
         );

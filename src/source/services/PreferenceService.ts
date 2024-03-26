@@ -7,10 +7,10 @@ import TenantConnection from "@app/db/TenantConnection";
 export default class PreferenceService extends  Service{
   private preferenceRepo = new PreferenceRepository();
 
-  async setPreference(data: IPreference): Promise<any> {
+  async setPreference(preferenceKey: string, data: IPreference): Promise<any> {
     const trans = await TenantConnection.getTrans();
     try {
-      const pref = await this.preferenceRepo.set(data, trans);
+      const pref = await this.preferenceRepo.set(data, preferenceKey, trans);
 
       await trans.commit();
       return pref;

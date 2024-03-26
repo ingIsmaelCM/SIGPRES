@@ -4,9 +4,9 @@ import {ValidationChain} from "express-validator";
 class ClientContactRequest extends BaseRequest {
     clientContactCreateRequest(): Array<ValidationChain> {
         return [
-            this.RequestMessage.required("clientId"),
-            this.RequestMessage.required("contactId"),
-            this.RequestMessage.isString("relationship").optional(),
+            this.RequestCheck.required("clientId"),
+            this.RequestCheck.required("contactId"),
+            this.RequestCheck.isString("relationship").optional(),
         ]
     }
 

@@ -4,32 +4,32 @@ import {ValidationChain} from "express-validator";
 class JobRequest extends BaseRequest {
     jobCreateRequest(): Array<ValidationChain> {
         return [
-            this.RequestMessage.required("startAt"),
-            this.RequestMessage.isDate("startAt"),
-            this.RequestMessage.isDate('endAt').optional(),
-            this.RequestMessage.isIn("status", "Actual | Anterior",
+            this.RequestCheck.required("startAt"),
+            this.RequestCheck.isDate("startAt"),
+            this.RequestCheck.isDate('endAt').optional(),
+            this.RequestCheck.isIn("status", "Actual | Anterior",
                 ['Actual', 'Anterior']).optional(),
-            this.RequestMessage.required('salary'),
-            this.RequestMessage.isFloat('salary', 0, (9 * 100 * 100 * 10)),
-            this.RequestMessage.required('position'),
-            this.RequestMessage.isLength("position", 5, 50),
-            this.RequestMessage.required('company'),
-            this.RequestMessage.isLength('company', 2, 75),
-            this.RequestMessage.required('clientId')
+            this.RequestCheck.required('salary'),
+            this.RequestCheck.isFloat('salary', 0, (9 * 100 * 100 * 10)),
+            this.RequestCheck.required('position'),
+            this.RequestCheck.isLength("position", 5, 50),
+            this.RequestCheck.required('company'),
+            this.RequestCheck.isLength('company', 2, 75),
+            this.RequestCheck.required('clientId')
         ]
     }
 
     jobUpdateRequest(): Array<ValidationChain> {
         return [
-            this.RequestMessage.isDate("startAt").optional(),
-            this.RequestMessage.isDate('endAt').optional({values: "falsy"}),
-            this.RequestMessage.isIn("status", "Actual | Anterior",
+            this.RequestCheck.isDate("startAt").optional(),
+            this.RequestCheck.isDate('endAt').optional({values: "falsy"}),
+            this.RequestCheck.isIn("status", "Actual | Anterior",
                 ['Actual', 'Anterior']).optional(),
-            this.RequestMessage.isInt("infoId").optional(),
-            this.RequestMessage.isFloat('salary', 0, (9 * 100 * 100 * 10)).optional(),
-            this.RequestMessage.isLength("position", 5, 50).optional(),
-            this.RequestMessage.isLength('company', 2, 75).optional(),
-            this.RequestMessage.isInt('clientId').optional()
+            this.RequestCheck.isInt("infoId").optional(),
+            this.RequestCheck.isFloat('salary', 0, (9 * 100 * 100 * 10)).optional(),
+            this.RequestCheck.isLength("position", 5, 50).optional(),
+            this.RequestCheck.isLength('company', 2, 75).optional(),
+            this.RequestCheck.isInt('clientId').optional()
         ]
     }
 

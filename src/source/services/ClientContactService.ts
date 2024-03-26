@@ -42,13 +42,22 @@ export default class ClientContactService extends Service {
     }
 
 
-    async deleteFromRelation(contactId: number): Promise<any> {
+    async deleteFromRelation(relationId: number): Promise<any> {
         const trans = await TenantConnection.getTrans();
         return this.safeRun(async () => {
-                const removedContact = await this.mainRepo.delete(contactId, trans);
-                console.log(removedContact)
+                const removedContact = await this.mainRepo.delete(relationId, trans);
                 await trans.commit();
                 return removedContact;
+            },
+            async () => await trans.rollback()
+        )
+    }
+    async restoreFromRelation(relationId: number): Promise<any> {
+        const trans = await TenantConnection.getTrans();
+        return this.safeRun(async () => {
+                const restoredContact = await this.mainRepo.restore(relationId, trans);
+                await trans.commit();
+                return restoredContact;
             },
             async () => await trans.rollback()
         )

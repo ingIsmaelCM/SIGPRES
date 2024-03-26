@@ -1,4 +1,3 @@
-import PreferenceRoutes from "@source/routes/PreferenceRoutes";
 import AmortizationRoutes from "@source/routes/AmortizationRoute";
 import ClientRoutes from "@source/routes/ClientRoute";
 import ConditionRoutes from "@source/routes/ConditionRoute";
@@ -16,6 +15,7 @@ import SocialRoutes from "@source/routes/SocialRoute";
 import WalletRoutes from "@source/routes/WalletRoute";
 import BaseRoutes from "@app/routes/BaseRoutes";
 import ClientContactRoutes from "@source/routes/ClientContactRoute";
+import PreferenceRoutes from "@source/routes/PreferenceRoute";
 
 const sourceRoutes: BaseRoutes<any>[]=[
     new PreferenceRoutes(),
@@ -32,7 +32,6 @@ const sourceRoutes: BaseRoutes<any>[]=[
     new LoanRoutes(),
     new MoraRoutes(),
     new PaymentRoutes(),
-    new PreferenceRoutes(),
     new SocialRoutes(),
     new WalletRoutes(),
     new ClientContactRoutes(),

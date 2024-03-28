@@ -111,9 +111,10 @@ export class App {
                 saveUninitialized: true,
             })
         );
+
         this.app.use(
             cors({
-                origin: "*",
+                origin: config.app.allowedUrl,
                 credentials: true,
             })
         );

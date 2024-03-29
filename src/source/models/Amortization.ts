@@ -4,12 +4,24 @@ import {
     Model,
 } from "sequelize";
 import {
+    EAmortizationStatus,
     IAmortization,
     IAmortizationRelation,
 } from "@app/interfaces/SourceInterfaces";
 
 @ITM.staticImplements<IAmortization, IAmortizationRelation>()
-export default class Amortization extends Model {
+export default class Amortization extends Model implements IAmortization {
+    declare date: string;
+    declare cuota: number;
+    declare nro: number;
+    declare capital: number;
+    declare interest: number;
+    declare balance: number;
+    declare status: EAmortizationStatus;
+    declare loanId: number;
+    declare clientId: number;
+    declare id: number;
+
     getSearchables(): Array<keyof IAmortization> {
         return [
             "date",
@@ -26,12 +38,17 @@ export default class Amortization extends Model {
     getRelations(): Array<keyof IAmortizationRelation> {
         return ["loan", "client"];
     }
-    static additionalOptions={}
+
+    static additionalOptions = {}
     static tableName = "amortizations";
     static modelName = "Amortization";
 
     static attributes: Record<keyof IAmortization, any> = {
         ...ITM.commonAttributes,
+        nro: {
+            type: DataTypes.INTEGER,
+            allowNull: false
+        },
         date: {
             type: DataTypes.DATE,
             allowNull: false,

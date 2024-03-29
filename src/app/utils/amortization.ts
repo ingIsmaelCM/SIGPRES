@@ -22,7 +22,7 @@ export default {
       payDate = this.getDateCuota(payDate, period);
       amortization.push({
         nro: i + 1,
-        date: payDate.format("DD/MM/YYYY"),
+        date: payDate.format("YYYY-MM-DD"),
         cuota: Number(cuota.toFixed(2)),
         capital: Number(capital.toFixed(2)),
         interest: Number(interest.toFixed(2)),

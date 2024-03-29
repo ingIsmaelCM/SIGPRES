@@ -6,6 +6,8 @@ import {
   ILoan,
   ILoanRelation,
 } from "@app/interfaces/SourceInterfaces";
+import {Amortization, Client, Condition, Contact, Document, Image, Lawyer, Mora, Payment} from "@source/models/index";
+import {EDocumentable, EImageable} from "@app/interfaces/FileInterface";
 
 @ITM.staticImplements<ILoan, ILoanRelation>()
 export default class Loan extends Model implements ILoan {
@@ -100,7 +102,7 @@ export default class Loan extends Model implements ILoan {
     },
     walletId: {
       type: DataTypes.INTEGER,
-      allowNull: false,
+      allowNull: true,
     },
     guarantorId: {
       type: DataTypes.INTEGER,
@@ -119,4 +121,58 @@ export default class Loan extends Model implements ILoan {
       allowNull: false,
     },
   };
+
+
+  static initRelations(){
+    Loan.belongsTo(Lawyer,{
+      as: "lawyer",
+      foreignKey: 'lawyerId',
+    })
+
+    Loan.belongsTo(Contact,{
+      as:'guarantor',
+      foreignKey: 'guarantorId'
+    })
+
+    Loan.belongsTo(Client,{
+      as:'client',
+      foreignKey: 'clientId'
+    })
+
+    Loan.hasOne(Condition,{
+      as: 'condition',
+      foreignKey:'loanId'
+    })
+
+    Loan.hasMany(Image,{
+      as: 'images',
+      foreignKey:'imageableId',
+      scope:{
+          imageableType: EImageable.Loan
+      }
+    })
+    Loan.hasMany(Document,{
+      as: 'documents',
+      foreignKey:'documentableId',
+      scope:{
+        documentableType: EDocumentable.Loan
+      }
+    })
+
+    Loan.hasMany(Payment,{
+      as: 'payments',
+      foreignKey:'loanId',
+    })
+
+    Loan.hasMany(Mora,{
+      as: 'moras',
+      foreignKey:'loanId',
+    })
+
+    Loan.hasMany(Amortization,{
+      as: 'amortizations',
+      foreignKey:'loanId',
+    })
+  }
 }
+

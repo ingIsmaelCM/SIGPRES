@@ -3,6 +3,7 @@ import {IDocument, IImage} from "@app/interfaces/FileInterface";
 
 export interface IAmortization extends ICommonField {
     date: string;
+    nro: number;
     cuota: number;
     capital: number;
     interest: number;

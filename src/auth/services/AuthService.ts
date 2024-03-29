@@ -66,7 +66,7 @@ export default class AuthService extends Service {
                 if (!userAuth.tenants || userAuth.tenants.length == 0) {
                     await Promise.reject({
                         code: 401,
-                        message: "The user does not have a DB associated with them",
+                        message: "The user does not have a DB associated with him",
                     });
                 }
                 const updateData = {lastlogin: new Date(), status: 1};

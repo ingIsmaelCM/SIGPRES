@@ -35,7 +35,7 @@ CREATE TABLE `preferences`
     `key` VARCHAR(50) NOT NULL UNIQUE,
     `label` VARCHAR(150) NOT NULL,
     `value` LONGTEXT,
-    `type` ENUM ('number, string, object, array, boolean') NOT NULL,
+    `type` ENUM ('number', 'string', 'object', 'array', 'boolean') NOT NULL,
     `createdBy` INT NOT NULL,
     `updatedBy` INT NOT NULL,
     `createdAt` TIMESTAMP NOT NULL DEFAULT current_timestamp,
@@ -183,7 +183,7 @@ CREATE TABLE `loans`(
     `status` ENUM('Pendiente', 'Aprobado','Rechazado') NOT NULL DEFAULT 'Pendiente',
     `period` VARCHAR(50) NOT NULL,
     `clientId` INT NOT NULL,
-    `walletId` INT NOT NULL,
+    `walletId` INT,
     `lawyerId` INT,
     `guarantorId` INT,
     `createdBy` INT NOT NULL,
@@ -236,6 +236,7 @@ CREATE TABLE `payments`(
 CREATE TABLE `amortizations`(
     `id` INT AUTO_INCREMENT PRIMARY KEY,
     `date` DATE NOT NULL,
+    `nro` INT NOT NULL,
     `cuota` DECIMAL(10,2) NOT NULL DEFAULT 0,
     `capital` DECIMAL(10,2) NOT NULL DEFAULT 0,
     `interest` DECIMAL(10,2) NOT NULL DEFAULT 0,
@@ -290,7 +291,7 @@ CREATE OR REPLACE VIEW clientContactView
 AS SELECT con.id, con.name, con.lastname, con.infoId, con.createdBy, con.updatedBy, con.createdAt,
  con.updatedAt, con.dni, con.address, con.phone, con.email,con.birthdate, con.gender, con.country,
  cc.clientId, cc.contactId, cc.isGarante, cc.relationship, cc.id as relationId, cc.deletedAt as deletedAt
-    FROM contactView con LEFT JOIN client_contacts cc ON cc.contactId=con.id
+    FROM contactView con LEFT JOIN client_contacts cc ON cc.contactId=con.id;
 
 ALTER TABLE `clients` ADD CONSTRAINT `FK_clients_infos` FOREIGN KEY (`infoId`) REFERENCES `infos` (`id`)
 ON DELETE CASCADE ON UPDATE CASCADE;
@@ -391,12 +392,14 @@ CREATE INDEX idx_moras_paymentId ON moras (paymentId);
 
 ALTER TABLE `client_contacts` ADD UNIQUE (`contactId`, `clientId`);
 
+ALTER TABLE `amortizations` ADD UNIQUE (`nro`, `loanId`);
+
 
 
 DELIMITER //
-CREATE TRIGGER IF NOT EXISTS add_code_to_client BEFORE INSERT ON clients FOR EACH ROW BEGIN SET NEW.code = LPAD((SELECT IFNULL(MAX(id), 0) + 1 FROM clients), 5, '0'); END;
+CREATE TRIGGER  add_code_to_client BEFORE INSERT ON clients FOR EACH ROW BEGIN SET NEW.code = LPAD((SELECT IFNULL(MAX(id), 0) + 1 FROM clients), 5, '0'); END;
 //
-CREATE TRIGGER IF NOT EXISTS add_code_to_loan BEFORE INSERT ON loans FOR EACH ROW BEGIN SET NEW.code = LPAD((SELECT IFNULL(MAX(id), 0) + 1 FROM loans), 5, '0'); END;
+CREATE TRIGGER add_code_to_loan BEFORE INSERT ON loans FOR EACH ROW BEGIN SET NEW.code = LPAD((SELECT IFNULL(MAX(id), 0) + 1 FROM loans), 5, '0'); END;
 //
 
 DELIMITER ;

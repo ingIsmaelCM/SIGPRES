@@ -3,6 +3,7 @@ import Client from "@source/models/Client";
 import Contact from "@source/models/Contact";
 import ITM from "@app/models/ITenantModel";
 import IClientContactRelation, {EClientContactRelationship, IClientContact} from "@app/interfaces/SourceInterfaces";
+import {ClientView, ContactView} from "@source/models/index";
 
 @ITM.staticImplements<IClientContact, IClientContactRelation>()
 export default class ClientContact extends Model implements IClientContact {
@@ -50,5 +51,16 @@ export default class ClientContact extends Model implements IClientContact {
     getRelations(): Array<keyof IClientContactRelation> {
         return ["client", "contact"]
     }
+    static initRelation(){
+        ClientContact.belongsTo(ClientView, {
+            foreignKey: "clientId",
+            as: "client",
+        })
+        ClientContact.belongsTo(ContactView, {
+            foreignKey: "contactId",
+            as: "contact",
+        })
+    }
+
 }
 

@@ -11,14 +11,14 @@ export default class LoanController extends Controller implements IController {
     async index(req: Request, res: Response) {
         return this.safeRun(async () =>
                 this.mainService.getLoans(req.query),
-            res, 200, ""
+            res, 200, "Listado de préstamos"
         )
     }
 
     async show(req: Request, res: Response) {
         return this.safeRun(async () =>
                 this.mainService.findLoan(Number(req.params.id), req.query),
-            res, 200, ""
+            res, 200, "Detalles del préstamo"
         )
     }
 
@@ -26,7 +26,15 @@ export default class LoanController extends Controller implements IController {
     async store(req: Request, res: Response) {
         return this.safeRun(async () =>
                 this.mainService.createLoan(req.body),
-            res, 201, ""
+            res, 201, "Solicitud Registrada"
+        )
+    }
+
+    @setAuthor
+    async confirm(req: Request, res: Response) {
+        return this.safeRun(async () =>
+                this.mainService.confirmLoan(Number(req.params.id), req.body),
+            res, 201, "Solicitud Confirmada"
         )
     }
 

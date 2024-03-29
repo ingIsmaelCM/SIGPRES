@@ -7,6 +7,8 @@ import {
 } from "@app/interfaces/SourceInterfaces";
 import ITM from "@app/models/ITenantModel";
 import {ClientContact, ContactView} from "@source/models";
+import Image from "../Image";
+import {EImageable} from "@app/interfaces/FileInterface";
 
 @ITM.staticImplements<IClientContactView, IContactRelation>()
 export default class ClientContactView extends Model implements IClientContactView {
@@ -42,6 +44,18 @@ export default class ClientContactView extends Model implements IClientContactVi
 
     getRelations(): Array<keyof IContactRelation|"profile"> {
         return ["clients", "profile"]
+    }
+
+    static initRelation(){
+        ClientContactView.hasOne(Image, {
+            foreignKey: "imageableId",
+            sourceKey: "contactId",
+            scope: {
+                imageableType: EImageable.Contact,
+                caption: "Perfil Contacto"
+            },
+            as: "profile"
+        })
     }
 
 }

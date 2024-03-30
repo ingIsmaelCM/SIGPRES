@@ -16,6 +16,7 @@ export default class Amortization extends Model implements IAmortization {
     declare nro: number;
     declare capital: number;
     declare interest: number;
+    declare mora: number;
     declare balance: number;
     declare status: EAmortizationStatus;
     declare loanId: number;
@@ -62,6 +63,10 @@ export default class Amortization extends Model implements IAmortization {
             allowNull: false,
         },
         interest: {
+            type: DataTypes.DECIMAL,
+            allowNull: false,
+        },
+        mora: {
             type: DataTypes.DECIMAL,
             allowNull: false,
         },

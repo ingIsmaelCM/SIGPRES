@@ -6,6 +6,17 @@ class PaymentRequest extends BaseRequest {
         return []
     }
 
+    paymentCreateCuotaRequest(): Array<ValidationChain> {
+        return [
+            this.RequestCheck.required("walletId"),
+            this.RequestCheck.required("payedAt"),
+            this.RequestCheck.required("cuotas"),
+            this.RequestCheck.isArray("cuotas"),
+            this.RequestCheck.required("omitMora")
+
+        ]
+    }
+
     paymentUpdateRequest(): Array<ValidationChain> {
         return []
     }

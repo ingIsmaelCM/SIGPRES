@@ -1,13 +1,31 @@
 import {DataTypes, Model} from "sequelize";
 import ITM from "@app/models/ITenantModel";
-import {IAmortizationRelation, IAmortizationView} from "@app/interfaces/SourceInterfaces";
+import {EAmortizationStatus, IAmortizationRelation, IAmortizationView} from "@app/interfaces/SourceInterfaces";
 import {Amortization, ClientView, Condition, Loan} from "@source/models";
 import moment from "moment";
 import amortization from "@app/utils/amortization";
 
 
 @ITM.staticImplements<IAmortizationView, IAmortizationRelation>()
-export default class AmortizationView extends Model {
+export default class AmortizationView extends Model implements IAmortizationView {
+    declare isExpired: boolean;
+    declare expiresAt: string;
+    declare initMora: number;
+    declare finalMora: number;
+    declare date: string;
+    declare nro: number;
+    declare cuota: number;
+    declare capital: number;
+    declare interest: number;
+    declare balance: number;
+    declare status: EAmortizationStatus;
+    declare loanId: number;
+    declare clientId: number;
+    declare initTerm: number;
+    declare initRateMora: number;
+    declare finalRateMora: number;
+    declare grace: number;
+    declare rate: number;
     declare mora: number;
     static tableName = "amortizationView";
     static modelName = "AmortizationView";
@@ -27,7 +45,7 @@ export default class AmortizationView extends Model {
         mora: {
             type: DataTypes.VIRTUAL,
             get(this: AmortizationView) {
-                const {mora} = amortization.getMora(this);
+                const {mora} = this.getDataValue("mora")|| amortization.getMora(this);
                 return mora;
             }
         },

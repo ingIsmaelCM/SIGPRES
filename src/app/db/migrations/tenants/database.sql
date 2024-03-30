@@ -240,6 +240,7 @@ CREATE TABLE `amortizations`(
     `cuota` DECIMAL(10,2) NOT NULL DEFAULT 0,
     `capital` DECIMAL(10,2) NOT NULL DEFAULT 0,
     `interest` DECIMAL(10,2) NOT NULL DEFAULT 0,
+    `mora` DECIMAL(10,2) NOT NULL DEFAULT 0,
     `balance` DECIMAL(10,2) NOT NULL DEFAULT 0,
     `status` ENUM('Pendiente','Pagado', 'Cancelado') NOT NULL DEFAULT 'Pendiente',
     `loanId` INT NOT NULL,

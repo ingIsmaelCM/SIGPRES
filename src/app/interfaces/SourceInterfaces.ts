@@ -7,6 +7,7 @@ export interface IAmortization extends ICommonField {
     cuota: number;
     capital: number;
     interest: number;
+    mora: number;
     balance: number;
     status: EAmortizationStatus;
     loanId: number;
@@ -44,7 +45,13 @@ export interface ILawyerView extends ILawyer, IInfo {
 
 export interface IJobView extends IJob, IInfo {
 }
+
 export interface IAmortizationView extends IAmortization, ICondition {
+    isExpired: boolean,
+    expiresAt: string,
+    mora: number,
+    initMora: number,
+    finalMora: number
 }
 
 export interface IClientContactView extends IContactView, IClientContact {

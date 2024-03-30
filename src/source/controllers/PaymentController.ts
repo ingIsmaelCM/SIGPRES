@@ -31,6 +31,14 @@ export default class PaymentController extends Controller implements IController
     }
 
     @setAuthor
+    async storePaymentCuota(req: Request, res: Response) {
+        return this.safeRun(async () =>
+                this.mainService.createPaymentCuotas(req.body),
+            res, 201, "Pago Registrado Exitosamente"
+        )
+    }
+
+    @setAuthor
     async update(req: Request, res: Response) {
         return this.safeRun(async () =>
                 this.mainService.updatePayment(Number(req.params.id), req.body),

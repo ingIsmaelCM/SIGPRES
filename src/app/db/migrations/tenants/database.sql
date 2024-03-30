@@ -241,7 +241,7 @@ CREATE TABLE `amortizations`(
     `capital` DECIMAL(10,2) NOT NULL DEFAULT 0,
     `interest` DECIMAL(10,2) NOT NULL DEFAULT 0,
     `balance` DECIMAL(10,2) NOT NULL DEFAULT 0,
-    `status` ENUM('Pendiente','Pagado', 'Cancelado') NOT NULL DEFAULT 'Pendiente', 
+    `status` ENUM('Pendiente','Pagado', 'Cancelado') NOT NULL DEFAULT 'Pendiente',
     `loanId` INT NOT NULL,
     `clientId` INT NOT NULL,
     `createdBy` INT NOT NULL,
@@ -287,12 +287,20 @@ CREATE OR REPLACE VIEW jobView
 AS SELECT j.*, i.dni, i.address,i.phone, i.email, i.birthdate, i.gender, i.country
 FROM jobs j LEFT JOIN infos i ON j.infoId=i.id;
 
+CREATE OR REPLACE VIEW amortizationView AS
+SELECT amort.*, DATE_ADD(amort.date, INTERVAL cond.grace DAY) as expiresAt,
+cond.initTerm, cond.initRateMora, cond.finalRateMora, cond.grace, cond.rate
+FROM amortizations amort LEFT JOIN conditions cond ON amort.loanId=cond.loanId;
+
+
 CREATE OR REPLACE VIEW clientContactView
 AS SELECT con.id, con.name, con.lastname, con.infoId, con.createdBy, con.updatedBy, con.createdAt,
  con.updatedAt, con.dni, con.address, con.phone, con.email,con.birthdate, con.gender, con.country,
  cc.clientId, cc.contactId, cc.isGarante, cc.relationship, cc.id as relationId, cc.deletedAt as deletedAt
     FROM contactView con LEFT JOIN client_contacts cc ON cc.contactId=con.id;
 
+ALTER TABLE `sigpres_main`.`auths` ADD CONSTRAINT `FK_auths_infos` FOREIGN KEY (`infoId`) REFERENCES `infos` (`id`)
+ON DELETE CASCADE ON UPDATE CASCADE;
 ALTER TABLE `clients` ADD CONSTRAINT `FK_clients_infos` FOREIGN KEY (`infoId`) REFERENCES `infos` (`id`)
 ON DELETE CASCADE ON UPDATE CASCADE;
 ALTER TABLE `lawyers` ADD CONSTRAINT `FK_lawyers_infos` FOREIGN KEY (`infoId`) REFERENCES `infos` (`id`)

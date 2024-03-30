@@ -3,16 +3,18 @@ import  {IParams} from "@app/interfaces/AppInterfaces";
 import AmortizationRepository from "@source/repositories/AmortizationRepository";
 import TenantConnection from "@app/db/TenantConnection";
 import {IAmortization} from "@app/interfaces/SourceInterfaces";
+import AmortizationViewRepository from "@source/repositories/AmortizationViewRepository";
 
 export default class AmortizationService extends Service {
     private mainRepo = new AmortizationRepository();
+    private amortizationViewRepo=new AmortizationViewRepository();
 
     async getAmortizations(params: IParams) {
-        return await this.mainRepo.getAll(params)
+        return await this.amortizationViewRepo.getAll(params)
     }
 
     async findAmortization(amortizationId: number, params: IParams) {
-        return await this.mainRepo.findById(amortizationId, params)
+        return await this.amortizationViewRepo.findById(amortizationId, params)
     }
 
     async createAmortization(data: IAmortization): Promise<IAmortization> {

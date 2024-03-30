@@ -36,6 +36,8 @@ INSERT INTO `permissions` (name) VALUES
 ('Ver Clientes'),
 ('Editar Clientes'),
 ('Eliminar Clientes'),
+('Confirmar Préstamo'),
+('Restructurar Préstamo'),
 ('Crear Préstamos'),
 ('Editar Préstamos'),
 ('Eliminar Préstamos'),

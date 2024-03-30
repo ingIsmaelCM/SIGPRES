@@ -1,6 +1,7 @@
 import ITM from "@/app/models/ITenantModel";
 import { DataTypes, Model } from "sequelize";
 import { ILawyer, ILawyerRelation } from "@app/interfaces/SourceInterfaces";
+import tools from "@app/utils/tools";
 
 @ITM.staticImplements<ILawyer, ILawyerRelation>()
 export default class Lawyer extends Model implements  ILawyer{
@@ -26,10 +27,16 @@ export default class Lawyer extends Model implements  ILawyer{
     name: {
       type: DataTypes.STRING,
       allowNull: false,
+      set(this: Lawyer, value: string){
+        this.setDataValue("name",tools.initialToUpper(value))
+      }
     },
     lastname: {
       type: DataTypes.STRING,
       allowNull: false,
+      set(this: Lawyer, value: string){
+        this.setDataValue("lastname",tools.initialToUpper(value))
+      }
     },
     infoId: {
       type: DataTypes.NUMBER,

@@ -79,7 +79,6 @@ export default class LoanService extends Service {
             async () => await trans.rollback()
         )
     }
-
     async updateLoan(loanId: number, data: ILoan): Promise<ILoan> {
         const trans = await TenantConnection.getTrans();
         return this.safeRun(async () => {

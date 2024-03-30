@@ -44,6 +44,8 @@ export interface ILawyerView extends ILawyer, IInfo {
 
 export interface IJobView extends IJob, IInfo {
 }
+export interface IAmortizationView extends IAmortization, ICondition {
+}
 
 export interface IClientContactView extends IContactView, IClientContact {
     relationId: number

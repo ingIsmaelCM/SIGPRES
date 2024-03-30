@@ -11,14 +11,14 @@ export default class AmortizationController extends Controller implements IContr
     async index(req: Request, res: Response) {
         return this.safeRun(async () =>
                 this.mainService.getAmortizations(req.query),
-            res, 200, ""
+            res, 200, "Lista de amortizaciones"
         )
     }
 
     async show(req: Request, res: Response) {
         return this.safeRun(async () =>
                 this.mainService.findAmortization(Number(req.params.id), req.query),
-            res, 200, ""
+            res, 200, "Detalles de la Amortización"
         )
     }
 

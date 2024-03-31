@@ -326,7 +326,7 @@ class Scope {
         } else {
             result = await model.findAndCountAll(args);
         }
-        if (params.page && params.perpage) {
+        if (params.page && params.perpage && !params.limit) {
             result = this.getPaginationProps(params.page, params.perpage, result);
         }
         return result;

@@ -58,6 +58,30 @@ export interface IClientContactView extends IContactView, IClientContact {
     relationId: number
 }
 
+export interface IPaymentStatView{
+    clientId: number;
+    loanId: number;
+    averageDiffInDay: number;
+    onTime: number;
+    percentOnTime: number;
+    outTime: number;
+    percentOutTime: number;
+    modaWallet: string;
+    averageAbonoCapital: number;
+    totalAbonoCapital: number;
+    totalCapitalOnCuota: number;
+    totalCapital: number;
+    totalInterest: number;
+    totalAmount: number;
+    initialMora: number;
+    finalMora: number;
+    mora: number;
+    totalUtility: number;
+    percentUtility: number,
+    loanAmount: number;
+    loanBalance: number;
+    loanPayedPercent: number
+}
 
 export enum EClientType {
     Persona = "Persona",
@@ -255,6 +279,7 @@ export interface ILoanRelation {
 export interface IMora extends ICommonField {
     initAmount: number;
     lateAmount: number;
+    mora: number;
     status: EMoraStatus;
     dueAt: string;
     closedAt: string;

@@ -12,6 +12,7 @@ import {
 } from "@source/models/index";
 import Image from "@source/models/Image";
 import {EDocumentable, EImageable} from "@app/interfaces/FileInterface";
+import PaymentStatView from "@source/models/views/PaymentStatView";
 
 /* TODO: Define relations for each Source Models */
 export default class SourceRelation {
@@ -21,5 +22,7 @@ export default class SourceRelation {
         ClientContact.initRelation();
         ContactView.initRelation();
         ClientContactView.initRelation();
+        Payment.initRelation();
+        PaymentStatView.initRelation();
     }
 }

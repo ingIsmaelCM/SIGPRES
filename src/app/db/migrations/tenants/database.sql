@@ -293,6 +293,27 @@ SELECT amort.*, DATE_ADD(amort.date, INTERVAL cond.grace DAY) as expiresAt,
 cond.initTerm, cond.initRateMora, cond.finalRateMora, cond.grace, cond.rate
 FROM amortizations amort LEFT JOIN conditions cond ON amort.loanId=cond.loanId;
 
+CREATE OR REPLACE VIEW paymentStatView AS
+SELECT ANY_VALUE(pay.id) AS id, pay.clientId , pay.loanId,
+ROUND(AVG(DATEDIFF(pay.payedAt, pay.dueAt)),2) AS averageDiffInDay,
+ROUND(COUNT(IF(DATEDIFF(pay.payedAt, pay.dueAt)>0,null,pay.id)),2) AS onTime,
+ROUND(COUNT(IF(DATEDIFF(pay.payedAt, pay.dueAt)>0,pay.id,null)),2) AS outTime,
+(SELECT ANY_VALUE(w.name) ORDER BY COUNT(w.id) DESC LIMIT 1) AS modaWallet,
+ROUND(AVG(IF(pay.interest=0,pay.capital,0)),2) AS averageAbonoCapital,
+ROUND(SUM(IF(pay.interest=0,pay.capital,0)),2) AS totalAbonoCapital,
+ROUND(SUM(IF(pay.interest>0,pay.capital,0)),2) AS totalCapitalOnCuota,
+ROUND(SUM(pay.capital),2) AS totalCapital,
+ROUND(SUM(pay.interest),2) AS totalInterest,
+ROUND(SUM(pay.amount),2) AS totalAmount,
+ROUND(SUM(IF(m.status='Cobrada',m.initAmount,0)),2) AS initialMora,
+ROUND(SUM(IF(m.status='Cobrada',m.lateAmount,0)),2) AS finalMora,
+ROUND(SUM(IF(m.status='Cobrada',m.initAmount+m.lateAmount,0)),2) AS mora,
+ROUND(l.amount,2) AS loanAmount, ROUND(l.balance,2) AS loanBalance
+FROM `payments` pay LEFT JOIN `wallets` w ON pay.walletId=w.id
+LEFT JOIN `moras` m ON m.paymentId=pay.id
+LEFT JOIN `loans` l ON pay.loanId=l.id
+WHERE pay.clientId=3
+GROUP BY  pay.clientId, pay.loanId
 
 CREATE OR REPLACE VIEW clientContactView
 AS SELECT con.id, con.name, con.lastname, con.infoId, con.createdBy, con.updatedBy, con.createdAt,

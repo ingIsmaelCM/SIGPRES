@@ -8,7 +8,7 @@ export default class Mora extends Model implements IMora {
 
     static tableName = "moras";
     static modelName: "Mora";
-    static additionalOptions={}
+    static additionalOptions = {}
     static attributes: Record<keyof IMora, ModelAttributeColumnOptions> = {
         initAmount: {
             type: DataTypes.DECIMAL,
@@ -17,6 +17,13 @@ export default class Mora extends Model implements IMora {
         lateAmount: {
             type: DataTypes.DECIMAL,
             allowNull: false
+        },
+        mora: {
+            type: DataTypes.VIRTUAL,
+            get(this: Mora) {
+                return (Number(this.getDataValue("initAmount"))
+                    + Number(this.getDataValue("lateAmount"))).toFixed(2)
+            }
         },
         status: {
             type: DataTypes.ENUM(...Object.values(EMoraStatus)),
@@ -49,6 +56,7 @@ export default class Mora extends Model implements IMora {
     declare dueAt: string;
     declare initAmount: number;
     declare lateAmount: number;
+    declare mora: number;
     declare loanId: number;
     declare paymentId: number;
     declare status: EMoraStatus;

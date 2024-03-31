@@ -1,6 +1,7 @@
 import { DataTypes, Model } from "sequelize";
 import { IPayment, IPaymentRelation } from "@app/interfaces/SourceInterfaces";
 import ITM from "@/app/models/ITenantModel";
+import {Wallet, Mora, Loan, Client} from "@source/models/index";
 
 @ITM.staticImplements<IPayment, IPaymentRelation>()
 export default class Payment extends Model implements IPayment {
@@ -99,4 +100,26 @@ export default class Payment extends Model implements IPayment {
       allowNull: true,
     },
   };
+
+  static initRelation(){
+    Payment.hasOne(Mora,{
+      foreignKey:"paymentId",
+      as: "mora"
+    })
+
+    Payment.belongsTo(Wallet, {
+      foreignKey: "walletId",
+      as: "wallet"
+    })
+
+    Payment.belongsTo(Loan, {
+      foreignKey: "loanId",
+      as: "loan"
+    })
+
+    Payment.belongsTo(Client, {
+      foreignKey: "clientId",
+      as: "client"
+    })
+  }
 }

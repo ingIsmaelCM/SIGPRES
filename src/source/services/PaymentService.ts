@@ -16,6 +16,7 @@ import WalletRepository from "@source/repositories/WalletRepository";
 import LoanRepository from "@source/repositories/LoanRepository";
 import amortization from "@app/utils/amortization";
 import AmortizationRepository from "@source/repositories/AmortizationRepository";
+import PaymentStatViewRepository from "@source/repositories/PaymentStatViewRepository";
 
 export default class PaymentService extends Service {
     private mainRepo = new PaymentRepository();
@@ -24,6 +25,7 @@ export default class PaymentService extends Service {
     private moraRepo = new MoraRepository();
     private walletRepo = new WalletRepository();
     private loanRepo = new LoanRepository();
+    private  paymentStatRepo=new PaymentStatViewRepository();
 
     async getPayments(params: IParams) {
         return await this.mainRepo.getAll(params)
@@ -31,6 +33,10 @@ export default class PaymentService extends Service {
 
     async findPayment(paymentId: number, params: IParams) {
         return await this.mainRepo.findById(paymentId, params)
+    }
+
+    async getPaymentStats(params: IParams){
+        return await this.paymentStatRepo.getAll(params)
     }
 
     async createPayment(data: IPayment): Promise<IPayment> {

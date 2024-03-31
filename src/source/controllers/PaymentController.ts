@@ -11,17 +11,23 @@ export default class PaymentController extends Controller implements IController
     async index(req: Request, res: Response) {
         return this.safeRun(async () =>
                 this.mainService.getPayments(req.query),
-            res, 200, ""
+            res, 200, "Lista de pagos"
         )
     }
 
     async show(req: Request, res: Response) {
         return this.safeRun(async () =>
                 this.mainService.findPayment(Number(req.params.id), req.query),
-            res, 200, ""
+            res, 200, "Detalles del pago"
         )
     }
 
+    async getPaymentStat(req: Request, res: Response) {
+        return this.safeRun(async () =>
+                this.mainService.getPaymentStats(req.query),
+            res, 200, "Estadísticas de Pago"
+        )
+    }
     @setAuthor
     async store(req: Request, res: Response) {
         return this.safeRun(async () =>

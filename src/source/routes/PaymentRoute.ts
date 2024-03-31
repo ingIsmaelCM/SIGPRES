@@ -22,6 +22,12 @@ export default class PaymentRoutes extends BaseRoutes<PaymentController> {
                 PaymentRequest.validate,
                 (req: Request, res: Response) => this.controller.store(req, res)
             );
+
+        this.controller.router.get("/stats",
+            RoleMiddleware.hasPermission(PermissionEnums.getPayments),
+            RoleMiddleware.hasPermission(PermissionEnums.getPaymentReports),
+            (req: Request, res: Response) => this.controller.getPaymentStat(req, res))
+
         this.controller.router.post("/cuotas",
             RoleMiddleware.hasPermission(PermissionEnums.createPayment),
             PaymentRequest.paymentCreateCuotaRequest(),

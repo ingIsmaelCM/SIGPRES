@@ -21,6 +21,7 @@ import JobView from "@source/models/views/JobView";
 import LawyerView from "@source/models/views/LawyerView";
 import ClientContactView from "@source/models/views/ClientContactView";
 import AmortizationView from "@source/models/views/AmortizationView";
+import PaymentStatView from "@source/models/views/PaymentStatView";
 
 export {
     Client,
@@ -45,5 +46,6 @@ export {
     JobView,
     LawyerView,
     ClientContactView,
-    AmortizationView
+    AmortizationView,
+    PaymentStatView
 };

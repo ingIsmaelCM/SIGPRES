@@ -59,6 +59,7 @@ export interface IClientContactView extends IContactView, IClientContact {
 }
 
 export interface IPaymentStatView{
+    loanCode: string;
     clientId: number;
     loanId: number;
     averageDiffInDay: number;

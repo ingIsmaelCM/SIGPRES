@@ -15,6 +15,7 @@ export interface IParams {
   isNull?: string;
   notNUll?: string;
   like?: string;
+  operation?: string;
 }
 
 export interface ICommonField {

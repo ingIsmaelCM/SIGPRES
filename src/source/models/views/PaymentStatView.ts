@@ -6,6 +6,7 @@ import {Client, Loan} from "@source/models";
 
 @ITM.staticImplements<IPaymentStatView, IPaymentRelation>()
 export default class PaymentStatView extends Model implements IPaymentStatView {
+    declare loanCode: string;
     declare averageAbonoCapital: number;
     declare averageDiffInDay: number;
     declare clientId: number;
@@ -45,6 +46,9 @@ export default class PaymentStatView extends Model implements IPaymentStatView {
     }
 
     static attributes: Record<keyof IPaymentStatView, ModelAttributeColumnOptions> = {
+        loanCode: {
+            type: DataTypes.STRING
+        },
         averageAbonoCapital: {
             type: DataTypes.DECIMAL
         },
@@ -78,15 +82,15 @@ export default class PaymentStatView extends Model implements IPaymentStatView {
         percentOnTime: {
             type: DataTypes.VIRTUAL,
             get(this: PaymentStatView) {
-                const percent = Number(this.getDataValue("onTime")) /
-                    (this.getDataValue("onTime") + this.getDataValue("outTime"));
+                const percent = Number(this.getDataValue("onTime")||0.01) /
+                   ( (this.getDataValue("onTime")) + this.getDataValue("outTime"));
                 return Number((percent * 100).toFixed(2))
             }
         },
         percentOutTime: {
             type: DataTypes.VIRTUAL,
             get(this: PaymentStatView) {
-                const percent = Number(this.getDataValue("outTime")) /
+                const percent = Number(this.getDataValue("outTime"))||0.01 /
                     (this.getDataValue("onTime") + this.getDataValue("outTime"));
                 return Number((percent * 100).toFixed(2))
             }

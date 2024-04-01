@@ -3,7 +3,7 @@ import {AmortizationView} from "@source/models";
 
 export default {
     getAmortization(data: any): any {
-        const {amount, term, rate, startAt, period} = data;
+        const {amount, term, rate, startAt, period, keepDate} = data;
         let balance = Number(amount);
         const cuota = this.getCuota(amount, term, rate);
         const amortization: {
@@ -41,7 +41,14 @@ export default {
         }
         return amount / term;
     },
-    getDateCuota(startAt: Date, period: string | number): Moment {
+    getCantidadCuotas(amount: number, rate: number, cuota: number) {
+        if (rate > 0) {
+            const rateIndex = rate / 100;
+            return -Math.log(1 - (amount * rateIndex) / cuota) / Math.log(1 + rateIndex);
+        }
+        return amount / cuota;
+    },
+    getDateCuota(startAt: Date, period: string | number, keepDate: boolean=false): Moment {
         let date = moment(startAt);
         period = typeof period == "string" ? period : String(period);
         switch (period.toLowerCase()) {
@@ -59,6 +66,7 @@ export default {
                     date = moment(date).endOf("month");
                 } else if (
                     moment(date).endOf("month").diff(moment(date), "days") <= 7
+                    && !keepDate
                 ) {
                     date = moment(date).startOf("month").add(1, "month").date(15);
                 } else {

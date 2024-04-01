@@ -1,7 +1,7 @@
 import ITM from "@/app/models/ITenantModel";
 import {
     DataTypes,
-    Model,
+    Model, ModelAttributeColumnOptions,
 } from "sequelize";
 import {
     EAmortizationStatus,
@@ -44,7 +44,7 @@ export default class Amortization extends Model implements IAmortization {
     static tableName = "amortizations";
     static modelName = "Amortization";
 
-    static attributes: Record<keyof IAmortization, any> = {
+    static attributes: Record<keyof IAmortization, ModelAttributeColumnOptions> = {
         ...ITM.commonAttributes,
         nro: {
             type: DataTypes.INTEGER,
@@ -68,7 +68,8 @@ export default class Amortization extends Model implements IAmortization {
         },
         mora: {
             type: DataTypes.DECIMAL,
-            allowNull: false,
+            allowNull: true,
+            defaultValue: 0
         },
         balance: {
             type: DataTypes.DECIMAL,

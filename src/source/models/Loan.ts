@@ -38,6 +38,7 @@ export default class Loan extends Model implements ILoan {
     return [
       "code",
       "clientId",
+      "walletId",
       "lawyerId",
       "amount",
       "balance",

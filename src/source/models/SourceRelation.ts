@@ -1,4 +1,5 @@
 import {
+    AmortizationView,
     ClientContact,
     ClientContactView,
     ClientView,
@@ -24,5 +25,6 @@ export default class SourceRelation {
         ClientContactView.initRelation();
         Payment.initRelation();
         PaymentStatView.initRelation();
+        AmortizationView.initRelation();
     }
 }

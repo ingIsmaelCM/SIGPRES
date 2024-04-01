@@ -11,7 +11,7 @@ export default class Contact extends Model implements  IContact{
 
 
   declare id: number;
-  declare infoId: number;
+  declare infoId: string;
   declare lastname: string;
   declare fullname?: string;
   declare name: string;
@@ -48,8 +48,8 @@ export default class Contact extends Model implements  IContact{
       }
     },
     infoId: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
+      type: DataTypes.STRING,
+      allowNull: false,
     },
     fullname: {
       type: DataTypes.VIRTUAL,

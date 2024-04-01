@@ -31,7 +31,7 @@ export default class ClientContactView extends Model implements IClientContactVi
     declare dni: string;
     declare fullname: string;
     declare gender: EInfoGender;
-    declare infoId: number;
+    declare infoId: string;
     declare isGarante: 0 | 1;
     declare lastname: string;
     declare name: string;

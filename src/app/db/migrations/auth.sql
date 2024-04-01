@@ -18,7 +18,7 @@ CREATE TABLE `auths` (
 `lastlogin` TIMESTAMP,
 `status` INT NOT NULL DEFAULT 0,
 `sessionId` TEXT,
-`infoId` INT,
+`infoId` VARCHAR(70),
 `verifiedAt` TIMESTAMP,
 `createdAt` TIMESTAMP NOT NULL DEFAULT current_timestamp,
 `updatedAt` TIMESTAMP NOT NULL DEFAULT current_timestamp,

@@ -1,7 +1,7 @@
-import Controller, {setAuthor} from "@/app/controllers/Controller";
+import Controller, {setAuthor} from "@app/controllers/Controller";
 import {Request, Response} from "express"
-import IController from "@/app/controllers/IController";
-import UserService from "@auth/services/UserService";
+import IController from "@app/controllers/IController";
+import UserService from "@source/services/UserService";
 
 export default class UserController extends Controller implements IController {
     prefix: string = 'users';

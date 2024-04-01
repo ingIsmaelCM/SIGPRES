@@ -5,17 +5,18 @@ import BaseConnection from "@app/db/BaseConnection";
 import {IAuth} from "@auth/utils/AuthInterfaces";
 import AuthMailService from "@auth/services/AuthMailService";
 import AuthService from "@auth/services/AuthService";
+import UserViewRepository from "@source/repositories/UserViewRepository";
 
 export default class UserService extends Service {
     private mainRepo = new AuthRepository();
     private authMailService: AuthMailService = new AuthMailService();
-
+    private  userViewRepo=new UserViewRepository();
     async getUsers(params: IParams) {
-        return await this.mainRepo.getAll(params)
+        return await this.userViewRepo.getAll(params)
     }
 
     async findUser(userId: number, params: IParams) {
-        return await this.mainRepo.findById(userId, params)
+        return await this.userViewRepo.findById(userId, params)
     }
 
     async createUser(data: IAuth): Promise<IAuth> {

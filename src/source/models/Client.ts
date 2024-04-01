@@ -13,7 +13,7 @@ export default class Client extends Model implements IClient {
     declare name: string;
     declare code?: string;
     declare lastname: string;
-    declare infoId?: number;
+    declare infoId?: string;
     declare clienttype: EClientType;
     declare id?: number;
     declare createdBy?: number;
@@ -68,8 +68,8 @@ export default class Client extends Model implements IClient {
             }
         },
         infoId: {
-            type: DataTypes.NUMBER,
-            allowNull: true,
+            type: DataTypes.STRING,
+            allowNull: false,
         },
         clienttype: {
             type: DataTypes.ENUM(...Object.values(EClientType)),

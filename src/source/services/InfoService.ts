@@ -28,16 +28,14 @@ export default class InfoService extends Service {
         )
     }
 
-    async setFromRelated(data: Partial<IInfo>, trans: Transaction): Promise<Info> {
+    async setFromRelated(data: any, trans: Transaction): Promise<Info> {
         return this.safeRun(async () => {
                 return await this.mainRepo.create(data, trans);
             }
         )
     }
 
-    async updateFromRelated(data: Partial<IInfo> & {
-        updatedBy?: number,
-    }, infoId: number, trans: Transaction): Promise<Info> {
+    async updateFromRelated(data: any, infoId: number|string, trans: Transaction): Promise<Info> {
         return this.safeRun(async () => {
                 return await this.mainRepo.update(data, infoId, trans);
             }

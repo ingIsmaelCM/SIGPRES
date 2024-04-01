@@ -12,16 +12,18 @@ import {IAuth} from "@/auth/utils/AuthInterfaces";
 import Permission from "../models/Permission";
 import Role from "../models/Role";
 import Service from "@app/services/Service";
+import InfoRepository from "@source/repositories/InfoRepository";
 
 export default class AuthService extends Service {
     private authRepo: AuthRepository = new AuthRepository();
     private authMailService: AuthMailService = new AuthMailService();
+    private infoRepo = new InfoRepository();
 
 
     async createAuth(auth: IAuth): Promise<Auth> {
         const trans: any = await BaseConnection.getTrans();
         try {
-            const emailExists: any = await this.authRepo.find("email", auth.email);
+            const emailExists: any = await this.authRepo.find("email", auth.email!);
             const usernameExists: any = await this.authRepo.find(
                 "username",
                 auth.username
@@ -77,7 +79,6 @@ export default class AuthService extends Service {
                     await this.setAuthFields(userAuth);
                 await trans.commit();
                 const result = {
-                    ...userAuth.dataValues,
                     password: null,
                     permissions: [...new Set(permissions)],
                     roles,
@@ -188,7 +189,7 @@ export default class AuthService extends Service {
             return "Código enviado exitosamente";
         } catch (error: any) {
             throw {
-                code: error.code||500,
+                code: error.code || 500,
                 message: error.message,
             };
         }
@@ -201,13 +202,13 @@ export default class AuthService extends Service {
             numbers.push(String(num).padStart(3, "0"))
         }
         const auth = await this.authRepo.find("email", authEmail);
-        if(!auth){
+        if (!auth) {
             return Promise.reject({
                 code: 404,
                 message: "No se encontró el usuario"
             })
         }
-        const newSessionId=await bcrypt.hash(numbers.join(""),10)
+        const newSessionId = await bcrypt.hash(numbers.join(""), 10)
         await auth.update({sessionId: newSessionId})
         return {
             email: authEmail,

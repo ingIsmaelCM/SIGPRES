@@ -12,7 +12,7 @@ export default class Job extends Model implements IJob {
     declare salary: number;
     declare position: string;
     declare company: string;
-    declare infoId?: number;
+    declare infoId?: string;
     declare clientId: number;
     declare id?: number;
     declare createdBy?: number;
@@ -68,8 +68,8 @@ export default class Job extends Model implements IJob {
             }
         },
         infoId: {
-            type: DataTypes.INTEGER,
-            allowNull: true,
+            type: DataTypes.STRING,
+            allowNull: false,
         },
         clientId: {
             type: DataTypes.INTEGER,

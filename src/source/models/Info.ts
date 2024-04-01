@@ -1,5 +1,5 @@
 import ITM from "@/app/models/ITenantModel";
-import {DataTypes, Model} from "sequelize";
+import {DataTypes, Model, ModelAttributeColumnOptions} from "sequelize";
 import {EInfoGender, IInfo, IInfoRelation} from "@app/interfaces/SourceInterfaces";
 import tools from "@app/utils/tools";
 
@@ -10,16 +10,23 @@ export default class Info extends Model implements IInfo {
     static additionalOptions = {}
     static modelName = "Info";
     static tableName = "infos";
-    static attributes: Record<keyof IInfo, any> = {
-        ...ITM.commonAttributes,
+    static attributes: Record<keyof IInfo, ModelAttributeColumnOptions> = {
+        id: {
+            type: DataTypes.STRING,
+            primaryKey: true,
+            allowNull: false,
+            defaultValue: DataTypes.UUIDV4
+
+        },
         dni: {
             type: DataTypes.STRING,
-            allowNull: false,
+            allowNull: true,
             unique: true,
         },
         phone: {
             type: DataTypes.STRING,
-            allowNull: false,
+            allowNull: true,
+            unique: true,
         },
         email: {
             type: DataTypes.STRING,
@@ -53,11 +60,23 @@ export default class Info extends Model implements IInfo {
                 this.setDataValue("country", tools.initialToUpper(value))
             }
         },
+        createdBy: {
+            type: DataTypes.INTEGER,
+        },
+        updatedBy: {
+            type: DataTypes.INTEGER,
+        },
+        createdAt: {
+            type: DataTypes.DATE,
+        },
+        updatedAt: {
+            type: DataTypes.DATE,
+        },
+        deletedAt: {
+            type: DataTypes.DATE,
+            allowNull: true,
+        },
     };
-    declare setClient: Function;
-    declare setContact: Function;
-    declare setLawyer: Function;
-    declare setJob: Function;
     declare dni: string;
     declare phone: string;
     declare email?: string;
@@ -65,7 +84,7 @@ export default class Info extends Model implements IInfo {
     declare address?: string;
     declare gender: EInfoGender;
     declare country: string;
-    declare id?: number;
+    declare id: string;
     declare createdBy?: number;
     declare updatedBy?: number;
     declare createdAt?: string;

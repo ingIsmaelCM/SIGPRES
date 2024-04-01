@@ -1,14 +1,20 @@
 import BaseRequest from "@app/requests/BaseRequest";
 import {body, ValidationChain} from "express-validator";
 import LawyerRepository from "@source/repositories/LawyerRepository";
+import {ELawyerPaymode} from "@app/interfaces/SourceInterfaces";
 
 class LawyerRequest extends BaseRequest {
     lawyerRepo = new LawyerRepository();
+
     lawyerCreateRequest(): Array<ValidationChain> {
         return [
             this.RequestCheck.required("name"),
             this.RequestCheck.isLength("name", 0, 50),
             this.RequestCheck.required("lastname"),
+            this.RequestCheck.required("payMode"),
+            this.RequestCheck.isIn("payMode", "", Object.values(ELawyerPaymode)),
+            this.RequestCheck.required("payPrice"),
+            this.RequestCheck.isFloat("payPrice"),
             this.RequestCheck.isLength("lastname", 0, 50),
             this.RequestCheck.isLength("exequatur", 2, 20).optional({values: "falsy"}),
             body("exequatur", "Este exequátur ya está registrado")
@@ -22,7 +28,9 @@ class LawyerRequest extends BaseRequest {
         return [
             this.RequestCheck.isLength("name", 0, 50).optional(),
             this.RequestCheck.isLength("lastname", 0, 50).optional(),
-            this.RequestCheck.isLength("exequatur", 2, 20).optional({values: "falsy"}),
+            this.RequestCheck.isIn("payMode", "", Object.values(ELawyerPaymode)).optional(),
+            this.RequestCheck.isFloat("payPrice").optional(),
+            this.RequestCheck.isLength("exequatur", 2, 20),
             this.RequestCheck.isInt("infoId").optional(),
             body("exequatur", "Este exequátur ya está registrado")
                 .custom((value: string, meta: any) =>

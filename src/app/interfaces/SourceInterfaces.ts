@@ -1,5 +1,6 @@
 import {ICommonField} from "@app/interfaces/AppInterfaces";
 import {IDocument, IImage} from "@app/interfaces/FileInterface";
+import {IAuth} from "@auth/utils/AuthInterfaces";
 
 export interface IAmortization extends ICommonField {
     date: string;
@@ -30,20 +31,48 @@ export interface IClient extends ICommonField {
     name: string;
     lastname: string;
     fullname?: string;
-    infoId?: number;
+    infoId?: string;
     clienttype: EClientType;
 }
 
-export interface IClientView extends IClient, IInfo {
+export interface IClientView extends IClient {
+    dni: string;
+    phone: string;
+    email?: string;
+    birthdate?: string;
+    address?: string;
+    gender: EInfoGender;
+    country: string;
 }
 
-export interface IContactView extends IContact, IInfo {
+export interface IContactView extends IContact {
+    dni: string;
+    phone: string;
+    email?: string;
+    birthdate?: string;
+    address?: string;
+    gender: EInfoGender;
+    country: string;
 }
 
-export interface ILawyerView extends ILawyer, IInfo {
+export interface ILawyerView extends ILawyer {
+    dni: string;
+    phone: string;
+    email?: string;
+    birthdate?: string;
+    address?: string;
+    gender: EInfoGender;
+    country: string;
 }
 
-export interface IJobView extends IJob, IInfo {
+export interface IJobView extends IJob {
+    dni: string;
+    phone: string;
+    email?: string;
+    birthdate?: string;
+    address?: string;
+    gender: EInfoGender;
+    country: string;
 }
 
 export interface IAmortizationView extends IAmortization, ICondition {
@@ -58,7 +87,21 @@ export interface IClientContactView extends IContactView, IClientContact {
     relationId: number
 }
 
-export interface IPaymentStatView{
+export interface IUserView extends IAuth {
+    dni: string;
+    phone: string;
+    email?: string;
+    birthdate?: string;
+    address?: string;
+    gender: EInfoGender;
+    country: string;
+}
+
+export  interface  IUserViewRelation{
+
+}
+
+export interface IPaymentStatView {
     loanCode: string;
     clientId: number;
     loanId: number;
@@ -145,7 +188,7 @@ export interface IConditionRelation {
 export interface IContact extends ICommonField {
     name: string;
     lastname: string;
-    infoId?: number;
+    infoId?: string;
     fullname?: string;
 }
 
@@ -168,7 +211,8 @@ export interface IExpenseRelation {
     lawyer: ILawyer;
 }
 
-export interface IInfo extends ICommonField {
+export interface IInfo  {
+    id: string;
     dni: string;
     phone: string;
     email?: string;
@@ -176,6 +220,11 @@ export interface IInfo extends ICommonField {
     address?: string;
     gender: EInfoGender;
     country: string;
+    createdBy?: number;
+    updatedBy?: number;
+    createdAt?: string;
+    updatedAt?: string;
+    deletedAt?: string;
 }
 
 export interface IInfoRelation {
@@ -203,7 +252,7 @@ export interface IJob extends ICommonField {
     salary: number;
     position: string;
     company: string;
-    infoId?: number;
+    infoId?: string;
     clientId: number;
 }
 
@@ -223,8 +272,41 @@ export interface ILawyer extends ICommonField {
     name: string;
     lastname: string;
     exequatur?: string;
-    infoId?: number;
+    payMode: ELawyerPaymode;
+    payPrice: number;
+    infoId?: string;
     fullname?: string;
+}
+
+export interface ILawyerPayment extends ICommonField {
+    amount: number;
+    loanId?: number;
+    paymentId?: number;
+    walletId?: number;
+    lawyerId: number;
+    status: ELawyerPaymentStatus;
+    closedAt?: string;
+    payPrice: number;
+}
+
+export interface ILawyerPaymentRelation {
+    lawyer: ILawyerView;
+    loan: ILoan;
+    payment: IPayment;
+    wallet: IWallet
+}
+
+export enum ELawyerPaymentStatus {
+    Pendiente = "Pendiente",
+    Pagado = "Pagado",
+    Cancelado = "Cancelado"
+
+}
+
+export enum ELawyerPaymode {
+    Mensual = "Mensual",
+    Porcentaje = "Porcentaje de Cobro",
+    Cuota = "Cuota de Cobro"
 }
 
 export interface ILawyerRelation {
@@ -322,6 +404,9 @@ export interface IPaymentRelation {
     client: IClient;
     mora?: IMora;
     images: IImage[];
+    "loan.client": ILoan,
+    "loan.condition": ILoan,
+    "loan.wallet": ILoan
 }
 
 export interface ISocial extends ICommonField {

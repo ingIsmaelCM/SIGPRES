@@ -38,7 +38,10 @@ export default class PaymentStatView extends Model implements IPaymentStatView {
     };
 
     getSearchables(): Array<keyof IPaymentStatView> {
-        return ["clientId", "loanId"]
+        return ["clientId", "loanId","onTime","averageAbonoCapital","averageDiffInDay",
+        "finalMora","initialMora","loanAmount","loanBalance","loanCode", "modaWallet",
+        "mora","outTime", "totalAbonoCapital","totalAmount","totalCapital",
+        "totalCapitalOnCuota","totalInterest"]
     }
 
     getRelations(): Array<keyof IPaymentRelation> {

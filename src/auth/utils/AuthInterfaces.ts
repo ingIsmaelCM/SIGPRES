@@ -1,12 +1,17 @@
 export interface IAuth {
   id?: number;
-  email: string;
+  email?: string;
   username: string;
   password: string;
   sessionId: number;
+  infoId?:number;
   name: string;
   lastname: string;
   lastlogin?: string;
+
+}
+
+export interface  IAuthRelation{
   role?: string;
   tenants?: Itenant[];
   permissions?: IPermission[];

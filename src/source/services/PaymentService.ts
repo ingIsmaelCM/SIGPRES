@@ -161,7 +161,6 @@ export default class PaymentService extends Service {
                     updatedBy: data.updatedBy
                 };
                 const newLoan = await this.loanRepo.update(newLoanData, loan.id, trans);
-                console.log(newLoan)
                 const walletBalance = Number(payments.reduce((a: number, b: IPayment) =>
                     a + b.amount, 0))
                 for (const amort of amorts.rows) {

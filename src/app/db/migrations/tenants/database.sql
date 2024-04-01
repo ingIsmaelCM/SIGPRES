@@ -45,9 +45,9 @@ CREATE TABLE `preferences`
 
 
 CREATE TABLE `infos`(
-    `id` INT AUTO_INCREMENT PRIMARY KEY,
-    `dni` VARCHAR(18) NOT NULL UNIQUE COMMENT 'Cédula, Pasaporte u otro',
-    `phone` VARCHAR(15) NOT NULL,
+    `id` VARCHAR(70) PRIMARY KEY DEFAULT (UUID()) ,
+    `dni` VARCHAR(18) UNIQUE COMMENT 'Cédula, Pasaporte u otro',
+    `phone` VARCHAR(15) UNIQUE,
     `email` VARCHAR(75) UNIQUE,
     `birthdate` DATE ,
     `address` VARCHAR(125),
@@ -66,7 +66,7 @@ CREATE TABLE `clients`(
     `name` VARCHAR(50) NOT NULL,
     `lastname` VARCHAR(50) NOT NULL,
     `clienttype` ENUM('Persona', 'Negocio') NOT NULL DEFAULT 'Persona',
-    `infoId` INT NOT NULL,
+    `infoId` VARCHAR(70) NOT NULL,
     `createdBy` INT NOT NULL,
     `updatedBy` INT NOT NULL,
     `createdAt` TIMESTAMP NOT NULL DEFAULT current_timestamp,
@@ -92,7 +92,26 @@ CREATE TABLE `lawyers`(
     `name` VARCHAR(50) NOT NULL,
     `lastname` VARCHAR(50) NOT NULL,
     `exequatur` VARCHAR(20),
-    `infoId` INT NOT NULL,
+    `payMode` ENUM('Mensual','Porcentaje de Cobro','Cuota de Cobro'),
+    `payPrice` DECIMAL NOT NULL DEFAULT 0,
+    `infoId` VARCHAR(70) NOT NULL,
+    `createdBy` INT NOT NULL,
+    `updatedBy` INT NOT NULL,
+    `createdAt` TIMESTAMP NOT NULL DEFAULT current_timestamp,
+    `updatedAt` TIMESTAMP NOT NULL DEFAULT current_timestamp,
+    `deletedAt` TIMESTAMP
+);
+
+CREATE TABLE `lawyer_payments`(
+    `id` INT AUTO_INCREMENT PRIMARY KEY,
+    `amount` DECIMAL NOT NULL,
+    `loanId` INT,
+    `paymentId` INT,
+    `walletId` INT,
+    `lawyerId` INT NOT NULL,
+    `status` ENUM('Pendiente','Pagado','Cancelado'),
+    `closedAt` DATE,
+    `payPrice` DECIMAL NOT NULL,
     `createdBy` INT NOT NULL,
     `updatedBy` INT NOT NULL,
     `createdAt` TIMESTAMP NOT NULL DEFAULT current_timestamp,
@@ -105,7 +124,7 @@ CREATE TABLE `contacts`(
     `id` INT AUTO_INCREMENT PRIMARY KEY,
     `name` VARCHAR(50) NOT NULL,
     `lastname` VARCHAR(50) NOT NULL,
-    `infoId` INT NOT NULL,
+    `infoId` VARCHAR(70) NOT NULL,
     `createdBy` INT NOT NULL,
     `updatedBy` INT NOT NULL,
     `createdAt` TIMESTAMP NOT NULL DEFAULT current_timestamp,
@@ -135,7 +154,7 @@ CREATE TABLE `jobs`(
     `salary` DECIMAL(10,2) NOT NULL,
     `position` VARCHAR(50) NOT NULL,
     `company` VARCHAR(75) NOT NULL,
-    `infoId` INT NOT NULL,
+    `infoId` VARCHAR(70) NOT NULL,
     `clientId` INT NOT NULL,
     `createdBy` INT NOT NULL,
     `updatedBy` INT NOT NULL,
@@ -293,6 +312,11 @@ SELECT amort.*, DATE_ADD(amort.date, INTERVAL cond.grace DAY) as expiresAt,
 cond.initTerm, cond.initRateMora, cond.finalRateMora, cond.grace, cond.rate
 FROM amortizations amort LEFT JOIN conditions cond ON amort.loanId=cond.loanId;
 
+CREATE OR REPLACE VIEW userview AS SELECT a.id, a.name, a.lastname, a.username, a.email, a.lastlogin, a.infoId, a.verifiedAt,
+i.dni, i.phone, i.birthdate, i.address, i.gender, i.country, i.createdBy, i.updatedBy,
+i.updatedAt, i.createdAt, i.deletedAt
+FROM `infos` i INNER JOIN `sigpres_main`.`auths` a ON a.infoId=i.id;
+
 CREATE OR REPLACE VIEW paymentStatView AS
 SELECT ANY_VALUE(pay.id) AS id, ANY_VALUE(l.code) AS loanCode, pay.clientId , pay.loanId,
 ROUND(AVG(DATEDIFF(pay.payedAt, pay.dueAt)),2) AS averageDiffInDay,
@@ -320,8 +344,7 @@ AS SELECT con.id, con.name, con.lastname, con.infoId, con.createdBy, con.updated
  cc.clientId, cc.contactId, cc.isGarante, cc.relationship, cc.id as relationId, cc.deletedAt as deletedAt
     FROM contactView con LEFT JOIN client_contacts cc ON cc.contactId=con.id;
 
-ALTER TABLE `sigpres_main`.`auths` ADD CONSTRAINT `FK_auths_infos` FOREIGN KEY (`infoId`) REFERENCES `infos` (`id`)
-ON DELETE CASCADE ON UPDATE CASCADE;
+
 ALTER TABLE `clients` ADD CONSTRAINT `FK_clients_infos` FOREIGN KEY (`infoId`) REFERENCES `infos` (`id`)
 ON DELETE CASCADE ON UPDATE CASCADE;
 ALTER TABLE `lawyers` ADD CONSTRAINT `FK_lawyers_infos` FOREIGN KEY (`infoId`) REFERENCES `infos` (`id`)
@@ -372,6 +395,11 @@ ALTER TABLE `moras` ADD CONSTRAINT `FK_moras_payments` FOREIGN KEY (`paymentId`)
 ON DELETE CASCADE ON UPDATE CASCADE;
 ALTER TABLE `socials` ADD CONSTRAINT `FK_clients_socials` FOREIGN KEY (`clientId`) REFERENCES `clients` (`id`)
 ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `lawyer_payments` ADD CONSTRAINT `FK_lawyer_payments_loan` FOREIGN KEY (`loanId`) REFERENCES `loans` (`id`),
+ADD CONSTRAINT `FK_lawyer_payments_payment` FOREIGN KEY (`paymentId`) REFERENCES `payments` (`id`),
+ADD CONSTRAINT `FK_lawyer_payments_wallet` FOREIGN KEY (`walletId`) REFERENCES `wallets` (`id`),
+ADD CONSTRAINT `FK_lawyer_payments_lawyer` FOREIGN KEY (`lawyerId`) REFERENCES `lawyers` (`id`)
+ON DELETE CASCADE ON UPDATE CASCADE;
 
 
 CREATE INDEX idx_images_imageableId ON images (imageableId);
@@ -418,19 +446,21 @@ CREATE INDEX idx_moras_loanId ON moras (loanId);
 CREATE INDEX idx_moras_clientId ON moras (clientId);
 CREATE INDEX idx_moras_paymentId ON moras (paymentId);
 
+CREATE INDEX idx_lawyer_payments_status ON lawyer_payments (`status`);
+CREATE INDEX idx_lawyer_payments_lawyerId ON lawyer_payments (lawyerId);
+CREATE INDEX idx_lawyer_payments_paymentId ON lawyer_payments (paymentId);
+CREATE INDEX idx_lawyer_payments_walletId ON lawyer_payments (walletId);
+CREATE INDEX idx_lawyer_payments_loanId ON lawyer_payments (loanId);
+
 
 ALTER TABLE `client_contacts` ADD UNIQUE (`contactId`, `clientId`);
 
 ALTER TABLE `amortizations` ADD UNIQUE (`nro`, `loanId`);
 
 
-
 DELIMITER //
-CREATE TRIGGER  add_code_to_client BEFORE INSERT ON clients FOR EACH ROW BEGIN SET NEW.code = LPAD((SELECT IFNULL(MAX(id), 0) + 1 FROM clients), 5, '0'); END;
-//
-CREATE TRIGGER add_code_to_loan BEFORE INSERT ON loans FOR EACH ROW BEGIN SET NEW.code = LPAD((SELECT IFNULL(MAX(id), 0) + 1 FROM loans), 5, '0'); END;
-//
-
+CREATE TRIGGER  add_code_to_client BEFORE INSERT ON clients FOR EACH ROW BEGIN SET NEW.code = LPAD((SELECT IFNULL(MAX(id), 0) + 1 FROM clients), 5, '0'); END;//
+CREATE TRIGGER add_code_to_loan BEFORE INSERT ON loans FOR EACH ROW BEGIN SET NEW.code = LPAD((SELECT IFNULL(MAX(id), 0) + 1 FROM loans), 5, '0'); END;//
 DELIMITER ;
 
 
@@ -454,5 +484,5 @@ TRUNCATE TABLE `wallets`;
 
 INSERT INTO `wallets` (name, balance, createdBy, updatedBy) VALUES
 ('Efectivo', 0, 1, 1);
-
+INSERT INTO `infos` (id, email, createdBy, updatedBy) VALUES ('2b96f902-f070-11ee-95b9-3c2c30ad6656',developer@ismaelcm.dev',1,1);
 SET foreign_key_checks = 1;

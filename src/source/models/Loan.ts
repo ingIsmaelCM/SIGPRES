@@ -6,7 +6,18 @@ import {
   ILoan,
   ILoanRelation,
 } from "@app/interfaces/SourceInterfaces";
-import {Amortization, Client, Condition, Contact, Document, Image, Lawyer, Mora, Payment} from "@source/models/index";
+import {
+  Amortization,
+  Client,
+  ClientView,
+  Condition,
+  Contact, ContactView,
+  Document,
+  Image,
+  Lawyer,
+  Mora,
+  Payment
+} from "@source/models/index";
 import {EDocumentable, EImageable} from "@app/interfaces/FileInterface";
 
 @ITM.staticImplements<ILoan, ILoanRelation>()
@@ -130,12 +141,12 @@ export default class Loan extends Model implements ILoan {
       foreignKey: 'lawyerId',
     })
 
-    Loan.belongsTo(Contact,{
+    Loan.belongsTo(ContactView,{
       as:'guarantor',
       foreignKey: 'guarantorId'
     })
 
-    Loan.belongsTo(Client,{
+    Loan.belongsTo(ClientView,{
       as:'client',
       foreignKey: 'clientId'
     })

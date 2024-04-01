@@ -56,7 +56,7 @@ export default {
                 date = moment(date).add(1, "day");
                 break;
             case "semanal":
-                date = moment(date).day("Saturday").add(1, "week");
+                date = moment(date).day("saturday").add(1, "week");
                 break;
             case "quincenal":
                 const fechaInicioMes = moment(date).startOf("month");

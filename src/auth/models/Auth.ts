@@ -15,6 +15,8 @@ class Auth
     declare email: string;
     declare username: string;
     declare password: string;
+    declare fullname: string;
+    declare infoId: number;
     declare name: string;
     declare lastname: string;
     declare status: number;
@@ -70,6 +72,16 @@ Auth.init(
         lastname: {
             type: DataTypes.STRING,
             allowNull: false,
+        },
+        fullname: {
+            type: DataTypes.VIRTUAL,
+            get(this:Auth){
+                return `${this.getDataValue("name")} ${this.getDataValue("lastname")}`
+            }
+        },
+        infoId: {
+            type: DataTypes.NUMBER,
+            allowNull: true,
         },
         lastlogin: {
             type: DataTypes.DATE,

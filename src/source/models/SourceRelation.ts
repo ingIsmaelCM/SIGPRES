@@ -14,6 +14,7 @@ import {
 import Image from "@source/models/Image";
 import {EDocumentable, EImageable} from "@app/interfaces/FileInterface";
 import PaymentStatView from "@source/models/views/PaymentStatView";
+import LawyerPayment from "@source/models/LawyerPayment";
 
 /* TODO: Define relations for each Source Models */
 export default class SourceRelation {
@@ -26,5 +27,6 @@ export default class SourceRelation {
         Payment.initRelation();
         PaymentStatView.initRelation();
         AmortizationView.initRelation();
+        LawyerPayment.initRelation();
     }
 }

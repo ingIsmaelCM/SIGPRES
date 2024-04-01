@@ -42,7 +42,7 @@ export default class Payment extends Model implements IPayment {
   }
 
   getRelations(): (keyof IPaymentRelation)[] {
-    return ["wallet", "loan", "lawyer", "client", "mora", "images"];
+    return ["wallet", "loan", "lawyer", "client", "mora", "images", "loan.client","loan.condition","loan.wallet"];
   }
 
   static tableName = "payments";
@@ -102,6 +102,7 @@ export default class Payment extends Model implements IPayment {
   };
 
   static initRelation(){
+
     Payment.hasOne(Mora,{
       foreignKey:"paymentId",
       as: "mora"

@@ -16,8 +16,9 @@ import WalletRoutes from "@source/routes/WalletRoute";
 import BaseRoutes from "@app/routes/BaseRoutes";
 import ClientContactRoutes from "@source/routes/ClientContactRoute";
 import PreferenceRoutes from "@source/routes/PreferenceRoute";
+import LawyerPaymentRoutes from "@source/routes/LawyerPaymentRoute";
 
-const sourceRoutes: BaseRoutes<any>[]=[
+const sourceRoutes: BaseRoutes<any>[] = [
     new PreferenceRoutes(),
     new AmortizationRoutes(),
     new ClientRoutes(),
@@ -35,6 +36,7 @@ const sourceRoutes: BaseRoutes<any>[]=[
     new SocialRoutes(),
     new WalletRoutes(),
     new ClientContactRoutes(),
+    new LawyerPaymentRoutes(),
 ]
 
-export default  sourceRoutes;
+export default sourceRoutes;

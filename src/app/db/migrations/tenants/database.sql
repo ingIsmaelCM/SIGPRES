@@ -4,12 +4,12 @@ SET foreign_key_checks = 0;
 
 
 CREATE TABLE `images`(
-`id` INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+`id` VARCHAR(70) PRIMARY KEY DEFAULT (UUID()),
 `path` VARCHAR(150) NOT NULL,
 `caption` VARCHAR(50) NOT NULL,
 `publicId` VARCHAR(50) NOT NULL,
 `imageableType` VARCHAR(150) NOT NULL,
-`imageableId` INT NOT NULL,
+`imageableId` VARCHAR(70) NOT NULL,
 `size` DECIMAL(10,2),
 `createdAt` TIMESTAMP NOT NULL DEFAULT current_timestamp,
 `updatedAt` TIMESTAMP NOT NULL DEFAULT current_timestamp,
@@ -17,12 +17,12 @@ CREATE TABLE `images`(
 );
 
 CREATE TABLE `documents`(
-`id` INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+`id` VARCHAR(70) PRIMARY KEY DEFAULT (UUID()),
 `path` VARCHAR(150) NOT NULL,
 `title` VARCHAR(150) NOT NULL,
 `publicId` VARCHAR(50) NOT NULL,
 `documentableType` VARCHAR(150) NOT NULL,
-`documentableId` INT NOT NULL,
+`documentableId` VARCHAR(70) NOT NULL,
 `size` DECIMAL(10,2) NOT NULL,
 `createdAt` TIMESTAMP NOT NULL DEFAULT current_timestamp,
 `updatedAt` TIMESTAMP NOT NULL DEFAULT current_timestamp,
@@ -31,13 +31,13 @@ CREATE TABLE `documents`(
 
 CREATE TABLE `preferences`
 (
-    `id` INT AUTO_INCREMENT PRIMARY KEY,
+    `id` VARCHAR(70) PRIMARY KEY DEFAULT (UUID()),
     `key` VARCHAR(50) NOT NULL UNIQUE,
     `label` VARCHAR(150) NOT NULL,
     `value` LONGTEXT,
     `type` ENUM ('number', 'string', 'object', 'array', 'boolean') NOT NULL,
-    `createdBy` INT NOT NULL,
-    `updatedBy` INT NOT NULL,
+    `createdBy` VARCHAR(70) NOT NULL,
+    `updatedBy` VARCHAR(70) NOT NULL,
     `createdAt` TIMESTAMP NOT NULL DEFAULT current_timestamp,
     `updatedAt` TIMESTAMP NOT NULL DEFAULT current_timestamp,
     `deletedAt` TIMESTAMP
@@ -45,75 +45,75 @@ CREATE TABLE `preferences`
 
 
 CREATE TABLE `infos`(
-    `id` VARCHAR(70) PRIMARY KEY DEFAULT (UUID()) ,
+    `id` VARCHAR(70) PRIMARY KEY DEFAULT (UUID()),
     `dni` VARCHAR(18) UNIQUE COMMENT 'Cédula, Pasaporte u otro',
     `phone` VARCHAR(15) UNIQUE,
     `email` VARCHAR(75) UNIQUE,
     `birthdate` DATE ,
     `address` VARCHAR(125),
     `gender` ENUM('Masculino','Femenino', 'Ninguno') NOT NULL DEFAULT 'Ninguno',
-     `country` NVARCHAR(50) NOT NULL DEFAULT 'República Dominicana',
-    `createdBy` INT NOT NULL,
-    `updatedBy` INT NOT NULL,
+    `country` NVARCHAR(50) NOT NULL DEFAULT 'República Dominicana',
+    `createdBy` VARCHAR(70) NOT NULL,
+    `updatedBy` VARCHAR(70) NOT NULL,
     `createdAt` TIMESTAMP NOT NULL DEFAULT current_timestamp,
     `updatedAt` TIMESTAMP NOT NULL DEFAULT current_timestamp,
     `deletedAt` TIMESTAMP
 );
 
 CREATE TABLE `clients`(
-    `id` INT AUTO_INCREMENT PRIMARY KEY,
+    `id` VARCHAR(70) PRIMARY KEY DEFAULT (UUID()),
     `code` VARCHAR(10),
     `name` VARCHAR(50) NOT NULL,
     `lastname` VARCHAR(50) NOT NULL,
     `clienttype` ENUM('Persona', 'Negocio') NOT NULL DEFAULT 'Persona',
     `infoId` VARCHAR(70) NOT NULL,
-    `createdBy` INT NOT NULL,
-    `updatedBy` INT NOT NULL,
+    `createdBy` VARCHAR(70) NOT NULL,
+    `updatedBy` VARCHAR(70) NOT NULL,
     `createdAt` TIMESTAMP NOT NULL DEFAULT current_timestamp,
     `updatedAt` TIMESTAMP NOT NULL DEFAULT current_timestamp,
     `deletedAt` TIMESTAMP
 );
 
 CREATE TABLE `socials`(
-    `id` INT AUTO_INCREMENT PRIMARY KEY,
+    `id` VARCHAR(70) PRIMARY KEY DEFAULT (UUID()),
     `instagram` VARCHAR(50) UNIQUE,
     `facebook` VARCHAR(50) UNIQUE,
     `whatsapp` VARCHAR(50) UNIQUE,
-    `clientId` INT NOT NULL UNIQUE,
-    `createdBy` INT NOT NULL,
-    `updatedBy` INT NOT NULL,
+    `clientId` VARCHAR(70) NOT NULL UNIQUE,
+    `createdBy` VARCHAR(70) NOT NULL,
+    `updatedBy` VARCHAR(70) NOT NULL,
     `createdAt` TIMESTAMP NOT NULL DEFAULT current_timestamp,
     `updatedAt` TIMESTAMP NOT NULL DEFAULT current_timestamp,
     `deletedAt` TIMESTAMP
 );
 
 CREATE TABLE `lawyers`(
-    `id` INT AUTO_INCREMENT PRIMARY KEY,
+    `id` VARCHAR(70) PRIMARY KEY DEFAULT (UUID()),
     `name` VARCHAR(50) NOT NULL,
     `lastname` VARCHAR(50) NOT NULL,
     `exequatur` VARCHAR(20),
-    `payMode` ENUM('Mensual','Porcentaje de Cobro','Cuota de Cobro'),
-    `payPrice` DECIMAL NOT NULL DEFAULT 0,
+    `payMode` ENUM('Mensual','Porcentaje de Cobro','Cuota de Cobro', 'Por Contrato') NOT NULL,
+    `payPrice` DECIMAL(10,2) NOT NULL DEFAULT 0,
     `infoId` VARCHAR(70) NOT NULL,
-    `createdBy` INT NOT NULL,
-    `updatedBy` INT NOT NULL,
+    `createdBy` VARCHAR(70) NOT NULL,
+    `updatedBy` VARCHAR(70) NOT NULL,
     `createdAt` TIMESTAMP NOT NULL DEFAULT current_timestamp,
     `updatedAt` TIMESTAMP NOT NULL DEFAULT current_timestamp,
     `deletedAt` TIMESTAMP
 );
 
 CREATE TABLE `lawyer_payments`(
-    `id` INT AUTO_INCREMENT PRIMARY KEY,
-    `amount` DECIMAL NOT NULL,
-    `loanId` INT,
-    `paymentId` INT,
-    `walletId` INT,
-    `lawyerId` INT NOT NULL,
+    `id` VARCHAR(70) PRIMARY KEY DEFAULT (UUID()),
+    `amount` DECIMAL(10,2) NOT NULL,
+    `loanId` VARCHAR(70),
+    `paymentId` VARCHAR(70),
+    `walletId` VARCHAR(70),
+    `lawyerId` VARCHAR(70) NOT NULL,
     `status` ENUM('Pendiente','Pagado','Cancelado'),
     `closedAt` DATE,
-    `payPrice` DECIMAL NOT NULL,
-    `createdBy` INT NOT NULL,
-    `updatedBy` INT NOT NULL,
+    `payPrice` DECIMAL(10,2) NOT NULL,
+    `createdBy` VARCHAR(70) NOT NULL,
+    `updatedBy` VARCHAR(70) NOT NULL,
     `createdAt` TIMESTAMP NOT NULL DEFAULT current_timestamp,
     `updatedAt` TIMESTAMP NOT NULL DEFAULT current_timestamp,
     `deletedAt` TIMESTAMP
@@ -121,25 +121,25 @@ CREATE TABLE `lawyer_payments`(
 
 
 CREATE TABLE `contacts`(
-    `id` INT AUTO_INCREMENT PRIMARY KEY,
+    `id` VARCHAR(70) PRIMARY KEY DEFAULT (UUID()),
     `name` VARCHAR(50) NOT NULL,
     `lastname` VARCHAR(50) NOT NULL,
     `infoId` VARCHAR(70) NOT NULL,
-    `createdBy` INT NOT NULL,
-    `updatedBy` INT NOT NULL,
+    `createdBy` VARCHAR(70) NOT NULL,
+    `updatedBy` VARCHAR(70) NOT NULL,
     `createdAt` TIMESTAMP NOT NULL DEFAULT current_timestamp,
     `updatedAt` TIMESTAMP NOT NULL DEFAULT current_timestamp,
     `deletedAt` TIMESTAMP
 );
 
 CREATE TABLE `client_contacts`(
-      `id` INT AUTO_INCREMENT PRIMARY KEY,
-      `clientId` INT NOT NULL,
-      `contactId` INT NOT NULL,
+      `id` VARCHAR(70) PRIMARY KEY DEFAULT (UUID()),
+      `clientId` VARCHAR(70) NOT NULL,
+      `contactId` VARCHAR(70) NOT NULL,
       `relationship` ENUM('Conyuge','Familiar','Amigo','Conocido','Otro') NOT NULL DEFAULT 'OTro',
       `isGarante` TINYINT NOT NULL DEFAULT 0,
-      `createdBy` INT NOT NULL,
-      `updatedBy` INT NOT NULL,
+      `createdBy` VARCHAR(70) NOT NULL,
+      `updatedBy` VARCHAR(70) NOT NULL,
       `createdAt` TIMESTAMP NOT NULL DEFAULT current_timestamp,
       `updatedAt` TIMESTAMP NOT NULL DEFAULT current_timestamp,
       `deletedAt` TIMESTAMP
@@ -147,7 +147,7 @@ CREATE TABLE `client_contacts`(
 
 
 CREATE TABLE `jobs`(
-    `id` INT AUTO_INCREMENT PRIMARY KEY,
+    `id` VARCHAR(70) PRIMARY KEY DEFAULT (UUID()),
     `startAt` DATE NOT NULL,
     `endAt` DATE,
     `status` ENUM('Actual', 'Anterior') NOT NULL DEFAULT 'Actual',
@@ -155,9 +155,9 @@ CREATE TABLE `jobs`(
     `position` VARCHAR(50) NOT NULL,
     `company` VARCHAR(75) NOT NULL,
     `infoId` VARCHAR(70) NOT NULL,
-    `clientId` INT NOT NULL,
-    `createdBy` INT NOT NULL,
-    `updatedBy` INT NOT NULL,
+    `clientId` VARCHAR(70) NOT NULL,
+    `createdBy` VARCHAR(70) NOT NULL,
+    `updatedBy` VARCHAR(70) NOT NULL,
     `createdAt` TIMESTAMP NOT NULL DEFAULT current_timestamp,
     `updatedAt` TIMESTAMP NOT NULL DEFAULT current_timestamp,
     `deletedAt` TIMESTAMP
@@ -165,11 +165,11 @@ CREATE TABLE `jobs`(
 
 
 CREATE TABLE `wallets`(
-    `id` INT AUTO_INCREMENT PRIMARY KEY,
+    `id` VARCHAR(70) PRIMARY KEY DEFAULT (UUID()),
     `name` VARCHAR(50) NOT NULL UNIQUE,
     `balance` DECIMAL(10,2),
-    `createdBy` INT NOT NULL,
-    `updatedBy` INT NOT NULL,
+    `createdBy` VARCHAR(70) NOT NULL,
+    `updatedBy` VARCHAR(70) NOT NULL,
     `createdAt` TIMESTAMP NOT NULL DEFAULT current_timestamp,
     `updatedAt` TIMESTAMP NOT NULL DEFAULT current_timestamp,
     `deletedAt` TIMESTAMP
@@ -177,21 +177,21 @@ CREATE TABLE `wallets`(
 
 
 CREATE TABLE `expenses`(
-    `id` INT AUTO_INCREMENT PRIMARY KEY,
+    `id` VARCHAR(70) PRIMARY KEY DEFAULT (UUID()),
     `amount` DECIMAL(10,2) NOT NULL,
     `date` DATE NOT NULL,
     `concepto` VARCHAR(125) NOT NULL,
-    `walletId` INT NOT NULL,
-    `lawyerId` INT,
-    `createdBy` INT NOT NULL,
-    `updatedBy` INT NOT NULL,
+    `walletId` VARCHAR(70) NOT NULL,
+    `lawyerId` VARCHAR(70),
+    `createdBy` VARCHAR(70) NOT NULL,
+    `updatedBy` VARCHAR(70) NOT NULL,
     `createdAt` TIMESTAMP NOT NULL DEFAULT current_timestamp,
     `updatedAt` TIMESTAMP NOT NULL DEFAULT current_timestamp,
     `deletedAt` TIMESTAMP
 );
 
 CREATE TABLE `loans`(
-    `id` INT AUTO_INCREMENT PRIMARY KEY,
+    `id` VARCHAR(70) PRIMARY KEY DEFAULT (UUID()),
      `code` VARCHAR(10),
     `amount` DECIMAL(10,2) NOT NULL,
     `balance` DECIMAL(10,2) NOT NULL,
@@ -201,12 +201,12 @@ CREATE TABLE `loans`(
     `term` INT NOT NULL COMMENT 'Cantidad de cuotas',
     `status` ENUM('Pendiente', 'Aprobado','Rechazado') NOT NULL DEFAULT 'Pendiente',
     `period` VARCHAR(50) NOT NULL,
-    `clientId` INT NOT NULL,
-    `walletId` INT,
-    `lawyerId` INT,
-    `guarantorId` INT,
-    `createdBy` INT NOT NULL,
-    `updatedBy` INT NOT NULL,
+    `clientId` VARCHAR(70) NOT NULL,
+    `walletId` VARCHAR(70),
+    `lawyerId` VARCHAR(70),
+    `guarantorId` VARCHAR(70),
+    `createdBy` VARCHAR(70) NOT NULL,
+    `updatedBy` VARCHAR(70) NOT NULL,
     `createdAt` TIMESTAMP NOT NULL DEFAULT current_timestamp,
     `updatedAt` TIMESTAMP NOT NULL DEFAULT current_timestamp,
     `deletedAt` TIMESTAMP
@@ -214,16 +214,16 @@ CREATE TABLE `loans`(
 
 
 CREATE TABLE `conditions`(
-    `id` INT AUTO_INCREMENT PRIMARY KEY,
+    `id` VARCHAR(70) PRIMARY KEY DEFAULT (UUID()),
     `initTerm` INT NOT NULL DEFAULT 0 COMMENT 'Días de recargo inicial',
     `initRateMora` DECIMAL(4,2) NOT NULL COMMENT 'Tasa de recargo inicial',
     `finalRateMora` DECIMAL(4,2) NOT NULL COMMENT 'Tasa de recargo final',
     `grace` INT NOT NULL DEFAULT 0 COMMENT 'Días de gracia antes de mora',
     `rate` DECIMAL(4,2) NOT NULL COMMENT 'Tasa de interés',
-    `loanId` INT NOT NULL,
-    `clientId` INT NOT NULL,
-    `createdBy` INT NOT NULL,
-    `updatedBy` INT NOT NULL,
+    `loanId` VARCHAR(70) NOT NULL,
+    `clientId` VARCHAR(70) NOT NULL,
+    `createdBy` VARCHAR(70) NOT NULL,
+    `updatedBy` VARCHAR(70) NOT NULL,
     `createdAt` TIMESTAMP NOT NULL DEFAULT current_timestamp,
     `updatedAt` TIMESTAMP NOT NULL DEFAULT current_timestamp,
     `deletedAt` TIMESTAMP
@@ -231,7 +231,7 @@ CREATE TABLE `conditions`(
 
 
 CREATE TABLE `payments`(
-    `id` INT AUTO_INCREMENT PRIMARY KEY,
+    `id` VARCHAR(70) PRIMARY KEY DEFAULT (UUID()),
     `amount` DECIMAL(10,2) NOT NULL,
     `capital` DECIMAL(10,2) NOT NULL DEFAULT 0,
     `interest` DECIMAL(10,2) NOT NULL DEFAULT 0,
@@ -240,12 +240,12 @@ CREATE TABLE `payments`(
     `dueAt` DATE NOT NULL,
     `payedAt` DATE NOT NULL,
     `note` VARCHAR(75),
-    `walletId` INT NOT NULL,
-    `loanId` INT NOT NULL,
-    `clientId` INT NOT NULL,
-    `lawyerId` INT,
-    `createdBy` INT NOT NULL,
-    `updatedBy` INT NOT NULL,
+    `walletId` VARCHAR(70) NOT NULL,
+    `loanId` VARCHAR(70) NOT NULL,
+    `clientId` VARCHAR(70) NOT NULL,
+    `lawyerId` VARCHAR(70),
+    `createdBy` VARCHAR(70) NOT NULL,
+    `updatedBy` VARCHAR(70) NOT NULL,
     `createdAt` TIMESTAMP NOT NULL DEFAULT current_timestamp,
     `updatedAt` TIMESTAMP NOT NULL DEFAULT current_timestamp,
     `deletedAt` TIMESTAMP
@@ -253,7 +253,7 @@ CREATE TABLE `payments`(
 
 
 CREATE TABLE `amortizations`(
-    `id` INT AUTO_INCREMENT PRIMARY KEY,
+    `id` VARCHAR(70) PRIMARY KEY DEFAULT (UUID()),
     `date` DATE NOT NULL,
     `nro` INT NOT NULL,
     `cuota` DECIMAL(10,2) NOT NULL DEFAULT 0,
@@ -262,10 +262,10 @@ CREATE TABLE `amortizations`(
     `mora` DECIMAL(10,2) NOT NULL DEFAULT 0,
     `balance` DECIMAL(10,2) NOT NULL DEFAULT 0,
     `status` ENUM('Pendiente','Pagado', 'Cancelado') NOT NULL DEFAULT 'Pendiente',
-    `loanId` INT NOT NULL,
-    `clientId` INT NOT NULL,
-    `createdBy` INT NOT NULL,
-    `updatedBy` INT NOT NULL,
+    `loanId` VARCHAR(70) NOT NULL,
+    `clientId` VARCHAR(70) NOT NULL,
+    `createdBy` VARCHAR(70) NOT NULL,
+    `updatedBy` VARCHAR(70) NOT NULL,
     `createdAt` TIMESTAMP NOT NULL DEFAULT current_timestamp,
     `updatedAt` TIMESTAMP NOT NULL DEFAULT current_timestamp,
     `deletedAt` TIMESTAMP
@@ -273,17 +273,17 @@ CREATE TABLE `amortizations`(
 
 
 CREATE TABLE `moras`(
-    `id` INT AUTO_INCREMENT PRIMARY KEY,
+    `id` VARCHAR(70) PRIMARY KEY DEFAULT (UUID()),
     `initAmount` DECIMAL(10,2) NOT NULL,
     `lateAmount` DECIMAL (10,2) NOT NULL DEFAULT 0,
     `status` ENUM('Cobrada', 'Perdonada') NOT NULL,
     `dueAt` DATE NOT NULL,
     `closedAt` DATE NOT NULL,
-    `loanId` INT NOT NULL,
-    `clientId` INT NOT NULL,
-    `paymentId` INT NOT NULL,
-    `createdBy` INT NOT NULL,
-    `updatedBy` INT NOT NULL,
+    `loanId` VARCHAR(70) NOT NULL,
+    `clientId` VARCHAR(70) NOT NULL,
+    `paymentId` VARCHAR(70) NOT NULL,
+    `createdBy` VARCHAR(70) NOT NULL,
+    `updatedBy` VARCHAR(70) NOT NULL,
     `createdAt` TIMESTAMP NOT NULL DEFAULT current_timestamp,
     `updatedAt` TIMESTAMP NOT NULL DEFAULT current_timestamp,
     `deletedAt` TIMESTAMP
@@ -459,8 +459,8 @@ ALTER TABLE `amortizations` ADD UNIQUE (`nro`, `loanId`);
 
 
 DELIMITER //
-CREATE TRIGGER  add_code_to_client BEFORE INSERT ON clients FOR EACH ROW BEGIN SET NEW.code = LPAD((SELECT IFNULL(MAX(id), 0) + 1 FROM clients), 5, '0'); END;//
-CREATE TRIGGER add_code_to_loan BEFORE INSERT ON loans FOR EACH ROW BEGIN SET NEW.code = LPAD((SELECT IFNULL(MAX(id), 0) + 1 FROM loans), 5, '0'); END;//
+CREATE TRIGGER  add_code_to_client BEFORE INSERT ON clients FOR EACH ROW BEGIN SET NEW.code = LPAD((SELECT IFNULL(COUNT(id), 0) + 1 FROM clients), 5, '0'); END;//
+CREATE TRIGGER add_code_to_loan BEFORE INSERT ON loans FOR EACH ROW BEGIN SET NEW.code = LPAD((SELECT IFNULL(COUNT(id), 0) + 1 FROM loans), 5, '0'); END;//
 DELIMITER ;
 
 
@@ -484,5 +484,5 @@ TRUNCATE TABLE `wallets`;
 
 INSERT INTO `wallets` (name, balance, createdBy, updatedBy) VALUES
 ('Efectivo', 0, 1, 1);
-INSERT INTO `infos` (id, email, createdBy, updatedBy) VALUES ('2b96f902-f070-11ee-95b9-3c2c30ad6656',developer@ismaelcm.dev',1,1);
+INSERT INTO `infos` (id, email, createdBy, updatedBy) VALUES ('2b96f902-f070-11ee-95b9-3c2c30ad6656','developer@ismaelcm.dev',1,1);
 SET foreign_key_checks = 1;

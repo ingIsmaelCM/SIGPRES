@@ -10,7 +10,7 @@ import ITM from "@/app/models/ITenantModel";
 export default class Wallet extends Model implements IWallet {
   declare name: string;
   declare balance: number;
-  declare id?: number;
+  declare id?: string;
   declare createdBy?: number;
   declare updatedBy?: number;
   declare createdAt?: string;

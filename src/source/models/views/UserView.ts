@@ -11,13 +11,13 @@ export default class UserView extends Model implements IUserView {
     declare dni: string;
     declare email?: string;
     declare gender: EInfoGender;
-    declare id: number;
-    declare infoId: number;
+    declare Id: string;
+    declare infoId: string;
     declare lastlogin: string;
     declare lastname: string;
     declare name: string;
     declare phone: string;
-    declare sessionId: number;
+    declare sessionId: string;
     declare username: string;
     declare password: string;
     static tableName = "userview";

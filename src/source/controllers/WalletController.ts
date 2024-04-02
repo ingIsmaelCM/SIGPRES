@@ -17,7 +17,7 @@ export default class WalletController extends Controller implements IController 
 
     async show(req: Request, res: Response) {
         return this.safeRun(async () =>
-                this.mainService.findWallet(Number(req.params.id), req.query),
+                this.mainService.findWallet(req.params.id, req.query),
             res, 200, "Detalles de la billetera"
         )
     }
@@ -33,21 +33,21 @@ export default class WalletController extends Controller implements IController 
     @setAuthor
     async update(req: Request, res: Response) {
         return this.safeRun(async () =>
-                this.mainService.updateWallet(Number(req.params.id), req.body),
+                this.mainService.updateWallet(req.params.id, req.body),
             res, 201, "Billetera Actualizada"
         )
     }
 
     async delete(req: Request, res: Response) {
         return this.safeRun(async () =>
-                this.mainService.deleteWallet(Number(req.params.id)),
+                this.mainService.deleteWallet(req.params.id),
             res, 200, "Billetera Eliminada"
         )
     }
 
     async restore(req: Request, res: Response) {
         return this.safeRun(async () =>
-                this.mainService.restoreWallet(Number(req.params.id)),
+                this.mainService.restoreWallet(req.params.id),
             res, 200, "Billetera Restaurada"
         )
     }

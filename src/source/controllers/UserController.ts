@@ -17,7 +17,7 @@ export default class UserController extends Controller implements IController {
 
     async show(req: Request, res: Response) {
         return this.safeRun(async () =>
-                this.mainService.findUser(Number(req.params.id), req.query),
+                this.mainService.findUser(req.params.id, req.query),
             res, 200, "Detalles del Usuario"
         )
     }
@@ -33,7 +33,7 @@ export default class UserController extends Controller implements IController {
     @setAuthor
     async update(req: Request, res: Response) {
         return this.safeRun(async () =>
-                this.mainService.updateUser(Number(req.params.id), req.body),
+                this.mainService.updateUser(req.params.id, req.body),
             res, 201, ""
         )
     }
@@ -48,14 +48,14 @@ export default class UserController extends Controller implements IController {
 
     async delete(req: Request, res: Response) {
         return this.safeRun(async () =>
-                this.mainService.deleteUser(Number(req.params.id)),
+                this.mainService.deleteUser(req.params.id),
             res, 200, ""
         )
     }
 
     async restore(req: Request, res: Response) {
         return this.safeRun(async () =>
-                this.mainService.restoreUser(Number(req.params.id)),
+                this.mainService.restoreUser(req.params.id),
             res, 200, ""
         )
     }

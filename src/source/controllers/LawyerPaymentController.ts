@@ -17,7 +17,7 @@ export default class LawyerPaymentController extends Controller implements ICont
 
     async show(req: Request, res: Response) {
         return this.safeRun(async () =>
-                this.mainService.findLawyerPayment(Number(req.params.id), req.query),
+                this.mainService.findLawyerPayment(req.params.id, req.query),
             res, 200, "Detalles del pago"
         )
     }
@@ -33,21 +33,21 @@ export default class LawyerPaymentController extends Controller implements ICont
     @setAuthor
     async update(req: Request, res: Response) {
         return this.safeRun(async () =>
-                this.mainService.updateLawyerPayment(Number(req.params.id), req.body),
+                this.mainService.updateLawyerPayment(req.params.id, req.body),
             res, 201, ""
         )
     }
 
     async delete(req: Request, res: Response) {
         return this.safeRun(async () =>
-                this.mainService.deleteLawyerPayment(Number(req.params.id)),
+                this.mainService.deleteLawyerPayment(req.params.id),
             res, 200, ""
         )
     }
 
     async restore(req: Request, res: Response) {
         return this.safeRun(async () =>
-                this.mainService.restoreLawyerPayment(Number(req.params.id)),
+                this.mainService.restoreLawyerPayment(req.params.id),
             res, 200, ""
         )
     }

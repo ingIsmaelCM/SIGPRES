@@ -11,8 +11,8 @@ export interface IAmortization extends ICommonField {
     mora: number;
     balance: number;
     status: EAmortizationStatus;
-    loanId: number;
-    clientId: number;
+    loanId: string;
+    clientId: string;
 }
 
 export interface IAmortizationRelation {
@@ -84,7 +84,7 @@ export interface IAmortizationView extends IAmortization, ICondition {
 }
 
 export interface IClientContactView extends IContactView, IClientContact {
-    relationId: number
+    relationId: string
 }
 
 export interface IUserView extends IAuth {
@@ -103,8 +103,8 @@ export  interface  IUserViewRelation{
 
 export interface IPaymentStatView {
     loanCode: string;
-    clientId: number;
-    loanId: number;
+    clientId: string;
+    loanId: string;
     averageDiffInDay: number;
     onTime: number;
     percentOnTime: number;
@@ -151,8 +151,8 @@ export interface IClientRelation {
 }
 
 export interface IClientContact extends ICommonField {
-    clientId: number,
-    contactId: number,
+    clientId: string,
+    contactId: string,
     relationship: EClientContactRelationship,
     isGarante: 0 | 1
 }
@@ -174,8 +174,8 @@ export interface ICondition extends ICommonField {
     initTerm: number;
     initRateMora: number;
     finalRateMora: number;
-    loanId: number;
-    clientId: number;
+    loanId: string;
+    clientId: string;
     grace: number;
     rate: number;
 }
@@ -202,8 +202,8 @@ export interface IExpense extends ICommonField {
     amount: number;
     date: string;
     concepto: string;
-    walletId: number;
-    lawyerId?: number;
+    walletId: string;
+    lawyerId?: string;
 }
 
 export interface IExpenseRelation {
@@ -234,7 +234,7 @@ export interface IInfoRelation {
 
 export enum EInfoModels {
     Client = "Client",
-    Lawyer = "Cawyer",
+    Lawyer = "Lawyer",
     Contact = "Contact",
     Job = "Job"
 }
@@ -253,7 +253,7 @@ export interface IJob extends ICommonField {
     position: string;
     company: string;
     infoId?: string;
-    clientId: number;
+    clientId: string;
 }
 
 export enum EJobStatus {
@@ -280,10 +280,10 @@ export interface ILawyer extends ICommonField {
 
 export interface ILawyerPayment extends ICommonField {
     amount: number;
-    loanId?: number;
-    paymentId?: number;
-    walletId?: number;
-    lawyerId: number;
+    loanId?: string;
+    paymentId?: string;
+    walletId?: string;
+    lawyerId: string;
     status: ELawyerPaymentStatus;
     closedAt?: string;
     payPrice: number;
@@ -306,7 +306,8 @@ export enum ELawyerPaymentStatus {
 export enum ELawyerPaymode {
     Mensual = "Mensual",
     Porcentaje = "Porcentaje de Cobro",
-    Cuota = "Cuota de Cobro"
+    Cuota = "Cuota de Cobro",
+    Contrato= "Por Contrato"
 }
 
 export interface ILawyerRelation {
@@ -328,10 +329,10 @@ export interface ILoan extends ICommonField {
     term: number;
     status: ELoanStatus;
     period: ELoanPeriod | number;
-    clientId: number;
-    lawyerId: number;
-    walletId: number;
-    guarantorId: number;
+    clientId: string;
+    lawyerId: string;
+    walletId: string;
+    guarantorId: string;
 }
 
 export enum ELoanPeriod {
@@ -366,9 +367,9 @@ export interface IMora extends ICommonField {
     status: EMoraStatus;
     dueAt: string;
     closedAt: string;
-    loanId: number;
-    clientId: number;
-    paymentId: number;
+    loanId: string;
+    clientId: string;
+    paymentId: string;
 }
 
 export interface IMoraRelation {
@@ -391,10 +392,10 @@ export interface IPayment extends ICommonField {
     dueAt: string;
     payedAt: string;
     note?: string;
-    walletId: number;
-    loanId: number;
-    clientId: null;
-    lawyerId?: number;
+    walletId: string;
+    loanId: string;
+    clientId: string;
+    lawyerId?: string;
 }
 
 export interface IPaymentRelation {
@@ -413,7 +414,7 @@ export interface ISocial extends ICommonField {
     facebook: string;
     instagram: string;
     whatsapp: string;
-    clientId: number;
+    clientId: string;
 }
 
 export interface ISocialRelation {

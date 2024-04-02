@@ -106,7 +106,7 @@ class Tool {
         T extends {
             createdBy?: any;
             updatedBy?: any;
-            id?: number;
+            id?: string;
             [x: string]: any;
         }
     >(req: any, data: T): T {

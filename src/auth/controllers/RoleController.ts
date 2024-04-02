@@ -21,7 +21,7 @@ export default class RoleController extends Controller implements IController {
   async deleteRole(req: Request, res: Response) {
     try {
       const role = req.params.id;
-      await this.mainService.deleteRole(Number(role));
+      await this.mainService.deleteRole(role);
       response.success(res, 201, "Rol borrado correctamente");
     } catch (error: any) {
       response.error(res, error.code, error.message);
@@ -30,7 +30,7 @@ export default class RoleController extends Controller implements IController {
   async assignRoleToAuth(req: Request, res: Response) {
     try {
       const { authId, roleId } = req.body;
-      await this.mainService.assingRoleToAuth(Number(authId), Number(roleId));
+      await this.mainService.assingRoleToAuth(authId, roleId);
       response.success(res, 201, "Rol asignado correctamente");
     } catch (error: any) {
       response.error(res, error.code, error.message);
@@ -41,7 +41,7 @@ export default class RoleController extends Controller implements IController {
     try {
       const { authId, permissionId } = req.body;
       await this.mainService.assingPermissionToAuth(
-        Number(authId),
+        authId,
         permissionId
       );
       response.success(res, 201, "Permiso asignado  al usuario");
@@ -52,7 +52,7 @@ export default class RoleController extends Controller implements IController {
   async grantAllToAuth(req: Request, res: Response) {
     try {
       const { authId } = req.body;
-      await this.mainService.grantAllToAuth(Number(authId));
+      await this.mainService.grantAllToAuth(authId);
       response.success(res, 201, "Todos los permisos asignados al usuario");
     } catch (error: any) {
       response.error(res, error.code, error.message);
@@ -62,7 +62,7 @@ export default class RoleController extends Controller implements IController {
     try {
       const { roleId, permissionId } = req.body;
       await this.mainService.assingPermissionToRole(
-        Number(roleId),
+        roleId,
         permissionId
       );
       response.success(res, 201, "Permiso asignado al rol");
@@ -73,7 +73,7 @@ export default class RoleController extends Controller implements IController {
   async grantAllToRole(req: Request, res: Response) {
     try {
       const { roleId } = req.body;
-      await this.mainService.grantAllToRole(Number(roleId));
+      await this.mainService.grantAllToRole(roleId);
       response.success(res, 201, "Todos los permisos asignados");
     } catch (error: any) {
       response.error(res, error.code, error.message);

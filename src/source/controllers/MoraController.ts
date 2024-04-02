@@ -17,7 +17,7 @@ export default class MoraController extends Controller implements IController {
 
     async show(req: Request, res: Response) {
         return this.safeRun(async () =>
-                this.mainService.findMora(Number(req.params.id), req.query),
+                this.mainService.findMora(req.params.id, req.query),
             res, 200, ""
         )
     }
@@ -33,21 +33,21 @@ export default class MoraController extends Controller implements IController {
     @setAuthor
     async update(req: Request, res: Response) {
         return this.safeRun(async () =>
-                this.mainService.updateMora(Number(req.params.id), req.body),
+                this.mainService.updateMora(req.params.id, req.body),
             res, 201, ""
         )
     }
 
     async delete(req: Request, res: Response) {
         return this.safeRun(async () =>
-                this.mainService.deleteMora(Number(req.params.id)),
+                this.mainService.deleteMora(req.params.id),
             res, 200, ""
         )
     }
 
     async restore(req: Request, res: Response) {
         return this.safeRun(async () =>
-                this.mainService.restoreMora(Number(req.params.id)),
+                this.mainService.restoreMora(req.params.id),
             res, 200, ""
         )
     }

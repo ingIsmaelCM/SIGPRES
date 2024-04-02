@@ -1,10 +1,10 @@
 export interface IAuth {
-  id?: number;
+  id?: string;
   email?: string;
   username: string;
   password: string;
-  sessionId: number;
-  infoId?:number;
+  sessionId: string;
+  infoId?: string;
   name: string;
   lastname: string;
   lastlogin?: string;
@@ -19,17 +19,17 @@ export interface  IAuthRelation{
 }
 
 export interface IRole {
-  id?: number;
+  id?: string;
   name: string;
 }
 
 export interface IPermission {
-  id?: number;
+  id?: string;
   name: string;
 }
 
 export interface Itenant {
-  id?: number;
+  id?: string;
   name: string;
   key: string;
 }

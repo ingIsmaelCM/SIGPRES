@@ -11,7 +11,7 @@ export default class ExpenseService extends Service {
         return await this.mainRepo.getAll(params)
     }
 
-    async findExpense(expenseId: number, params: IParams) {
+    async findExpense(expenseId: string, params: IParams) {
         return await this.mainRepo.findById(expenseId, params)
     }
 
@@ -23,7 +23,7 @@ export default class ExpenseService extends Service {
         )
     }
 
-    async updateExpense(expenseId: number, data: IExpense): Promise<IExpense> {
+    async updateExpense(expenseId: string, data: IExpense): Promise<IExpense> {
         const trans = await TenantConnection.getTrans();
         return this.safeRun(async () => {
             },
@@ -32,7 +32,7 @@ export default class ExpenseService extends Service {
     }
 
 
-    async deleteExpense(expenseId: number): Promise<IExpense> {
+    async deleteExpense(expenseId: string): Promise<IExpense> {
         const trans = await TenantConnection.getTrans();
         return this.safeRun(async () => {
             },
@@ -40,7 +40,7 @@ export default class ExpenseService extends Service {
         )
     }
 
-    async restoreExpense(expenseId: number): Promise<IExpense> {
+    async restoreExpense(expenseId: string): Promise<IExpense> {
         const trans = await TenantConnection.getTrans();
         return this.safeRun(async () => {
             },

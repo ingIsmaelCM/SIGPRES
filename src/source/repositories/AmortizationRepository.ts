@@ -7,7 +7,7 @@ export default class AmortizationRepository extends BaseRepository<Amortization>
         super(Amortization);
     }
 
-    async createFromLoan(data: any[], loanId: number, clientId: number, trans: Transaction)
+    async createFromLoan(data: any[], loanId: string, clientId: string, trans: Transaction)
         : Promise<Amortization[]> {
         data = data.map(amort => ({
             ...amort,

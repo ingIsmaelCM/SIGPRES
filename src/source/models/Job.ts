@@ -13,8 +13,8 @@ export default class Job extends Model implements IJob {
     declare position: string;
     declare company: string;
     declare infoId?: string;
-    declare clientId: number;
-    declare id?: number;
+    declare clientId: string;
+    declare id?: string;
     declare createdBy?: number;
     declare updatedBy?: number;
     declare createdAt?: string;

@@ -22,7 +22,7 @@ export class AuthController extends Controller implements IController {
     async verifyAuth(req: Request, res: Response) {
         return await this.safeRun(async () => {
             const authId = req.params.id;
-            return await this.mainService.verifyAuth(Number(authId));
+            return await this.mainService.verifyAuth(authId);
         }, res, 200, "Usuario verificado exitosamente")
     }
 

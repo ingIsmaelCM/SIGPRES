@@ -48,14 +48,14 @@ export default class Document extends Model implements IDocument {
             allowNull: true,
         },
     }
-    declare id: number;
+    declare Id: string;
     declare path: string;
     declare size: number;
     declare title: string;
     declare publicId: string;
     declare createdAt: string;
     declare deletedAt: string;
-    declare documentableId: number;
+    declare documentableId: string;
     declare documentableType: string;
     declare updatedAt: string;
 

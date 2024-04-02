@@ -7,7 +7,7 @@ export default class WalletRepository extends BaseRepository<Wallet> {
         super(Wallet);
     }
 
-    async setBalance(newValue: number, walletId: number, trans: Transaction) {
+    async setBalance(newValue: number, walletId: string, trans: Transaction) {
         const wallet = await super.findById(walletId);
         if (!wallet) {
             return Promise.reject({

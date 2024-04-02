@@ -23,9 +23,10 @@ export function staticImplements<T, R>() {
 //TODO: Implements interface and declare on each model
 export const commonAttributes: Record<keyof ICommonField, any> = {
   id: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.STRING,
     primaryKey: true,
-    autoIncrement: true,
+    allowNull: false,
+    defaultValue: DataTypes.UUIDV4
   },
   createdBy: {
     type: DataTypes.INTEGER,

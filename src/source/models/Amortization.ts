@@ -19,13 +19,14 @@ export default class Amortization extends Model implements IAmortization {
     declare mora: number;
     declare balance: number;
     declare status: EAmortizationStatus;
-    declare loanId: number;
-    declare clientId: number;
-    declare id: number;
+    declare loanId: string;
+    declare clientId: string;
+    declare id: string;
 
     getSearchables(): Array<keyof IAmortization> {
         return [
             "date",
+            "nro",
             "cuota",
             "capital",
             "interest",

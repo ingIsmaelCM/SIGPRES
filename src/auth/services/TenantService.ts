@@ -44,7 +44,7 @@ export default class TenantService extends  Service{
         }
     }
 
-    async updateTenant(tenantId: number, data: Itenant): Promise<any> {
+    async updateTenant(tenantId: string, data: Itenant): Promise<any> {
         const trans = await BaseConnection.getTrans();
         try {
             const updatedTenant = await this.tenantRepo.update(data, tenantId, trans);

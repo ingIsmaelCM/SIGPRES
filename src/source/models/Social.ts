@@ -4,12 +4,12 @@ import ITM from "@app/models/ITenantModel";
 
 @ITM.staticImplements<ISocial, ISocialRelation>()
 export default class Social extends Model implements ISocial {
-    declare clientId: number;
+    declare clientId: string;
     declare createdAt: string;
     declare createdBy: number;
     declare deletedAt: string;
     declare facebook: string;
-    declare id: number;
+    declare Id: string;
     declare instagram: string;
     declare updatedAt: string;
     declare updatedBy: number;

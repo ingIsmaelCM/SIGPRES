@@ -15,7 +15,7 @@ export default class Client extends Model implements IClient {
     declare lastname: string;
     declare infoId?: string;
     declare clienttype: EClientType;
-    declare id?: number;
+    declare id?: string;
     declare createdBy?: number;
     declare updatedBy?: number;
     declare createdAt?: string;

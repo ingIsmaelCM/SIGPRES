@@ -18,7 +18,7 @@ export default class ClientController extends Controller implements IController 
 
     async show(req: Request, res: Response) {
         return this.safeRun(async () =>
-                this.mainService.findClient(Number(req.params.id), req.query),
+                this.mainService.findClient(req.params.id, req.query),
             res, 200, "Detalles del cliente"
         )
     }
@@ -34,7 +34,7 @@ export default class ClientController extends Controller implements IController 
     @setAuthor
     async update(req: Request, res: Response) {
         return this.safeRun(async () =>
-                this.mainService.updateClient(Number(req.params.id), req.body),
+                this.mainService.updateClient(req.params.id, req.body),
             res, 201, "Cliente Actualizado"
         )
     }
@@ -42,39 +42,39 @@ export default class ClientController extends Controller implements IController 
     @setAuthor
     async setInfoToClient(req: Request, res: Response) {
         return this.safeRun(async () =>
-                this.mainService.setInfoToClient(Number(req.params.id), req.body),
+                this.mainService.setInfoToClient(req.params.id, req.body),
             res, 201, "Información Actualizada"
         )
     }
 
     async setProfilePhoto(req: Request, res: Response) {
         return this.safeRun(async () =>
-                this.mainService.setProfilePhoto(Number(req.params.id), req.files),
+                this.mainService.setProfilePhoto(req.params.id, req.files),
             res, 201, "Foto de perfil añadida")
     }
 
     async setImagesToClient(req: Request, res: Response) {
         return this.safeRun(async () =>
-                this.mainService.setImagesToClient(Number(req.params.id), req.files),
+                this.mainService.setImagesToClient(req.params.id, req.files),
             res, 201, "Fotos añadidas al cliente")
     }
 
     async setDocumentsToClient(req: Request, res: Response) {
         return this.safeRun(async () =>
-                this.mainService.setDocumentsToClient(Number(req.params.id), req.files),
+                this.mainService.setDocumentsToClient(req.params.id, req.files),
             res, 201, "Documentos añadidos al cliente")
     }
 
     async delete(req: Request, res: Response) {
         return this.safeRun(async () =>
-                this.mainService.deleteClient(Number(req.params.id)),
+                this.mainService.deleteClient(req.params.id),
             res, 200, "Cliente Eliminado"
         )
     }
 
     async restore(req: Request, res: Response) {
         return this.safeRun(async () =>
-                this.mainService.restoreClient(Number(req.params.id)),
+                this.mainService.restoreClient(req.params.id),
             res, 200, "Cliente Restaurado"
         )
     }

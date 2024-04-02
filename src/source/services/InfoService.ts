@@ -13,7 +13,7 @@ export default class InfoService extends Service {
         return await this.mainRepo.getAll(params)
     }
 
-    async findInfo(infoId: number, params: IParams) {
+    async findInfo(infoId: string, params: IParams) {
         return await this.mainRepo.findById(infoId, params)
     }
 
@@ -35,14 +35,14 @@ export default class InfoService extends Service {
         )
     }
 
-    async updateFromRelated(data: any, infoId: number|string, trans: Transaction): Promise<Info> {
+    async updateFromRelated(data: any, infoId: string|string, trans: Transaction): Promise<Info> {
         return this.safeRun(async () => {
                 return await this.mainRepo.update(data, infoId, trans);
             }
         )
     }
 
-    async updateInfo(infoId: number, data: IInfo): Promise<IInfo> {
+    async updateInfo(infoId: string, data: IInfo): Promise<IInfo> {
         const trans = await TenantConnection.getTrans();
         return this.safeRun(async () => {
                 const updatedInfo = await this.mainRepo.update(data, infoId, trans);
@@ -54,7 +54,7 @@ export default class InfoService extends Service {
     }
 
 
-    async deleteInfo(infoId: number): Promise<IInfo> {
+    async deleteInfo(infoId: string): Promise<IInfo> {
         const trans = await TenantConnection.getTrans();
         return this.safeRun(async () => {
             },
@@ -62,7 +62,7 @@ export default class InfoService extends Service {
         )
     }
 
-    async restoreInfo(infoId: number): Promise<IInfo> {
+    async restoreInfo(infoId: string): Promise<IInfo> {
         const trans = await TenantConnection.getTrans();
         return this.safeRun(async () => {
             },

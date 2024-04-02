@@ -35,7 +35,6 @@ class InfoRequest extends BaseRequest {
                 .custom(async (val: string, meta: any) =>
                     await this.checkUnique("dni", val, meta.req.params.id)),
             this.RequestCheck.isLength("phone", 10, 15).optional({values: "falsy"}),
-
             body("phone", "Este teléfono ya está registrado")
                 .custom(async (val: string, meta: any) =>
                     await this.checkUnique("phone", val, meta.req.params.id)),

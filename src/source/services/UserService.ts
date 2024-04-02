@@ -15,7 +15,7 @@ export default class UserService extends Service {
         return await this.userViewRepo.getAll(params)
     }
 
-    async findUser(userId: number, params: IParams) {
+    async findUser(userId: string, params: IParams) {
         return await this.userViewRepo.findById(userId, params)
     }
 
@@ -27,7 +27,7 @@ export default class UserService extends Service {
         )
     }
 
-    async updateUser(userId: number, data: IAuth): Promise<IAuth> {
+    async updateUser(userId: string, data: IAuth): Promise<IAuth> {
         const trans = await BaseConnection.getTrans();
         return this.safeRun(async () => {
             },
@@ -56,7 +56,7 @@ export default class UserService extends Service {
     }
 
 
-    async deleteUser(userId: number): Promise<IAuth> {
+    async deleteUser(userId: string): Promise<IAuth> {
         const trans = await BaseConnection.getTrans();
         return this.safeRun(async () => {
             },
@@ -64,7 +64,7 @@ export default class UserService extends Service {
         )
     }
 
-    async restoreUser(userId: number): Promise<IAuth> {
+    async restoreUser(userId: string): Promise<IAuth> {
         const trans = await BaseConnection.getTrans();
         return this.safeRun(async () => {
             },

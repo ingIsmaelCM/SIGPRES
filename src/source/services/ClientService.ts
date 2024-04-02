@@ -23,7 +23,7 @@ export default class ClientService extends Service {
         return await this.clientViewRepo.getAll(params)
     }
 
-    async findClient(clientId: number, params: IParams) {
+    async findClient(clientId: string, params: IParams) {
         return await this.clientViewRepo.findById(clientId, params)
     }
 
@@ -39,7 +39,7 @@ export default class ClientService extends Service {
         )
     }
 
-    async updateClient(clientId: number, data: IClient & IClientRelation): Promise<IClient> {
+    async updateClient(clientId: string, data: IClient & IClientRelation): Promise<IClient> {
         const trans = await TenantConnection.getTrans();
         return this.safeRun(async () => {
                 const updatedClient = await this.mainRepo.update(data, clientId, trans);
@@ -53,7 +53,7 @@ export default class ClientService extends Service {
         )
     }
 
-    async setInfoToClient(clientId: number, info: IInfo): Promise<IClient> {
+    async setInfoToClient(clientId: string, info: IInfo): Promise<IClient> {
         const trans = await TenantConnection.getTrans();
         return this.safeRun(async () => {
                 const client = await this.mainRepo.findById(clientId);
@@ -72,7 +72,7 @@ export default class ClientService extends Service {
         )
     }
 
-    async setProfilePhoto(clientId: number, data: any): Promise<IImage> {
+    async setProfilePhoto(clientId: string, data: any): Promise<IImage> {
         return this.safeRun(async () => {
                 const res = await CloudinaryService.getInstance().uploadFilesToCloudinary<IImage>(data);
                 const image: IImage = res[0]
@@ -83,7 +83,7 @@ export default class ClientService extends Service {
         )
     }
 
-    async setImagesToClient(clientId: number, data: any): Promise<IImage> {
+    async setImagesToClient(clientId: string, data: any): Promise<IImage> {
         return this.safeRun(async () => {
                 const res = await CloudinaryService.getInstance().uploadFilesToCloudinary<IImage>(data);
                 return await this.imageService
@@ -92,7 +92,7 @@ export default class ClientService extends Service {
         )
     }
 
-    async setDocumentsToClient(clientId: number, data: any): Promise<IImage> {
+    async setDocumentsToClient(clientId: string, data: any): Promise<IImage> {
         return this.safeRun(async () => {
                 const res = await CloudinaryService.getInstance().uploadFilesToCloudinary<IDocument>(data);
                 return await this.documentService
@@ -101,7 +101,7 @@ export default class ClientService extends Service {
         )
     }
 
-    async deleteClient(clientId: number): Promise<IClient> {
+    async deleteClient(clientId: string): Promise<IClient> {
         const trans = await TenantConnection.getTrans();
         return this.safeRun(async () => {
                 const deletedClient = await this.mainRepo.delete(clientId, trans);
@@ -112,7 +112,7 @@ export default class ClientService extends Service {
         )
     }
 
-    async restoreClient(clientId: number): Promise<IClient> {
+    async restoreClient(clientId: string): Promise<IClient> {
         const trans = await TenantConnection.getTrans();
         return this.safeRun(async () => {
                 const restoredClient = await this.mainRepo.restore(clientId, trans);

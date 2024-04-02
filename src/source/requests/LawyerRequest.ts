@@ -30,8 +30,8 @@ class LawyerRequest extends BaseRequest {
             this.RequestCheck.isLength("lastname", 0, 50).optional(),
             this.RequestCheck.isIn("payMode", "", Object.values(ELawyerPaymode)).optional(),
             this.RequestCheck.isFloat("payPrice").optional(),
-            this.RequestCheck.isLength("exequatur", 2, 20),
-            this.RequestCheck.isInt("infoId").optional(),
+            this.RequestCheck.isLength("exequatur", 2, 20).optional({values: "falsy"}),
+            this.RequestCheck.isString("infoId").optional(),
             body("exequatur", "Este exequátur ya está registrado")
                 .custom((value: string, meta: any) =>
                     this.checkUnique("exequatur", value, meta.req.params))

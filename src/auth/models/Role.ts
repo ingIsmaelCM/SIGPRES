@@ -15,7 +15,7 @@ class Role
   declare createdAt: string;
   declare updatedAt: string;
 
-  declare id: number;
+  declare id: string;
   declare name: string;
 
   getSearchables(): string[] {

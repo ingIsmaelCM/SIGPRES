@@ -13,7 +13,7 @@ export default class WalletService extends Service {
         return await this.mainRepo.getAll(params)
     }
 
-    async findWallet(walletId: number, params: IParams) {
+    async findWallet(walletId: string, params: IParams) {
         return await this.mainRepo.findById(walletId, params)
     }
 
@@ -33,7 +33,7 @@ export default class WalletService extends Service {
         )
     }
 
-    async updateWallet(walletId: number, data: IWallet ): Promise<IWallet> {
+    async updateWallet(walletId: string, data: IWallet ): Promise<IWallet> {
         const trans = await TenantConnection.getTrans();
         return this.safeRun(async () => {
                 const updatedWallet = await this.mainRepo.update(data, walletId, trans);
@@ -45,7 +45,7 @@ export default class WalletService extends Service {
     }
 
 
-    async deleteWallet(walletId: number): Promise<IWallet> {
+    async deleteWallet(walletId: string): Promise<IWallet> {
         const trans = await TenantConnection.getTrans();
         return this.safeRun(async () => {
                 const walletToDelete = await this.findWallet(walletId, {});
@@ -64,7 +64,7 @@ export default class WalletService extends Service {
         )
     }
 
-    async restoreWallet(walletId: number): Promise<IWallet> {
+    async restoreWallet(walletId: string): Promise<IWallet> {
         const trans = await TenantConnection.getTrans();
         return this.safeRun(async () => {
                 const restoredWallet = await this.mainRepo.restore(walletId, trans);

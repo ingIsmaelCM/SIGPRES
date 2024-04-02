@@ -141,7 +141,7 @@ export default {
         let mora = 0;
         let initMora=0;
         let finalMora=0;
-        const isExpired = moment().isAfter(moment(amort.getDataValue("expiresAt")));
+        const isExpired = moment().subtract(25, 'hours').isAfter(moment(amort.getDataValue("expiresAt")));
         if (isExpired) {
             const diffInDays = moment().diff(amort.getDataValue("expiresAt"), 'days') - 1
             const initDay = diffInDays >= amort.getDataValue("initTerm") ? amort.getDataValue("initTerm") : diffInDays;

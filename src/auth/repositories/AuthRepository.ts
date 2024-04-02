@@ -6,7 +6,7 @@ export class AuthRepository extends BaseRepository<Auth> {
     super(Auth);
   }
 
-  public async assingRole(auth: Auth, role: Array<number>): Promise<any> {
+  public async assingRole(auth: Auth, role: Array<string>): Promise<any> {
     return this.safeRun(() => {
       return auth.addRoles(role);
     });
@@ -14,7 +14,7 @@ export class AuthRepository extends BaseRepository<Auth> {
 
   public async assingPermission(
     auth: Auth,
-    permission: Array<number>
+    permission: Array<string>
   ): Promise<any> {
     return this.safeRun(() => {
       return auth.addPermission(permission);

@@ -9,10 +9,10 @@ export default class PaymentStatView extends Model implements IPaymentStatView {
     declare loanCode: string;
     declare averageAbonoCapital: number;
     declare averageDiffInDay: number;
-    declare clientId: number;
+    declare clientId: string;
     declare finalMora: number;
     declare initialMora: number;
-    declare loanId: number;
+    declare loanId: string;
     declare modaWallet: string;
     declare mora: number;
     declare onTime: number;

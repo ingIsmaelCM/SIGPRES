@@ -4,13 +4,13 @@ import { IImage, IImageRelation } from "@app/interfaces/FileInterface";
 
 @ITM.staticImplements<IImage, IImageRelation>()
 class Image extends Model implements  IImage{
-  declare id?: number;
+  declare id?: string;
   declare path: string;
   declare caption: string;
   declare publicId: string;
   declare size: number;
   declare imageableType: string;
-  declare imageableId: number;
+  declare imageableId: string;
   declare createdAt?: string;
   declare updatedAt?: string;
   declare deletedAt?: string;

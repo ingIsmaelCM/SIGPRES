@@ -17,7 +17,7 @@ export default class ContactController extends Controller implements IController
 
     async show(req: Request, res: Response) {
         return this.safeRun(async () =>
-                this.mainService.findContact(Number(req.params.id), req.query),
+                this.mainService.findContact(req.params.id, req.query),
             res, 200, "Detalles del contacto"
         )
     }
@@ -40,27 +40,27 @@ export default class ContactController extends Controller implements IController
     @setAuthor
     async update(req: Request, res: Response) {
         return this.safeRun(async () =>
-                this.mainService.updateContact(Number(req.params.id), req.body),
+                this.mainService.updateContact(req.params.id, req.body),
             res, 201, "Contacto actualizado"
         )
     }
 
     async setProfilePhoto(req: Request, res: Response) {
         return this.safeRun(async () =>
-                this.mainService.setProfilePhoto(Number(req.params.id), req.files),
+                this.mainService.setProfilePhoto(req.params.id, req.files),
             res, 201, "Foto de perfil añadida")
     }
 
     async delete(req: Request, res: Response) {
         return this.safeRun(async () =>
-                this.mainService.deleteContact(Number(req.params.id)),
+                this.mainService.deleteContact(req.params.id),
             res, 200, "Contacto eliminado"
         )
     }
 
     async restore(req: Request, res: Response) {
         return this.safeRun(async () =>
-                this.mainService.restoreContact(Number(req.params.id)),
+                this.mainService.restoreContact(req.params.id),
             res, 200, "Contacto restaurado"
         )
     }

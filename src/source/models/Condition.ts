@@ -7,11 +7,11 @@ export default class Condition extends Model implements ICondition {
   declare initTerm: number;
   declare initRateMora: number;
   declare finalRateMora: number;
-  declare loanId: number;
-  declare clientId: number;
+  declare loanId: string;
+  declare clientId: string;
   declare grace: number;
   declare rate: number;
-  declare id?: number;
+  declare id?: string;
   declare createdBy?: number;
   declare updatedBy?: number;
   declare createdAt?: string;

@@ -52,7 +52,7 @@ export default class BaseRequest {
 
     requireIdRequest(): Array<ValidationChain> {
         return [
-            param("id", "El parámetro de ruta debe ser un entero").exists().isInt({min: 1}),
+            param("id", "Falta el parámetro id de la ruta").exists().isString(),
         ]
     }
 }

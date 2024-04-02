@@ -11,12 +11,12 @@ class Auth
     implements IModel {
     [x: string]: any;
 
-    declare id: number;
+    declare id: string;
     declare email: string;
     declare username: string;
     declare password: string;
     declare fullname: string;
-    declare infoId: number;
+    declare infoId: string;
     declare name: string;
     declare lastname: string;
     declare status: number;

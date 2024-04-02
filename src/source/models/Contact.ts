@@ -10,7 +10,7 @@ import tools from "@app/utils/tools";
 export default class Contact extends Model implements  IContact{
 
 
-  declare id: number;
+  declare id: string;
   declare infoId: string;
   declare lastname: string;
   declare fullname?: string;

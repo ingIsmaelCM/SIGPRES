@@ -39,8 +39,8 @@ export default class ClientContact extends Model implements IClientContact {
     };
 
     static additionalOptions = {}
-    declare clientId: number;
-    declare contactId: number;
+    declare clientId: string;
+    declare contactId: string;
     declare relationship: EClientContactRelationship;
     declare isGarante: 0 | 1;
 

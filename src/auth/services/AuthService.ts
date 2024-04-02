@@ -95,7 +95,7 @@ export default class AuthService extends Service {
         }
     }
 
-    async verifyAuth(authId: number) {
+    async verifyAuth(authId: string) {
         const trans = await BaseConnection.getTrans();
         try {
             const auth = await this.authRepo.findById(authId);
@@ -153,7 +153,7 @@ export default class AuthService extends Service {
     }
 
     public async resetPassword(
-        authId: number,
+        authId: string,
         newPassword: string
     ): Promise<any> {
         const trans = await BaseConnection.getTrans();

@@ -13,7 +13,7 @@ export default class AmortizationService extends Service {
         return await this.amortizationViewRepo.getAll(params)
     }
 
-    async findAmortization(amortizationId: number, params: IParams) {
+    async findAmortization(amortizationId: string, params: IParams) {
         return await this.amortizationViewRepo.findById(amortizationId, params)
     }
 
@@ -25,7 +25,7 @@ export default class AmortizationService extends Service {
         )
     }
 
-    async updateAmortization(amortizationId: number, data: IAmortization): Promise<IAmortization> {
+    async updateAmortization(amortizationId: string, data: IAmortization): Promise<IAmortization> {
         const trans = await TenantConnection.getTrans();
         return this.safeRun(async () => {
             },
@@ -34,7 +34,7 @@ export default class AmortizationService extends Service {
     }
 
 
-    async deleteAmortization(amortizationId: number): Promise<IAmortization> {
+    async deleteAmortization(amortizationId: string): Promise<IAmortization> {
         const trans = await TenantConnection.getTrans();
         return this.safeRun(async () => {
             },
@@ -42,7 +42,7 @@ export default class AmortizationService extends Service {
         )
     }
 
-    async restoreAmortization(amortizationId: number): Promise<IAmortization> {
+    async restoreAmortization(amortizationId: string): Promise<IAmortization> {
         const trans = await TenantConnection.getTrans();
         return this.safeRun(async () => {
             },

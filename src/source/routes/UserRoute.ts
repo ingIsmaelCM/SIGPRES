@@ -4,6 +4,7 @@ import RoleMiddleware from "@auth/middlewares/RoleMiddleware";
 import UserController from "@source/controllers/UserController";
 import PermissionEnums from "@app/interfaces/PermissionEnums";
 import UserRequest from "@source/requests/UserRequest";
+import InfoRequest from "@source/requests/InfoRequest";
 
 export default class UserRoutes extends BaseRoutes<UserController> {
     constructor() {
@@ -18,6 +19,7 @@ export default class UserRoutes extends BaseRoutes<UserController> {
             )
             .post(
                 RoleMiddleware.hasPermission(PermissionEnums.createUser),
+                InfoRequest.infoCreateRequest(),
                 UserRequest.userCreateRequest(),
                 UserRequest.validate,
                 (req: Request, res: Response) => this.controller.store(req, res)

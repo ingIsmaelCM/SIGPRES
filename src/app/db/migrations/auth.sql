@@ -9,7 +9,7 @@ DROP TABLE IF EXISTS `model_permissions`;
 
 
 CREATE TABLE `auths` (
-`id` INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+`id` VARCHAR(70) PRIMARY KEY DEFAULT (UUID()),
 `email` VARCHAR(100) NOT NULL UNIQUE,
 `username`  VARCHAR(45) NOT NULL UNIQUE,
 `name` VARCHAR(50) NOT NULL,
@@ -25,7 +25,7 @@ CREATE TABLE `auths` (
 `deletedAt` TIMESTAMP);
 
 CREATE TABLE `tenants` (
-`id` INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+`id` VARCHAR(70) PRIMARY KEY DEFAULT (UUID()),
 `name` VARCHAR(100) NOT NULL,
 `key` VARCHAR(100) NOT NULL UNIQUE,
 `createdAt` TIMESTAMP NOT NULL DEFAULT current_timestamp,
@@ -34,15 +34,15 @@ CREATE TABLE `tenants` (
 
 
 CREATE TABLE `auth_tenants` (
-`id` INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
-`authId` INT NOT NULL,
-`tenantId` INT NOT NULL,
+`id` VARCHAR(70) PRIMARY KEY DEFAULT (UUID()),
+`authId` VARCHAR(70) NOT NULL,
+`tenantId` VARCHAR(70) NOT NULL,
 `createdAt` TIMESTAMP NOT NULL DEFAULT current_timestamp,
 `updatedAt` TIMESTAMP NOT NULL DEFAULT current_timestamp,
 `deletedAt` TIMESTAMP);
 
 CREATE TABLE `roles`(
-`id` INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+`id` VARCHAR(70) PRIMARY KEY DEFAULT (UUID()),
 `name` VARCHAR(500) NOT NULL UNIQUE,
 `createdAt` TIMESTAMP NOT NULL DEFAULT current_timestamp,
 `updatedAt` TIMESTAMP NOT NULL DEFAULT current_timestamp,
@@ -50,7 +50,7 @@ CREATE TABLE `roles`(
 );
 
 CREATE TABLE `permissions`(
-`id` INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+`id` VARCHAR(70) PRIMARY KEY DEFAULT (UUID()),
 `name` VARCHAR(500) NOT NULL UNIQUE,
 `createdAt` TIMESTAMP NOT NULL DEFAULT current_timestamp,
 `updatedAt` TIMESTAMP NOT NULL DEFAULT current_timestamp,
@@ -58,18 +58,18 @@ CREATE TABLE `permissions`(
 );
 
 CREATE TABLE `auth_roles`(
-`id` INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
-`authId` INT NOT NULL,
-`roleId` INT NOT NULL,
+`id` VARCHAR(70) PRIMARY KEY DEFAULT (UUID()),
+`authId` VARCHAR(70) NOT NULL,
+`roleId` VARCHAR(70) NOT NULL,
 `createdAt` TIMESTAMP NOT NULL DEFAULT current_timestamp,
 `updatedAt` TIMESTAMP NOT NULL DEFAULT current_timestamp,
 `deletedAt` TIMESTAMP
 );
 
 CREATE TABLE `model_permissions`(
-`id` INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
-`permissionId` INT NOT NULL,
-`modelId` INT NOT NULL,
+`id` VARCHAR(70) PRIMARY KEY DEFAULT (UUID()),
+`permissionId` VARCHAR(70) NOT NULL,
+`modelId` VARCHAR(70) NOT NULL,
 `modelType` VARCHAR(50) NOT NULL,
 `createdAt` TIMESTAMP NOT NULL DEFAULT current_timestamp,
 `updatedAt` TIMESTAMP NOT NULL DEFAULT current_timestamp,

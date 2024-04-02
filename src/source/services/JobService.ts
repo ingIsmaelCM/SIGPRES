@@ -16,7 +16,7 @@ export default class JobService extends Service {
         return await this.jobViewRepo.getAll(params)
     }
 
-    async findJob(jobId: number, params: IParams) {
+    async findJob(jobId: string, params: IParams) {
         return await this.jobViewRepo.findById(jobId, params)
     }
 
@@ -34,7 +34,7 @@ export default class JobService extends Service {
         )
     }
 
-    async updateJob(jobId: number, data: IJob): Promise<IJob> {
+    async updateJob(jobId: string, data: IJob): Promise<IJob> {
         const trans = await TenantConnection.getTrans();
         return this.safeRun(async () => {
                 await this.mainRepo.validateBeforeInsertRelation(Client, data.clientId);
@@ -50,7 +50,7 @@ export default class JobService extends Service {
     }
 
 
-    async deleteJob(jobId: number): Promise<IJob> {
+    async deleteJob(jobId: string): Promise<IJob> {
         const trans = await TenantConnection.getTrans();
         return this.safeRun(async () => {
                 const deletedJob = await this.mainRepo.delete(jobId, trans);
@@ -61,7 +61,7 @@ export default class JobService extends Service {
         )
     }
 
-    async restoreJob(jobId: number): Promise<IJob> {
+    async restoreJob(jobId: string): Promise<IJob> {
         const trans = await TenantConnection.getTrans();
         return this.safeRun(async () => {
                 const restoredJob = await this.mainRepo.restore(jobId, trans);

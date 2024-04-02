@@ -10,8 +10,8 @@ class LoanRequest extends BaseRequest {
             this.RequestCheck.required('term'),
             this.RequestCheck.required('period'),
             this.RequestCheck.required('clientId'),
-            this.RequestCheck.isInt('lawyerId').optional(),
-            this.RequestCheck.isInt('guarantorId').optional(),
+            this.RequestCheck.isString('lawyerId').optional(),
+            this.RequestCheck.isString('guarantorId').optional(),
         ]
     }
 

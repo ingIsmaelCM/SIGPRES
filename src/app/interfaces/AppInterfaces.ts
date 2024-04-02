@@ -19,7 +19,7 @@ export interface IParams {
 }
 
 export interface ICommonField {
-  id?: number;
+  id?: string;
   createdBy?: number;
   updatedBy?: number;
   createdAt?: string;

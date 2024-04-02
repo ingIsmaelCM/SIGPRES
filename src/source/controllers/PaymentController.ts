@@ -17,7 +17,7 @@ export default class PaymentController extends Controller implements IController
 
     async show(req: Request, res: Response) {
         return this.safeRun(async () =>
-                this.mainService.findPayment(Number(req.params.id), req.query),
+                this.mainService.findPayment(req.params.id, req.query),
             res, 200, "Detalles del pago"
         )
     }
@@ -54,21 +54,21 @@ export default class PaymentController extends Controller implements IController
     @setAuthor
     async update(req: Request, res: Response) {
         return this.safeRun(async () =>
-                this.mainService.updatePayment(Number(req.params.id), req.body),
+                this.mainService.updatePayment(req.params.id, req.body),
             res, 201, ""
         )
     }
 
     async delete(req: Request, res: Response) {
         return this.safeRun(async () =>
-                this.mainService.deletePayment(Number(req.params.id)),
+                this.mainService.deletePayment(req.params.id),
             res, 200, ""
         )
     }
 
     async restore(req: Request, res: Response) {
         return this.safeRun(async () =>
-                this.mainService.restorePayment(Number(req.params.id)),
+                this.mainService.restorePayment(req.params.id),
             res, 200, ""
         )
     }

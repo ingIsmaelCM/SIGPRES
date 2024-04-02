@@ -51,16 +51,16 @@ export default class Mora extends Model implements IMora {
         },
         ...ITM.commonAttributes
     }
-    declare clientId: number;
+    declare clientId: string;
     declare closedAt: string;
     declare dueAt: string;
     declare initAmount: number;
     declare lateAmount: number;
     declare mora: number;
-    declare loanId: number;
-    declare paymentId: number;
+    declare loanId: string;
+    declare paymentId: string;
     declare status: EMoraStatus;
-    declare id?: number;
+    declare id?: string;
     declare createdBy?: number;
     declare updatedBy?: number;
     declare createdAt?: string;

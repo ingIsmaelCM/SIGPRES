@@ -29,7 +29,7 @@ export default class RoleService extends  Service{
       };
     }
   }
-  async deleteRole(roleId: number) {
+  async deleteRole(roleId: string) {
     const trans = await BaseConnection.getTrans();
     try {
       const existingRole = await this.roleRepo.findById(roleId);
@@ -50,7 +50,7 @@ export default class RoleService extends  Service{
       };
     }
   }
-  async assingRoleToAuth(authId: number, roleId: number) {
+  async assingRoleToAuth(authId: string, roleId: string) {
     try {
       const auth = await this.authRepo.findById(authId, { include: "roles" });
       const role = await this.roleRepo.findById(roleId);
@@ -69,7 +69,7 @@ export default class RoleService extends  Service{
     }
   }
 
-  async assingPermissionToAuth(authId: number, permissionId: number[]) {
+  async assingPermissionToAuth(authId: string, permissionId: string[]) {
     try {
       const auth = await this.authRepo.findById(authId, {
         include: "permissions",
@@ -88,7 +88,7 @@ export default class RoleService extends  Service{
       };
     }
   }
-  async grantAllToAuth(authId: number) {
+  async grantAllToAuth(authId: string) {
     try {
       const auth = await this.authRepo.findById(authId, {
         include: "permissions",
@@ -116,7 +116,7 @@ export default class RoleService extends  Service{
       };
     }
   }
-  async assingPermissionToRole(roleId: number, permissionId: number[]) {
+  async assingPermissionToRole(roleId: string, permissionId: string[]) {
     try {
       const role = await this.roleRepo.findById(roleId, {
         include: "permissions",
@@ -136,7 +136,7 @@ export default class RoleService extends  Service{
     }
   }
 
-  async grantAllToRole(roleId: number) {
+  async grantAllToRole(roleId: string) {
     try {
       const role = await this.roleRepo.findById(roleId, {
         include: "permissions",

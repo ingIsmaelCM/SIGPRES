@@ -13,11 +13,11 @@ export default class Payment extends Model implements IPayment {
   declare dueAt: string;
   declare payedAt: string;
   declare note?: string;
-  declare walletId: number;
-  declare loanId: number;
-  declare clientId: null;
-  declare lawyerId?: number;
-  declare id?: number;
+  declare walletId: string;
+  declare loanId: string;
+  declare clientId: string;
+  declare lawyerId?: string;
+  declare id?: string;
   declare createdBy?: number;
   declare updatedBy?: number;
   declare createdAt?: string;

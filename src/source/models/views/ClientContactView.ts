@@ -24,9 +24,9 @@ export default class ClientContactView extends Model implements IClientContactVi
     static additionalOptions: Partial<InitOptions>={
 
     }
-    declare clientId: number;
-    declare contactId: number;
-    declare relationId: number;
+    declare clientId: string;
+    declare contactId: string;
+    declare relationId: string;
     declare country: string;
     declare dni: string;
     declare fullname: string;

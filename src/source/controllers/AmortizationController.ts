@@ -17,7 +17,7 @@ export default class AmortizationController extends Controller implements IContr
 
     async show(req: Request, res: Response) {
         return this.safeRun(async () =>
-                this.mainService.findAmortization(Number(req.params.id), req.query),
+                this.mainService.findAmortization(req.params.id, req.query),
             res, 200, "Detalles de la Amortización"
         )
     }
@@ -33,21 +33,21 @@ export default class AmortizationController extends Controller implements IContr
     @setAuthor
     async update(req: Request, res: Response) {
         return this.safeRun(async () =>
-                this.mainService.updateAmortization(Number(req.params.id), req.body),
+                this.mainService.updateAmortization(req.params.id, req.body),
             res, 201, ""
         )
     }
 
     async delete(req: Request, res: Response) {
         return this.safeRun(async () =>
-                this.mainService.deleteAmortization(Number(req.params.id)),
+                this.mainService.deleteAmortization(req.params.id),
             res, 200, ""
         )
     }
 
     async restore(req: Request, res: Response) {
         return this.safeRun(async () =>
-                this.mainService.restoreAmortization(Number(req.params.id)),
+                this.mainService.restoreAmortization(req.params.id),
             res, 200, ""
         )
     }

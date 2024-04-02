@@ -23,7 +23,7 @@ export default class ContactService extends Service {
         return await this.contactViewRepo.getAll(params)
     }
 
-    async findContact(contactId: number, params: IParams) {
+    async findContact(contactId: string, params: IParams) {
         return await this.contactViewRepo.findById(contactId, params)
     }
 
@@ -31,7 +31,7 @@ export default class ContactService extends Service {
         return await this.clientContactViewRepo.getAll(params)
     }
 
-    async createContact(data: IContactView & { clientId: number }): Promise<IContact> {
+    async createContact(data: IContactView & { clientId: string }): Promise<IContact> {
         const trans = await TenantConnection.getTrans();
         return this.safeRun(async () => {
                 const newInfo = await this.infoService.setFromRelated(data, trans);
@@ -51,7 +51,7 @@ export default class ContactService extends Service {
         )
     }
 
-    async updateContact(contactId: number, data: IContactView & { clientId: number }): Promise<IContact> {
+    async updateContact(contactId: string, data: IContactView & { clientId: string }): Promise<IContact> {
         const trans = await TenantConnection.getTrans();
         return this.safeRun(async () => {
                 const updatedContact = await this.mainRepo.update(data, contactId, trans);
@@ -68,7 +68,7 @@ export default class ContactService extends Service {
         )
     }
 
-    async setProfilePhoto(contactId: number, data: any): Promise<IImage> {
+    async setProfilePhoto(contactId: string, data: any): Promise<IImage> {
         return this.safeRun(async () => {
                 const res = await CloudinaryService.getInstance().uploadFilesToCloudinary<IImage>(data)
                 const image: IImage = res[0]
@@ -79,7 +79,7 @@ export default class ContactService extends Service {
         )
     }
 
-    async deleteContact(contactId: number): Promise<IContact> {
+    async deleteContact(contactId: string): Promise<IContact> {
         const trans = await TenantConnection.getTrans();
         return this.safeRun(async () => {
                 const deletedContact = await this.mainRepo.delete(contactId, trans);
@@ -90,7 +90,7 @@ export default class ContactService extends Service {
         )
     }
 
-    async restoreContact(contactId: number): Promise<IContact> {
+    async restoreContact(contactId: string): Promise<IContact> {
         const trans = await TenantConnection.getTrans();
         return this.safeRun(async () => {
                 const restoredContact = await this.mainRepo.restore(contactId, trans);

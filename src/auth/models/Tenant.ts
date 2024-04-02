@@ -11,7 +11,7 @@ class Tenant
   extends Model<InferAttributes<Tenant>, InferCreationAttributes<Tenant>>
   implements IModel
 {
-  declare id: number;
+  declare id: string;
   declare name: string;
   declare key: string;
 

@@ -8,13 +8,13 @@ import {Lawyer, Loan, Payment, Wallet} from "@source/models/index";
 export default class LawyerPayment extends Model implements ILawyerPayment {
     declare amount: number;
     declare closedAt: string;
-    declare id: number;
-    declare lawyerId: number;
-    declare loanId: number;
+    declare Id: string;
+    declare lawyerId: string;
+    declare loanId: string;
     declare payPrice: number;
-    declare paymentId: number;
+    declare paymentId: string;
     declare status: ELawyerPaymentStatus;
-    declare walletId: number;
+    declare walletId: string;
 
     static tableName = "lawyer_payments";
     static modelName = "LawyerPayment";

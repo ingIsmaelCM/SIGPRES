@@ -3,7 +3,7 @@ import response from "@/app/utils/response";
 import { NextFunction, Response } from "express";
 
 type IPermission = {
-  id: number;
+  Id: string;
   name: string;
 };
 class RoleMiddleware extends Middleware {

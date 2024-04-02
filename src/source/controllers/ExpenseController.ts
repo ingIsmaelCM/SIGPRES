@@ -17,7 +17,7 @@ export default class ExpenseController extends Controller implements IController
 
     async show(req: Request, res: Response) {
         return this.safeRun(async () =>
-                this.mainService.findExpense(Number(req.params.id), req.query),
+                this.mainService.findExpense(req.params.id, req.query),
             res, 200, ""
         )
     }
@@ -33,21 +33,21 @@ export default class ExpenseController extends Controller implements IController
     @setAuthor
     async update(req: Request, res: Response) {
         return this.safeRun(async () =>
-                this.mainService.updateExpense(Number(req.params.id), req.body),
+                this.mainService.updateExpense(req.params.id, req.body),
             res, 201, ""
         )
     }
 
     async delete(req: Request, res: Response) {
         return this.safeRun(async () =>
-                this.mainService.deleteExpense(Number(req.params.id)),
+                this.mainService.deleteExpense(req.params.id),
             res, 200, ""
         )
     }
 
     async restore(req: Request, res: Response) {
         return this.safeRun(async () =>
-                this.mainService.restoreExpense(Number(req.params.id)),
+                this.mainService.restoreExpense(req.params.id),
             res, 200, ""
         )
     }

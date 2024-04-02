@@ -1,24 +1,24 @@
 export interface IImage {
-    id?: number;
+    id?: string;
     path: string;
     caption: string;
     publicId: string;
     size: number;
     imageableType: string;
-    imageableId: number;
+    imageableId: string;
     createdAt?: string;
     updatedAt?: string;
     deletedAt?: string;
 }
 
 export interface IDocument {
-    id?: number;
+    id?: string;
     path: string;
     title: string;
     publicId: string;
     size: number;
     documentableType: string;
-    documentableId: number;
+    documentableId: string;
     createdAt: string;
     updatedAt: string;
     deletedAt: string;

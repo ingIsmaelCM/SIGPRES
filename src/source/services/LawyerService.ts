@@ -15,7 +15,7 @@ export default class LawyerService extends Service {
         return await this.lawyerViewRepo.getAll(params)
     }
 
-    async findLawyer(lawyerId: number, params: IParams) {
+    async findLawyer(lawyerId: string, params: IParams) {
         return await this.lawyerViewRepo.findById(lawyerId, params)
     }
 
@@ -31,7 +31,7 @@ export default class LawyerService extends Service {
         )
     }
 
-    async updateLawyer(lawyerId: number, data: ILawyer): Promise<ILawyer> {
+    async updateLawyer(lawyerId: string, data: ILawyer): Promise<ILawyer> {
         const trans = await TenantConnection.getTrans();
         return this.safeRun(async () => {
             const updatedLawyer=await this.mainRepo.update(data, lawyerId, trans);
@@ -46,7 +46,7 @@ export default class LawyerService extends Service {
     }
 
 
-    async deleteLawyer(lawyerId: number): Promise<ILawyer> {
+    async deleteLawyer(lawyerId: string): Promise<ILawyer> {
         const trans = await TenantConnection.getTrans();
         return this.safeRun(async () => {
             const deletedLawyer=await this.mainRepo.delete(lawyerId, trans);
@@ -57,7 +57,7 @@ export default class LawyerService extends Service {
         )
     }
 
-    async restoreLawyer(lawyerId: number): Promise<ILawyer> {
+    async restoreLawyer(lawyerId: string): Promise<ILawyer> {
         const trans = await TenantConnection.getTrans();
         return this.safeRun(async () => {
                 const restoredLawyer=await this.mainRepo.restore(lawyerId, trans);

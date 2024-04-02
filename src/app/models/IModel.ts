@@ -1,5 +1,5 @@
 export interface IModel {
-  id: number;
+  id: string;
   createdAt: string;
   updatedAt: string;
   getSearchables(): string[];

@@ -3,10 +3,10 @@ import {IParams} from "@app/interfaces/AppInterfaces";
 import PaymentRepository from "@source/repositories/PaymentRepository";
 import TenantConnection from "@app/db/TenantConnection";
 import {
-    EAmortizationStatus,
+    EAmortizationStatus, ELawyerPaymentStatus, ELawyerPaymode,
     EMoraStatus,
     IAmortization,
-    IAmortizationView, ILoan, ILoanRelation,
+    IAmortizationView, ILawyerPayment, ILoan, ILoanRelation,
     IMora,
     IPayment
 } from "@app/interfaces/SourceInterfaces";
@@ -18,6 +18,9 @@ import amortization from "@app/utils/amortization";
 import AmortizationRepository from "@source/repositories/AmortizationRepository";
 import PaymentStatViewRepository from "@source/repositories/PaymentStatViewRepository";
 import moment from "moment";
+import {Transaction} from "sequelize";
+import LawyerPaymentRepository from "@source/repositories/LawyerPaymentRepository";
+import LawyerRepository from "@source/repositories/LawyerRepository";
 
 export default class PaymentService extends Service {
     private mainRepo = new PaymentRepository();
@@ -27,12 +30,14 @@ export default class PaymentService extends Service {
     private walletRepo = new WalletRepository();
     private loanRepo = new LoanRepository();
     private paymentStatRepo = new PaymentStatViewRepository();
+    private lawyerPaymentRepo = new LawyerPaymentRepository();
+    private lawyerRepo = new LawyerRepository();
 
     async getPayments(params: IParams) {
         return await this.mainRepo.getAll(params)
     }
 
-    async findPayment(paymentId: number, params: IParams) {
+    async findPayment(paymentId: string, params: IParams) {
         return await this.mainRepo.findById(paymentId, params)
     }
 
@@ -75,6 +80,9 @@ export default class PaymentService extends Service {
                     await this.amortizationRepo.updateOrCreate(amort, trans)
                 }
                 const payment = this.getPaymentFromCapitalAndData(data, loan);
+                if (payment.lawyerId) {
+                    await this.createPaymentForLawyerFromPayment(payment, trans);
+                }
                 await this.mainRepo.create(payment, trans);
                 const newLoan = this.loanRepo.update({balance: payment.balanceAfter}, loan.id, trans);
                 await this.walletRepo.setBalance(payment.amount, wallet.id, trans);
@@ -84,18 +92,36 @@ export default class PaymentService extends Service {
             async () => await trans.rollback())
     }
 
+    private async createPaymentForLawyerFromPayment(payment: IPayment, trans: Transaction) {
+        const lawyer = await this.lawyerRepo.findById(payment.lawyerId!);
+        if (lawyer.payMode == ELawyerPaymode.Cuota || lawyer.payMode == ELawyerPaymode.Porcentaje) {
+            const newLayerPayment: ILawyerPayment = {
+                amount: lawyer.payment == ELawyerPaymode.Contrato ?
+                    lawyer.payPrice :
+                    (payment.amount * (lawyer.payPrice / 100)),
+                paymentId: payment.id,
+                status: ELawyerPaymentStatus.Pendiente,
+                payPrice: lawyer.payPrice,
+                createdBy: payment.createdBy,
+                updatedBy: payment.updatedBy,
+                lawyerId: lawyer.id
+            }
+            await this.lawyerPaymentRepo.create(newLayerPayment, trans);
+        }
+    }
+
     private getPaymentFromCapitalAndData(data: Record<string, any>, loan: ILoan) {
         return {
             amount: data.capital + data.interest,
             capital: data.capital,
             interest: data.interest,
             balanceBefore: loan.balance,
-            balanceAfter: Number(loan.balance - data.capital).toFixed(2),
+            balanceAfter: Number(Number(loan.balance - data.capital).toFixed(2)),
             dueAt: data.payedAt,
             payedAt: data.payedAt,
             walletId: data.walletId,
             lawyerId: data.lawyerId,
-            loanId: loan.id,
+            loanId: loan.id!,
             clientId: loan.clientId,
             note: data.note,
             createdBy: data.createdBy,
@@ -149,7 +175,12 @@ export default class PaymentService extends Service {
                 const loan = await this.loanRepo.findById(amorts.rows.at(-1).loanId)
                 const payments = this.getPaymentFromAmortsAndData(amorts, data);
                 const newPayments = await this.mainRepo.bulkCreate(payments, trans);
-                const moras = this.getMorasFromAmortsDataAndPayments(amorts, data, newPayments);
+                for (const pay of newPayments){
+                    if (pay.lawyerId) {
+                        await this.createPaymentForLawyerFromPayment(pay, trans);
+                    }
+                }
+                const moras = this.getMorasFromAmortsDataAndPayments(amorts, data, newPayments as any);
                 await this.moraRepo.bulkCreate(moras, trans);
                 const wallet = await this.walletRepo.findById(data.walletId);
                 const nextPaymentDate = amortization.moveDateCuota([amorts.rows.at(-1).date], loan.period)[0]
@@ -223,7 +254,7 @@ export default class PaymentService extends Service {
         })
     }
 
-    async updatePayment(paymentId: number, data: IPayment): Promise<IPayment> {
+    async updatePayment(paymentId: string, data: IPayment): Promise<IPayment> {
         const trans = await TenantConnection.getTrans();
         return this.safeRun(async () => {
             },
@@ -232,7 +263,7 @@ export default class PaymentService extends Service {
     }
 
 
-    async deletePayment(paymentId: number): Promise<IPayment> {
+    async deletePayment(paymentId: string): Promise<IPayment> {
         const trans = await TenantConnection.getTrans();
         return this.safeRun(async () => {
             },
@@ -240,7 +271,7 @@ export default class PaymentService extends Service {
         )
     }
 
-    async restorePayment(paymentId: number): Promise<IPayment> {
+    async restorePayment(paymentId: string): Promise<IPayment> {
         const trans = await TenantConnection.getTrans();
         return this.safeRun(async () => {
             },

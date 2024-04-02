@@ -19,8 +19,8 @@ export default class AmortizationView extends Model implements IAmortizationView
     declare interest: number;
     declare balance: number;
     declare status: EAmortizationStatus;
-    declare loanId: number;
-    declare clientId: number;
+    declare loanId: string;
+    declare clientId: string;
     declare initTerm: number;
     declare initRateMora: number;
     declare finalRateMora: number;
@@ -66,7 +66,7 @@ export default class AmortizationView extends Model implements IAmortizationView
         isExpired: {
             type: DataTypes.VIRTUAL,
             get(this: AmortizationView) {
-                return moment().isAfter(moment(this.getDataValue("expiresAt")));
+                return moment().subtract(25, 'hours').isAfter(moment(this.getDataValue("expiresAt")));
             }
         }
 

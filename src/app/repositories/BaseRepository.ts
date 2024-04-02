@@ -54,12 +54,12 @@ export class BaseRepository<T extends Model> {
     }
 
     public async findById(
-        dataId: number,
+        dataId: string|string,
         params?: any,
         withTrashed?: boolean
     ): Promise<any> {
         return this.safeRun(() =>
-            this.find("id", tools.parseOrZero(dataId), withTrashed, params)
+            this.find("id", dataId, withTrashed, params)
         );
     }
 
@@ -171,7 +171,7 @@ export class BaseRepository<T extends Model> {
         });
     }
 
-    async validateBeforeInsertRelation(model: ModelStatic<any>, id: number): Promise<any> {
+    async validateBeforeInsertRelation(model: ModelStatic<any>, id: string): Promise<any> {
         return this.safeRun(async () => {
             const exists = await model.findByPk(id);
             if (!exists) {

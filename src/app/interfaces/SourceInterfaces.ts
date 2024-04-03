@@ -285,6 +285,7 @@ export interface ILawyerPayment extends ICommonField {
     walletId?: string;
     lawyerId: string;
     status: ELawyerPaymentStatus;
+    date?: string;
     closedAt?: string;
     payPrice: number;
 }

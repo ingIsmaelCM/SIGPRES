@@ -8,21 +8,23 @@ export default class WalletRepository extends BaseRepository<Wallet> {
     }
 
     async setBalance(newValue: number, walletId: string, trans: Transaction) {
-        const wallet = await super.findById(walletId);
-        if (!wallet) {
-            return Promise.reject({
-                code: 404,
-                message: "La billetera indicada no se encontró"
-            })
-        }
-        const newBalance = wallet.balance + newValue;
-        if (newBalance < 0) {
-            return Promise.reject({
-                code: 422,
-                message: "Balance insuficiente en la billetera"
-            })
-        }
-        return await super.update({balance: newBalance}, walletId, trans);
+        return this.safeRun(async () => {
+            const wallet = await super.findById(walletId);
+            if (!wallet) {
+                return Promise.reject({
+                    code: 404,
+                    message: "La billetera indicada no se encontró"
+                })
+            }
+            const newBalance = wallet.balance + newValue;
+            if (newBalance < 0) {
+                return Promise.reject({
+                    code: 422,
+                    message: "Balance insuficiente en la billetera"
+                })
+            }
+            return await super.update({balance: newBalance}, walletId, trans);
+        })
 
     }
 }

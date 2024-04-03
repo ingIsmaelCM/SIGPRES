@@ -15,6 +15,13 @@ export default class UserController extends Controller implements IController {
         )
     }
 
+    async indexAuthUsers(req: Request, res: Response) {
+        return this.safeRun(async () =>
+                this.mainService.getAuthUsers(req.query),
+            res, 200, "Lista de Usuarios Autenticables"
+        )
+    }
+
     async show(req: Request, res: Response) {
         return this.safeRun(async () =>
                 this.mainService.findUser(req.params.id, req.query),

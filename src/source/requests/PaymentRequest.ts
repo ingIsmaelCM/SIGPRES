@@ -13,8 +13,9 @@ class PaymentRequest extends BaseRequest {
             this.RequestCheck.required("cuotas"),
             this.RequestCheck.isArray("cuotas"),
             this.RequestCheck.required("omitMora"),
+            this.RequestCheck.required("justInterest"),
             this.RequestCheck.isString("note").optional({values: "falsy"}),
-            this.RequestCheck.isString("lawyerId").optional()
+            this.RequestCheck.isString("lawyerId").optional({values: "falsy"})
 
         ]
     }
@@ -30,7 +31,7 @@ class PaymentRequest extends BaseRequest {
             this.RequestCheck.required("keep"),
             this.RequestCheck.isIn("keep","dates|cuotas",["dates","cuotas"]),
             this.RequestCheck.isString("note").optional({values: "falsy"}),
-            this.RequestCheck.isString("lawyerId").optional()
+            this.RequestCheck.isString("lawyerId").optional({values: "falsy"})
         ]
     }
 

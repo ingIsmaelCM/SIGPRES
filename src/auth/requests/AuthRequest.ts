@@ -59,14 +59,14 @@ class AuthRequest extends BaseRequest {
         ];
     }
 
-    public validateRecoverEmail(): Array<ValidationChain> {
+    public validateRecoverAndVerifyEmail(): Array<ValidationChain> {
         return [
             body("email", "Se requiere el correo electrónico").notEmpty(),
             body("email", "El formato del correo no es válido").isEmail(),
         ];
     }
 
-    public validateRecoverPassword(): Array<ValidationChain> {
+    public validateRecoverPasswordAndVerifyAccount(): Array<ValidationChain> {
         return [
             body("code", "Ingrese el código").exists().notEmpty(),
             body("code", "El código ingresado no es válido").isString().isLength({min: 6, max: 6}),

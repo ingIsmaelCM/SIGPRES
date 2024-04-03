@@ -44,9 +44,10 @@ class Auth
 Auth.init(
     {
         id: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.STRING,
             primaryKey: true,
-            autoIncrement: true,
+            allowNull: false,
+            defaultValue: DataTypes.UUIDV4
         },
         email: {
             type: DataTypes.STRING,

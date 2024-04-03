@@ -68,7 +68,7 @@ export default class AuthService extends Service {
                 if (!userAuth.tenants || userAuth.tenants.length == 0) {
                     await Promise.reject({
                         code: 401,
-                        message: "The user does not have a DB associated with him",
+                        message: "El usuario no tiene una base de datos asociada",
                     });
                 }
                 const updateData = {lastlogin: new Date(), status: 1};
@@ -79,6 +79,7 @@ export default class AuthService extends Service {
                     await this.setAuthFields(userAuth);
                 await trans.commit();
                 const result = {
+                    ...userAuth.dataValues,
                     password: null,
                     permissions: [...new Set(permissions)],
                     roles,
@@ -95,17 +96,31 @@ export default class AuthService extends Service {
         }
     }
 
-    async verifyAuth(authId: string) {
+    async verifyAuth(data: any) {
         const trans = await BaseConnection.getTrans();
         try {
-            const auth = await this.authRepo.findById(authId);
+            const {email, code} = data;
+            const auth = await this.authRepo.find("email", email);
+
             if (!auth) {
-                await Promise.reject({
+                return Promise.reject({
                     code: 404,
                     message: "No existe este usuario",
                 });
             }
-            await this.authRepo.update({verifiedAt: new Date()}, authId, trans);
+            if (auth.verifiedAt) {
+                return Promise.reject({
+                    code: 419,
+                    message: "Esta cuenta ya está verificada",
+                });
+            }
+            if (!await bcrypt.compare(code, auth.sessionId)) {
+                return Promise.reject({
+                    code: 419,
+                    message: "El código ingresado no es correcto",
+                });
+            }
+            await this.authRepo.update({verifiedAt: new Date()}, auth.id, trans);
             await trans.commit();
         } catch (error: any) {
             await trans.rollback();
@@ -185,6 +200,24 @@ export default class AuthService extends Service {
                 context,
                 subject: "Recupere su Contraseña",
                 template: "recoverPassword"
+            });
+            return "Código enviado exitosamente";
+        } catch (error: any) {
+            throw {
+                code: error.code || 500,
+                message: error.message,
+            };
+        }
+    }
+
+    public async sendVerificationCode(authEmail: string): Promise<any> {
+        try {
+            const context = await this.getContextForSendCodeToEmail(authEmail);
+            await this.authMailService.sendEmail({
+                to: authEmail,
+                context,
+                subject: "Verifiue su cuenta",
+                template: "verifyAccount"
             });
             return "Código enviado exitosamente";
         } catch (error: any) {

@@ -39,7 +39,8 @@ export default class AmortizationView extends Model implements IAmortizationView
         cuota:{
           type: DataTypes.DECIMAL,
           get(this:AmortizationView){
-              return Number(this.getDataValue("cuota"))+Number(this.mora)
+              const cuota= Number(this.getDataValue("cuota"))+Number(this.mora)
+              return Number(cuota.toFixed(2))
           }
         },
         mora: {
@@ -75,7 +76,8 @@ export default class AmortizationView extends Model implements IAmortizationView
     getSearchables(): Array<any> {
         return  [
             ...new Amortization().getSearchables(),
-            "expiresAt"
+            "expiresAt",
+            'date'
         ]
     }
 

@@ -23,9 +23,10 @@ class Image extends Model implements  IImage{
   static additionalOptions={}
   static attributes = {
     id: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING,
       primaryKey: true,
-      autoIncrement: true,
+      allowNull: false,
+      defaultValue: DataTypes.UUIDV4
     },
     path: {
       type: DataTypes.STRING,

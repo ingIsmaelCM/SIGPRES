@@ -6,6 +6,8 @@ import {IAuth} from "@auth/utils/AuthInterfaces";
 import AuthMailService from "@auth/services/AuthMailService";
 import AuthService from "@auth/services/AuthService";
 import UserViewRepository from "@source/repositories/UserViewRepository";
+import RoleMiddleware from "@auth/middlewares/RoleMiddleware";
+import PermissionEnums from "@app/interfaces/PermissionEnums";
 
 export default class UserService extends Service {
     private mainRepo = new AuthRepository();
@@ -13,6 +15,10 @@ export default class UserService extends Service {
     private  userViewRepo=new UserViewRepository();
     async getUsers(params: IParams) {
         return await this.userViewRepo.getAll(params)
+    }
+
+    async getAuthUsers(params: IParams) {
+        return await this.mainRepo.getAll(params)
     }
 
     async findUser(userId: string, params: IParams) {

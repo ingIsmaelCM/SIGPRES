@@ -21,8 +21,7 @@ export class AuthController extends Controller implements IController {
 
     async verifyAuth(req: Request, res: Response) {
         return await this.safeRun(async () => {
-            const authId = req.params.id;
-            return await this.mainService.verifyAuth(authId);
+            return await this.mainService.verifyAuth(req.body);
         }, res, 200, "Usuario verificado exitosamente")
     }
 
@@ -59,6 +58,12 @@ export class AuthController extends Controller implements IController {
         return await this.safeRun(async () =>
                 await this.mainService.sendRecoverLink(req.body.email),
             res, 200, "Correo de recuperación enviado")
+    }
+
+    async sendVerificationCode(req: any, res: Response) {
+        return await this.safeRun(async () =>
+                await this.mainService.sendVerificationCode(req.body.email),
+            res, 200, "Correo de verificación enviado")
     }
 
 

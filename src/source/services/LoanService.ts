@@ -64,6 +64,7 @@ export default class LoanService extends Service {
         if (lawyer.payMode == ELawyerPaymode.Contrato) {
             const newLayerPayment: ILawyerPayment = {
                 amount: lawyer.payPrice,
+                date: newLoan.startAt,
                 loanId: newLoan.id,
                 status: ELawyerPaymentStatus.Pendiente,
                 payPrice: lawyer.payPrice,

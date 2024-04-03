@@ -1,14 +1,15 @@
 import {DataTypes, Model, ModelAttributeColumnOptions} from "sequelize";
 import {ELawyerPaymentStatus, ILawyerPayment, ILawyerPaymentRelation} from "@app/interfaces/SourceInterfaces";
 import ITM from "@app/models/ITenantModel";
-import {Lawyer, Loan, Payment, Wallet} from "@source/models/index";
+import { LawyerView, Loan, Payment, Wallet} from "@source/models/index";
 
 
 @ITM.staticImplements<ILawyerPayment, ILawyerPaymentRelation>()
 export default class LawyerPayment extends Model implements ILawyerPayment {
     declare amount: number;
+    declare date: string;
     declare closedAt: string;
-    declare Id: string;
+    declare id: string;
     declare lawyerId: string;
     declare loanId: string;
     declare payPrice: number;
@@ -26,6 +27,10 @@ export default class LawyerPayment extends Model implements ILawyerPayment {
         },
         payPrice: {
             type: DataTypes.DECIMAL,
+            allowNull: false
+        },
+        date: {
+            type: DataTypes.STRING,
             allowNull: false
         },
         closedAt: {
@@ -64,7 +69,7 @@ export default class LawyerPayment extends Model implements ILawyerPayment {
     }
 
     static initRelation() {
-        LawyerPayment.belongsTo(Lawyer, {
+        LawyerPayment.belongsTo(LawyerView, {
             foreignKey: "lawyerId",
             as: "lawyer"
         })

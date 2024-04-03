@@ -92,50 +92,35 @@ export default {
         }
         return date;
     },
-    moveDateCuota(startDates: Date[], period: string | number): Date[] {
-        return startDates.map(startDate => {
-            let date = moment(startDate);
-            period = typeof period == "string" ? period : String(period);
-            switch (period.toLowerCase()) {
-                case "diario":
-                    date = moment(date).add(1, "day");
-                    break;
-                case "semanal":
-                    date = moment(date).day("Saturday").add(1, "week");
-                    break;
-                case "quincenal":
-                    const fechaInicioMes = moment(date).startOf("month");
-                    const quincena1 = moment(fechaInicioMes).date(15);
-                    const quincena2 = moment(fechaInicioMes).endOf("month");
-                    if (moment(date).isSame(moment(date).date(15))) {
-                        date = moment(date).endOf("month");
-                    } else if (
-                        moment(date).endOf("month").diff(moment(date), "days") <= 7
-                    ) {
-                        date = moment(date).startOf("month").add(1, "month").date(15);
-                    } else {
-                        date = moment(date).isBefore(quincena1) ? quincena1 : quincena2;
-                    }
-                    break;
-                case "mensual":
-                    const middleMonth = moment(moment(date)).date(15);
-                    let endMonth = moment(moment(date)).endOf("month");
-
-                    date = moment(date).isBefore(moment(middleMonth).add(1, "d"))
-                        ? middleMonth
-                        : endMonth;
-                    date = moment(date).add(1, "month").endOf("month");
-                    break;
-                default:
-                    if (!isNaN(parseInt(period))) {
-                        date = moment(date).add(period, "d");
-                    } else {
-                        throw new Error("Periodo de cuota no válido");
-                    }
-                    break;
-            }
-            return date.toDate();
-        });
+    moveDateCuota(startDate: Date, period: string | number): Date {
+        let date = moment(startDate);
+        period = typeof period == "string" ? period : String(period);
+        switch (period.toLowerCase()) {
+            case "diario":
+                date = moment(date).add(1, "day");
+                break;
+            case "semanal":
+                date = moment(date).day("Saturday").add(1, "week");
+                break;
+            case "quincenal":
+                if (moment(date).isSame(moment(date).date(15))) {
+                    date = moment(date).endOf("month");
+                }  else {
+                    date = moment(date).add(7, 'days').date(15);
+                }
+                break;
+            case "mensual":
+                date = moment(date).add(1, "month");
+                break;
+            default:
+                if (!isNaN(parseInt(period))) {
+                    date = moment(date).add(period, "d");
+                } else {
+                    throw new Error("Periodo de cuota no válido");
+                }
+                break;
+        }
+        return date.toDate();
     },
     getMora(amort: AmortizationView) {
         let mora = 0;

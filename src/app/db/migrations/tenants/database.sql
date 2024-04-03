@@ -110,6 +110,7 @@ CREATE TABLE `lawyer_payments`(
     `walletId` VARCHAR(70),
     `lawyerId` VARCHAR(70) NOT NULL,
     `status` ENUM('Pendiente','Pagado','Cancelado'),
+    `date` DATE NOT NULL,
     `closedAt` DATE,
     `payPrice` DECIMAL(10,2) NOT NULL,
     `createdBy` VARCHAR(70) NOT NULL,

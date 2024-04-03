@@ -25,6 +25,10 @@ export default class UserRoutes extends BaseRoutes<UserController> {
                 (req: Request, res: Response) => this.controller.store(req, res)
             );
 
+        this.controller.router.get("/auths",
+            RoleMiddleware.hasPermission(PermissionEnums.verifyUser),
+            (req: Request, res: Response) => this.controller.indexAuthUsers(req, res));
+
         this.controller.router.post("/verification/send",
             RoleMiddleware.hasPermission(PermissionEnums.verifyUser),
             UserRequest.userSendVerificationRequest(),

@@ -10,7 +10,7 @@ export default class WalletController extends Controller implements IController 
 
     async index(req: Request, res: Response) {
         return this.safeRun(async () =>
-                this.mainService.getWallets(req.query),
+                this.mainService.getWallets(req.query, req),
             res, 200, "Listado de Billeteras"
         )
     }

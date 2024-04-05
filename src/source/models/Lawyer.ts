@@ -50,7 +50,10 @@ export default class Lawyer extends Model implements ILawyer {
         },
         payPrice: {
             type: DataTypes.DECIMAL,
-            allowNull: false
+            allowNull: false,
+            get(this: Lawyer){
+                return Number(this.getDataValue("payPrice"))
+            }
         },
         exequatur: {
             type: DataTypes.STRING,

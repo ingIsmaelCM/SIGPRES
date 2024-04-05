@@ -46,9 +46,9 @@ CREATE TABLE `preferences`
 
 CREATE TABLE `infos`(
     `id` VARCHAR(70) PRIMARY KEY DEFAULT (UUID()),
-    `dni` VARCHAR(18) UNIQUE COMMENT 'Cédula, Pasaporte u otro',
-    `phone` VARCHAR(15) UNIQUE,
-    `email` VARCHAR(75) UNIQUE,
+    `dni` VARCHAR(18)  COMMENT 'Cédula, Pasaporte u otro',
+    `phone` VARCHAR(15) ,
+    `email` VARCHAR(75) ,
     `birthdate` DATE ,
     `address` VARCHAR(125),
     `gender` ENUM('Masculino','Femenino', 'Ninguno') NOT NULL DEFAULT 'Ninguno',
@@ -168,7 +168,8 @@ CREATE TABLE `jobs`(
 CREATE TABLE `wallets`(
     `id` VARCHAR(70) PRIMARY KEY DEFAULT (UUID()),
     `name` VARCHAR(50) NOT NULL UNIQUE,
-    `balance` DECIMAL(10,2),
+    `balance` DECIMAL(10,2) NOT NULL DEFAULT 0,
+    `authId` VARCHAR(70),
     `createdBy` VARCHAR(70) NOT NULL,
     `updatedBy` VARCHAR(70) NOT NULL,
     `createdAt` TIMESTAMP NOT NULL DEFAULT current_timestamp,
@@ -478,7 +479,7 @@ INSERT INTO `preferences` (`key`, label, createdBy, updatedBy, value, type) VALU
 ('capitalCompany','Capital de Trabajo',1,1, 0, 'number'),
 ('chargePerSaldo','Cargo Por Saldo Adelantado',1,1, 0, 'number'),
 ('percentToChargePerSaldo','Porcentaje de Préstamo Cargable',1,1, 0, 'number'),
-('companyData','Detalles del negocio',1,1, '{"name":"SIGPRES","longName":"Sistema Integrado Para la Gestión de Préstamos","address":"Located at Word Wide Web","phone":"(809) 000-0000","email":"info@atriontechsd.com","logo":"https://res.cloudinary.com/atriontechsd/image/upload/v1708904993/logo_long_oraqpj.png","rnc":"000-00000-0"}','object');
+('companyData','Detalles del negocio',1,1, '{"name":"SIGPRES","city":"Santo Domingo","country":"República Dominicana","longName":"Sistema Integrado Para la Gestión de Préstamos","address":"Located at Word Wide Web","phone":"(809) 000-0000","email":"info@atriontechsd.com","logo":"https://res.cloudinary.com/atriontechsd/image/upload/v1708904993/logo_long_oraqpj.png","rnc":"000-00000-0"}','object');
 
 
 TRUNCATE TABLE `wallets`;

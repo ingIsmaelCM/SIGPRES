@@ -7,12 +7,14 @@ class WalletRequest extends BaseRequest {
             this.RequestCheck.required("name"),
             this.RequestCheck.required("balance"),
             this.RequestCheck.isLength("sumBalance",0, 20).optional(),
+            this.RequestCheck.isString("authId").optional({values: "falsy"}),
         ]
     }
 
     walletUpdateRequest(): Array<ValidationChain> {
         return [
             this.RequestCheck.isString("name").optional({values: "falsy"}),
+            this.RequestCheck.isString("authId").optional({values: "falsy"}),
         ]
     }
 

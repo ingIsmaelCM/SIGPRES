@@ -21,17 +21,14 @@ export default class Info extends Model implements IInfo {
         dni: {
             type: DataTypes.STRING,
             allowNull: true,
-            unique: true,
         },
         phone: {
             type: DataTypes.STRING,
             allowNull: true,
-            unique: true,
         },
         email: {
             type: DataTypes.STRING,
             allowNull: true,
-            unique: true,
         },
         birthdate: {
             type: DataTypes.DATE,

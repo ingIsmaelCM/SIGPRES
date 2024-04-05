@@ -425,6 +425,7 @@ export interface ISocialRelation {
 export interface IWallet extends ICommonField {
     name: string;
     balance: number;
+    authId: string;
 }
 
 export interface IWalletRelation {

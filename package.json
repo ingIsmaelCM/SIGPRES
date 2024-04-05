@@ -1,6 +1,6 @@
 {
   "name": "carnibores",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Gestor de gestión integral",
   "main": "App.ts",
   "scripts": {

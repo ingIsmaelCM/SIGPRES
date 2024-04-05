@@ -50,6 +50,20 @@ class InfoRequest extends BaseRequest {
         ]
     }
 
+    infoUpsertForJobRequest(): Array<ValidationChain>{
+        return [
+            this.RequestCheck.isLength("dni", 8, 18).optional({values: "falsy"}),
+            this.RequestCheck.required("phone"),
+            this.RequestCheck.isLength("phone", 10, 15),
+            this.RequestCheck.isDate("birthdate").optional({values: "falsy"}),
+            this.RequestCheck.isIn("gender", "Masculino | Femenino | Ninguno",
+                [EInfoGender.Masculino, EInfoGender.Femenino, EInfoGender.Ninguno]).optional({values: "falsy"}),
+            this.RequestCheck.isLength("address", 2, 125).optional({values: "falsy"}),
+            this.RequestCheck.isString("country").optional({values: "falsy"}),
+            this.RequestCheck.isEmail("email").optional({values: "falsy"}),
+        ]
+    }
+
     relatedInfoRequest(): Array<ValidationChain> {
         return [
             this.RequestCheck.isLength("dni", 8, 18).optional({values: "falsy"}),

@@ -1,7 +1,8 @@
-import {Model} from "sequelize";
+import {DataTypes, Model} from "sequelize";
 import ITM from "@app/models/ITenantModel";
 import {IJobRelation, IJobView} from "@app/interfaces/SourceInterfaces";
 import {Info, Job} from "@source/models";
+import moment from "moment";
 
 
 @ITM.staticImplements<IJobView, IJobRelation>()
@@ -11,7 +12,8 @@ export default class JobView extends Model {
     static additionalOptions = {}
     static attributes = {
         ...Job.attributes,
-        ...Info.attributes
+        ...Info.attributes,
+
     };
 
     getSearchables(): Array<keyof IJobView> {

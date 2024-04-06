@@ -25,7 +25,7 @@ export default {
             isFirst = false;
             amortization.push({
                 nro: i + 1,
-                date: payDate.format("YYYY-MM-DD"),
+                date: payDate.format("YYYY-MM-DD 12:00:00"),
                 cuota: Number(cuota.toFixed(2)),
                 capital: Number(capital.toFixed(2)),
                 interest: Number(interest.toFixed(2)),

@@ -48,13 +48,13 @@ class Image extends Model implements  IImage{
       type: DataTypes.INTEGER,
     },
     createdAt: {
-      type: DataTypes.DATE,
+      type: DataTypes.DATEONLY,
     },
     updatedAt: {
-      type: DataTypes.DATE,
+      type: DataTypes.DATEONLY,
     },
     deletedAt: {
-      type: DataTypes.DATE,
+      type: DataTypes.DATEONLY,
       allowNull: true,
     },
   };

@@ -22,7 +22,7 @@ export default class Expense extends Model {
       allowNull: false,
     },
     date: {
-      type: DataTypes.DATE,
+      type: DataTypes.DATEONLY,
       allowNull: false,
     },
     concepto: {

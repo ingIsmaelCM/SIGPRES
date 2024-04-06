@@ -31,7 +31,7 @@ export default class Info extends Model implements IInfo {
             allowNull: true,
         },
         birthdate: {
-            type: DataTypes.DATE,
+            type: DataTypes.DATEONLY,
             allowNull: true,
         },
         address: {

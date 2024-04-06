@@ -2,14 +2,6 @@ import Service from "@app/services/Service";
 import {IParams} from "@app/interfaces/AppInterfaces";
 import PaymentRepository from "@source/repositories/PaymentRepository";
 import TenantConnection from "@app/db/TenantConnection";
-import {
-    EAmortizationStatus, ELawyerPaymentStatus, ELawyerPaymode,
-    EMoraStatus,
-    IAmortization,
-    IAmortizationView, ILawyerPayment, ILoan, ILoanRelation,
-    IMora,
-    IPayment
-} from "@app/interfaces/SourceInterfaces";
 import AmortizationViewRepository from "@source/repositories/AmortizationViewRepository";
 import MoraRepository from "@source/repositories/MoraRepository";
 import WalletRepository from "@source/repositories/WalletRepository";
@@ -21,6 +13,10 @@ import moment from "moment";
 import {Transaction} from "sequelize";
 import LawyerPaymentRepository from "@source/repositories/LawyerPaymentRepository";
 import LawyerRepository from "@source/repositories/LawyerRepository";
+import {
+    EAmortizationStatus, ELawyerPaymentStatus, ELawyerPaymode, EMoraStatus, IAmortization, IAmortizationView,
+    ILawyerPayment, ILoan, ILoanRelation, IPayment
+} from "@app/interfaces/SourceInterfaces";
 
 export default class PaymentService extends Service {
     private mainRepo = new PaymentRepository();
@@ -52,6 +48,7 @@ export default class PaymentService extends Service {
             async () => await trans.rollback()
         )
     }
+
     async createPaymentCuotas(data: Record<string, any>): Promise<IPayment> {
         const trans = await TenantConnection.getTrans();
         return this.safeRun(async () => {
@@ -105,43 +102,71 @@ export default class PaymentService extends Service {
             async () => await trans.rollback()
         )
     }
+
     async createPaymentCapital(data: Record<string, any>): Promise<IPayment> {
         const trans = await TenantConnection.getTrans();
         return this.safeRun(async () => {
-                const amorts = await this.getAmortizationFromLoan(data);
+                const pendingAmorts = await this.getAmortizationFromLoan(data); //obtiene todos los pagos pendientes
                 const loan = await this.loanRepo.findById(data.loanId, {include: "condition"});
                 const wallet = await this.walletRepo.findById(data.walletId);
-                let newAmorts = [];
-                const dataForAmort = this.getDataForAmort(loan, data, amorts);
+                let newAmorts: IAmortization[] = [];
+                const dataForAmort = this.getDataForAmort(loan, data, pendingAmorts);
                 if (data.keep == 'dates') {
-                    dataForAmort.term = amorts.length
-                    newAmorts = this.getAmortsFromSetCapital(amorts, dataForAmort);
+                    dataForAmort.term = pendingAmorts.length  //El plazo es igual a la cantidad de pagos pendientes
+                    newAmorts = this.getAmortsFromSetCapital(pendingAmorts, dataForAmort);
+
                 } else {
                     let cuotas: number = amortization.getCantidadCuotas(loan.balance - data.capital,
-                        loan.condition.rate, amorts.at(0).cuota)
+                        loan.condition.rate, pendingAmorts.at(0).cuota)
                     cuotas = Math.round(cuotas) || 1;
                     dataForAmort.term = cuotas
-                    newAmorts = this.getAmortsFromSetCapital(amorts, dataForAmort)
-                    for (const amort of amorts) {
+                    newAmorts = this.getAmortsFromSetCapital(pendingAmorts, dataForAmort)
+                    for (const amort of pendingAmorts) {
                         if (!(newAmorts.some((a: IAmortization) => amort.nro === a.nro))) {
                             await this.amortizationRepo.delete(amort.id, trans);
                         }
                     }
                 }
+                //Check if user's paying all balance to setup amortizations as payed
+                newAmorts = this.checkIfBalanceIsZero(newAmorts, pendingAmorts, data);
                 for (const amort of newAmorts) {
-                    await this.amortizationRepo.updateOrCreate(amort, trans)
+                    //Update or create amortizations according changes
+                    await this.amortizationRepo.updateOrCreate(amort, trans);
                 }
+
+                //Get data to create payment records
                 const payment = this.getPaymentFromCapitalAndData(data, loan);
                 if (payment.lawyerId) {
+                    //Store data about payment to lawyer according his payment scheme
                     await this.createPaymentForLawyerFromPayment(payment, trans);
                 }
+                //Create payment record
                 await this.mainRepo.create(payment, trans);
-                const newLoan =await  this.loanRepo.update({balance: payment.balanceAfter}, loan.id, trans);
+                //Update loan status t
+                const newLoan = await this.loanRepo.update({balance: payment.balanceAfter}, loan.id, trans);
+                //Update balance of wallet
                 await this.walletRepo.setBalance(payment.amount, wallet.id, trans);
                 await trans.commit();
                 return newLoan;
             },
             async () => await trans.rollback())
+    }
+
+    private checkIfBalanceIsZero(newAmorts: IAmortization[], pendingAmorts: IAmortization[], data: Record<string, any>) {
+        if (newAmorts.at(0)?.balance === 0) {
+            for (const index in newAmorts) {
+                const pendingAmort = pendingAmorts[index];
+                newAmorts[index] = {
+                    ...pendingAmort,
+                    status: EAmortizationStatus.Pagado,
+                    capital: data.capital / newAmorts.length,
+                    interest: data.interest / newAmorts.length,
+                    cuota: (data.capital + data.interest) / newAmorts.length,
+                    balance: 0
+                };
+            }
+        }
+        return newAmorts;
     }
 
     private async createPaymentForLawyerFromPayment(payment: IPayment, trans: Transaction) {
@@ -198,8 +223,10 @@ export default class PaymentService extends Service {
         }
     }
 
-    private getAmortsFromSetCapital(amorts: any[], dataForAmort: any) {
+    private getAmortsFromSetCapital(amorts: any[], dataForAmort: any): IAmortization[] {
+
         return amortization.getAmortization(dataForAmort).map((newAmort: any, index: number) => {
+
             return {
                 ...newAmort,
                 nro: amorts.at(index).nro,
@@ -222,7 +249,6 @@ export default class PaymentService extends Service {
         })
         return amorts.rows.map((amort: any) => amort.dataValues);
     }
-
 
 
     private getMorasFromAmortsDataAndPayments(amorts: any, data: Record<string, any>, newPayments: IPayment[]) {

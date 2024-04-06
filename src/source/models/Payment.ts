@@ -71,12 +71,13 @@ export default class Payment extends Model implements IPayment {
       allowNull: false,
     },
     dueAt: {
-      type: DataTypes.DATE,
+      type: DataTypes.DATEONLY,
       allowNull: false,
     },
     payedAt: {
-      type: DataTypes.DATE,
+      type: DataTypes.DATEONLY,
       allowNull: false,
+
     },
     note: {
       type: DataTypes.STRING,

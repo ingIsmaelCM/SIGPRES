@@ -30,11 +30,11 @@ export default class Mora extends Model implements IMora {
             allowNull: false,
         },
         dueAt: {
-            type: DataTypes.DATE,
+            type: DataTypes.DATEONLY,
             allowNull: false
         },
         closedAt: {
-            type: DataTypes.DATE,
+            type: DataTypes.DATEONLY,
             allowNull: false
         },
         loanId: {

@@ -45,11 +45,11 @@ Tenant.init(
     },
 
     createdAt: {
-      type: DataTypes.DATE,
+      type: DataTypes.DATEONLY,
     },
 
     updatedAt: {
-      type: DataTypes.DATE,
+      type: DataTypes.DATEONLY,
     },
   },
   {

@@ -34,11 +34,11 @@ export default class Job extends Model implements IJob {
     static additionalOptions={}
     static attributes: Record<keyof IJob, ModelAttributeColumnOptions> = {
         startAt: {
-            type: DataTypes.DATE,
+            type: DataTypes.DATEONLY,
             allowNull: false,
         },
         endAt: {
-            type: DataTypes.DATE,
+            type: DataTypes.DATEONLY,
             allowNull: true
         },
         status: {

@@ -52,7 +52,59 @@ export default class PaymentService extends Service {
             async () => await trans.rollback()
         )
     }
-
+    async createPaymentCuotas(data: Record<string, any>): Promise<IPayment> {
+        const trans = await TenantConnection.getTrans();
+        return this.safeRun(async () => {
+                const amorts = await this.getAmortsFromData(data);
+                const loan = await this.loanRepo.findById(amorts.rows.at(-1).loanId)
+                const payments = this.getPaymentFromAmortsAndData(amorts, data);
+                const newPayments = await this.mainRepo.bulkCreate(payments, trans);
+                for (const pay of newPayments) {
+                    if (pay.lawyerId) {
+                        await this.createPaymentForLawyerFromPayment(pay, trans);
+                    }
+                }
+                const moras = this.getMorasFromAmortsDataAndPayments(amorts, data, newPayments as any);
+                await this.moraRepo.bulkCreate(moras, trans);
+                const wallet = await this.walletRepo.findById(data.walletId);
+                const nextPaymentDate = amortization.moveDateCuota(amorts.rows.at(-1).date, loan.period)
+                const newBalance = Number(loan.balance) - Number(amorts.rows.reduce((a: number, b: IAmortizationView) =>
+                    a + Number(b.capital), 0))
+                const newLoanData = {
+                    balance: data.justInterest ? loan.balance : newBalance,
+                    nextPaymentAt: moment(nextPaymentDate).format("YYYY-MM-DD"),
+                    updatedBy: data.updatedBy
+                };
+                const newLoan = await this.loanRepo.update(newLoanData, loan.id, trans);
+                const walletBalance = Number(payments.reduce((a: number, b: IPayment) =>
+                    a + b.amount, 0))
+                if (data.justInterest) {
+                    let date = nextPaymentDate;
+                    const amortsToMove = await this.getAmortsFromLastDate(String(date), loan.id)
+                    for (const amort of amortsToMove.rows) {
+                        date = amortization.moveDateCuota(date, loan.period)
+                        await this.amortizationRepo.update({
+                            date: date,
+                            mora: amort.mora,
+                            updatedBy: data.updatedBy
+                        }, amort.id!, trans);
+                    }
+                } else {
+                    for (const amort of amorts.rows) {
+                        await this.amortizationRepo.update({
+                            status: EAmortizationStatus.Pagado,
+                            mora: amort.mora,
+                            updatedBy: data.updatedBy
+                        }, amort.id!, trans);
+                    }
+                }
+                await this.walletRepo.setBalance(walletBalance, wallet.id, trans);
+                await trans.commit();
+                return newLoan;
+            },
+            async () => await trans.rollback()
+        )
+    }
     async createPaymentCapital(data: Record<string, any>): Promise<IPayment> {
         const trans = await TenantConnection.getTrans();
         return this.safeRun(async () => {
@@ -171,59 +223,7 @@ export default class PaymentService extends Service {
         return amorts.rows.map((amort: any) => amort.dataValues);
     }
 
-    async createPaymentCuotas(data: Record<string, any>): Promise<IPayment> {
-        const trans = await TenantConnection.getTrans();
-        return this.safeRun(async () => {
-                const amorts = await this.getAmortsFromData(data);
-                const loan = await this.loanRepo.findById(amorts.rows.at(-1).loanId)
-                const payments = this.getPaymentFromAmortsAndData(amorts, data);
-                const newPayments = await this.mainRepo.bulkCreate(payments, trans);
-                for (const pay of newPayments) {
-                    if (pay.lawyerId) {
-                        await this.createPaymentForLawyerFromPayment(pay, trans);
-                    }
-                }
-                const moras = this.getMorasFromAmortsDataAndPayments(amorts, data, newPayments as any);
-                await this.moraRepo.bulkCreate(moras, trans);
-                const wallet = await this.walletRepo.findById(data.walletId);
-                const nextPaymentDate = amortization.moveDateCuota(amorts.rows.at(-1).date, loan.period)
-                const newBalance = Number(loan.balance) - Number(amorts.rows.reduce((a: number, b: IAmortizationView) =>
-                    a + Number(b.capital), 0))
-                const newLoanData = {
-                    balance: data.justInterest ? loan.balance : newBalance,
-                    nextPaymentAt: moment(nextPaymentDate).format("YYYY-MM-DD"),
-                    updatedBy: data.updatedBy
-                };
-                const newLoan = await this.loanRepo.update(newLoanData, loan.id, trans);
-                const walletBalance = Number(payments.reduce((a: number, b: IPayment) =>
-                    a + b.amount, 0))
-                if (data.justInterest) {
-                    let date = nextPaymentDate;
-                    const amortsToMove = await this.getAmortsFromLastDate(String(date), loan.id)
-                    for (const amort of amortsToMove.rows) {
-                        await this.amortizationRepo.update({
-                            date: date,
-                            mora: amort.mora,
-                            updatedBy: data.updatedBy
-                        }, amort.id!, trans);
-                        date = amortization.moveDateCuota(date, loan.period)
-                    }
-                } else {
-                    for (const amort of amorts.rows) {
-                        await this.amortizationRepo.update({
-                            status: EAmortizationStatus.Pagado,
-                            mora: amort.mora,
-                            updatedBy: data.updatedBy
-                        }, amort.id!, trans);
-                    }
-                }
-                await this.walletRepo.setBalance(walletBalance, wallet.id, trans);
-                await trans.commit();
-                return newLoan;
-            },
-            async () => await trans.rollback()
-        )
-    }
+
 
     private getMorasFromAmortsDataAndPayments(amorts: any, data: Record<string, any>, newPayments: IPayment[]) {
         return amorts.rows.filter((amort: IAmortizationView) => amort.isExpired)

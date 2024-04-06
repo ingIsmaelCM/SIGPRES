@@ -10,6 +10,7 @@ class PaymentRequest extends BaseRequest {
         return [
             this.RequestCheck.required("walletId"),
             this.RequestCheck.required("payedAt"),
+            this.RequestCheck.isDate("payedAt"),
             this.RequestCheck.required("cuotas"),
             this.RequestCheck.isArray("cuotas"),
             this.RequestCheck.required("omitMora"),
@@ -25,6 +26,7 @@ class PaymentRequest extends BaseRequest {
             this.RequestCheck.required("walletId"),
             this.RequestCheck.required("loanId"),
             this.RequestCheck.required("payedAt"),
+            this.RequestCheck.isDate("payedAt"),
             this.RequestCheck.required("capital"),
             this.RequestCheck.isFloat("capital",100),
             this.RequestCheck.isFloat("interest").optional(),

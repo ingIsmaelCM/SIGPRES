@@ -1,5 +1,4 @@
 import "module-alias/register";
-
 import config from "@app/app.config";
 import {App} from "@/AppInit";
 import Relation from "@app/models/Relations";
@@ -22,6 +21,7 @@ const app = new App(routes, PORT);
 Relation.initRelations();
 
 app.app.use("/api/*", (req: any, res: any) => {
+    process.env.TZ = 'America/Santo_Domingo';
     response.error(res, 404, "Not Found");
 });
 app.listen();

@@ -3,6 +3,7 @@ import {body, param, ValidationChain, validationResult} from "express-validator"
 
 import response from "@app/utils/response";
 import {IsNumericOptions} from "validator";
+import moment from "moment-timezone";
 
 export default class BaseRequest {
     RequestCheck = {
@@ -30,7 +31,7 @@ export default class BaseRequest {
     }
 
     public validate(req: Request, res: Response, next: NextFunction) {
-        
+
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
             const messages: any = {};
@@ -44,9 +45,12 @@ export default class BaseRequest {
         }
         //@ts-ignore
         const fields = validatedFields(req['express-validator#contexts'])
-        req.body = Object.fromEntries(
+
+        const cleanedBody = Object.fromEntries(
             Object.entries(req.body).filter(([key]) => fields.includes(key))
         );
+
+        req.body = cleanedBody;
         next();
     }
 

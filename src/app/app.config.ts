@@ -3,7 +3,6 @@ import path from "path";
 import * as process from "process";
 
 dotenv.config();
-process.env.TZ = "-04:00";
 const env = process.env.NODE_ENV || "prod";
 let config: any = {
   app: {
@@ -25,7 +24,7 @@ let config: any = {
     host: process.env.DATABASE_HOST || "localhost",
     dialect: process.env.DATABASE_DIALECT || "mysql",
     logging: process.env.DATABSE_LOGGIN == "TRUE",
-    timezone: process.env.TZ,
+    timezone: "-04:00",
   },
 
   mail: {

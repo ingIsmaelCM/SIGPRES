@@ -459,11 +459,8 @@ ALTER TABLE `client_contacts` ADD UNIQUE (`contactId`, `clientId`);
 
 ALTER TABLE `amortizations` ADD UNIQUE (`nro`, `loanId`);
 
-
-DELIMITER //
-CREATE TRIGGER  add_code_to_client BEFORE INSERT ON clients FOR EACH ROW BEGIN SET NEW.code = LPAD((SELECT IFNULL(COUNT(id), 0) + 1 FROM clients), 5, '0'); END;//
-CREATE TRIGGER add_code_to_loan BEFORE INSERT ON loans FOR EACH ROW BEGIN SET NEW.code = LPAD((SELECT IFNULL(COUNT(id), 0) + 1 FROM loans), 5, '0'); END;//
-DELIMITER ;
+CREATE TRIGGER  add_code_to_client BEFORE INSERT ON clients FOR EACH ROW BEGIN SET NEW.code = LPAD((SELECT IFNULL(COUNT(id), 0) + 1 FROM clients), 5, '0'); END;
+CREATE TRIGGER add_code_to_loan BEFORE INSERT ON loans FOR EACH ROW BEGIN SET NEW.code = LPAD((SELECT IFNULL(COUNT(id), 0) + 1 FROM loans), 5, '0'); END;
 
 
 TRUNCATE TABLE `preferences`;

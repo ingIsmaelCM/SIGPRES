@@ -2,17 +2,21 @@ import Service from "@app/services/Service";
 import {AuthRepository} from "@auth/repositories/AuthRepository";
 import {IParams} from "@app/interfaces/AppInterfaces";
 import BaseConnection from "@app/db/BaseConnection";
-import {IAuth} from "@auth/utils/AuthInterfaces";
+import {IAuth} from "@app/interfaces/AuthInterfaces";
 import AuthMailService from "@auth/services/AuthMailService";
 import AuthService from "@auth/services/AuthService";
 import UserViewRepository from "@source/repositories/UserViewRepository";
 import RoleMiddleware from "@auth/middlewares/RoleMiddleware";
 import PermissionEnums from "@app/interfaces/PermissionEnums";
+import InfoService from "@source/services/InfoService";
+import TenantConnection from "@app/db/TenantConnection";
 
 export default class UserService extends Service {
     private mainRepo = new AuthRepository();
     private authMailService: AuthMailService = new AuthMailService();
-    private  userViewRepo=new UserViewRepository();
+    private userViewRepo = new UserViewRepository();
+    private infoService = new InfoService();
+
     async getUsers(params: IParams) {
         return await this.userViewRepo.getAll(params)
     }
@@ -27,17 +31,29 @@ export default class UserService extends Service {
 
     async createUser(data: IAuth): Promise<IAuth> {
         const trans = await BaseConnection.getTrans();
+        const infoTrans = await TenantConnection.getTrans();
         return this.safeRun(async () => {
+                const newInfo = await this.infoService.setFromRelated(data as any, infoTrans);
+                const newUser = await this.mainRepo.create({...data, infoId: newInfo.id}, trans);
+                await trans.commit();
+                await infoTrans.commit();
+                return {...newUser.dataValues, info: newInfo};
             },
-            async () => await trans.rollback()
+            async () => {
+                await trans.rollback();
+                await infoTrans.rollback();
+            }
         )
     }
 
-    async updateUser(userId: string, data: IAuth): Promise<IAuth> {
-        const trans = await BaseConnection.getTrans();
+    async updateUser(data: IAuth): Promise<IAuth> {
+        const infoTrans = await TenantConnection.getTrans();
         return this.safeRun(async () => {
+                const updatedInfo = await this.infoService.setFromRelated(data as any, infoTrans);
+                await infoTrans.commit();
+                return updatedInfo;
             },
-            async () => await trans.rollback()
+            async () => await infoTrans.rollback()
         )
     }
 
@@ -61,10 +77,12 @@ export default class UserService extends Service {
         )
     }
 
-
     async deleteUser(userId: string): Promise<IAuth> {
         const trans = await BaseConnection.getTrans();
         return this.safeRun(async () => {
+                const deletedUser = await this.mainRepo.delete(userId, trans);
+                await trans.commit();
+                return deletedUser;
             },
             async () => await trans.rollback()
         )
@@ -73,10 +91,14 @@ export default class UserService extends Service {
     async restoreUser(userId: string): Promise<IAuth> {
         const trans = await BaseConnection.getTrans();
         return this.safeRun(async () => {
+                const restoredUser = await this.mainRepo.restore(userId, trans);
+                await trans.commit();
+                return restoredUser;
             },
             async () => await trans.rollback()
         )
     }
+
 
 
 }

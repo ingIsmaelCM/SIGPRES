@@ -37,7 +37,7 @@ export default class RoleRoutes extends BaseRoutes<RoleController> {
       "/auth/permissions",
 
       RoleMiddleware.hasPermission("Asignar Permiso a Usuario"),
-      RoleRequests.validateAssingPermissionToAuth(),
+      RoleRequests.validateAssignPermissionToAuth(),
       RoleRequests.validate,
       (req: any, res: any) => this.controller.assignPermissionToAuth(req, res)
     );
@@ -45,7 +45,7 @@ export default class RoleRoutes extends BaseRoutes<RoleController> {
       "/auth/permissions/grantall",
 
       RoleMiddleware.hasPermission("Asignar Permiso a Usuario"),
-      RoleRequests.validateAssingPermissionToAuth().slice(0, 1),
+      RoleRequests.validateAssignPermissionToAuth().slice(0, 1),
       RoleRequests.validate,
       (req: any, res: any) => this.controller.grantAllToAuth(req, res)
     );
@@ -53,14 +53,14 @@ export default class RoleRoutes extends BaseRoutes<RoleController> {
       "/permissions",
 
       RoleMiddleware.hasPermission("Asignar Permiso a Rol"),
-      RoleRequests.validateAssingPermissionToRole(),
+      RoleRequests.validateAssignPermissionToRole(),
       RoleRequests.validate,
       (req: any, res: any) => this.controller.assignPermissionToRole(req, res)
     );
     this.router.post(
       "/permissions/grantall",
       RoleMiddleware.hasPermission("Asignar Permiso a Rol"),
-      RoleRequests.validateAssingPermissionToRole().slice(0, 1),
+      RoleRequests.validateAssignPermissionToRole().slice(0, 1),
       RoleRequests.validate,
       (req: any, res: any) => this.controller.grantAllToRole(req, res)
     );

@@ -30,7 +30,7 @@ export default class InfoService extends Service {
 
     async setFromRelated(data: any, trans: Transaction): Promise<Info> {
         return this.safeRun(async () => {
-                return await this.mainRepo.create(data, trans);
+                return await this.mainRepo.updateOrCreate(data, trans);
             }
         )
     }

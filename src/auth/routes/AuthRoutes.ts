@@ -4,6 +4,7 @@ import AuthRequests from "@auth/requests/AuthRequest";
 import {AuthController} from "@auth/controllers/AuthController";
 import RoleMiddleware from "../middlewares/RoleMiddleware";
 import PermissionEnums from "@app/interfaces/PermissionEnums";
+import {Request, Response} from "express";
 
 export default class AuthRoutes extends BaseRoutes<AuthController> {
 
@@ -66,7 +67,12 @@ export default class AuthRoutes extends BaseRoutes<AuthController> {
             RoleMiddleware.hasPermission(PermissionEnums.verifyUser),
             (req: any, res: any) => this.controller.sendVerificationCode(req, res)
         );
-
+        this.controller.router.post("/unauthorize/:id",
+            AuthMiddleware.auth,
+            RoleMiddleware.hasPermission(PermissionEnums.verifyUser),
+            AuthRequests.requireIdRequest(),
+            AuthRequests.validate,
+            (req: Request, res: Response) => this.controller.unAuthorize(req, res))
 
         this.router.put(
             "/password/recover",

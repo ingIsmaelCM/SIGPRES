@@ -8,7 +8,7 @@ import {v4 as uuidv4} from "uuid";
 import {Response} from "express";
 import tools from "@app/utils/tools";
 import BaseConnection from "@app/db/BaseConnection";
-import {IAuth} from "@/auth/utils/AuthInterfaces";
+import {IAuth} from "@app/interfaces/AuthInterfaces";
 import Permission from "../models/Permission";
 import Role from "../models/Role";
 import Service from "@app/services/Service";
@@ -75,14 +75,13 @@ export default class AuthService extends Service {
                 await this.authRepo.update(updateData, userAuth.id, trans);
                 const {token, refreshToken} = this.generateTokens(userAuth);
                 this.setLoginCookies(res, refreshToken, token, userAuth);
-                let {permissions, roles}: { permissions: any[]; roles: any[] } =
-                    await this.setAuthFields(userAuth);
                 await trans.commit();
                 const result = {
                     ...userAuth.dataValues,
                     password: null,
-                    permissions: [...new Set(permissions)],
-                    roles,
+                    permissions: userAuth.allPermissions,
+                    roles: userAuth.roles?.map((role: any) =>
+                        ({id: role.id, name: role.name})),
                 };
                 return {userAuth: result, token};
             }
@@ -143,6 +142,18 @@ export default class AuthService extends Service {
     public async logout(res: Response) {
         tools.setCookie(res, "accessToken", "null");
     }
+
+    async unAuthorizeUser(userId: string): Promise<IAuth> {
+        const trans = await BaseConnection.getTrans();
+        return this.safeRun(async () => {
+                const unauthorized = await this.authRepo.update({verifiedAt: null}, userId, trans);
+                await trans.commit();
+                return unauthorized;
+            },
+            async () => await trans.rollback()
+        )
+    }
+
 
     public async logoutAll(req: any, res: Response) {
         const trans = await BaseConnection.getTrans();
@@ -216,7 +227,7 @@ export default class AuthService extends Service {
             await this.authMailService.sendEmail({
                 to: authEmail,
                 context,
-                subject: "Verifiue su cuenta",
+                subject: "Verifique su cuenta",
                 template: "verifyAccount"
             });
             return "Código enviado exitosamente";
@@ -308,24 +319,6 @@ export default class AuthService extends Service {
         tools.setCookie(res, "tenant", userAuth.tenants[0].key);
     }
 
-    private async setAuthFields(userAuth: any) {
-        let permissions: any[] = userAuth.permissions.map((p: Permission) => ({
-            name: p.name,
-            id: p.id,
-        }));
-        const rolePermissions: any[] = userAuth.roles.map((r: Role) =>
-            r.permissions.map((p: Permission) => ({name: p.name, id: p.id}))
-        );
-        rolePermissions.forEach((rP) => {
-            permissions = permissions.concat(rP);
-        });
-        const roles = userAuth.roles.map((r: Role) => ({
-            name: r.name,
-            id: r.id,
-        }));
-
-        return {permissions, roles};
-    }
 
     private async validateAuthAccount(auth: any, pwd: string): Promise<Boolean> {
         const isValidPassword = await bcrypt.compare(

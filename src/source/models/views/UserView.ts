@@ -1,9 +1,12 @@
 import {DataTypes, Model, ModelAttributeColumnOptions} from "sequelize";
 import {EInfoGender, IUserView, IUserViewRelation} from "@app/interfaces/SourceInterfaces";
 import ITM from "@app/models/ITenantModel";
+import {IAuthRelation} from "@app/interfaces/AuthInterfaces";
+import Permission from "@auth/models/Permission";
+import ModelPermission from "@auth/models/ModelPermission";
 
 
-@ITM.staticImplements<IUserView, IUserViewRelation>()
+@ITM.staticImplements<IUserView, IAuthRelation>()
 export default class UserView extends Model implements IUserView {
     declare address: string;
     declare birthdate: string;
@@ -82,9 +85,22 @@ export default class UserView extends Model implements IUserView {
         return []
     }
 
-    getRelations(): Array<keyof IUserViewRelation> {
-        return []
+    getRelations(): Array<keyof IAuthRelation> {
+        return ["permissions"]
     }
 
+    static  initRelation(){
+        UserView.belongsToMany(Permission,{
+            as: "permissions",
+            foreignKey: "modelId",
+            through: {
+                model: ModelPermission,
+                scope: {
+                    modelType: "auth",
+                },
+            },
+            constraints: false,
+        })
+    }
 
 }

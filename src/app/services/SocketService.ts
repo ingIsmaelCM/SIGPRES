@@ -1,4 +1,4 @@
-import {IAuth} from "@/auth/utils/AuthInterfaces";
+import {IAuth} from "@app/interfaces/AuthInterfaces";
 import {Server as HttpServer} from "http";
 import {RemoteSocket, Server} from "socket.io";
 

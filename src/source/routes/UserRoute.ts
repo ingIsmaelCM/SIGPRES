@@ -33,7 +33,9 @@ export default class UserRoutes extends BaseRoutes<UserController> {
             RoleMiddleware.hasPermission(PermissionEnums.verifyUser),
             UserRequest.userSendVerificationRequest(),
             UserRequest.validate,
-            (req: Request, res: Response) => this.controller.sendVerifiction(req, res))
+            (req: Request, res: Response) => this.controller.sendVerification(req, res))
+
+
 
         this.controller.router.route("/:id")
             .get(

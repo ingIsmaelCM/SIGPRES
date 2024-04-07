@@ -9,7 +9,7 @@ import {
     Loan,
     Mora,
     Payment,
-    Social
+    Social, UserView
 } from "@source/models/index";
 import Image from "@source/models/Image";
 import {EDocumentable, EImageable} from "@app/interfaces/FileInterface";
@@ -28,5 +28,6 @@ export default class SourceRelation {
         PaymentStatView.initRelation();
         AmortizationView.initRelation();
         LawyerPayment.initRelation();
+        UserView.initRelation();
     }
 }

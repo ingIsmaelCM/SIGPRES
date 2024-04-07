@@ -80,8 +80,10 @@ ALTER TABLE `auth_roles` ADD CONSTRAINT `FK_roles_role` FOREIGN KEY (`roleId`) R
 ADD CONSTRAINT `FK_roles_auth` FOREIGN KEY (`authId`) REFERENCES `auths`(`id`);
 
 ALTER TABLE `auth_tenants`ADD CONSTRAINT `FK_tenants_auth` FOREIGN KEY (`authId`) REFERENCES `auths`(`id`),
-ADD CONSTRAINT `FK_tenants_tenant` FOREIGN KEY (`tenantId`) REFERENCES `tenants`(`id`)
-;
+ADD CONSTRAINT `FK_tenants_tenant` FOREIGN KEY (`tenantId`) REFERENCES `tenants`(`id`);
+
+ALTER TABLE `model_permissions`
+ ADD UNIQUE `idx_uniques_permissions` (`modelId`, `modelType`, `permissionId`) USING BTREE;
 
 ALTER TABLE `model_permissions` ADD CONSTRAINT `FK_model_permissions_permission` FOREIGN KEY (`permissionId`) REFERENCES `permissions`(`id`);
 

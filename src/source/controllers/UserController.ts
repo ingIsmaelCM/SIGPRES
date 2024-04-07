@@ -33,19 +33,19 @@ export default class UserController extends Controller implements IController {
     async store(req: Request, res: Response) {
         return this.safeRun(async () =>
                 this.mainService.createUser(req.body),
-            res, 201, ""
+            res, 201, "Usuario Registrado"
         )
     }
 
     @setAuthor
     async update(req: Request, res: Response) {
         return this.safeRun(async () =>
-                this.mainService.updateUser(req.params.id, req.body),
-            res, 201, ""
+                this.mainService.updateUser( req.body),
+            res, 201, "Usuario actualizado"
         )
     }
 
-    async sendVerifiction(req: Request, res: Response) {
+    async sendVerification(req: Request, res: Response) {
         return this.safeRun(async () =>
                 this.mainService.sendVerificationCode(req.body.email),
             res, 201, "Código de Verificación Enviado"
@@ -53,17 +53,18 @@ export default class UserController extends Controller implements IController {
     }
 
 
+
     async delete(req: Request, res: Response) {
         return this.safeRun(async () =>
                 this.mainService.deleteUser(req.params.id),
-            res, 200, ""
+            res, 200, "Usuario Eliminado"
         )
     }
 
     async restore(req: Request, res: Response) {
         return this.safeRun(async () =>
                 this.mainService.restoreUser(req.params.id),
-            res, 200, ""
+            res, 200, "Usuario Restaurado"
         )
     }
 }

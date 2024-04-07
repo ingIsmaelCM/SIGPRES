@@ -1,6 +1,7 @@
 import BaseRequest from "@app/requests/BaseRequest";
 import {body, ValidationChain} from "express-validator";
 import {AuthRepository} from "@auth/repositories/AuthRepository";
+import {EInfoGender} from "@app/interfaces/SourceInterfaces";
 
 class UserRequest extends BaseRequest {
     private authRepo = new AuthRepository();
@@ -25,6 +26,19 @@ class UserRequest extends BaseRequest {
         return [
             this.RequestCheck.isString("name").optional({values: "falsy"}),
             this.RequestCheck.isString("lastname").optional({values: "falsy"}),
+            this.RequestCheck.isLength("dni", 8, 18).optional({values: "falsy"}),
+            body("dni", "Este dni ya está registrado")
+                .custom(async (val: string, meta: any) =>
+                    await this.checkUnique("dni", val, meta.req.body.infoId)).optional({values: "falsy"}),
+            this.RequestCheck.isLength("phone", 10, 15).optional({values: "falsy"}),
+            body("phone", "Este teléfono ya está registrado")
+                .custom(async (val: string, meta: any) =>
+                    await this.checkUnique("phone", val, meta.req.body.infoId)).optional({values: "falsy"}),
+            this.RequestCheck.isDate("birthdate").optional({values: "falsy"}),
+            this.RequestCheck.isIn("gender", "Masculino | Femenino | Ninguno",
+                [EInfoGender.Masculino, EInfoGender.Femenino, EInfoGender.Ninguno]).optional({values: "falsy"}),
+            this.RequestCheck.isLength("address", 2, 125).optional({values: "falsy"}),
+            this.RequestCheck.isString("country").optional({values: "falsy"}),
         ]
     }
 

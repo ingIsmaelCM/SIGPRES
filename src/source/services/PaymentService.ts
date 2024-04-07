@@ -224,9 +224,7 @@ export default class PaymentService extends Service {
     }
 
     private getAmortsFromSetCapital(amorts: any[], dataForAmort: any): IAmortization[] {
-
         return amortization.getAmortization(dataForAmort).map((newAmort: any, index: number) => {
-
             return {
                 ...newAmort,
                 nro: amorts.at(index).nro,

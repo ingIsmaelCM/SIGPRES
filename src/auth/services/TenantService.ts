@@ -1,11 +1,12 @@
 import {IParams} from "@app/interfaces/AppInterfaces";
 import TenantRepository from "../repositories/TenantRepository";
-import {Itenant} from "../utils/AuthInterfaces";
+import {Itenant} from "@app/interfaces/AuthInterfaces";
 import BaseConnection from "@/app/db/BaseConnection";
 import MigrateTenant from "@/app/db/migrations/tenants/MigrateTenant";
 import Service from "@app/services/Service";
+import Tenant from "@auth/models/Tenant";
 
-export default class TenantService extends  Service{
+export default class TenantService extends Service {
     tenantRepo = new TenantRepository();
 
     async getTenants(param: IParams): Promise<any> {
@@ -24,10 +25,11 @@ export default class TenantService extends  Service{
         try {
             data.key = new Date().getTime().toString();
             const newTenant = await this.tenantRepo.create(data, trans);
+            console.log(newTenant)
             const updated = await this.tenantRepo.update(
                 {
                     ...newTenant,
-                    key: `sigpres_tenant_${newTenant.id}`,
+                    key: `sigpres_tenant_${newTenant.key}`,
                 },
                 newTenant.id,
                 trans
@@ -48,9 +50,30 @@ export default class TenantService extends  Service{
         const trans = await BaseConnection.getTrans();
         try {
             const updatedTenant = await this.tenantRepo.update(data, tenantId, trans);
-
             await trans.commit();
             return updatedTenant;
+        } catch (error: any) {
+            await trans.rollback();
+            throw {
+                code: error.code,
+                message: error.message,
+            };
+        }
+    }
+
+    async assignTenantToUser(tenantId: string, data: Record<string, any>): Promise<any> {
+        const trans = await BaseConnection.getTrans();
+        try {
+            const tenant: Tenant = await this.tenantRepo.findById(tenantId);
+            if (!tenant) {
+                return Promise.reject({
+                    code: 404,
+                    message: "No se encontró el inquilino"
+                })
+            }
+            await tenant.setAuths(data.authIds, {transaction: trans});
+            await trans.commit();
+            return "Inquilinos asignados";
         } catch (error: any) {
             await trans.rollback();
             throw {

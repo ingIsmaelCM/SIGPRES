@@ -1,15 +1,17 @@
 import BaseConnection from "@app/db/BaseConnection";
-import { DataTypes } from "sequelize";
+import {DataTypes} from "sequelize";
 
 const ModelPermission = BaseConnection.getConnection().define(
-  "ModelPermission",
-  {
-    modelType: DataTypes.STRING,
-  },
-  {
-    tableName: "model_permissions",
-    paranoid: true,
-  }
+    "ModelPermission",
+    {
+        modelType: DataTypes.STRING,
+        permissionId: DataTypes.STRING,
+        modelId: DataTypes.STRING
+    },
+    {
+        tableName: "model_permissions",
+        paranoid: false,
+    }
 );
 
 export default ModelPermission;

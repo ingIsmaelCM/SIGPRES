@@ -10,11 +10,14 @@ class TenantRequest extends BaseRequest {
   updateTenantRequest(): Array<ValidationChain> {
     return [
       body("name", "Indique el nombre del Inquilino").exists().notEmpty(),
-      body("key", "La clave de inquilino no puede motificarse").not().exists(),
-      param("id", "Indique el id del Inquilino")
-        .exists()
-        .notEmpty()
-        .isNumeric(),
+    ];
+  }
+
+  assignTenantRequest(): Array<ValidationChain> {
+    return [
+      this.RequestCheck.required("authIds"),
+      body("authIds","Indique al menos un usuario")
+          .isArray({min: 1, max: 100})
     ];
   }
 }

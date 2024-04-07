@@ -26,7 +26,7 @@ class Auth
     declare deletedAt: string;
 
     getSearchables() {
-        return ["email", "username", "lastLogin", "verifiedAt", "status"];
+        return ["email", "username", "name","lastname", "lastLogin", "verifiedAt", "status"];
     }
 
     /* istanbul ignore next */
@@ -76,8 +76,28 @@ Auth.init(
         },
         fullname: {
             type: DataTypes.VIRTUAL,
-            get(this:Auth){
+            get(this: Auth) {
                 return `${this.getDataValue("name")} ${this.getDataValue("lastname")}`
+            }
+        },
+        allPermissions: {
+            type: DataTypes.VIRTUAL,
+            get(this: Auth) {
+                if (!Boolean(this.permissions)) return null;
+                const rolePermissions: any[] = this.roles?.map((role: any) =>
+                    role.permissions.map((perm: any) =>
+                        ({id: perm.id, name: perm.name})))[0] || [];
+                const localPermissions: any[] = this.permissions
+                    .map((perm: any) =>
+                        ({id: perm.id, name: perm.name}))
+                ;
+                const allPermissions = rolePermissions.concat(localPermissions)
+                const uniquePermissions = allPermissions.filter((item, index, self) =>
+                        index === self.findIndex((t) => (
+                            t.id === item.id
+                        ))
+                );
+                return Array.from(new Set(uniquePermissions))
             }
         },
         infoId: {

@@ -19,25 +19,21 @@ class RoleRequests extends BaseRequest {
     ];
   }
 
-  public validateAssingPermissionToAuth(): Array<ValidationChain> {
+  public validateAssignPermissionToAuth(): Array<ValidationChain> {
     return [
-      body("authId", "El parámetro authId debe ser un número")
-        .notEmpty()
-        .isNumeric(),
-      body("permissionId", "Formato de permisos inválido").notEmpty().isArray({
-        min: 1,
-      }),
+        this.RequestCheck.required('authId'),
+        this.RequestCheck.isArray('permissionId'),
+        body("permissionId", "Se aceptan entre 1 y 100 permisos")
+            .isArray({min: 1, max:100})
     ];
   }
 
-  public validateAssingPermissionToRole(): Array<ValidationChain> {
+  public validateAssignPermissionToRole(): Array<ValidationChain> {
     return [
-      body("roleId", "El parámetro roleId debe ser un número")
-        .notEmpty()
-        .isNumeric(),
-      body("permissionId", "Formato de permisos inválido").notEmpty().isArray({
-        min: 1,
-      }),
+      this.RequestCheck.required('roleId'),
+      this.RequestCheck.isArray('permissionId'),
+      body("permissionId", "Se aceptan entre 1 y 100 permisos")
+          .isArray({min: 1, max:100})
     ];
   }
 }

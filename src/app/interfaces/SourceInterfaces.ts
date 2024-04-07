@@ -1,6 +1,6 @@
 import {ICommonField} from "@app/interfaces/AppInterfaces";
 import {IDocument, IImage} from "@app/interfaces/FileInterface";
-import {IAuth} from "@auth/utils/AuthInterfaces";
+import {IAuth} from "@app/interfaces/AuthInterfaces";
 
 export interface IAmortization extends ICommonField {
     date: string;

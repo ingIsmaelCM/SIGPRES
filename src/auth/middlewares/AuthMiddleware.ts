@@ -8,7 +8,7 @@ import Permission from "../models/Permission";
 import Role from "../models/Role";
 import {request} from "express";
 import TenantConnection from "@/app/db/TenantConnection";
-import {IAuth} from "@auth/utils/AuthInterfaces";
+import {IAuth} from "@app/interfaces/AuthInterfaces";
 import AuthService from "@auth/services/AuthService";
 
 class AuthMiddleware extends Middleware {

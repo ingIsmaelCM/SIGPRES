@@ -1,63 +1,66 @@
 import BaseConnection from "@/app/db/BaseConnection";
-import { IModel } from "@/app/models/IModel";
+import {IModel} from "@/app/models/IModel";
 import {
-  DataTypes,
-  InferAttributes,
-  InferCreationAttributes,
-  Model,
+    DataTypes,
+    InferAttributes,
+    InferCreationAttributes,
+    Model,
 } from "sequelize";
 
 class Tenant
-  extends Model<InferAttributes<Tenant>, InferCreationAttributes<Tenant>>
-  implements IModel
-{
-  declare id: string;
-  declare name: string;
-  declare key: string;
+    extends Model<InferAttributes<Tenant>, InferCreationAttributes<Tenant>>
+    implements IModel {
 
-  declare createdAt: string;
-  declare updatedAt: string;
+    [x: string]: any;
+    declare id: string;
+    declare name: string;
+    declare key: string;
 
-  getRelations(): string[] {
-    return ["auths"];
-  }
+    declare createdAt: string;
+    declare updatedAt: string;
 
-  getSearchables(): string[] {
-    return ["name", "key"];
-  }
+
+    getRelations(): string[] {
+        return ["auths"];
+    }
+
+    getSearchables(): string[] {
+        return ["name", "key"];
+    }
 }
 
 Tenant.init(
-  {
-    id: {
-      type: DataTypes.INTEGER,
-      primaryKey: true,
-      autoIncrement: true,
-    },
-    name: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    key: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: true,
-    },
+    {
+        id: {
+            type: DataTypes.STRING,
+            primaryKey: true,
+            allowNull: false,
+            defaultValue: DataTypes.UUIDV4
+        },
+        name: {
+            type: DataTypes.STRING,
+            allowNull: false,
+        },
+        key: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            unique: true,
+        },
 
-    createdAt: {
-      type: DataTypes.DATEONLY,
-    },
+        createdAt: {
+            type: DataTypes.DATEONLY,
+        },
 
-    updatedAt: {
-      type: DataTypes.DATEONLY,
+        updatedAt: {
+            type: DataTypes.DATEONLY,
+        },
     },
-  },
-  {
-    modelName: "Tenant",
-    tableName: "tenants",
-    sequelize: BaseConnection.getConnection(),
-    paranoid: true,
-  }
+    {
+        modelName: "Tenant",
+        tableName: "tenants",
+        sequelize: BaseConnection.getConnection(),
+        paranoid: true,
+    }
 );
 
 export default Tenant;

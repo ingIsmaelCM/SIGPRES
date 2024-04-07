@@ -65,7 +65,12 @@ export class AuthController extends Controller implements IController {
                 await this.mainService.sendVerificationCode(req.body.email),
             res, 200, "Correo de verificación enviado")
     }
-
+    async unAuthorize(req: Request, res: Response) {
+        return this.safeRun(async () =>
+                this.mainService.unAuthorizeUser(req.params.id),
+            res, 201, "Código de desautorizado"
+        )
+    }
 
     async recoverPassword(req: any, res: Response) {
         return await this.safeRun(async()=> await this.mainService.recoverPassword(req.body, res),

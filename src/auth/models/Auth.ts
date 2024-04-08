@@ -1,6 +1,7 @@
 import {DataTypes, InferAttributes, InferCreationAttributes, Model,} from "sequelize";
 import {IModel} from "@app/models/IModel";
 import BaseConnection from "@app/db/BaseConnection";
+import InfoRepository from "@source/repositories/InfoRepository";
 
 /*TODO: Create table, model and repository concerns.
    TODO: Set concernId on auths and modify register
@@ -26,7 +27,7 @@ class Auth
     declare deletedAt: string;
 
     getSearchables() {
-        return ["email", "username", "name","lastname", "lastLogin", "verifiedAt", "status"];
+        return ["email", "username", "name", "lastname", "lastLogin", "verifiedAt", "status"];
     }
 
     /* istanbul ignore next */

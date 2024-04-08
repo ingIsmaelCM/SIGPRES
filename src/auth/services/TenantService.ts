@@ -5,6 +5,9 @@ import BaseConnection from "@/app/db/BaseConnection";
 import MigrateTenant from "@/app/db/migrations/tenants/MigrateTenant";
 import Service from "@app/services/Service";
 import Tenant from "@auth/models/Tenant";
+import {request} from "express";
+import tools from "@app/utils/tools";
+import TenantConnection from "@app/db/TenantConnection";
 
 export default class TenantService extends Service {
     tenantRepo = new TenantRepository();
@@ -25,7 +28,6 @@ export default class TenantService extends Service {
         try {
             data.key = new Date().getTime().toString();
             const newTenant = await this.tenantRepo.create(data, trans);
-            console.log(newTenant)
             const updated = await this.tenantRepo.update(
                 {
                     ...newTenant,
@@ -81,5 +83,14 @@ export default class TenantService extends Service {
                 message: error.message,
             };
         }
+    }
+
+    async switchTenant(tenantKey: string, res: any): Promise<any> {
+        return this.safeRun(async()=>{
+            request.headers["tenant"]=tenantKey;
+            tools.setCookie(res, "tenant", tenantKey);
+            TenantConnection.initModels(TenantConnection.getConnection());
+            return "Realizdo con éxito"
+        })
     }
 }

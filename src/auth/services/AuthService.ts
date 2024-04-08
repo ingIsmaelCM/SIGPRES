@@ -79,6 +79,7 @@ export default class AuthService extends Service {
                 const result = {
                     ...userAuth.dataValues,
                     password: null,
+                    fullname: userAuth.fullname,
                     permissions: userAuth.allPermissions,
                     roles: userAuth.roles?.map((role: any) =>
                         ({id: role.id, name: role.name})),

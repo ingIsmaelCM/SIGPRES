@@ -21,7 +21,7 @@ class Tenant
 
 
     getRelations(): string[] {
-        return ["auths"];
+        return ["auths","auths.roles.permissions","auths.permissions"];
     }
 
     getSearchables(): string[] {

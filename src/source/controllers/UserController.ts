@@ -10,7 +10,7 @@ export default class UserController extends Controller implements IController {
 
     async index(req: Request, res: Response) {
         return this.safeRun(async () =>
-                this.mainService.getUsers(req.query),
+                this.mainService.getUsers(req.query, req),
             res, 200, "Lista de Usuarios"
         )
     }

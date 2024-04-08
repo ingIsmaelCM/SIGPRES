@@ -8,12 +8,10 @@ import Permission from "../models/Permission";
 import Role from "../models/Role";
 import {request} from "express";
 import TenantConnection from "@/app/db/TenantConnection";
-import {IAuth} from "@app/interfaces/AuthInterfaces";
+import {IAuth, Itenant} from "@app/interfaces/AuthInterfaces";
 import AuthService from "@auth/services/AuthService";
 
 class AuthMiddleware extends Middleware {
-    static request: any;
-
     async auth(req: any, res: Response, next: NextFunction): Promise<any> {
         try {
             const authToken = await this.verifyTokenExists(req);
@@ -109,7 +107,7 @@ class AuthMiddleware extends Middleware {
         try {
             const authRepository = new AuthRepository();
             const auth = await authRepository.find("id", decoded.id, false, {
-                include: "roles.permissions,permissions",
+                include: "roles.permissions,permissions,tenants",
             });
             this.checkSessionId(auth, decoded)
             let permissions: any[] = auth.permissions.map((p: Permission) => ({
@@ -128,6 +126,8 @@ class AuthMiddleware extends Middleware {
                 password: null,
                 permissions: [...new Set(permissions)],
                 roles,
+                tenants: auth.tenants.map((tenant: Itenant) =>
+                    ({name: tenant.name, id: tenant.id, key: tenant.key})),
                 company: config.company,
             };
         } catch (error: any) {

@@ -11,14 +11,14 @@ export default class ExpenseController extends Controller implements IController
     async index(req: Request, res: Response) {
         return this.safeRun(async () =>
                 this.mainService.getExpenses(req.query),
-            res, 200, ""
+            res, 200, "Registro de gastos"
         )
     }
 
     async show(req: Request, res: Response) {
         return this.safeRun(async () =>
                 this.mainService.findExpense(req.params.id, req.query),
-            res, 200, ""
+            res, 200, "Detalles del gasto"
         )
     }
 
@@ -26,7 +26,7 @@ export default class ExpenseController extends Controller implements IController
     async store(req: Request, res: Response) {
         return this.safeRun(async () =>
                 this.mainService.createExpense(req.body),
-            res, 201, ""
+            res, 201, "Gasto registrado"
         )
     }
 
@@ -34,21 +34,21 @@ export default class ExpenseController extends Controller implements IController
     async update(req: Request, res: Response) {
         return this.safeRun(async () =>
                 this.mainService.updateExpense(req.params.id, req.body),
-            res, 201, ""
+            res, 201, "Gasto actualizado"
         )
     }
 
     async delete(req: Request, res: Response) {
         return this.safeRun(async () =>
                 this.mainService.deleteExpense(req.params.id),
-            res, 200, ""
+            res, 200, "Gasto elimiado correctamente"
         )
     }
 
     async restore(req: Request, res: Response) {
         return this.safeRun(async () =>
                 this.mainService.restoreExpense(req.params.id),
-            res, 200, ""
+            res, 200, "Gasto restaurado correctamente"
         )
     }
 }

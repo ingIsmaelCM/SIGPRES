@@ -16,7 +16,7 @@ export default class WalletRepository extends BaseRepository<Wallet> {
                     message: "La billetera indicada no se encontró"
                 })
             }
-            const newBalance = wallet.balance + newValue;
+            const newBalance = Number(wallet.balance) + Number(newValue);
             if (newBalance < 0) {
                 return Promise.reject({
                     code: 422,

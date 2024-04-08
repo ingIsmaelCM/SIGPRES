@@ -3,9 +3,12 @@ import {IParams} from "@app/interfaces/AppInterfaces";
 import ExpenseRepository from "@source/repositories/ExpenseRepository";
 import TenantConnection from "@app/db/TenantConnection";
 import {IExpense} from "@app/interfaces/SourceInterfaces";
+import WalletRepository from "@source/repositories/WalletRepository";
+import {Transaction} from "sequelize";
 
 export default class ExpenseService extends Service {
     private mainRepo = new ExpenseRepository();
+    private walletRepo = new WalletRepository();
 
     async getExpenses(params: IParams) {
         return await this.mainRepo.getAll(params)
@@ -15,9 +18,15 @@ export default class ExpenseService extends Service {
         return await this.mainRepo.findById(expenseId, params)
     }
 
-    async createExpense(data: IExpense): Promise<IExpense> {
-        const trans = await TenantConnection.getTrans();
+    async createExpense(data: IExpense, externTrans?: Transaction): Promise<IExpense> {
+        const trans = externTrans || await TenantConnection.getTrans();
         return this.safeRun(async () => {
+                const newExpense = await this.mainRepo.create(data, trans);
+                await this.walletRepo.setBalance((0 - data.amount), data.walletId, trans);
+                if (!externTrans) {
+                    await trans.commit();
+                }
+                return newExpense;
             },
             async () => await trans.rollback()
         )
@@ -26,6 +35,12 @@ export default class ExpenseService extends Service {
     async updateExpense(expenseId: string, data: IExpense): Promise<IExpense> {
         const trans = await TenantConnection.getTrans();
         return this.safeRun(async () => {
+                const prevExpense = await this.mainRepo.findById(expenseId);
+                const updatedExpense = await this.mainRepo.update(data, expenseId, trans);
+                await this.walletRepo.setBalance(prevExpense.amount, prevExpense.walletId, trans);
+                await this.walletRepo.setBalance((0 - data.amount), data.walletId, trans);
+                await trans.commit();
+                return updatedExpense;
             },
             async () => await trans.rollback()
         )
@@ -35,6 +50,10 @@ export default class ExpenseService extends Service {
     async deleteExpense(expenseId: string): Promise<IExpense> {
         const trans = await TenantConnection.getTrans();
         return this.safeRun(async () => {
+                const deletedExpense = await this.mainRepo.delete(expenseId, trans);
+                await this.walletRepo.setBalance(deletedExpense.amount, deletedExpense.walletId, trans);
+                await trans.commit();
+                return deletedExpense;
             },
             async () => await trans.rollback()
         )
@@ -43,6 +62,10 @@ export default class ExpenseService extends Service {
     async restoreExpense(expenseId: string): Promise<IExpense> {
         const trans = await TenantConnection.getTrans();
         return this.safeRun(async () => {
+                const restoredExpense = await this.mainRepo.restore(expenseId, trans);
+                await this.walletRepo.setBalance((0 - restoredExpense.amount), restoredExpense.walletId, trans);
+                await trans.commit();
+                return restoredExpense;
             },
             async () => await trans.rollback()
         )

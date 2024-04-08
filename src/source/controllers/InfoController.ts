@@ -11,14 +11,14 @@ export default class InfoController extends Controller implements IController {
     async index(req: Request, res: Response) {
         return this.safeRun(async () =>
                 this.mainService.getInfos(req.query),
-            res, 200, ""
+            res, 200, "Registro de Informaciones"
         )
     }
 
     async show(req: Request, res: Response) {
         return this.safeRun(async () =>
                 this.mainService.findInfo(req.params.id, req.query),
-            res, 200, ""
+            res, 200, "Detalles de la información"
         )
     }
 
@@ -26,7 +26,7 @@ export default class InfoController extends Controller implements IController {
     async store(req: Request, res: Response) {
         return this.safeRun(async () =>
                 this.mainService.createInfo(req.body),
-            res, 201, ""
+            res, 201, "Información Registrada con Éxito"
         )
     }
 
@@ -34,7 +34,7 @@ export default class InfoController extends Controller implements IController {
     async update(req: Request, res: Response) {
         return this.safeRun(async () =>
                 this.mainService.updateInfo(req.params.id, req.body),
-            res, 201, ""
+            res, 201, "Información Actualizada"
         )
     }
 

@@ -4,6 +4,9 @@ import ITM from "@app/models/ITenantModel";
 import {IAuthRelation} from "@app/interfaces/AuthInterfaces";
 import Permission from "@auth/models/Permission";
 import ModelPermission from "@auth/models/ModelPermission";
+import BaseConnection from "@app/db/BaseConnection";
+import Auth from "@auth/models/Auth";
+import Role from "@auth/models/Role";
 
 
 @ITM.staticImplements<IUserView, IAuthRelation>()
@@ -86,11 +89,11 @@ export default class UserView extends Model implements IUserView {
     }
 
     getRelations(): Array<keyof IAuthRelation> {
-        return ["permissions"]
+        return ["permissions", "roles.permissions"]
     }
 
     static  initRelation(){
-        UserView.belongsToMany(Permission,{
+        UserView.belongsToMany(Auth.sequelize!.models.Permission,{
             as: "permissions",
             foreignKey: "modelId",
             through: {
@@ -101,6 +104,12 @@ export default class UserView extends Model implements IUserView {
             },
             constraints: false,
         })
+
+        UserView.belongsToMany(Role, {
+            foreignKey: "roleId",
+            through: "auth_roles",
+            as: "roles",
+        });
     }
 
 }

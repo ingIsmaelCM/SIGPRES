@@ -16,6 +16,8 @@ export interface  IAuthRelation{
   tenants?: Itenant[];
   permissions?: IPermission[];
   roles?: IRole[];
+  "roles.auths": IRole[],
+  "roles.permissions": IRole[]
 }
 
 export interface IRole {

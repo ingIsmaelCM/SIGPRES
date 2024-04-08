@@ -10,15 +10,24 @@ import RoleMiddleware from "@auth/middlewares/RoleMiddleware";
 import PermissionEnums from "@app/interfaces/PermissionEnums";
 import InfoService from "@source/services/InfoService";
 import TenantConnection from "@app/db/TenantConnection";
+import TenantRepository from "@auth/repositories/TenantRepository";
+import tenant from "@auth/models/Tenant";
+import tenantRequest from "@auth/requests/TenantRequest";
 
 export default class UserService extends Service {
     private mainRepo = new AuthRepository();
     private authMailService: AuthMailService = new AuthMailService();
     private userViewRepo = new UserViewRepository();
     private infoService = new InfoService();
+    private  tenantRepo=new TenantRepository();
 
-    async getUsers(params: IParams) {
-        return await this.userViewRepo.getAll(params)
+    async getUsers(params: IParams, req: any) {
+      return   this.safeRun(async()=>{
+          //We retrieve users from tenant, cause we couldn't make cross relationship between auths and info
+            const tenant=await this.tenantRepo.find('key',req.cookies.tenant,false,
+                {include:'auths.roles.permissions,auths.permissions'});
+            return await (tenant).auths
+        })
     }
 
     async getAuthUsers(params: IParams) {

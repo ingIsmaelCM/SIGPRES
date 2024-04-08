@@ -1,9 +1,16 @@
 import ITM from "@/app/models/ITenantModel";
 import { DataTypes, Model } from "sequelize";
 import { IExpense, IExpenseRelation } from "@app/interfaces/SourceInterfaces";
+import {Lawyer, Wallet} from "@source/models/index";
 
 @ITM.staticImplements<IExpense, IExpenseRelation>()
-export default class Expense extends Model {
+export default class Expense extends Model implements  IExpense{
+  declare amount: number;
+  declare date: string;
+  declare concepto: string;
+  declare walletId: string;
+  declare lawyerId: string | undefined;
+
   getSearchables(): Array<keyof IExpense> {
     return ["amount", "date", "concepto", "walletId", "lawyerId"];
   }
@@ -38,4 +45,15 @@ export default class Expense extends Model {
       allowNull: true,
     },
   };
+
+  static initRelation(){
+    Expense.belongsTo(Wallet,{
+      as: "wallet",
+      foreignKey: 'walletId'
+    })
+    Expense.belongsTo(Lawyer,{
+      as: "lawyer",
+      foreignKey: 'lawyerId'
+    })
+  }
 }

@@ -10,6 +10,7 @@ const ModelPermission = BaseConnection.getConnection().define(
     },
     {
         tableName: "model_permissions",
+        freezeTableName: true,
         paranoid: false,
     }
 );

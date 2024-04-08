@@ -4,7 +4,7 @@ import {
     ClientContactView,
     ClientView,
     ContactView,
-    Document,
+    Document, Expense,
     Job,
     Loan,
     Mora,
@@ -29,5 +29,6 @@ export default class SourceRelation {
         AmortizationView.initRelation();
         LawyerPayment.initRelation();
         UserView.initRelation();
+        Expense.initRelation();
     }
 }

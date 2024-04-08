@@ -39,4 +39,10 @@ export default class TenantController
             return await this.mainService.assignTenantToUser(req.params.id, req.body);
         }, res, 201, "Inquilino asignado");
     }
+
+    async switchTenant(req: any, res: any) {
+        await this.safeRun(async () => {
+            return await this.mainService.switchTenant(req.body.tenant, res);
+        }, res, 201, "Inquilino Cambiado");
+    }
 }

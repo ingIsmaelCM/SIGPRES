@@ -30,7 +30,13 @@ export default class TenantRoutes extends BaseRoutes<TenantController> {
         TenantRequest.requireIdRequest(),
         TenantRequest.validate,
         (req: any, res: any) => this.controller.assignToUser(req, res)
-        )
+    )
+
+    this.controller.router.post('/switch',
+        TenantRequest.switchTenantRequest(),
+        TenantRequest.validate,
+        (req: any, res: any) => this.controller.switchTenant(req, res)
+    )
 
     this.controller.router
       .route("/:id")

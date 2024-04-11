@@ -8,6 +8,9 @@ import app from "../../../App";
 export default class TenantConnection {
     private static readonly connections: Map<string, Sequelize> = new Map();
 
+    private constructor() {
+    }
+
     static getConnection(dbName?: string): Sequelize {
         const tenant = dbName || request.headers.tenant || config.db.database;
         if (!TenantConnection.connections.has(tenant)) {

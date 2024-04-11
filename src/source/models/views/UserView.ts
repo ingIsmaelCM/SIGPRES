@@ -1,10 +1,8 @@
 import {DataTypes, Model, ModelAttributeColumnOptions} from "sequelize";
-import {EInfoGender, IUserView, IUserViewRelation} from "@app/interfaces/SourceInterfaces";
+import {EInfoGender, IUserView} from "@app/interfaces/SourceInterfaces";
 import ITM from "@app/models/ITenantModel";
 import {IAuthRelation} from "@app/interfaces/AuthInterfaces";
-import Permission from "@auth/models/Permission";
 import ModelPermission from "@auth/models/ModelPermission";
-import BaseConnection from "@app/db/BaseConnection";
 import Auth from "@auth/models/Auth";
 import Role from "@auth/models/Role";
 

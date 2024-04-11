@@ -17,7 +17,7 @@ export default class SocketService {
                 path: "/api/socket",
             });
             SocketService.setMiddelware();
-            SocketService.sockectListen();
+            SocketService.socketListen();
         }
 
     }
@@ -27,7 +27,7 @@ export default class SocketService {
         });
     }
 
-    private static sockectListen() {
+    private static socketListen() {
         try {
             this.socket.on("connection", (socket: any) => {
 

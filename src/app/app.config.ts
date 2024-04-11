@@ -7,7 +7,7 @@ const env = process.env.NODE_ENV || "prod";
 let config: any = {
   app: {
     port: env != "test" ? process.env.PORT : process.env.PORT_TEST,
-    name: process.env.APP_NAME || "Turn",
+    name: process.env.APP_NAME || "Faciloans",
     url: process.env.APP_URL || "http://localhost",
     public: path.resolve(__dirname, "../../public"),
     views: path.resolve(__dirname, "../../views"),

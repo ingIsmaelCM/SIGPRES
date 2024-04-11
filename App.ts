@@ -6,6 +6,7 @@ import response from "@app/utils/response";
 
 import sourceRoutes from "@source/routes";
 import authRoutes from "@auth/routes";
+import WhatsAppService from "@source/services/WhatsAppService";
 
 
 const PORT = config.app.port;

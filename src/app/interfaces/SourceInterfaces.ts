@@ -330,12 +330,16 @@ export interface ILoan extends ICommonField {
     term: number;
     status: ELoanStatus;
     period: ELoanPeriod | number;
+    type: ELoanType
     clientId: string;
     lawyerId: string;
     walletId: string;
     guarantorId: string;
 }
-
+export  enum ELoanType{
+    Fixed="Tasa Fija",
+    Variable="Tasa Variable"
+}
 export enum ELoanPeriod {
     Diario = "diario",
     Semanal = "semanal",

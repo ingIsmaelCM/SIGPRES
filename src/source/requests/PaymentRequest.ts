@@ -28,10 +28,10 @@ class PaymentRequest extends BaseRequest {
             this.RequestCheck.required("payedAt"),
             this.RequestCheck.isDate("payedAt"),
             this.RequestCheck.required("capital"),
-            this.RequestCheck.isFloat("capital",100),
+            this.RequestCheck.required("mora"),
+            this.RequestCheck.isFloat("capital",0),
+            this.RequestCheck.isFloat("mora",0),
             this.RequestCheck.isFloat("interest").optional(),
-            this.RequestCheck.required("keep"),
-            this.RequestCheck.isIn("keep","dates|cuotas",["dates","cuotas"]),
             this.RequestCheck.isString("note").optional({values: "falsy"}),
             this.RequestCheck.isString("lawyerId").optional({values: "falsy"})
         ]

@@ -58,23 +58,38 @@ export default class Amortization extends Model implements IAmortization {
         cuota: {
             type: DataTypes.DECIMAL,
             allowNull: false,
+            get(this: Amortization){
+                return Number(this.getDataValue("cuota"))
+            }
         },
         capital: {
             type: DataTypes.DECIMAL,
             allowNull: false,
+            get(this: Amortization){
+                return Number(this.getDataValue("capital"))
+            }
         },
         interest: {
             type: DataTypes.DECIMAL,
             allowNull: false,
+            get(this: Amortization){
+                return Number(this.getDataValue("interest"))
+            }
         },
         mora: {
             type: DataTypes.DECIMAL,
             allowNull: true,
-            defaultValue: 0
+            defaultValue: 0,
+            get(this: Amortization){
+                return Number(this.getDataValue("mora"))
+            }
         },
         balance: {
             type: DataTypes.DECIMAL,
             allowNull: false,
+            get(this: Amortization){
+                return Number(this.getDataValue("balance"))
+            }
         },
         status: {
             type: DataTypes.ENUM("Pendiente", "Pagado", "Cancelado"),

@@ -1,8 +1,8 @@
 import ITM from "@/app/models/ITenantModel";
-import {DataTypes, Model} from "sequelize";
+import {DataTypes, Model, ModelAttributeColumnOptions} from "sequelize";
 import {
     ELoanPeriod,
-    ELoanStatus,
+    ELoanStatus, ELoanType,
     ILoan,
     ILoanRelation,
 } from "@app/interfaces/SourceInterfaces";
@@ -30,6 +30,7 @@ export default class Loan extends Model implements ILoan {
     declare term: number;
     declare status: ELoanStatus;
     declare period: ELoanPeriod | number;
+    declare type: ELoanType;
     declare clientId: string;
     declare lawyerId: string;
     declare walletId: string;
@@ -58,6 +59,7 @@ export default class Loan extends Model implements ILoan {
             "period",
             "term",
             "status",
+            "type",
             "guarantorId",
         ];
     }
@@ -76,7 +78,7 @@ export default class Loan extends Model implements ILoan {
         ];
     }
 
-    static attributes: Record<keyof ILoan, any> = {
+    static attributes: Record<keyof ILoan, ModelAttributeColumnOptions> = {
         ...ITM.commonAttributes,
         code: {
             type: DataTypes.STRING,
@@ -103,6 +105,11 @@ export default class Loan extends Model implements ILoan {
         period: {
             type: DataTypes.STRING,
             allowNull: false,
+        },
+        type:{
+          type: DataTypes.ENUM(...Object.values(ELoanType)),
+          allowNull: false,
+          defaultValue: ELoanType.Fixed
         },
         clientId: {
             type: DataTypes.INTEGER,

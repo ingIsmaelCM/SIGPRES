@@ -203,6 +203,7 @@ CREATE TABLE `loans`(
     `term` INT NOT NULL COMMENT 'Cantidad de cuotas',
     `status` ENUM('Pendiente', 'Aprobado','Rechazado') NOT NULL DEFAULT 'Pendiente',
     `period` VARCHAR(50) NOT NULL,
+    `type` ENUM('Tasa Fija','Tasa Variable') NOT NULL DEFAULT 'Tasa Fija',
     `clientId` VARCHAR(70) NOT NULL,
     `walletId` VARCHAR(70),
     `lawyerId` VARCHAR(70),

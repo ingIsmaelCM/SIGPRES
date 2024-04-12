@@ -111,9 +111,9 @@ class Tool {
         }
     >(req: any, data: T): T {
         if (!data.id) {
-            data.createdBy = req.auth.id;
+            data.createdBy = req.auth.username;
         }
-        data.updatedBy = req.auth.id;
+        data.updatedBy = req.auth.username;
         return data;
     }
 

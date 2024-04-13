@@ -6,7 +6,6 @@ import {AuthRepository} from "../repositories/AuthRepository";
 import Middleware from "@app/middlewares/Middleware";
 import Permission from "../models/Permission";
 import Role from "../models/Role";
-import {request} from "express";
 import TenantConnection from "@/app/db/TenantConnection";
 import {IAuth, Itenant} from "@app/interfaces/AuthInterfaces";
 import AuthService from "@auth/services/AuthService";
@@ -14,16 +13,18 @@ import AuthService from "@auth/services/AuthService";
 class AuthMiddleware extends Middleware {
     async auth(req: any, res: Response, next: NextFunction): Promise<any> {
         try {
-            const authToken = await this.verifyTokenExists(req);
-            const decoded = await this.verifyTokenIsValid(authToken);
-            req.auth = await this.validateSessionId(decoded);
-            request.headers["tenant"] = req.cookies.tenant;
-            TenantConnection.getConnection();
-            try {
-                await new AuthService().refreshToken(req, res);
-            } catch (error) {
-            }
-            next();
+            TenantConnection.requestNamespace.run(async () => {
+                const authToken = await this.verifyTokenExists(req);
+                const decoded = await this.verifyTokenIsValid(authToken);
+                req.auth = await this.validateSessionId(decoded);
+                try {
+                    await new AuthService().refreshToken(req, res);
+                } catch (error) {
+                }
+                TenantConnection.requestNamespace.set("req", req)
+                TenantConnection.initModels(TenantConnection.getConnection());
+                next();
+            });
         } catch (error: any) {
             response.error(res, error.code, error.message, "No autorizado");
             return;

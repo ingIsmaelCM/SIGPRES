@@ -1,16 +1,20 @@
 import SocketService from "@app/services/SocketService";
-import {Client, LocalAuth, Message} from "whatsapp-web.js";
+import {Client, LocalAuth, Message, Chat} from "whatsapp-web.js";
 
 export default class WhatsappManagement {
     private static socket: SocketService;
     private static readonly wsClients: Map<string, Client> = new Map();
 
-    private constructor(authId: string) {
+    private constructor(tenantId: string) {
+
+    }
+
+    private static async createClient(tenantId: string) {
         try {
             if (!WhatsappManagement.socket) {
                 WhatsappManagement.socket = new SocketService();
             }
-            if (!WhatsappManagement.wsClients.has(authId)) {
+            if (!WhatsappManagement.wsClients.has(tenantId)) {
                 const client = new Client({
                     webVersionCache: {
                         type: 'remote',
@@ -18,31 +22,39 @@ export default class WhatsappManagement {
                     },
                     qrMaxRetries: 3,
                     authStrategy: new LocalAuth({
-                        clientId: authId
+                        clientId: tenantId
                     }),
-
                 });
                 if (client.info) {
-                    client.logout().then();
-                    client.destroy().then();
+                    WhatsappManagement.wsClients.set(tenantId, client);
+                } else {
+                    client.on('qr', (qr: string) => {
+                        WhatsappManagement.socket.emit(`wsQrCode${tenantId}`, {tenantId: tenantId, qrCode: qr});
+                    });
+                    client.on('ready', () => {
+                        WhatsappManagement.wsClients.set(tenantId, client);
+                        WhatsappManagement.socket.emit(`wsStarted${tenantId}`, {tenantId: tenantId})
+                    });
+
+                    client.on('message', async (msg: Message) => {
+                        let messages = await this.getUnreadMessages(client);
+                        WhatsappManagement.socket.emit(`updateMessages${tenantId}`,
+                            {tenantId: tenantId, messages: messages})
+                    });
+                    client.on('message_ack', async (msg: Message) => {
+                        console.log('Testing')
+                        let messages = await this.getUnreadMessages(client);
+                        WhatsappManagement.socket.emit(`updateMessages${tenantId}`,
+                            {tenantId: tenantId, messages: messages})
+                        if (msg.body == '!ping') {
+                            msg.reply('pong');
+                        }
+                    });
+
+                    await client.initialize();
                 }
 
 
-                client.on('qr', (qr: string) => {
-                    WhatsappManagement.socket.emit(`wsQrCode${authId}`, {authId: authId, qrCode: qr})
-                    console.log('QR RECEIVED', qr);
-                });
-
-                client.on('ready', () => {
-                    WhatsappManagement.wsClients.set(authId, client);
-                    WhatsappManagement.socket.emit(`wsStarted${authId}`, {authId: authId})
-                });
-                client.on('message', (msg: Message) => {
-                    if (msg.body == '!ping') {
-                        msg.reply('pong');
-                    }
-                });
-                client.initialize().then();
             }
         } catch (err: any) {
             throw {
@@ -52,21 +64,44 @@ export default class WhatsappManagement {
         }
     }
 
-    static async getClient(authId: string): Promise<Client> {
-        if (!WhatsappManagement.wsClients.has(authId)) {
-            new WhatsappManagement(authId);
+    static async getUnreadMessages(client: Client) {
+        let chats = (await client.getChats().then((allChats: Chat[]) =>
+            allChats.filter((chat: Chat) => chat.unreadCount > 0)
+        ));
+        let messages: Message[] = [];
+        for (const chat of chats) {
+            const message = await chat.fetchMessages({limit: chat.unreadCount})
+                .then((msgs: Message[]) => msgs
+                    .filter((msg: Message) => msg.body)
+                    .sort((a, b) => b.timestamp - a.timestamp)
+                    .map((msg: Message) => {
+                        return {
+                            from: msg.from,
+                            to: msg.to,
+                            body: msg.body,
+                            timestamp: msg.timestamp,
+                        } as Message
+                    }));
+            messages.push(...message)
         }
-        return WhatsappManagement.wsClients.get(authId)!
+        return messages;
     }
 
-    static async removeClient(authId: string) {
-        const client = WhatsappManagement.wsClients.get(authId)!;
+    static async getClient(tenantId: string): Promise<Client> {
+        if (!WhatsappManagement.wsClients.has(tenantId)) {
+            await WhatsappManagement.createClient(tenantId);
+        }
+        return WhatsappManagement.wsClients.get(tenantId)!
+    }
+
+    static async removeClient(tenantId: string) {
+        const client = WhatsappManagement.wsClients.get(tenantId)!;
         await client.destroy();
-        WhatsappManagement.wsClients.delete(authId)
+        WhatsappManagement.wsClients.delete(tenantId)
     }
 
-    static checkClient(authId: string) {
-        return WhatsappManagement.wsClients.has(authId)
+    static checkClient(tenantId: string) {
+        return WhatsappManagement.wsClients.has(tenantId)
     }
 
 }

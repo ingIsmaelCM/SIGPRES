@@ -5,7 +5,7 @@ import WhatsappManagement from "@source/services/WhatsappManagement";
 
 class WhatsappMiddleware extends Middleware{
     hasClient(req: any, res: Response, next: NextFunction) {
-       if(WhatsappManagement.checkClient(req.auth.id)){
+       if(WhatsappManagement.checkClient(req.cookies.tenant)){
            next()
        } else{
            response.error(res, 419, 'No ha iniciado un cliente de whatsapp', "No autorizado");

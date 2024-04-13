@@ -4,15 +4,19 @@ import * as models from "../../source/models";
 import SourceRelation from "../../source/models/SourceRelation";
 import {request} from "express";
 import app from "../../../App";
+import {createNamespace} from "cls-hooked"
 
 export default class TenantConnection {
     private static readonly connections: Map<string, Sequelize> = new Map();
+
+    static readonly requestNamespace = createNamespace("request");
 
     private constructor() {
     }
 
     static getConnection(dbName?: string): Sequelize {
-        const tenant = dbName || request.headers.tenant || config.db.database;
+        const storedReq = TenantConnection.requestNamespace.get('req')
+        const tenant = storedReq.cookies.tenant;
         if (!TenantConnection.connections.has(tenant)) {
             const sequelize = new Sequelize({
                 dialect: config.db.dialect,
@@ -25,7 +29,7 @@ export default class TenantConnection {
                 timezone: "-04:00"
             });
             TenantConnection.connections.set(tenant, sequelize);
-            TenantConnection.initModels(sequelize);
+
         }
         return TenantConnection.connections.get(tenant)!;
     }
@@ -42,8 +46,8 @@ export default class TenantConnection {
                     tableName: model.tableName,
                     paranoid: true,
                     ...model.additionalOptions
-
                 });
+                console.log(model.modelName)
             }
             SourceRelation.initRelation();
         } catch (error: any) {

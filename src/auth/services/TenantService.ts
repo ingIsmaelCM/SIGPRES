@@ -87,10 +87,9 @@ export default class TenantService extends Service {
 
     async switchTenant(tenantKey: string, res: any): Promise<any> {
         return this.safeRun(async()=>{
-            request.headers["tenant"]=tenantKey;
             tools.setCookie(res, "tenant", tenantKey);
             TenantConnection.initModels(TenantConnection.getConnection());
-            return "Realizdo con éxito"
+            return "Realizado con éxito"
         })
     }
 }

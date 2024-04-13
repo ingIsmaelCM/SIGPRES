@@ -9,6 +9,13 @@ class  WhatsappRequest extends  BaseRequest{
             this.RequestCheck.required("to")
         ]
     }
+    imageMesageRequest(): Array<ValidationChain>{
+        return [
+            this.RequestCheck.required("image"),
+            this.RequestCheck.required("to")
+        ]
+    }
+
 }
 
 export  default  new WhatsappRequest();

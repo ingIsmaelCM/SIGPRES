@@ -17,6 +17,12 @@ export default class WhatsappRoutes extends BaseRoutes<WhatsappController> {
                 (req: Request, res: Response) => this.controller.getClient(req, res)
             );
         this.controller.router
+            .get(
+                '/unread',
+                WhatsappMiddleware.hasClient,
+                (req: Request, res: Response) => this.controller.getUnreadMessages(req, res)
+            );
+        this.controller.router
             .post(
                 '/start',
                 (req: Request, res: Response) => this.controller.startWS(req, res)
@@ -34,6 +40,14 @@ export default class WhatsappRoutes extends BaseRoutes<WhatsappController> {
                 WhatsappRequest.textMessageRequest(),
                 WhatsappRequest.validate,
                 (req: Request, res: Response) => this.controller.sendMessage(req, res)
+            );
+        this.controller.router
+            .post(
+                '/send/image',
+                WhatsappMiddleware.hasClient,
+                WhatsappRequest.imageMesageRequest(),
+                WhatsappRequest.validate,
+                (req: Request, res: Response) => this.controller.sendImage(req, res)
             );
 
 

@@ -28,6 +28,7 @@ export class BaseRepository<T extends Model> {
     }
 
     public async getAll(params: IParams): Promise<any> {
+        console.log(this.model!.sequelize!.getDatabaseName())
         return this.safeRun(() => Scope.get(this.model, params));
     }
 

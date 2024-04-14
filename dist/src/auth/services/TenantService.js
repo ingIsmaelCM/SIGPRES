@@ -7,7 +7,6 @@ const TenantRepository_1 = __importDefault(require("../repositories/TenantReposi
 const BaseConnection_1 = __importDefault(require("@/app/db/BaseConnection"));
 const MigrateTenant_1 = __importDefault(require("@/app/db/migrations/tenants/MigrateTenant"));
 const Service_1 = __importDefault(require("@app/services/Service"));
-const express_1 = require("express");
 const tools_1 = __importDefault(require("@app/utils/tools"));
 const TenantConnection_1 = __importDefault(require("@app/db/TenantConnection"));
 class TenantService extends Service_1.default {
@@ -83,10 +82,9 @@ class TenantService extends Service_1.default {
     }
     async switchTenant(tenantKey, res) {
         return this.safeRun(async () => {
-            express_1.request.headers["tenant"] = tenantKey;
             tools_1.default.setCookie(res, "tenant", tenantKey);
             TenantConnection_1.default.initModels(TenantConnection_1.default.getConnection());
-            return "Realizdo con éxito";
+            return "Realizado con éxito";
         });
     }
 }

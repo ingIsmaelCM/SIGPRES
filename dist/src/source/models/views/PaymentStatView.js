@@ -59,7 +59,13 @@ let PaymentStatView = class PaymentStatView extends sequelize_1.Model {
             type: sequelize_1.DataTypes.DECIMAL
         },
         onTime: {
-            type: sequelize_1.DataTypes.DECIMAL
+            type: sequelize_1.DataTypes.DECIMAL,
+            get() {
+                if (this.getDataValue('outTime') === 0) {
+                    return 1;
+                }
+                return this.getDataValue('onTime');
+            }
         },
         outTime: {
             type: sequelize_1.DataTypes.DECIMAL
@@ -67,6 +73,9 @@ let PaymentStatView = class PaymentStatView extends sequelize_1.Model {
         percentOnTime: {
             type: sequelize_1.DataTypes.VIRTUAL,
             get() {
+                if (this.getDataValue('outTime') === 0) {
+                    return 100;
+                }
                 const percent = Number(this.getDataValue("onTime") || 0.01) /
                     ((this.getDataValue("onTime")) + this.getDataValue("outTime"));
                 return Number((percent * 100).toFixed(2));

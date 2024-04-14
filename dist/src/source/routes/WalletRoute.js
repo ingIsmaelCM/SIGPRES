@@ -16,6 +16,7 @@ class WalletRoutes extends BaseRoutes_1.default {
         this.controller.router.route("/")
             .get(RoleMiddleware_1.default.hasPermission(PermissionEnums_1.default.getWallets), (req, res) => this.controller.index(req, res))
             .post(RoleMiddleware_1.default.hasPermission(PermissionEnums_1.default.createWallet), WalletRequest_1.default.walletCreateRequest(), WalletRequest_1.default.validate, (req, res) => this.controller.store(req, res));
+        this.controller.router.put("/:id/balance/add", RoleMiddleware_1.default.hasPermission(PermissionEnums_1.default.createWallet), WalletRequest_1.default.walletAddBalanceRequest(), WalletRequest_1.default.requireIdRequest(), WalletRequest_1.default.validate, (req, res) => this.controller.addBalance(req, res));
         this.controller.router.route("/:id")
             .get(RoleMiddleware_1.default.hasPermission(PermissionEnums_1.default.getWallets), (req, res) => this.controller.show(req, res))
             .put(RoleMiddleware_1.default.hasPermission(PermissionEnums_1.default.editWallet), WalletRequest_1.default.walletUpdateRequest(), WalletRequest_1.default.validate, (req, res) => this.controller.update(req, res))

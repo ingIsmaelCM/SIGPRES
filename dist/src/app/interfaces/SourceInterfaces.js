@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.EMoraStatus = exports.ELoanStatus = exports.ELoanPeriod = exports.ELawyerPaymode = exports.ELawyerPaymentStatus = exports.EJobStatus = exports.EInfoGender = exports.EInfoModels = exports.EClientContactRelationship = exports.EClientType = exports.EAmortizationStatus = void 0;
+exports.EMoraStatus = exports.ELoanStatus = exports.ELoanPeriod = exports.ELoanType = exports.ELawyerPaymode = exports.ELawyerPaymentStatus = exports.EJobStatus = exports.EInfoGender = exports.EInfoModels = exports.EClientContactRelationship = exports.EClientType = exports.EAmortizationStatus = void 0;
 var EAmortizationStatus;
 (function (EAmortizationStatus) {
     EAmortizationStatus["Pendiente"] = "Pendiente";
@@ -51,6 +51,11 @@ var ELawyerPaymode;
     ELawyerPaymode["Cuota"] = "Cuota de Cobro";
     ELawyerPaymode["Contrato"] = "Por Contrato";
 })(ELawyerPaymode || (exports.ELawyerPaymode = ELawyerPaymode = {}));
+var ELoanType;
+(function (ELoanType) {
+    ELoanType["Fixed"] = "Tasa Fija";
+    ELoanType["Variable"] = "Tasa Variable";
+})(ELoanType || (exports.ELoanType = ELoanType = {}));
 var ELoanPeriod;
 (function (ELoanPeriod) {
     ELoanPeriod["Diario"] = "diario";
@@ -63,6 +68,7 @@ var ELoanStatus;
     ELoanStatus["Pendiente"] = "Pendiente";
     ELoanStatus["Aprobado"] = "Aprobado";
     ELoanStatus["Rechazado"] = "Rechazado";
+    ELoanStatus["Pagado"] = "Pagado";
 })(ELoanStatus || (exports.ELoanStatus = ELoanStatus = {}));
 var EMoraStatus;
 (function (EMoraStatus) {

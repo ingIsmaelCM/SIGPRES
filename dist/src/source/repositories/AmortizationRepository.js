@@ -7,12 +7,14 @@ class AmortizationRepository extends BaseRepository_1.BaseRepository {
         super(models_1.Amortization);
     }
     async createFromLoan(data, loanId, clientId, trans) {
-        data = data.map(amort => ({
-            ...amort,
-            loanId,
-            clientId
-        }));
-        return super.bulkCreate(data, trans);
+        return await this.safeRun(async () => {
+            data = data.map(amort => ({
+                ...amort,
+                loanId,
+                clientId
+            }));
+            return await super.bulkCreate(data, trans);
+        });
     }
 }
 exports.default = AmortizationRepository;

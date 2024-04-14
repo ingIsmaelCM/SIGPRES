@@ -11,6 +11,12 @@ class WhatsappRequest extends BaseRequest_1.default {
             this.RequestCheck.required("to")
         ];
     }
+    imageMesageRequest() {
+        return [
+            this.RequestCheck.required("image"),
+            this.RequestCheck.required("to")
+        ];
+    }
 }
 exports.default = new WhatsappRequest();
 //# sourceMappingURL=WhatsappRequest.js.map

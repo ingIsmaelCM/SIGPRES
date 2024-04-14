@@ -16,6 +16,19 @@ class BaseRepository {
         this.model = model;
         this.socketService = new SocketService_1.default();
     }
+    async safeRun(method) {
+        try {
+            this.primaryKeyName = this.model.primaryKeyAttribute;
+            return await method();
+        }
+        catch (error) {
+            logger_1.default.error(JSON.stringify(error));
+            throw {
+                code: error.code || 500,
+                message: error.message
+            };
+        }
+    }
     async getAll(params) {
         return this.safeRun(() => scopes_1.default.get(this.model, params));
     }
@@ -95,6 +108,23 @@ class BaseRepository {
             });
         });
     }
+    async bulkDelete(options, force, trans) {
+        return await this.safeRun(async () => {
+            return await this.model.destroy({
+                ...options,
+                transaction: trans,
+                force: true
+            });
+        });
+    }
+    async bulkUpdate(data, options, trans) {
+        return await this.safeRun(async () => {
+            return await this.model.update(data, {
+                ...options,
+                transaction: trans,
+            });
+        });
+    }
     async restore(primaryKey, trans) {
         return this.safeRun(async () => {
             const dataToRestore = await this.find(this.primaryKeyName, primaryKey, true);
@@ -121,19 +151,6 @@ class BaseRepository {
             }
             return exists;
         });
-    }
-    async safeRun(method) {
-        try {
-            this.primaryKeyName = this.model.primaryKeyAttribute;
-            return await method();
-        }
-        catch (error) {
-            logger_1.default.error(JSON.stringify(error));
-            throw {
-                code: error.code || 500,
-                message: error.message
-            };
-        }
     }
 }
 exports.BaseRepository = BaseRepository;

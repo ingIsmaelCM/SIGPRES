@@ -34,8 +34,9 @@ class UserService extends Service_1.default {
         const trans = await BaseConnection_1.default.getTrans();
         const infoTrans = await TenantConnection_1.default.getTrans();
         return this.safeRun(async () => {
-            const newInfo = await this.infoService.setFromRelated(data, infoTrans);
-            const newUser = await this.mainRepo.create({ ...data, infoId: newInfo.id }, trans);
+            const newUser = await this.mainRepo.create({ ...data }, trans);
+            const newInfo = await this.infoService.setFromRelated({ ...data, id: newUser.id }, infoTrans);
+            await this.mainRepo.update({ infoId: newInfo.id }, newUser.id, trans);
             await trans.commit();
             await infoTrans.commit();
             return { ...newUser.dataValues, info: newInfo };

@@ -19,6 +19,13 @@ class WalletRequest extends BaseRequest_1.default {
             this.RequestCheck.isString("authId").optional({ values: "falsy" }),
         ];
     }
+    walletAddBalanceRequest() {
+        return [
+            this.RequestCheck.required("newBalance"),
+            this.RequestCheck.isFloat("newBalance", 1, 9 * 100 * 100),
+            this.RequestCheck.isLength("sumBalance", 0, 20).optional(),
+        ];
+    }
 }
 exports.default = new WalletRequest();
 //# sourceMappingURL=WalletRequest.js.map

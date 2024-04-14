@@ -11,14 +11,25 @@ class LoanRequest extends BaseRequest_1.default {
             this.RequestCheck.isFloat("amount", 100, 900 * 1000),
             this.RequestCheck.required('startAt'),
             this.RequestCheck.required('term'),
+            this.RequestCheck.required("type"),
             this.RequestCheck.required('period'),
             this.RequestCheck.required('clientId'),
-            this.RequestCheck.isString('lawyerId').optional(),
-            this.RequestCheck.isString('guarantorId').optional(),
+            this.RequestCheck.isString('lawyerId').optional({ values: "falsy" }),
+            this.RequestCheck.isString('guarantorId').optional({ values: "falsy" }),
         ];
     }
     loanUpdateRequest() {
-        return [];
+        return [
+            this.RequestCheck.required("amount"),
+            this.RequestCheck.isFloat("amount", 100, 900 * 1000),
+            this.RequestCheck.required('startAt'),
+            this.RequestCheck.required('term'),
+            this.RequestCheck.required("type"),
+            this.RequestCheck.required('period'),
+            this.RequestCheck.required('clientId'),
+            this.RequestCheck.isString('lawyerId').optional({ values: "falsy" }),
+            this.RequestCheck.isString('guarantorId').optional({ values: "falsy" }),
+        ];
     }
     loanConfirmRequest() {
         return [

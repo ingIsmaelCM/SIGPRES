@@ -8,7 +8,6 @@ const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const app_config_1 = __importDefault(require("@app/app.config"));
 const AuthRepository_1 = require("../repositories/AuthRepository");
 const Middleware_1 = __importDefault(require("@app/middlewares/Middleware"));
-const express_1 = require("express");
 const TenantConnection_1 = __importDefault(require("@/app/db/TenantConnection"));
 const AuthService_1 = __importDefault(require("@auth/services/AuthService"));
 class AuthMiddleware extends Middleware_1.default {
@@ -17,14 +16,16 @@ class AuthMiddleware extends Middleware_1.default {
             const authToken = await this.verifyTokenExists(req);
             const decoded = await this.verifyTokenIsValid(authToken);
             req.auth = await this.validateSessionId(decoded);
-            express_1.request.headers["tenant"] = req.cookies.tenant;
-            TenantConnection_1.default.getConnection();
-            try {
-                await new AuthService_1.default().refreshToken(req, res);
-            }
-            catch (error) {
-            }
-            next();
+            TenantConnection_1.default.requestNamespace.run(async () => {
+                try {
+                    await new AuthService_1.default().refreshToken(req, res);
+                }
+                catch (error) {
+                }
+                TenantConnection_1.default.requestNamespace.set("req", req);
+                TenantConnection_1.default.initModels(TenantConnection_1.default.getConnection());
+                next();
+            });
         }
         catch (error) {
             response_1.default.error(res, error.code, error.message, "No autorizado");

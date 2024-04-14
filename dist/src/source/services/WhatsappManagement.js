@@ -8,12 +8,14 @@ const whatsapp_web_js_1 = require("whatsapp-web.js");
 class WhatsappManagement {
     static socket;
     static wsClients = new Map();
-    constructor(authId) {
+    constructor(tenantId) {
+    }
+    static async createClient(tenantId) {
         try {
             if (!WhatsappManagement.socket) {
                 WhatsappManagement.socket = new SocketService_1.default();
             }
-            if (!WhatsappManagement.wsClients.has(authId)) {
+            if (!WhatsappManagement.wsClients.has(tenantId)) {
                 const client = new whatsapp_web_js_1.Client({
                     webVersionCache: {
                         type: 'remote',
@@ -21,27 +23,33 @@ class WhatsappManagement {
                     },
                     qrMaxRetries: 3,
                     authStrategy: new whatsapp_web_js_1.LocalAuth({
-                        clientId: authId
+                        clientId: tenantId
                     }),
                 });
                 if (client.info) {
-                    client.logout().then();
-                    client.destroy().then();
+                    WhatsappManagement.wsClients.set(tenantId, client);
                 }
-                client.on('qr', (qr) => {
-                    WhatsappManagement.socket.emit(`wsQrCode${authId}`, { authId: authId, qrCode: qr });
-                    console.log('QR RECEIVED', qr);
-                });
-                client.on('ready', () => {
-                    WhatsappManagement.wsClients.set(authId, client);
-                    WhatsappManagement.socket.emit(`wsStarted${authId}`, { authId: authId });
-                });
-                client.on('message', (msg) => {
-                    if (msg.body == '!ping') {
-                        msg.reply('pong');
-                    }
-                });
-                client.initialize().then();
+                else {
+                    client.on('qr', (qr) => {
+                        WhatsappManagement.socket.emit(`wsQrCode${tenantId}`, { tenantId: tenantId, qrCode: qr });
+                    });
+                    client.on('ready', () => {
+                        WhatsappManagement.wsClients.set(tenantId, client);
+                        WhatsappManagement.socket.emit(`wsStarted${tenantId}`, { tenantId: tenantId });
+                    });
+                    client.on('message', async (msg) => {
+                        let messages = await this.getUnreadMessages(client);
+                        WhatsappManagement.socket.emit(`updateMessages${tenantId}`, { tenantId: tenantId, messages: messages });
+                    });
+                    client.on('message_ack', async (msg) => {
+                        let messages = await this.getUnreadMessages(client);
+                        WhatsappManagement.socket.emit(`updateMessages${tenantId}`, { tenantId: tenantId, messages: messages });
+                        if (msg.body == '!ping') {
+                            msg.reply('pong');
+                        }
+                    });
+                    await client.initialize();
+                }
             }
         }
         catch (err) {
@@ -51,19 +59,39 @@ class WhatsappManagement {
             };
         }
     }
-    static async getClient(authId) {
-        if (!WhatsappManagement.wsClients.has(authId)) {
-            new WhatsappManagement(authId);
+    static async getUnreadMessages(client) {
+        let chats = (await client.getChats().then((allChats) => allChats.filter((chat) => chat.unreadCount > 0)));
+        let messages = [];
+        for (const chat of chats) {
+            const message = await chat.fetchMessages({ limit: chat.unreadCount })
+                .then((msgs) => msgs
+                .filter((msg) => msg.body)
+                .sort((a, b) => b.timestamp - a.timestamp)
+                .map((msg) => {
+                return {
+                    from: msg.from,
+                    to: msg.to,
+                    body: msg.body,
+                    timestamp: msg.timestamp,
+                };
+            }));
+            messages.push(...message);
         }
-        return WhatsappManagement.wsClients.get(authId);
+        return messages;
     }
-    static async removeClient(authId) {
-        const client = WhatsappManagement.wsClients.get(authId);
+    static async getClient(tenantId) {
+        if (!WhatsappManagement.wsClients.has(tenantId)) {
+            await WhatsappManagement.createClient(tenantId);
+        }
+        return WhatsappManagement.wsClients.get(tenantId);
+    }
+    static async removeClient(tenantId) {
+        const client = WhatsappManagement.wsClients.get(tenantId);
         await client.destroy();
-        WhatsappManagement.wsClients.delete(authId);
+        WhatsappManagement.wsClients.delete(tenantId);
     }
-    static checkClient(authId) {
-        return WhatsappManagement.wsClients.has(authId);
+    static checkClient(tenantId) {
+        return WhatsappManagement.wsClients.has(tenantId);
     }
 }
 exports.default = WhatsappManagement;

@@ -6,7 +6,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const Service_1 = __importDefault(require("@app/services/Service"));
 const cloudinary_1 = __importDefault(require("cloudinary"));
 const app_config_1 = __importDefault(require("@app/app.config"));
-const AppService_1 = __importDefault(require("@app/services/AppService"));
 const fs_1 = __importDefault(require("fs"));
 const logger_1 = __importDefault(require("@/logger"));
 class CloudinaryService extends Service_1.default {
@@ -31,7 +30,6 @@ class CloudinaryService extends Service_1.default {
     }
     async uploadFilesToCloudinary(files) {
         try {
-            const options = await new AppService_1.default().getCloudSignature();
             const results = [];
             for (const file of files) {
                 const res = await this.cloud.uploader.upload(file.path, {
@@ -56,7 +54,7 @@ class CloudinaryService extends Service_1.default {
         catch (error) {
             return Promise.reject({
                 code: 500,
-                message: error.code
+                message: error.message
             });
         }
     }

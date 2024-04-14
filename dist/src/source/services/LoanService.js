@@ -50,7 +50,7 @@ class LoanService extends Service_1.default {
     }
     async createPaymentForLawyerFromLoan(lawyerId, newLoan, trans) {
         const lawyer = await this.lawyerRepo.findById(lawyerId);
-        if (lawyer.payMode == SourceInterfaces_1.ELawyerPaymode.Contrato) {
+        if (lawyer.payMode === SourceInterfaces_1.ELawyerPaymode.Contrato) {
             const newLayerPayment = {
                 amount: lawyer.payPrice,
                 date: newLoan.startAt,
@@ -89,8 +89,8 @@ class LoanService extends Service_1.default {
                     await this.amortizationRepo.updateOrCreate(amort, trans);
                 }
             }
-            if (data.lawyerId) {
-                await this.createPaymentForLawyerFromLoan(data.lawyerId, loan, trans);
+            if (loan.lawyerId) {
+                await this.createPaymentForLawyerFromLoan(loan.lawyerId, loan, trans);
             }
             await this.walletRepo.setBalance((0 - loan.amount), data.walletId, trans);
             await this.mainRepo.update({ ...data, status: SourceInterfaces_1.ELoanStatus.Aprobado }, loan.id, trans);
@@ -98,9 +98,45 @@ class LoanService extends Service_1.default {
             return loan;
         }, async () => await trans.rollback());
     }
+    async declineLoan(loanId, data) {
+        const trans = await TenantConnection_1.default.getTrans();
+        return this.safeRun(async () => {
+            await this.mainRepo.update({
+                status: SourceInterfaces_1.ELoanStatus.Rechazado,
+                updatedBy: data.updatedBy
+            }, loanId, trans);
+            await this.amortizationRepo.bulkUpdate({ status: SourceInterfaces_1.EAmortizationStatus.Cancelado }, {
+                where: {
+                    loanId: loanId
+                }
+            }, trans);
+            await trans.commit();
+            return true;
+        }, async () => await trans.rollback());
+    }
     async updateLoan(loanId, data) {
         const trans = await TenantConnection_1.default.getTrans();
         return this.safeRun(async () => {
+            const loan = await this.mainRepo.findById(loanId, { include: "amortizations,condition" });
+            const oldAmorts = loan?.amortizations;
+            let newAmorts = amortization_1.default.getAmortization(data)
+                .map((amort) => ({
+                ...amort,
+                createdBy: data.updatedBy,
+                updatedBy: data.updatedBy
+            }));
+            await this.amortizationRepo.bulkDelete({ where: { loanId: loanId } }, true, trans);
+            data.endAt = newAmorts.at(-1).date;
+            data.startAt = newAmorts.at(0).date;
+            data.nextPaymentAt = newAmorts.at(0).date;
+            data.balance = data.amount;
+            const newLoan = await this.mainRepo.update(data, loanId, trans);
+            await this.conditionRepo
+                .update({ ...data, loanId: newLoan.id }, loan.condition.id, trans);
+            await this.amortizationRepo
+                .createFromLoan(newAmorts, newLoan.id, data.clientId, trans);
+            await trans.commit();
+            return newLoan;
         }, async () => await trans.rollback());
     }
     async deleteLoan(loanId) {

@@ -19,10 +19,10 @@ class ClientService extends Service_1.default {
     imageService = new ImageService_1.default();
     documentService = new DocumentService_1.default();
     async getClients(params) {
-        return await this.clientViewRepo.getAll(params);
+        return this.safeRun(async () => await this.clientViewRepo.getAll(params));
     }
     async findClient(clientId, params) {
-        return await this.clientViewRepo.findById(clientId, params);
+        return this.safeRun(async () => await this.clientViewRepo.findById(clientId, params));
     }
     async createClient(data) {
         const trans = await TenantConnection_1.default.getTrans();

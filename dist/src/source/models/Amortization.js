@@ -44,23 +44,38 @@ let Amortization = class Amortization extends sequelize_1.Model {
         cuota: {
             type: sequelize_1.DataTypes.DECIMAL,
             allowNull: false,
+            get() {
+                return Number(this.getDataValue("cuota"));
+            }
         },
         capital: {
             type: sequelize_1.DataTypes.DECIMAL,
             allowNull: false,
+            get() {
+                return Number(this.getDataValue("capital"));
+            }
         },
         interest: {
             type: sequelize_1.DataTypes.DECIMAL,
             allowNull: false,
+            get() {
+                return Number(this.getDataValue("interest"));
+            }
         },
         mora: {
             type: sequelize_1.DataTypes.DECIMAL,
             allowNull: true,
-            defaultValue: 0
+            defaultValue: 0,
+            get() {
+                return Number(this.getDataValue("mora"));
+            }
         },
         balance: {
             type: sequelize_1.DataTypes.DECIMAL,
             allowNull: false,
+            get() {
+                return Number(this.getDataValue("balance"));
+            }
         },
         status: {
             type: sequelize_1.DataTypes.ENUM("Pendiente", "Pagado", "Cancelado"),

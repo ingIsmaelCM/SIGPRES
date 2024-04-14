@@ -8,7 +8,7 @@ const response_1 = __importDefault(require("@app/utils/response"));
 const WhatsappManagement_1 = __importDefault(require("@source/services/WhatsappManagement"));
 class WhatsappMiddleware extends Middleware_1.default {
     hasClient(req, res, next) {
-        if (WhatsappManagement_1.default.checkClient(req.auth.id)) {
+        if (WhatsappManagement_1.default.checkClient(req.cookies.tenant)) {
             next();
         }
         else {

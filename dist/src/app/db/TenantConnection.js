@@ -30,13 +30,15 @@ const sequelize_1 = require("sequelize");
 const app_config_1 = __importDefault(require("../app.config"));
 const models = __importStar(require("../../source/models"));
 const SourceRelation_1 = __importDefault(require("../../source/models/SourceRelation"));
-const express_1 = require("express");
+const cls_hooked_1 = require("cls-hooked");
 class TenantConnection {
     static connections = new Map();
+    static requestNamespace = (0, cls_hooked_1.createNamespace)("request");
     constructor() {
     }
     static getConnection(dbName) {
-        const tenant = dbName || express_1.request.headers.tenant || app_config_1.default.db.database;
+        const storedReq = TenantConnection.requestNamespace.get('req');
+        const tenant = storedReq.cookies.tenant;
         if (!TenantConnection.connections.has(tenant)) {
             const sequelize = new sequelize_1.Sequelize({
                 dialect: app_config_1.default.db.dialect,
@@ -49,7 +51,6 @@ class TenantConnection {
                 timezone: "-04:00"
             });
             TenantConnection.connections.set(tenant, sequelize);
-            TenantConnection.initModels(sequelize);
         }
         return TenantConnection.connections.get(tenant);
     }

@@ -26,23 +26,38 @@ let Condition = class Condition extends sequelize_1.Model {
         initTerm: {
             type: sequelize_1.DataTypes.INTEGER,
             allowNull: false,
+            get() {
+                return Number(this.getDataValue("initTerm"));
+            }
         },
         initRateMora: {
             type: sequelize_1.DataTypes.DECIMAL,
             allowNull: false,
+            get() {
+                return Number(this.getDataValue("initRateMora"));
+            }
         },
         grace: {
             type: sequelize_1.DataTypes.INTEGER,
             allowNull: false,
             defaultValue: 0,
+            get() {
+                return Number(this.getDataValue("grace"));
+            }
         },
         rate: {
             type: sequelize_1.DataTypes.INTEGER,
             allowNull: false,
+            get() {
+                return Number(this.getDataValue("rate"));
+            }
         },
         finalRateMora: {
             type: sequelize_1.DataTypes.DECIMAL,
             allowNull: false,
+            get() {
+                return Number(this.getDataValue("finalRateMora"));
+            }
         },
         loanId: {
             type: sequelize_1.DataTypes.INTEGER,

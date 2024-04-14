@@ -17,9 +17,10 @@ let Document = class Document extends sequelize_1.Model {
     static modelName = "Document";
     static attributes = {
         id: {
-            type: sequelize_1.DataTypes.INTEGER,
+            type: sequelize_1.DataTypes.STRING,
             primaryKey: true,
-            autoIncrement: true,
+            allowNull: false,
+            defaultValue: sequelize_1.DataTypes.UUIDV4
         },
         path: {
             type: sequelize_1.DataTypes.STRING,

@@ -49,6 +49,9 @@ class WalletController extends Controller_1.default {
     async store(req, res) {
         return this.safeRun(async () => this.mainService.createWallet(req.body), res, 201, "Billetera registrada");
     }
+    async addBalance(req, res) {
+        return this.safeRun(async () => this.mainService.addBalanceToWallet(req.params.id, req.body), res, 201, "Saldo añadido exitosamente");
+    }
     async update(req, res) {
         return this.safeRun(async () => this.mainService.updateWallet(req.params.id, req.body), res, 201, "Billetera Actualizada");
     }
@@ -66,6 +69,12 @@ __decorate([
     __metadata("design:paramtypes", [Object, Object]),
     __metadata("design:returntype", Promise)
 ], WalletController.prototype, "store", null);
+__decorate([
+    Controller_1.setAuthor,
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, Object]),
+    __metadata("design:returntype", Promise)
+], WalletController.prototype, "addBalance", null);
 __decorate([
     Controller_1.setAuthor,
     __metadata("design:type", Function),

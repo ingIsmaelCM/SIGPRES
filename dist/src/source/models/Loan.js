@@ -33,6 +33,7 @@ let Loan = class Loan extends sequelize_1.Model {
             "period",
             "term",
             "status",
+            "type",
             "guarantorId",
         ];
     }
@@ -58,14 +59,23 @@ let Loan = class Loan extends sequelize_1.Model {
         amount: {
             type: sequelize_1.DataTypes.DECIMAL,
             allowNull: false,
+            get() {
+                return Number(this.getDataValue("amount"));
+            }
         },
         balance: {
             type: sequelize_1.DataTypes.DECIMAL,
             allowNull: false,
+            get() {
+                return Number(this.getDataValue("balance"));
+            }
         },
         term: {
-            type: sequelize_1.DataTypes.DECIMAL,
+            type: sequelize_1.DataTypes.INTEGER,
             allowNull: false,
+            get() {
+                return Number(this.getDataValue("term"));
+            }
         },
         status: {
             type: sequelize_1.DataTypes.ENUM(...Object.values(SourceInterfaces_1.ELoanStatus)),
@@ -75,6 +85,11 @@ let Loan = class Loan extends sequelize_1.Model {
         period: {
             type: sequelize_1.DataTypes.STRING,
             allowNull: false,
+        },
+        type: {
+            type: sequelize_1.DataTypes.ENUM(...Object.values(SourceInterfaces_1.ELoanType)),
+            allowNull: false,
+            defaultValue: SourceInterfaces_1.ELoanType.Fixed
         },
         clientId: {
             type: sequelize_1.DataTypes.INTEGER,

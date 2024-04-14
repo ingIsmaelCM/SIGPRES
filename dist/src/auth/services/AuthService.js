@@ -13,6 +13,8 @@ const tools_1 = __importDefault(require("@app/utils/tools"));
 const BaseConnection_1 = __importDefault(require("@app/db/BaseConnection"));
 const Service_1 = __importDefault(require("@app/services/Service"));
 const InfoRepository_1 = __importDefault(require("@source/repositories/InfoRepository"));
+const TenantConnection_1 = __importDefault(require("@app/db/TenantConnection"));
+const InfoService_1 = __importDefault(require("@source/services/InfoService"));
 class AuthService extends Service_1.default {
     authRepo = new AuthRepository_1.AuthRepository();
     authMailService = new AuthMailService_1.default();
@@ -40,6 +42,20 @@ class AuthService extends Service_1.default {
             await trans.rollback();
             throw { code: error.code, message: error.message };
         }
+    }
+    async updateAuthInfo(infoId, info) {
+        const trans = await TenantConnection_1.default.getTrans();
+        const authTrans = await BaseConnection_1.default.getTrans();
+        return this.safeRun(async () => {
+            const updatedInfo = await new InfoService_1.default().setFromRelated({ ...info, id: infoId }, trans);
+            await this.authRepo.update({ infoId: infoId }, infoId, authTrans);
+            await trans.commit();
+            await authTrans.commit();
+            return updatedInfo;
+        }, async () => {
+            await trans.rollback();
+            await authTrans.rollback();
+        });
     }
     async login(auth, res) {
         const trans = await BaseConnection_1.default.getTrans();

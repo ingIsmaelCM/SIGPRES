@@ -72,12 +72,12 @@ class Tool {
     uppercaseFirst(str) {
         return `${str[0].toUpperCase()}${str.substring(1)}`;
     }
-    initialToUpper = (sentence = "") => sentence.toLocaleLowerCase().replace(/\b[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ]+\b/gi, (match) => match.toLowerCase().replace(match.charAt(0), match.charAt(0).toUpperCase()));
+    initialToUpper = (sentence = "") => sentence.replace(/\b[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ]+\b/gi, (match) => match !== match.toUpperCase() ? this.uppercaseFirst(match) : match);
     setUserRelated(req, data) {
         if (!data.id) {
-            data.createdBy = req.auth.id;
+            data.createdBy = req.auth.username;
         }
-        data.updatedBy = req.auth.id;
+        data.updatedBy = req.auth.username;
         return data;
     }
     fromEnum(myEnum) {

@@ -30,7 +30,7 @@ class WalletService extends Service_1.default {
             if (data.sumBalance) {
                 const preference = await this.preferenceRepo.find("key", "capitalCompany");
                 const balance = Number(preference.value);
-                const upatedPref = await this.preferenceRepo.update({ value: balance + data.balance }, preference.id, trans);
+                await this.preferenceRepo.update({ value: balance + data.balance }, preference.id, trans);
             }
             await trans.commit();
             return newWallet;
@@ -40,6 +40,20 @@ class WalletService extends Service_1.default {
         const trans = await TenantConnection_1.default.getTrans();
         return this.safeRun(async () => {
             const updatedWallet = await this.mainRepo.update(data, walletId, trans);
+            await trans.commit();
+            return updatedWallet;
+        }, async () => await trans.rollback());
+    }
+    async addBalanceToWallet(walletId, data) {
+        const trans = await TenantConnection_1.default.getTrans();
+        return this.safeRun(async () => {
+            const updatedWallet = await this.mainRepo.setBalance(data.newBalance, walletId, trans);
+            if (data.sumBalance) {
+                const preference = await this.preferenceRepo.find("key", "capitalCompany");
+                const balance = Number(preference.value);
+                await this.preferenceRepo.update({ value: balance + data.newBalance }, preference.id, trans);
+            }
+            await this.mainRepo.update({ updatedBy: data.updatedBy }, walletId, trans);
             await trans.commit();
             return updatedWallet;
         }, async () => await trans.rollback());

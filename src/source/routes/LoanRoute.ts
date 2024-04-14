@@ -26,11 +26,17 @@ export default class LoanRoutes extends BaseRoutes<LoanController> {
             );
 
         this.controller.router.patch("/:id/confirm",
-            RoleMiddleware.hasPermission(PermissionEnums.editLoan),
+            RoleMiddleware.hasPermission(PermissionEnums.approveLoan),
             LoanRequest.loanConfirmRequest(),
             LoanRequest.requireIdRequest(),
             LoanRequest.validate,
             (req: Request, res: Response) => this.controller.confirm(req, res)
+            );
+        this.controller.router.patch("/:id/decline",
+            RoleMiddleware.hasPermission(PermissionEnums.declineLoan),
+            LoanRequest.requireIdRequest(),
+            LoanRequest.validate,
+            (req: Request, res: Response) => this.controller.decline(req, res)
             )
         this.controller.router.route("/:id")
             .get(
@@ -40,6 +46,8 @@ export default class LoanRoutes extends BaseRoutes<LoanController> {
             .put(
                 RoleMiddleware.hasPermission(PermissionEnums.editLoan),
                 LoanRequest.loanUpdateRequest(),
+                LoanRequest.requireIdRequest(),
+                ConditionRequest.conditionCreateRequest(),
                 LoanRequest.validate,
                 (req: Request, res: Response) => this.controller.update(req, res)
             )

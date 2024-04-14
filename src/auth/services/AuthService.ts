@@ -13,6 +13,8 @@ import Permission from "../models/Permission";
 import Role from "../models/Role";
 import Service from "@app/services/Service";
 import InfoRepository from "@source/repositories/InfoRepository";
+import TenantConnection from "@app/db/TenantConnection";
+import InfoService from "@source/services/InfoService";
 
 export default class AuthService extends Service {
     private authRepo: AuthRepository = new AuthRepository();
@@ -49,6 +51,22 @@ export default class AuthService extends Service {
             await trans.rollback();
             throw {code: error.code, message: error.message};
         }
+    }
+
+    async updateAuthInfo(infoId: string, info: any) {
+        const trans = await TenantConnection.getTrans();
+        const authTrans = await BaseConnection.getTrans();
+        return this.safeRun(async () => {
+            const updatedInfo = await new InfoService().setFromRelated({...info, id: infoId}, trans);
+            await this.authRepo.update({infoId: infoId}, infoId, authTrans);
+            await trans.commit();
+            await authTrans.commit();
+            return updatedInfo
+        }, async () => {
+            await trans.rollback();
+            await authTrans.rollback();
+
+        })
     }
 
 

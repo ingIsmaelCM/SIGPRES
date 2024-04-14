@@ -201,7 +201,7 @@ CREATE TABLE `loans`(
     `endAt` DATE NOT NULL,
      `nextPaymentAt` DATE,
     `term` INT NOT NULL COMMENT 'Cantidad de cuotas',
-    `status` ENUM('Pendiente', 'Aprobado','Rechazado') NOT NULL DEFAULT 'Pendiente',
+    `status` ENUM('Pendiente', 'Aprobado','Rechazado','Pagado') NOT NULL DEFAULT 'Pendiente',
     `period` VARCHAR(50) NOT NULL,
     `type` ENUM('Tasa Fija','Tasa Variable') NOT NULL DEFAULT 'Tasa Fija',
     `clientId` VARCHAR(70) NOT NULL,
@@ -322,9 +322,9 @@ FROM `infos` i INNER JOIN `sigpres_main`.`auths` a ON a.infoId=i.id;
 
 CREATE OR REPLACE VIEW paymentStatView AS
 SELECT ANY_VALUE(pay.id) AS id, ANY_VALUE(l.code) AS loanCode, pay.clientId , pay.loanId,
-ROUND(AVG(DATEDIFF(pay.payedAt, pay.dueAt)),2) AS averageDiffInDay,
-ROUND(COUNT(IF(DATEDIFF(pay.payedAt, pay.dueAt)<=0,pay.id,NULL)),2) AS onTime,
-ROUND(COUNT(IF(DATEDIFF(pay.payedAt, pay.dueAt)>0,pay.id,NULL)),2) AS outTime,
+ROUND(AVG(DATEDIFF(m.closedAt, m.dueAt)),2) AS averageDiffInDay,
+ROUND(COUNT(IF(DATEDIFF(m.closedAt, m.dueAt)<=0,pay.id,NULL)),2) AS onTime,
+ROUND(COUNT(IF(DATEDIFF(m.closedAt, m.dueAt)>0,pay.id,NULL)),2) AS outTime,
 (SELECT ANY_VALUE(w.name) ORDER BY COUNT(w.id) DESC LIMIT 1) AS modaWallet,
 ROUND(AVG(IF(pay.interest=0,pay.capital,0)),2) AS averageAbonoCapital,
 ROUND(SUM(IF(pay.interest=0,pay.capital,0)),2) AS totalAbonoCapital,
@@ -484,5 +484,5 @@ TRUNCATE TABLE `wallets`;
 
 INSERT INTO `wallets` (name, balance, createdBy, updatedBy) VALUES
 ('Efectivo', 0, 1, 1);
-INSERT INTO `infos` (id, email, createdBy, updatedBy) VALUES ('2b96f902-f070-11ee-95b9-3c2c30ad6656','developer@ismaelcm.dev',1,1);
+INSERT INTO `infos` (id, email, createdBy, updatedBy) VALUES (1,'developer@ismaelcm.dev',1,1);
 SET foreign_key_checks = 1;

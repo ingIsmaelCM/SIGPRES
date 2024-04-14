@@ -20,11 +20,15 @@ export default class ClientService extends Service {
 
 
     async getClients(params: IParams) {
-        return await this.clientViewRepo.getAll(params)
+        return this.safeRun(async () =>
+            await this.clientViewRepo.getAll(params)
+        )
     }
 
     async findClient(clientId: string, params: IParams) {
-        return await this.clientViewRepo.findById(clientId, params)
+        return this.safeRun(async () =>
+            await this.clientViewRepo.findById(clientId, params)
+        )
     }
 
     async createClient(data: IClientView): Promise<IClient> {

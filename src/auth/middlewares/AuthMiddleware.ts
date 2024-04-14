@@ -13,10 +13,10 @@ import AuthService from "@auth/services/AuthService";
 class AuthMiddleware extends Middleware {
     async auth(req: any, res: Response, next: NextFunction): Promise<any> {
         try {
+            const authToken = await this.verifyTokenExists(req);
+            const decoded = await this.verifyTokenIsValid(authToken);
+            req.auth = await this.validateSessionId(decoded);
             TenantConnection.requestNamespace.run(async () => {
-                const authToken = await this.verifyTokenExists(req);
-                const decoded = await this.verifyTokenIsValid(authToken);
-                req.auth = await this.validateSessionId(decoded);
                 try {
                     await new AuthService().refreshToken(req, res);
                 } catch (error) {

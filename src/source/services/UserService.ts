@@ -19,13 +19,13 @@ export default class UserService extends Service {
     private authMailService: AuthMailService = new AuthMailService();
     private userViewRepo = new UserViewRepository();
     private infoService = new InfoService();
-    private  tenantRepo=new TenantRepository();
+    private tenantRepo = new TenantRepository();
 
     async getUsers(params: IParams, req: any) {
-      return   this.safeRun(async()=>{
-          //We retrieve users from tenant, cause we couldn't make cross relationship between auths and info
-            const tenant=await this.tenantRepo.find('key',req.cookies.tenant,false,
-                {include:'auths.roles.permissions,auths.permissions'});
+        return this.safeRun(async () => {
+            //We retrieve users from tenant, cause we couldn't make cross relationship between auths and info
+            const tenant = await this.tenantRepo.find('key', req.cookies.tenant, false,
+                {include: 'auths.roles.permissions,auths.permissions'});
             return await (tenant).auths
         })
     }
@@ -42,8 +42,9 @@ export default class UserService extends Service {
         const trans = await BaseConnection.getTrans();
         const infoTrans = await TenantConnection.getTrans();
         return this.safeRun(async () => {
-                const newInfo = await this.infoService.setFromRelated(data as any, infoTrans);
-                const newUser = await this.mainRepo.create({...data, infoId: newInfo.id}, trans);
+                const newUser = await this.mainRepo.create({...data}, trans);
+                const newInfo = await this.infoService.setFromRelated({...data, id: newUser.id} as any, infoTrans);
+                await this.mainRepo.update({infoId: newInfo.id}, newUser.id, trans);
                 await trans.commit();
                 await infoTrans.commit();
                 return {...newUser.dataValues, info: newInfo};
@@ -107,7 +108,6 @@ export default class UserService extends Service {
             async () => await trans.rollback()
         )
     }
-
 
 
 }

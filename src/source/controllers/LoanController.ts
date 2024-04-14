@@ -39,10 +39,18 @@ export default class LoanController extends Controller implements IController {
     }
 
     @setAuthor
+    async decline(req: Request, res: Response) {
+        return this.safeRun(async () =>
+                this.mainService.declineLoan(req.params.id, req.body),
+            res, 201, "Solicitud Rechazada"
+        )
+    }
+
+    @setAuthor
     async update(req: Request, res: Response) {
         return this.safeRun(async () =>
                 this.mainService.updateLoan(req.params.id, req.body),
-            res, 201, ""
+            res, 201, "Préstamo actualizado"
         )
     }
 

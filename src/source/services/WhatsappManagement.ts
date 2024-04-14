@@ -42,7 +42,6 @@ export default class WhatsappManagement {
                             {tenantId: tenantId, messages: messages})
                     });
                     client.on('message_ack', async (msg: Message) => {
-                        console.log('Testing')
                         let messages = await this.getUnreadMessages(client);
                         WhatsappManagement.socket.emit(`updateMessages${tenantId}`,
                             {tenantId: tenantId, messages: messages})

@@ -87,14 +87,23 @@ export default class Loan extends Model implements ILoan {
         amount: {
             type: DataTypes.DECIMAL,
             allowNull: false,
+            get(this: Loan){
+                return Number(this.getDataValue("amount"))
+            }
         },
         balance: {
             type: DataTypes.DECIMAL,
             allowNull: false,
+            get(this: Loan){
+                return Number(this.getDataValue("balance"))
+            }
         },
         term: {
-            type: DataTypes.DECIMAL,
+            type: DataTypes.INTEGER,
             allowNull: false,
+            get(this: Loan){
+                return Number(this.getDataValue("term"))
+            }
         },
 
         status: {

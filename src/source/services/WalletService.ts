@@ -16,10 +16,10 @@ export default class WalletService extends Service {
         const canCreateWallet = req.auth.permissions
             .some((permission: any) =>
                 permission.name === permissionEnums.createWallet)
-        let wallets=await this.mainRepo.getAll(params)
+        let wallets = await this.mainRepo.getAll(params)
         if (!canCreateWallet) {
-          wallets.rows=wallets.rows.filter((wallet:IWallet)=>
-          !wallet.authId || wallet.authId===req.auth.id)
+            wallets.rows = wallets.rows.filter((wallet: IWallet) =>
+                !wallet.authId || wallet.authId === req.auth.id)
         }
         return wallets;
     }
@@ -35,7 +35,7 @@ export default class WalletService extends Service {
                 if (data.sumBalance) {
                     const preference = await this.preferenceRepo.find("key", "capitalCompany");
                     const balance = Number(preference.value)
-                    const upatedPref = await this.preferenceRepo.update({value: balance + data.balance}, preference.id, trans);
+                    await this.preferenceRepo.update({value: balance + data.balance}, preference.id, trans);
                 }
                 await trans.commit();
                 return newWallet;
@@ -48,6 +48,23 @@ export default class WalletService extends Service {
         const trans = await TenantConnection.getTrans();
         return this.safeRun(async () => {
                 const updatedWallet = await this.mainRepo.update(data, walletId, trans);
+                await trans.commit();
+                return updatedWallet;
+            },
+            async () => await trans.rollback()
+        )
+    }
+
+    async addBalanceToWallet(walletId: string, data: Record<string, any>): Promise<IWallet> {
+        const trans = await TenantConnection.getTrans();
+        return this.safeRun(async () => {
+                const updatedWallet = await this.mainRepo.setBalance(data.newBalance, walletId, trans);
+                if (data.sumBalance) {
+                    const preference = await this.preferenceRepo.find("key", "capitalCompany");
+                    const balance = Number(preference.value)
+                    await this.preferenceRepo.update({value: balance + data.newBalance}, preference.id, trans);
+                }
+                await this.mainRepo.update({updatedBy: data.updatedBy}, walletId, trans);
                 await trans.commit();
                 return updatedWallet;
             },

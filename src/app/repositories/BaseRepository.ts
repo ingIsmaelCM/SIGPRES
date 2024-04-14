@@ -1,4 +1,4 @@
-import {Model, ModelStatic, Sequelize} from "sequelize";
+import {DestroyOptions, Model, ModelStatic, Sequelize, Transaction, UpdateOptions} from "sequelize";
 import Scope from "../utils/scopes";
 import {IParams} from "../interfaces/AppInterfaces";
 import tools from "../utils/tools";
@@ -10,16 +10,9 @@ import SocketService from "@app/services/SocketService";
  *
  */
 export class BaseRepository<T extends Model> {
-    /**
-     * Model used by this repo
-     * @protected
-     */
     protected model;
     protected socketService: SocketService;
-    /**
-     * Name of col that is primary key. Default: id
-     * @private
-     */
+
     private primaryKeyName: string = "id";
 
     constructor(model: ModelStatic<T>) {
@@ -27,8 +20,20 @@ export class BaseRepository<T extends Model> {
         this.socketService = new SocketService();
     }
 
+    protected async safeRun(method: () => Promise<any>): Promise<any> {
+        try {
+            this.primaryKeyName = this.model.primaryKeyAttribute;
+            return await method();
+        } catch (error: any) {
+            logger.error(JSON.stringify(error))
+            throw {
+                code: error.code || 500,
+                message: error.message
+            };
+        }
+    }
+
     public async getAll(params: IParams): Promise<any> {
-        console.log(this.model!.sequelize!.getDatabaseName())
         return this.safeRun(() => Scope.get(this.model, params));
     }
 
@@ -55,7 +60,7 @@ export class BaseRepository<T extends Model> {
     }
 
     public async findById(
-        dataId: string|string,
+        dataId: string | string,
         params?: any,
         withTrashed?: boolean
     ): Promise<any> {
@@ -144,6 +149,27 @@ export class BaseRepository<T extends Model> {
         });
     }
 
+    async bulkDelete(options: DestroyOptions, force: boolean, trans: Transaction) {
+        return await this.safeRun(async () => {
+            return await this.model.destroy({
+                ...options,
+                transaction: trans,
+                force: true
+
+            })
+        })
+    }
+
+
+    async bulkUpdate(data: any, options: UpdateOptions,  trans: Transaction) {
+        return await this.safeRun(async () => {
+            return await this.model.update(data, {
+                ...options,
+                transaction: trans,
+            })
+        })
+    }
+
     public async restore(primaryKey: string | number, trans: any): Promise<T> {
         return this.safeRun(async () => {
             const dataToRestore = await this.find(
@@ -185,16 +211,5 @@ export class BaseRepository<T extends Model> {
         })
     }
 
-    protected async safeRun(method: () => Promise<any>): Promise<any> {
-        try {
-            this.primaryKeyName = this.model.primaryKeyAttribute;
-            return await method();
-        } catch (error: any) {
-            logger.error(JSON.stringify(error))
-            throw {
-                code: error.code || 500,
-                message: error.message
-            };
-        }
-    }
+
 }

@@ -19,7 +19,6 @@ import Multer from "@app/middlewares/Multer";
 import IdempotencyMiddleware from "@app/middlewares/IdempotencyMiddleware";
 import proxy from "express-http-proxy";
 
-console.log(new Date())
 export class App {
     public app: express.Application;
     public port: number;
@@ -32,7 +31,6 @@ export class App {
      * @param port
      */
     constructor(routes: Array<any>, port: number) {
-
         this.app = express();
         this.app.use('/proxy',proxy(config.app.url))
         this.server = http.createServer(this.app);

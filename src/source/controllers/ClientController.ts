@@ -9,7 +9,6 @@ export default class ClientController extends Controller implements IController 
 
 
     async index(req: Request, res: Response) {
-        //@ts-ignore
         return this.safeRun(async () =>
                 this.mainService.getClients(req.query),
             res, 200, "Listado de clientes"

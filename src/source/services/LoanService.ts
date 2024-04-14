@@ -3,9 +3,10 @@ import {IParams} from "@app/interfaces/AppInterfaces";
 import LoanRepository from "@source/repositories/LoanRepository";
 import TenantConnection from "@app/db/TenantConnection";
 import {
+    EAmortizationStatus,
     ELawyerPaymentStatus,
     ELawyerPaymode,
-    ELoanStatus,
+    ELoanStatus, IAmortization,
     ILawyerPayment,
     ILoan
 } from "@app/interfaces/SourceInterfaces";
@@ -61,7 +62,7 @@ export default class LoanService extends Service {
 
     private async createPaymentForLawyerFromLoan(lawyerId: string, newLoan: ILoan, trans: Transaction) {
         const lawyer = await this.lawyerRepo.findById(lawyerId);
-        if (lawyer.payMode == ELawyerPaymode.Contrato) {
+        if (lawyer.payMode === ELawyerPaymode.Contrato) {
             const newLayerPayment: ILawyerPayment = {
                 amount: lawyer.payPrice,
                 date: newLoan.startAt,
@@ -78,7 +79,6 @@ export default class LoanService extends Service {
 
     async confirmLoan(loanId: string, data: Record<string, any>) {
         const trans = await TenantConnection.getTrans();
-
         return this.safeRun(async () => {
                 const loan = await this.mainRepo.findById(loanId, {include: "condition"});
                 if (loan.startAt !== data.startAt) {
@@ -104,8 +104,8 @@ export default class LoanService extends Service {
                         await this.amortizationRepo.updateOrCreate(amort, trans);
                     }
                 }
-                if (data.lawyerId) {
-                    await this.createPaymentForLawyerFromLoan(data.lawyerId, loan, trans);
+                if (loan.lawyerId) {
+                    await this.createPaymentForLawyerFromLoan(loan.lawyerId, loan, trans);
                 }
                 await this.walletRepo.setBalance((0 - loan.amount), data.walletId, trans);
                 await this.mainRepo.update({...data, status: ELoanStatus.Aprobado}, loan.id, trans);
@@ -116,9 +116,51 @@ export default class LoanService extends Service {
         )
     }
 
+    async declineLoan(loanId: string, data: any) {
+        const trans = await TenantConnection.getTrans();
+        return this.safeRun(async () => {
+                await this.mainRepo.update({
+                    status: ELoanStatus.Rechazado,
+                    updatedBy: data.updatedBy
+                }, loanId, trans);
+                await this.amortizationRepo.bulkUpdate({status: EAmortizationStatus.Cancelado},
+                    {
+                        where: {
+                            loanId: loanId
+                        }
+                    }, trans);
+                await trans.commit();
+                return true;
+            },
+            async () => await trans.rollback()
+        )
+    }
+
     async updateLoan(loanId: string, data: ILoan): Promise<ILoan> {
         const trans = await TenantConnection.getTrans();
         return this.safeRun(async () => {
+                const loan = await this.mainRepo.findById(loanId, {include: "amortizations,condition"});
+                const oldAmorts = loan?.amortizations;
+                let newAmorts = amortization.getAmortization(data)
+                    .map((amort: {}) => ({
+                        ...amort,
+                        createdBy: data.updatedBy,
+                        updatedBy: data.updatedBy
+                    }));
+                await this.amortizationRepo.bulkDelete({where: {loanId: loanId}}, true, trans);
+                data.endAt = newAmorts.at(-1).date;
+                data.startAt = newAmorts.at(0).date;
+                data.nextPaymentAt = newAmorts.at(0).date;
+                data.balance = data.amount;
+                const newLoan = await this.mainRepo.update(data, loanId, trans);
+                await this.conditionRepo
+                    .update({...data, loanId: newLoan.id}, loan.condition.id, trans);
+                await this.amortizationRepo
+                    .createFromLoan(newAmorts, newLoan.id!, data.clientId, trans);
+                await trans.commit();
+                return newLoan;
+
+
             },
             async () => await trans.rollback()
         )

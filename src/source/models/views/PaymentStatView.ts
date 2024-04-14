@@ -77,7 +77,13 @@ export default class PaymentStatView extends Model implements IPaymentStatView {
             type: DataTypes.DECIMAL
         },
         onTime: {
-            type: DataTypes.DECIMAL
+            type: DataTypes.DECIMAL,
+            get(this: PaymentStatView) {
+                if(this.getDataValue('outTime')===0){
+                    return 1;
+                }
+                return this.getDataValue('onTime');
+            }
         },
         outTime: {
             type: DataTypes.DECIMAL
@@ -85,6 +91,9 @@ export default class PaymentStatView extends Model implements IPaymentStatView {
         percentOnTime: {
             type: DataTypes.VIRTUAL,
             get(this: PaymentStatView) {
+                if(this.getDataValue('outTime')===0){
+                    return 100;
+                }
                 const percent = Number(this.getDataValue("onTime")||0.01) /
                    ( (this.getDataValue("onTime")) + this.getDataValue("outTime"));
                 return Number((percent * 100).toFixed(2))

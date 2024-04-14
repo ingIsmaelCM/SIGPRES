@@ -5,6 +5,7 @@ import {AuthController} from "@auth/controllers/AuthController";
 import RoleMiddleware from "../middlewares/RoleMiddleware";
 import PermissionEnums from "@app/interfaces/PermissionEnums";
 import {Request, Response} from "express";
+import InfoRequest from "@source/requests/InfoRequest";
 
 export default class AuthRoutes extends BaseRoutes<AuthController> {
 
@@ -49,7 +50,14 @@ export default class AuthRoutes extends BaseRoutes<AuthController> {
             AuthRequests.validate,
             (req: any, res: any) => this.controller.resetPassword(req, res)
         );
-
+        this.router.put(
+            "/profile/:id",
+            AuthMiddleware.auth,
+            InfoRequest.relatedInfoRequest(),
+            InfoRequest.relatedInfoRequest(),
+            InfoRequest.validate,
+            (req: any, res: any) => this.controller.updateAuthInfo(req, res)
+        );
         this.router.post(
             "/password/recover",
             AuthRequests.validateRecoverAndVerifyEmail(),

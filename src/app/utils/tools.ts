@@ -11,7 +11,6 @@ import cloudinary from "cloudinary"
 import logger from "@/logger";
 
 
-
 class Tool {
     parseOrZero(value: string | number | undefined): number {
         if (typeof value == "number") {
@@ -63,7 +62,7 @@ class Tool {
             httpOnly: true,
             sameSite: false,
             secure: true,
-            expires: new Date(Date.now() + (expiration||24 * 60 * 60 * 1000)),
+            expires: new Date(Date.now() + (expiration || 24 * 60 * 60 * 1000)),
         });
     }
 
@@ -98,9 +97,8 @@ class Tool {
         return `${str[0].toUpperCase()}${str.substring(1)}`;
     }
 
-    initialToUpper = (sentence: string = "") => sentence.toLocaleLowerCase().replace(/\b[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ]+\b/gi,
-        (match: string) => match.toLowerCase().replace(match.charAt(0),
-            match.charAt(0).toUpperCase()));
+    initialToUpper = (sentence: string = "") => sentence.replace(/\b[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ]+\b/gi,
+        (match: string) => match !== match.toUpperCase() ? this.uppercaseFirst(match) : match);
 
     setUserRelated<
         T extends {

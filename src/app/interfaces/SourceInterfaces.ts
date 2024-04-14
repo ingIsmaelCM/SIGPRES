@@ -351,6 +351,7 @@ export enum ELoanStatus {
     Pendiente = "Pendiente",
     Aprobado = "Aprobado",
     Rechazado = "Rechazado",
+    Pagado = "Pagado",
 }
 
 export interface ILoanRelation {

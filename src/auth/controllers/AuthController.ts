@@ -2,7 +2,7 @@ import {Request, Response} from "express";
 import AuthService from "../services/AuthService";
 import IController from "@app/controllers/IController";
 
-import Controller from "@/app/controllers/Controller";
+import Controller, {setAuthor} from "@/app/controllers/Controller";
 
 export class AuthController extends Controller implements IController {
     mainService: AuthService = new AuthService();
@@ -12,6 +12,13 @@ export class AuthController extends Controller implements IController {
         return await this.safeRun(async () => {
             return await this.mainService.createAuth(req.body);
         }, res, 201, "Cuenta registrada exitosamente")
+    }
+
+    @setAuthor
+    async updateAuthInfo(req: Request, res: Response) {
+        return await this.safeRun(async () => {
+            return await this.mainService.updateAuthInfo(req.params.id, req.body);
+        }, res, 201, "Perfil Actualizado Correctamente")
     }
 
     async loginAuth(req: Request, res: Response) {
@@ -65,6 +72,7 @@ export class AuthController extends Controller implements IController {
                 await this.mainService.sendVerificationCode(req.body.email),
             res, 200, "Correo de verificación enviado")
     }
+
     async unAuthorize(req: Request, res: Response) {
         return this.safeRun(async () =>
                 this.mainService.unAuthorizeUser(req.params.id),
@@ -73,7 +81,7 @@ export class AuthController extends Controller implements IController {
     }
 
     async recoverPassword(req: any, res: Response) {
-        return await this.safeRun(async()=> await this.mainService.recoverPassword(req.body, res),
+        return await this.safeRun(async () => await this.mainService.recoverPassword(req.body, res),
             res, 200, "Código Verificado correctamente")
 
     }

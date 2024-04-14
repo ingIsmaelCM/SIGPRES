@@ -47,7 +47,6 @@ export default class TenantConnection {
                     paranoid: true,
                     ...model.additionalOptions
                 });
-                console.log(model.modelName)
             }
             SourceRelation.initRelation();
         } catch (error: any) {

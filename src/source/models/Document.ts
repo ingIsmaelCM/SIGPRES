@@ -9,9 +9,10 @@ export default class Document extends Model implements IDocument {
     static modelName = "Document"
     static attributes: Record<keyof IDocument, ModelAttributeColumnOptions> = {
         id: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.STRING,
             primaryKey: true,
-            autoIncrement: true,
+            allowNull: false,
+            defaultValue: DataTypes.UUIDV4
         },
         path: {
             type: DataTypes.STRING,

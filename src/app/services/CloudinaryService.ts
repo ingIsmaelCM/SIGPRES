@@ -35,7 +35,6 @@ export default class CloudinaryService extends Service {
 
     async uploadFilesToCloudinary<T>(files: any[]) {
         try {
-            const options: FileCloudOptions = await new AppService().getCloudSignature();
             const results: T[] = [];
             for (const file of files) {
                 const res = await this.cloud.uploader.upload(file.path, {
@@ -45,7 +44,6 @@ export default class CloudinaryService extends Service {
                     ],
 
                 })
-
                 results.push({
                     path: res.url,
                     size: (res.bytes * 0.000001).toFixed(2),
@@ -63,7 +61,7 @@ export default class CloudinaryService extends Service {
         }catch (error:any){
             return Promise.reject({
                 code: 500,
-                message: error.code
+                message: error.message
             })
         }
 

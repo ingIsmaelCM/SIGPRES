@@ -29,6 +29,13 @@ export default class WalletController extends Controller implements IController 
             res, 201, "Billetera registrada"
         )
     }
+    @setAuthor
+    async addBalance(req: Request, res: Response) {
+        return this.safeRun(async () =>
+                this.mainService.addBalanceToWallet(req.params.id, req.body),
+            res, 201, "Saldo añadido exitosamente"
+        )
+    }
 
     @setAuthor
     async update(req: Request, res: Response) {

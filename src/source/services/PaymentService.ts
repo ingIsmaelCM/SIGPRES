@@ -16,7 +16,7 @@ import LawyerRepository from "@source/repositories/LawyerRepository";
 import {
     EAmortizationStatus,
     ELawyerPaymentStatus,
-    ELawyerPaymode,
+    ELawyerPaymode, ELoanStatus,
     EMoraStatus,
     IAmortizationView,
     ILawyerPayment,
@@ -73,11 +73,13 @@ export default class PaymentService extends Service {
                 const wallet = await this.walletRepo.findById(data.walletId);
                 const nextPaymentDate = amortization.moveDateCuota(amorts.rows.at(-1).date, loan.period)
                 const newBalance = Number(loan.balance) - Number(amorts.rows.reduce((a: number, b: IAmortizationView) =>
-                    a + Number(b.capital), 0))
+                    a + Number(b.capital), 0));
+                const isPayed = newBalance <= 0 && !data.justInterest;
                 const newLoanData = {
                     balance: data.justInterest ? loan.balance : newBalance,
                     nextPaymentAt: moment(nextPaymentDate).format("YYYY-MM-DD"),
-                    updatedBy: data.updatedBy
+                    updatedBy: data.updatedBy,
+                    status: isPayed ? ELoanStatus.Pagado : loan.status
                 };
                 const newLoan = await this.loanRepo.update(newLoanData, loan.id, trans);
                 const walletBalance = Number(payments.reduce((a: number, b: IPayment) =>
@@ -116,7 +118,7 @@ export default class PaymentService extends Service {
                 const amort: IAmortizationView = (await this.getAmortizationFromLoan(data))[0];
                 const wallet = await this.walletRepo.findById(data.walletId);
                 const total = data.capital + data.interest + data.mora;
-                if(total<=0){
+                if (total <= 0) {
                     return Promise.reject({
                         code: 422,
                         message: "No ingresó ningún valor"
@@ -127,7 +129,8 @@ export default class PaymentService extends Service {
                 while (data.interest && moment().isAfter(moment(newDate))) {
                     newDate = amortization.getDateCuota(new Date(newDate), loan.period).format('YYYY-MM-DD')
                 }
-                const newStatus = loan.balance === data.capital ? EAmortizationStatus.Pagado : EAmortizationStatus.Pendiente;
+                const isPayed = loan.balance === data.capital;
+                const newStatus = isPayed ? EAmortizationStatus.Pagado : EAmortizationStatus.Pendiente;
                 const payment = this.getPaymentFromCapitalAndData(data, loan);
                 const newPayment = await this.mainRepo.create(payment, trans);
                 if (amort.mora) {
@@ -142,19 +145,24 @@ export default class PaymentService extends Service {
                 })[0];
                 newAmort = {
                     ...newAmort,
+                    cuota: isPayed ? amort.cuota : newAmort.cuota,
+                    interest: isPayed ? amort.interest : newAmort.interest,
+                    capital: isPayed ? amort.capital : newAmort.capital,
                     status: newStatus,
-                    mora: 0,
+                    mora: isPayed ? amort.mora :0,
                     updatedBy: data.updatedBy
                 }
+
                 if (newPayment.lawyerId) {
                     await this.createPaymentForLawyerFromPayment(payment, trans);
                 }
                 const newLoan = await this.loanRepo.update({
                     balance: newPayment.balanceAfter,
-                    nextPaymentAt: newDate
+                    nextPaymentAt: newDate,
+                    status: isPayed ? ELoanStatus.Pagado : loan.status
                 }, loan.id, trans);
-                const amortUpdated = await this.amortizationRepo.update(newAmort, amort.id!, trans);
-                await this.walletRepo.setBalance(newPayment.amount, wallet.id, trans);
+                await this.amortizationRepo.update(newAmort, amort.id!, trans);
+                await this.walletRepo.setBalance(newPayment.amount,wallet.id, trans);
                 await trans.commit();
                 return newLoan;
             },
@@ -201,7 +209,7 @@ export default class PaymentService extends Service {
 
     private getPaymentFromCapitalAndData(data: Record<string, any>, loan: ILoan) {
         return {
-            amount: data.capital + data.interest,
+            amount: data.capital + data.interest+data.mora,
             capital: data.capital,
             interest: data.interest,
             balanceBefore: loan.balance,
@@ -227,7 +235,7 @@ export default class PaymentService extends Service {
             ],
             order: "nro"
         })
-        return amorts.rows.map((amort: any) => amort.dataValues);
+        return amorts.rows;
     }
 
 

@@ -16,7 +16,7 @@ import AmortizationRepository from "@source/repositories/AmortizationRepository"
 import WalletRepository from "@source/repositories/WalletRepository";
 import LawyerPaymentRepository from "@source/repositories/LawyerPaymentRepository";
 import LawyerRepository from "@source/repositories/LawyerRepository";
-import {Transaction} from "sequelize";
+import {Op, Transaction} from "sequelize";
 
 export default class LoanService extends Service {
     private mainRepo = new LoanRepository();
@@ -105,6 +105,7 @@ export default class LoanService extends Service {
                     }
                 }
                 if (loan.lawyerId) {
+
                     await this.createPaymentForLawyerFromLoan(loan.lawyerId, loan, trans);
                 }
                 await this.walletRepo.setBalance((0 - loan.amount), data.walletId, trans);
@@ -140,7 +141,8 @@ export default class LoanService extends Service {
         const trans = await TenantConnection.getTrans();
         return this.safeRun(async () => {
                 const loan = await this.mainRepo.findById(loanId, {include: "amortizations,condition"});
-                const oldAmorts = loan?.amortizations;
+                const oldWallet = await this.walletRepo.findById(loan.walletId);
+                const newWallet = await this.walletRepo.findById(data.walletId)
                 let newAmorts = amortization.getAmortization(data)
                     .map((amort: {}) => ({
                         ...amort,
@@ -155,6 +157,29 @@ export default class LoanService extends Service {
                 const newLoan = await this.mainRepo.update(data, loanId, trans);
                 await this.conditionRepo
                     .update({...data, loanId: newLoan.id}, loan.condition.id, trans);
+                if (loan.status === ELoanStatus.Aprobado) {
+                    if (loan.lawyerId) {
+                        await this.lawyerPaymentRepo.bulkDelete({
+                            where: {
+                                [Op.and]: [{lawyerId: loan.lawyerId}, {loanId: loan.id}],
+                            }
+                        }, true, trans)
+                        await this.createPaymentForLawyerFromLoan(loan.lawyerId, loan, trans);
+                    }
+                    if(oldWallet?.id===newWallet?.id){
+                        if (newWallet) {
+                            await this.walletRepo.setBalance(loan.amount-data.amount, oldWallet.id, trans);
+                        }
+
+                    } else{
+                        if (oldWallet) {
+                            await this.walletRepo.setBalance(loan.amount, oldWallet.id, trans);
+                        }
+                        if (newWallet) {
+                            await this.walletRepo.setBalance(0 - data.amount, newWallet.id, trans);
+                        }
+                    }
+                }
                 await this.amortizationRepo
                     .createFromLoan(newAmorts, newLoan.id!, data.clientId, trans);
                 await trans.commit();

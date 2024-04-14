@@ -13,6 +13,7 @@ const AmortizationRepository_1 = __importDefault(require("@source/repositories/A
 const WalletRepository_1 = __importDefault(require("@source/repositories/WalletRepository"));
 const LawyerPaymentRepository_1 = __importDefault(require("@source/repositories/LawyerPaymentRepository"));
 const LawyerRepository_1 = __importDefault(require("@source/repositories/LawyerRepository"));
+const sequelize_1 = require("sequelize");
 class LoanService extends Service_1.default {
     mainRepo = new LoanRepository_1.default();
     conditionRepo = new ConditionRepository_1.default();
@@ -118,7 +119,8 @@ class LoanService extends Service_1.default {
         const trans = await TenantConnection_1.default.getTrans();
         return this.safeRun(async () => {
             const loan = await this.mainRepo.findById(loanId, { include: "amortizations,condition" });
-            const oldAmorts = loan?.amortizations;
+            const oldWallet = await this.walletRepo.findById(loan.walletId);
+            const newWallet = await this.walletRepo.findById(data.walletId);
             let newAmorts = amortization_1.default.getAmortization(data)
                 .map((amort) => ({
                 ...amort,
@@ -133,6 +135,29 @@ class LoanService extends Service_1.default {
             const newLoan = await this.mainRepo.update(data, loanId, trans);
             await this.conditionRepo
                 .update({ ...data, loanId: newLoan.id }, loan.condition.id, trans);
+            if (loan.status === SourceInterfaces_1.ELoanStatus.Aprobado) {
+                if (loan.lawyerId) {
+                    await this.lawyerPaymentRepo.bulkDelete({
+                        where: {
+                            [sequelize_1.Op.and]: [{ lawyerId: loan.lawyerId }, { loanId: loan.id }],
+                        }
+                    }, true, trans);
+                    await this.createPaymentForLawyerFromLoan(loan.lawyerId, loan, trans);
+                }
+                if (oldWallet?.id === newWallet?.id) {
+                    if (newWallet) {
+                        await this.walletRepo.setBalance(loan.amount - data.amount, oldWallet.id, trans);
+                    }
+                }
+                else {
+                    if (oldWallet) {
+                        await this.walletRepo.setBalance(loan.amount, oldWallet.id, trans);
+                    }
+                    if (newWallet) {
+                        await this.walletRepo.setBalance(0 - data.amount, newWallet.id, trans);
+                    }
+                }
+            }
             await this.amortizationRepo
                 .createFromLoan(newAmorts, newLoan.id, data.clientId, trans);
             await trans.commit();

@@ -1,7 +1,8 @@
 import BaseConnection from "../../BaseConnection";
-import TenantConnection from "../../TenantConnection";
 import path from "path";
 import fs from "fs";
+import {Sequelize} from "sequelize";
+import config from "@app/app.config";
 
 export default class MigrateTenant {
   private readonly dbName: string;
@@ -34,7 +35,16 @@ export default class MigrateTenant {
   }
 
   private async migrateDatabase(dbName: string): Promise<void> {
-    const connection = TenantConnection.getConnection(dbName);
+    const connection = new Sequelize({
+      dialect: config.db.dialect,
+      host: config.db.host,
+      port: config.db.port,
+      username: config.db.user,
+      password: config.db.password,
+      database: dbName,
+      logging: config.db.logging,
+      timezone: "-04:00"
+    });;
     try {
       const folderPath = __dirname;
       const files = fs.readdirSync(folderPath);

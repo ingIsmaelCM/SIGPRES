@@ -4,9 +4,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const BaseConnection_1 = __importDefault(require("../../BaseConnection"));
-const TenantConnection_1 = __importDefault(require("../../TenantConnection"));
 const path_1 = __importDefault(require("path"));
 const fs_1 = __importDefault(require("fs"));
+const sequelize_1 = require("sequelize");
+const app_config_1 = __importDefault(require("@app/app.config"));
 class MigrateTenant {
     dbName;
     constructor(dbName) {
@@ -36,7 +37,17 @@ class MigrateTenant {
         }
     }
     async migrateDatabase(dbName) {
-        const connection = TenantConnection_1.default.getConnection(dbName);
+        const connection = new sequelize_1.Sequelize({
+            dialect: app_config_1.default.db.dialect,
+            host: app_config_1.default.db.host,
+            port: app_config_1.default.db.port,
+            username: app_config_1.default.db.user,
+            password: app_config_1.default.db.password,
+            database: dbName,
+            logging: app_config_1.default.db.logging,
+            timezone: "-04:00"
+        });
+        ;
         try {
             const folderPath = __dirname;
             const files = fs_1.default.readdirSync(folderPath);

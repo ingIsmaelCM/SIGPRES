@@ -10,7 +10,7 @@
     "migrate": "ts-node ./src/app/db/Migration",
     "seed": "ts-node ./src/app/db/Seed",
     "build": "npx tsc && xcopy /E /I public dist\\public && xcopy /E /I views dist\\views && copy package.json dist",
-    "copy": "shx cp -r src/app/db/migrations/tenants/database.sql dist/src/app/db/migrations/tenants/database.sqll",
+    "copy": "shx cp -r src/app/db/migrations/tenants/database.sql dist/src/app/db/migrations/tenants/database.sql",
     "docker:build": "docker build -t turn .",
     "docker:run": "docker run -p 3001:3001 -v ./:/usr/node/app turn",
     "docker:stop-all": "docker stop $(docker ps -q)"

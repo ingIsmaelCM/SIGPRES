@@ -29,6 +29,7 @@ class LoanRequest extends BaseRequest_1.default {
             this.RequestCheck.required('clientId'),
             this.RequestCheck.isString('lawyerId').optional({ values: "falsy" }),
             this.RequestCheck.isString('guarantorId').optional({ values: "falsy" }),
+            this.RequestCheck.isString('walletId').optional({ values: "falsy" }),
         ];
     }
     loanConfirmRequest() {

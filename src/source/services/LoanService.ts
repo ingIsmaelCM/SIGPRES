@@ -170,7 +170,6 @@ export default class LoanService extends Service {
                         if (newWallet) {
                             await this.walletRepo.setBalance(loan.amount-data.amount, oldWallet.id, trans);
                         }
-
                     } else{
                         if (oldWallet) {
                             await this.walletRepo.setBalance(loan.amount, oldWallet.id, trans);

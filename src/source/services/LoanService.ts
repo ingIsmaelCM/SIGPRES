@@ -157,6 +157,7 @@ export default class LoanService extends Service {
                 const newLoan = await this.mainRepo.update(data, loanId, trans);
                 await this.conditionRepo
                     .update({...data, loanId: newLoan.id}, loan.condition.id, trans);
+
                 if (loan.status === ELoanStatus.Aprobado) {
                     if (loan.lawyerId) {
                         await this.lawyerPaymentRepo.bulkDelete({

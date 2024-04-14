@@ -114,7 +114,7 @@ INSERT INTO `permissions` ( name, id) VALUES
 
 INSERT INTO `auths` (id, email, password, username, name, lastname, verifiedAt, infoId)
 VALUES
-(1, 'developer@ismaelcm.dev','$2a$10$uR9yGrtV2MJLZwbjOpA49eZRHoRp5j/tN8kZ4gQY57pAwzeyMSYau', 'icontreras','Ismael','Contreras', '2024-01-01 12:00:01', 1),
+(1, 'developer@ismaelcm.dev','$2a$12$5ZdhDxFotW64vqX.KAqoeuBN.0DTt9SXwJpqJwJzRbPY.veNXghkG', 'icontreras','Ismael','Contreras', '2024-01-01 12:00:01', 1),
 (2,'user1@example.com', '$2a$10$sOhAGjEUAIGVSVffACk3POMbIzkDorKX3imNeCFndiJQMCx7elimK', 'user1', "User","One", '2024-01-01 12:00:01',NULL);
 
 INSERT INTO `tenants` (name, `key`) VALUES ('Base de Datos Administrador','sigpres_main_tenant');

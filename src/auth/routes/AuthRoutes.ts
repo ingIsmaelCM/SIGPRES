@@ -54,7 +54,6 @@ export default class AuthRoutes extends BaseRoutes<AuthController> {
             "/profile/:id",
             AuthMiddleware.auth,
             InfoRequest.relatedInfoRequest(),
-            InfoRequest.relatedInfoRequest(),
             InfoRequest.validate,
             (req: any, res: any) => this.controller.updateAuthInfo(req, res)
         );

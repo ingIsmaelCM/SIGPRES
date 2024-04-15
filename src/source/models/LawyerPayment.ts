@@ -1,7 +1,7 @@
 import {DataTypes, Model, ModelAttributeColumnOptions} from "sequelize";
 import {ELawyerPaymentStatus, ILawyerPayment, ILawyerPaymentRelation} from "@app/interfaces/SourceInterfaces";
 import ITM from "@app/models/ITenantModel";
-import { LawyerView, Loan, Payment, Wallet} from "@source/models/index";
+import {LawyerView, Loan, Payment, Wallet} from "@source/models/index";
 
 
 @ITM.staticImplements<ILawyerPayment, ILawyerPaymentRelation>()
@@ -23,18 +23,24 @@ export default class LawyerPayment extends Model implements ILawyerPayment {
     static attributes: Record<keyof ILawyerPayment, ModelAttributeColumnOptions> = {
         amount: {
             type: DataTypes.DECIMAL,
-            allowNull: false
+            allowNull: false,
+            get(this: LawyerPayment) {
+                return Number(this.getDataValue("amount"))
+            }
         },
         payPrice: {
             type: DataTypes.DECIMAL,
-            allowNull: false
+            allowNull: false,
+            get(this: LawyerPayment) {
+                return Number(this.getDataValue("payPrice"))
+            }
         },
         date: {
             type: DataTypes.STRING,
             allowNull: false
         },
         closedAt: {
-            type: DataTypes.STRING,
+            type: DataTypes.DATEONLY,
             allowNull: true
         },
         lawyerId: {

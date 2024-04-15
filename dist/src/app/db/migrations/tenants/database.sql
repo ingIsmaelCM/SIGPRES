@@ -323,8 +323,8 @@ FROM `infos` i INNER JOIN `sigpres_main`.`auths` a ON a.infoId=i.id;
 CREATE OR REPLACE VIEW paymentStatView AS
 SELECT ANY_VALUE(pay.id) AS id, ANY_VALUE(l.code) AS loanCode, pay.clientId , pay.loanId,
 ROUND(AVG(DATEDIFF(m.closedAt, m.dueAt)),2) AS averageDiffInDay,
-ROUND(COUNT(IF(DATEDIFF(pay.payedAt, pay.dueAt)<=0,pay.id,NULL)),2) AS onTime,
-ROUND(COUNT(IF(DATEDIFF(pay.payedAt, pay.dueAt)>0,pay.id,NULL)),2) AS outTime,
+ROUND(COUNT(IF(DATEDIFF(m.closedAt, m.dueAt)<=0,pay.id,NULL)),2) AS onTime,
+ROUND(COUNT(IF(DATEDIFF(m.closedAt, m.dueAt)>0,pay.id,NULL)),2) AS outTime,
 (SELECT ANY_VALUE(w.name) ORDER BY COUNT(w.id) DESC LIMIT 1) AS modaWallet,
 ROUND(AVG(IF(pay.interest=0,pay.capital,0)),2) AS averageAbonoCapital,
 ROUND(SUM(IF(pay.interest=0,pay.capital,0)),2) AS totalAbonoCapital,

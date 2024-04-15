@@ -8,7 +8,7 @@ import {v4 as uuidv4} from "uuid";
 import {Response} from "express";
 import tools from "@app/utils/tools";
 import BaseConnection from "@app/db/BaseConnection";
-import {IAuth} from "@app/interfaces/AuthInterfaces";
+import {IAuth, Itenant} from "@app/interfaces/AuthInterfaces";
 import Permission from "../models/Permission";
 import Role from "../models/Role";
 import Service from "@app/services/Service";
@@ -335,7 +335,8 @@ export default class AuthService extends Service {
     ) {
         tools.setCookie(res, "refreshToken", `${refreshToken}`);
         tools.setCookie(res, "accessToken", `Bearer ${token}`);
-        tools.setCookie(res, "tenant", userAuth.tenants[0].key);
+        tools.setCookie(res, "tenant", userAuth.tenants
+            .sort((a: any,b: any)=>a.key.localeCompare(b.key))[0].key);
     }
 
 

@@ -60,6 +60,9 @@ Tenant.init(
         tableName: "tenants",
         sequelize: BaseConnection.getConnection(),
         paranoid: true,
+        defaultScope:{
+            order:[ "createdAt"]
+        }
     }
 );
 

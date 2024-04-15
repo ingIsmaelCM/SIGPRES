@@ -1,0 +1,9 @@
+.env
+*.log
+.idea
+node_modules
+coverage
+build
+.wwebjs_auth
+
+public/images

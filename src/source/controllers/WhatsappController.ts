@@ -32,7 +32,7 @@ export default class WhatsappController extends Controller {
     async getClient(req: any, res: Response){
         return this.safeRun(async () =>
                 await this.mainService.getClient(req.cookies.tenant)
-            , res, 200, "Mensaje Enviado")
+            , res, 200, "Cliente del Servicio")
     }
 
     async getUnreadMessages(req: any, res: Response){

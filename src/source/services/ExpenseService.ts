@@ -2,13 +2,15 @@ import Service from "@app/services/Service";
 import {IParams} from "@app/interfaces/AppInterfaces";
 import ExpenseRepository from "@source/repositories/ExpenseRepository";
 import TenantConnection from "@app/db/TenantConnection";
-import {IExpense} from "@app/interfaces/SourceInterfaces";
+import {ELawyerPaymentStatus, IExpense} from "@app/interfaces/SourceInterfaces";
 import WalletRepository from "@source/repositories/WalletRepository";
-import {Transaction} from "sequelize";
+import {Op, Transaction} from "sequelize";
+import LawyerPaymentRepository from "@source/repositories/LawyerPaymentRepository";
 
 export default class ExpenseService extends Service {
     private mainRepo = new ExpenseRepository();
     private walletRepo = new WalletRepository();
+    private lawyerPaymentRepo = new LawyerPaymentRepository();
 
     async getExpenses(params: IParams) {
         return await this.mainRepo.getAll(params)
@@ -27,6 +29,32 @@ export default class ExpenseService extends Service {
                     await trans.commit();
                 }
                 return newExpense;
+            },
+            async () => await trans.rollback()
+        )
+    }
+
+    async createExpenseFromLawyer(data: Record<string, any>): Promise<IExpense> {
+        const trans = await TenantConnection.getTrans();
+        return this.safeRun(async () => {
+                await this.lawyerPaymentRepo.bulkUpdate(
+                    {
+                        walletId: data.walletId,
+                        status: ELawyerPaymentStatus.Pagado,
+                        closedAt: data.date,
+                        updatedBy: data.updatedBy
+                    }, {
+                        where: {
+                            id: {
+                                [Op.in]: data.lawyerPaymentIds
+                            }
+                        }
+                    }, trans);
+                const newExpense = await this.mainRepo.create(data, trans);
+                await this.walletRepo.setBalance((0 - data.amount), data.walletId, trans);
+                await trans.commit();
+               return newExpense;
+
             },
             async () => await trans.rollback()
         )

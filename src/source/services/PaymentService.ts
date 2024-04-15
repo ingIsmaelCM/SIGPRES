@@ -126,7 +126,7 @@ export default class PaymentService extends Service {
                 }
                 const loan = await this.loanRepo.findById(data.loanId, {include: "condition"});
                 let newDate = amort.date;
-                while (data.interest && moment().isAfter(moment(newDate))) {
+                while (data.interest && moment().add(3, 'days').isAfter(moment(newDate))) {
                     newDate = amortization.getDateCuota(new Date(newDate), loan.period).format('YYYY-MM-DD')
                 }
                 const isPayed = loan.balance === data.capital;

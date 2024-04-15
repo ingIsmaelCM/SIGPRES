@@ -12,7 +12,7 @@ export default class BaseRequest {
         isEmail: (field: string) => body(field, `invalidType: {{email}} `).isEmail(),
         isDate: (field: string) => body(field, `invalidType: {{date}} `).isISO8601().toDate(),
         isString: (field: string) => body(field, `invalidType: {{texto}} `).isString(),
-        isArray: (field: string) => body(field, `invalidType: {{array}}`).isArray(),
+        isArray: (field: string, options?: any) => body(field, `invalidType: {{array}}`).isArray(options),
         isFloat: (field: string, min?: number, max?: number) => body(field, `isFloat: {{${min}}} {{${max}}} `)
             .isFloat({
                 min: min || 0,

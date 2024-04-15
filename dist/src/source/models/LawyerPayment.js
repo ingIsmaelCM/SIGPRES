@@ -22,18 +22,24 @@ let LawyerPayment = class LawyerPayment extends sequelize_1.Model {
     static attributes = {
         amount: {
             type: sequelize_1.DataTypes.DECIMAL,
-            allowNull: false
+            allowNull: false,
+            get() {
+                return Number(this.getDataValue("amount"));
+            }
         },
         payPrice: {
             type: sequelize_1.DataTypes.DECIMAL,
-            allowNull: false
+            allowNull: false,
+            get() {
+                return Number(this.getDataValue("payPrice"));
+            }
         },
         date: {
             type: sequelize_1.DataTypes.STRING,
             allowNull: false
         },
         closedAt: {
-            type: sequelize_1.DataTypes.STRING,
+            type: sequelize_1.DataTypes.DATEONLY,
             allowNull: true
         },
         lawyerId: {

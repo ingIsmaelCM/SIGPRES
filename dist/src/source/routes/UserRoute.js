@@ -16,7 +16,7 @@ class UserRoutes extends BaseRoutes_1.default {
     initRoutes() {
         this.controller.router.route("/")
             .get(RoleMiddleware_1.default.hasPermission(PermissionEnums_1.default.getUsers), (req, res) => this.controller.index(req, res))
-            .post(RoleMiddleware_1.default.hasPermission(PermissionEnums_1.default.createUser), InfoRequest_1.default.infoCreateRequest(), UserRequest_1.default.userCreateRequest(), UserRequest_1.default.validate, (req, res) => this.controller.store(req, res));
+            .post(InfoRequest_1.default.infoUpdateRequest(), UserRequest_1.default.userCreateRequest(), UserRequest_1.default.validate, (req, res) => this.controller.store(req, res));
         this.controller.router.get("/auths", RoleMiddleware_1.default.hasPermission(PermissionEnums_1.default.verifyUser), (req, res) => this.controller.indexAuthUsers(req, res));
         this.controller.router.post("/verification/send", RoleMiddleware_1.default.hasPermission(PermissionEnums_1.default.verifyUser), UserRequest_1.default.userSendVerificationRequest(), UserRequest_1.default.validate, (req, res) => this.controller.sendVerification(req, res));
         this.controller.router.route("/:id")

@@ -40,6 +40,9 @@ Tenant.init({
     tableName: "tenants",
     sequelize: BaseConnection_1.default.getConnection(),
     paranoid: true,
+    defaultScope: {
+        order: ["createdAt"]
+    }
 });
 exports.default = Tenant;
 //# sourceMappingURL=Tenant.js.map

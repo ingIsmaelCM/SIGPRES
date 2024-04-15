@@ -277,7 +277,8 @@ class AuthService extends Service_1.default {
     setLoginCookies(res, refreshToken, token, userAuth) {
         tools_1.default.setCookie(res, "refreshToken", `${refreshToken}`);
         tools_1.default.setCookie(res, "accessToken", `Bearer ${token}`);
-        tools_1.default.setCookie(res, "tenant", userAuth.tenants[0].key);
+        tools_1.default.setCookie(res, "tenant", userAuth.tenants
+            .sort((a, b) => a.key.localeCompare(b.key))[0].key);
     }
     async validateAuthAccount(auth, pwd) {
         const isValidPassword = await bcrypt_1.default.compare(pwd, auth["_previousDataValues"].password);

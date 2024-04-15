@@ -21,7 +21,7 @@ class WhatsappController extends Controller_1.default {
         return this.safeRun(async () => await this.mainService.sendWsImage(req.cookies.tenant, req.body), res, 200, "Mensaje Enviado");
     }
     async getClient(req, res) {
-        return this.safeRun(async () => await this.mainService.getClient(req.cookies.tenant), res, 200, "Mensaje Enviado");
+        return this.safeRun(async () => await this.mainService.getClient(req.cookies.tenant), res, 200, "Cliente del Servicio");
     }
     async getUnreadMessages(req, res) {
         return this.safeRun(async () => await this.mainService.getUnreadMessages(req.cookies.tenant), res, 200, "Lista de Mensajes");

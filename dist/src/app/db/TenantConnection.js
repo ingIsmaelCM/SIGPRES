@@ -36,9 +36,9 @@ class TenantConnection {
     static requestNamespace = (0, cls_hooked_1.createNamespace)("request");
     constructor() {
     }
-    static getConnection(dbName) {
-        const storedReq = dbName || TenantConnection.requestNamespace.get('req');
-        const tenant = storedReq.cookies.tenant;
+    static getConnection() {
+        const storedReq = TenantConnection.requestNamespace.get('req');
+        const tenant = storedReq?.cookies.tenant;
         if (!TenantConnection.connections.has(tenant)) {
             const sequelize = new sequelize_1.Sequelize({
                 dialect: app_config_1.default.db.dialect,

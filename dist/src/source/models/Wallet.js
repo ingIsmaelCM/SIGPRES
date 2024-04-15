@@ -11,6 +11,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const sequelize_1 = require("sequelize");
 const ITenantModel_1 = __importDefault(require("@/app/models/ITenantModel"));
+const tools_1 = __importDefault(require("@app/utils/tools"));
 let Wallet = class Wallet extends sequelize_1.Model {
     static tableName = "wallets";
     static modelName = "Wallet";
@@ -26,6 +27,9 @@ let Wallet = class Wallet extends sequelize_1.Model {
             type: sequelize_1.DataTypes.STRING,
             allowNull: false,
             unique: true,
+            set(val) {
+                this.setDataValue("name", tools_1.default.initialToUpper(val));
+            }
         },
         authId: {
             type: sequelize_1.DataTypes.STRING,

@@ -12,7 +12,7 @@ class BaseRequest {
         isEmail: (field) => (0, express_validator_1.body)(field, `invalidType: {{email}} `).isEmail(),
         isDate: (field) => (0, express_validator_1.body)(field, `invalidType: {{date}} `).isISO8601().toDate(),
         isString: (field) => (0, express_validator_1.body)(field, `invalidType: {{texto}} `).isString(),
-        isArray: (field) => (0, express_validator_1.body)(field, `invalidType: {{array}}`).isArray(),
+        isArray: (field, options) => (0, express_validator_1.body)(field, `invalidType: {{array}}`).isArray(options),
         isFloat: (field, min, max) => (0, express_validator_1.body)(field, `isFloat: {{${min}}} {{${max}}} `)
             .isFloat({
             min: min || 0,

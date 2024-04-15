@@ -81,7 +81,8 @@ export class AuthController extends Controller implements IController {
     }
 
     async recoverPassword(req: any, res: Response) {
-        return await this.safeRun(async () => await this.mainService.recoverPassword(req.body, res),
+        return await this.safeRun(async () =>
+                await this.mainService.recoverPassword(req.body, res),
             res, 200, "Código Verificado correctamente")
 
     }

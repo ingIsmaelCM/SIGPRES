@@ -23,6 +23,14 @@ export default class ExpenseRoutes extends BaseRoutes<ExpenseController> {
                 (req: Request, res: Response) => this.controller.store(req, res)
             );
 
+        this.controller.router.post('/lawyer',
+            RoleMiddleware.hasPermission(PermissionEnums.createExpense),
+            ExpenseRequest.expenseCreateRequest(),
+            ExpenseRequest.expenseCreateFromLawyerRequest(),
+            ExpenseRequest.validate,
+            (req: Request, res: Response) => this.controller.storeFromLawyer(req, res)
+            )
+
         this.controller.router.route("/:id")
             .get(
                 RoleMiddleware.hasPermission(PermissionEnums.getExpenses),

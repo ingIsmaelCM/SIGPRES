@@ -14,9 +14,9 @@ export default class TenantConnection {
     private constructor() {
     }
 
-    static getConnection(dbName?: string): Sequelize {
-        const storedReq = dbName|| TenantConnection.requestNamespace.get('req')
-        const tenant = storedReq.cookies.tenant;
+    static getConnection(): Sequelize {
+        const storedReq = TenantConnection.requestNamespace.get('req')
+        const tenant = storedReq?.cookies.tenant;
         if (!TenantConnection.connections.has(tenant)) {
             const sequelize = new Sequelize({
                 dialect: config.db.dialect,

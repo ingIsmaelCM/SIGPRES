@@ -18,8 +18,8 @@ export default class UserRoutes extends BaseRoutes<UserController> {
                 (req: Request, res: Response) => this.controller.index(req, res)
             )
             .post(
-                RoleMiddleware.hasPermission(PermissionEnums.createUser),
-                InfoRequest.infoCreateRequest(),
+
+                InfoRequest.infoUpdateRequest(),
                 UserRequest.userCreateRequest(),
                 UserRequest.validate,
                 (req: Request, res: Response) => this.controller.store(req, res)
@@ -44,6 +44,7 @@ export default class UserRoutes extends BaseRoutes<UserController> {
             )
             .put(
                 RoleMiddleware.hasPermission(PermissionEnums.editUser),
+
                 UserRequest.userUpdateRequest(),
                 UserRequest.validate,
                 (req: Request, res: Response) => this.controller.update(req, res)

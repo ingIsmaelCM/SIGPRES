@@ -17,6 +17,7 @@ import WalletRepository from "@source/repositories/WalletRepository";
 import LawyerPaymentRepository from "@source/repositories/LawyerPaymentRepository";
 import LawyerRepository from "@source/repositories/LawyerRepository";
 import {Op, Transaction} from "sequelize";
+import moment from "moment";
 
 export default class LoanService extends Service {
     private mainRepo = new LoanRepository();
@@ -65,7 +66,7 @@ export default class LoanService extends Service {
         if (lawyer.payMode === ELawyerPaymode.Contrato) {
             const newLayerPayment: ILawyerPayment = {
                 amount: lawyer.payPrice,
-                date: newLoan.startAt,
+                date: moment(newLoan.createdAt).format('YYYY-MM-DD'),
                 loanId: newLoan.id,
                 status: ELawyerPaymentStatus.Pendiente,
                 payPrice: lawyer.payPrice,

@@ -31,6 +31,14 @@ export default class ExpenseController extends Controller implements IController
     }
 
     @setAuthor
+    async storeFromLawyer(req: Request, res: Response) {
+        return this.safeRun(async () =>
+                this.mainService.createExpenseFromLawyer(req.body),
+            res, 201, "Honorarios pagados"
+        )
+    }
+
+    @setAuthor
     async update(req: Request, res: Response) {
         return this.safeRun(async () =>
                 this.mainService.updateExpense(req.params.id, req.body),

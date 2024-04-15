@@ -49,6 +49,9 @@ class ExpenseController extends Controller_1.default {
     async store(req, res) {
         return this.safeRun(async () => this.mainService.createExpense(req.body), res, 201, "Gasto registrado");
     }
+    async storeFromLawyer(req, res) {
+        return this.safeRun(async () => this.mainService.createExpenseFromLawyer(req.body), res, 201, "Honorarios pagados");
+    }
     async update(req, res) {
         return this.safeRun(async () => this.mainService.updateExpense(req.params.id, req.body), res, 201, "Gasto actualizado");
     }
@@ -66,6 +69,12 @@ __decorate([
     __metadata("design:paramtypes", [Object, Object]),
     __metadata("design:returntype", Promise)
 ], ExpenseController.prototype, "store", null);
+__decorate([
+    Controller_1.setAuthor,
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, Object]),
+    __metadata("design:returntype", Promise)
+], ExpenseController.prototype, "storeFromLawyer", null);
 __decorate([
     Controller_1.setAuthor,
     __metadata("design:type", Function),

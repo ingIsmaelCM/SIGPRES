@@ -17,6 +17,12 @@ class ExpenseRequest extends BaseRequest_1.default {
             this.RequestCheck.isString("lawyerId").optional({ values: "falsy" }),
         ];
     }
+    expenseCreateFromLawyerRequest() {
+        return [
+            this.RequestCheck.required("lawyerPaymentIds"),
+            this.RequestCheck.isArray("lawyerPaymentIds", { min: 1, max: 15 }),
+        ];
+    }
     expenseUpdateRequest() {
         return [
             this.RequestCheck.isFloat("amount", 1, 9 * 1000 * 1000).optional({ values: "falsy" }),

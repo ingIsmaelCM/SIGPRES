@@ -14,6 +14,7 @@ const WalletRepository_1 = __importDefault(require("@source/repositories/WalletR
 const LawyerPaymentRepository_1 = __importDefault(require("@source/repositories/LawyerPaymentRepository"));
 const LawyerRepository_1 = __importDefault(require("@source/repositories/LawyerRepository"));
 const sequelize_1 = require("sequelize");
+const moment_1 = __importDefault(require("moment"));
 class LoanService extends Service_1.default {
     mainRepo = new LoanRepository_1.default();
     conditionRepo = new ConditionRepository_1.default();
@@ -54,7 +55,7 @@ class LoanService extends Service_1.default {
         if (lawyer.payMode === SourceInterfaces_1.ELawyerPaymode.Contrato) {
             const newLayerPayment = {
                 amount: lawyer.payPrice,
-                date: newLoan.startAt,
+                date: (0, moment_1.default)(newLoan.createdAt).format('YYYY-MM-DD'),
                 loanId: newLoan.id,
                 status: SourceInterfaces_1.ELawyerPaymentStatus.Pendiente,
                 payPrice: lawyer.payPrice,

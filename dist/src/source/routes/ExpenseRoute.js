@@ -16,6 +16,7 @@ class ExpenseRoutes extends BaseRoutes_1.default {
         this.controller.router.route("/")
             .get(RoleMiddleware_1.default.hasPermission(PermissionEnums_1.default.getExpenses), (req, res) => this.controller.index(req, res))
             .post(RoleMiddleware_1.default.hasPermission(PermissionEnums_1.default.createExpense), ExpenseRequest_1.default.expenseCreateRequest(), ExpenseRequest_1.default.validate, (req, res) => this.controller.store(req, res));
+        this.controller.router.post('/lawyer', RoleMiddleware_1.default.hasPermission(PermissionEnums_1.default.createExpense), ExpenseRequest_1.default.expenseCreateRequest(), ExpenseRequest_1.default.expenseCreateFromLawyerRequest(), ExpenseRequest_1.default.validate, (req, res) => this.controller.storeFromLawyer(req, res));
         this.controller.router.route("/:id")
             .get(RoleMiddleware_1.default.hasPermission(PermissionEnums_1.default.getExpenses), (req, res) => this.controller.show(req, res))
             .put(RoleMiddleware_1.default.hasPermission(PermissionEnums_1.default.editExpense), ExpenseRequest_1.default.expenseUpdateRequest(), ExpenseRequest_1.default.validate, (req, res) => this.controller.update(req, res))

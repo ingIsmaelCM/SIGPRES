@@ -6,10 +6,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const Service_1 = __importDefault(require("@app/services/Service"));
 const ExpenseRepository_1 = __importDefault(require("@source/repositories/ExpenseRepository"));
 const TenantConnection_1 = __importDefault(require("@app/db/TenantConnection"));
+const SourceInterfaces_1 = require("@app/interfaces/SourceInterfaces");
 const WalletRepository_1 = __importDefault(require("@source/repositories/WalletRepository"));
+const sequelize_1 = require("sequelize");
+const LawyerPaymentRepository_1 = __importDefault(require("@source/repositories/LawyerPaymentRepository"));
 class ExpenseService extends Service_1.default {
     mainRepo = new ExpenseRepository_1.default();
     walletRepo = new WalletRepository_1.default();
+    lawyerPaymentRepo = new LawyerPaymentRepository_1.default();
     async getExpenses(params) {
         return await this.mainRepo.getAll(params);
     }
@@ -24,6 +28,27 @@ class ExpenseService extends Service_1.default {
             if (!externTrans) {
                 await trans.commit();
             }
+            return newExpense;
+        }, async () => await trans.rollback());
+    }
+    async createExpenseFromLawyer(data) {
+        const trans = await TenantConnection_1.default.getTrans();
+        return this.safeRun(async () => {
+            await this.lawyerPaymentRepo.bulkUpdate({
+                walletId: data.walletId,
+                status: SourceInterfaces_1.ELawyerPaymentStatus.Pagado,
+                closedAt: data.date,
+                updatedBy: data.updatedBy
+            }, {
+                where: {
+                    id: {
+                        [sequelize_1.Op.in]: data.lawyerPaymentIds
+                    }
+                }
+            }, trans);
+            const newExpense = await this.mainRepo.create(data, trans);
+            await this.walletRepo.setBalance((0 - data.amount), data.walletId, trans);
+            await trans.commit();
             return newExpense;
         }, async () => await trans.rollback());
     }

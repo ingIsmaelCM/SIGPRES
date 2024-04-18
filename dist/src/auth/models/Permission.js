@@ -6,10 +6,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const sequelize_1 = require("sequelize");
 const BaseConnection_1 = __importDefault(require("@app/db/BaseConnection"));
 class Permission extends sequelize_1.Model {
-    getSearchables() {
+    static getSearchables() {
         return ["name"];
     }
-    getRelations() {
+    static getRelations() {
         return [];
     }
 }

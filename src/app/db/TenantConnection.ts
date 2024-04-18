@@ -14,9 +14,9 @@ export default class TenantConnection {
     private constructor() {
     }
 
-    static getConnection(): Sequelize {
+    static getConnection(dbName?: string): Sequelize {
         const storedReq = TenantConnection.requestNamespace.get('req')
-        const tenant = storedReq?.cookies.tenant;
+        const tenant = dbName || storedReq?.cookies.tenant;
         if (!TenantConnection.connections.has(tenant)) {
             const sequelize = new Sequelize({
                 dialect: config.db.dialect,
@@ -29,26 +29,23 @@ export default class TenantConnection {
                 timezone: "-04:00"
             });
             TenantConnection.connections.set(tenant, sequelize);
-
+            TenantConnection.initModels(sequelize);
         }
         return TenantConnection.connections.get(tenant)!;
     }
 
     static initModels(instanceConnection: Sequelize) {
         try {
-            const modelos = Object.values(models).filter(
-                (model: any) => !instanceConnection.models[model]
-            );
-            for (let model of modelos) {
-                (model as any).init(model.attributes, {
-                    sequelize: instanceConnection,
+            for (let model of Object.values(models)) {
+              instanceConnection.define(model.modelName, <any>model.attributes, {
                     modelName: model.modelName,
                     tableName: model.tableName,
                     paranoid: true,
-                    ...model.additionalOptions
+                    ...(model.additionalOptions||{})
                 });
+
             }
-            SourceRelation.initRelation();
+            SourceRelation.initRelation(instanceConnection);
         } catch (error: any) {
             throw {
                 code: 500,

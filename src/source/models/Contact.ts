@@ -20,11 +20,11 @@ export default class Contact extends Model implements  IContact{
   declare deletedAt?: string;
   declare updatedAt?: string;
   declare updatedBy?: number;
-  getSearchables(): Array<keyof IContact> {
+ static  getSearchables(): Array<keyof IContact> {
     return ["name", "lastname", "infoId"];
   }
 
-  getRelations(): (keyof IContactRelation)[] {
+ static getRelations(): (keyof IContactRelation)[] {
     return ["clients", "info",];
   }
 

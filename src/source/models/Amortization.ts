@@ -23,7 +23,7 @@ export default class Amortization extends Model implements IAmortization {
     declare clientId: string;
     declare id: string;
 
-    getSearchables(): Array<keyof IAmortization> {
+   static  getSearchables(): Array<keyof IAmortization> {
         return [
             "date",
             "nro",
@@ -37,7 +37,7 @@ export default class Amortization extends Model implements IAmortization {
         ];
     }
 
-    getRelations(): Array<keyof IAmortizationRelation> {
+   static getRelations(): Array<keyof IAmortizationRelation> {
         return ["loan", "client"];
     }
 

@@ -22,11 +22,11 @@ export default class Client extends Model implements IClient {
     declare updatedAt?: string;
     declare deletedAt?: string;
 
-    getSearchables(): Array<keyof IClient> {
+   static  getSearchables(): Array<keyof IClient> {
         return ["code", "name", "lastname", "infoId", "clienttype"];
     }
 
-    getRelations(): (keyof IClientRelation)[] {
+   static getRelations(): (keyof IClientRelation)[] {
         return [
             "info",
             "loans",

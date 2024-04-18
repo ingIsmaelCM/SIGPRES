@@ -8,26 +8,23 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
-var PaymentStatView_1;
 Object.defineProperty(exports, "__esModule", { value: true });
 const sequelize_1 = require("sequelize");
 const ITenantModel_1 = __importDefault(require("@app/models/ITenantModel"));
-const models_1 = require("@source/models");
 let PaymentStatView = class PaymentStatView extends sequelize_1.Model {
-    static { PaymentStatView_1 = this; }
     static tableName = "paymentStatView";
     static modelName = "PaymentStatView";
     static additionalOptions = {
         paranoid: false,
         timestamps: false
     };
-    getSearchables() {
+    static getSearchables() {
         return ["clientId", "loanId", "onTime", "averageAbonoCapital", "averageDiffInDay",
             "finalMora", "initialMora", "loanAmount", "loanBalance", "loanCode", "modaWallet",
             "mora", "outTime", "totalAbonoCapital", "totalAmount", "totalCapital",
             "totalCapitalOnCuota", "totalInterest"];
     }
-    getRelations() {
+    static getRelations() {
         return [];
     }
     static attributes = {
@@ -136,18 +133,20 @@ let PaymentStatView = class PaymentStatView extends sequelize_1.Model {
             }
         }
     };
-    static initRelation() {
-        PaymentStatView_1.belongsTo(models_1.Client, {
+    static initRelation(sequelize) {
+        sequelize.model("PaymentStatView")
+            .belongsTo(sequelize.model("Client"), {
             foreignKey: "clientId",
             as: "client"
         });
-        PaymentStatView_1.belongsTo(models_1.Loan, {
+        sequelize.model("PaymentStatView")
+            .belongsTo(sequelize.model("Loan"), {
             foreignKey: "loanId",
             as: "loan"
         });
     }
 };
-PaymentStatView = PaymentStatView_1 = __decorate([
+PaymentStatView = __decorate([
     ITenantModel_1.default.staticImplements()
 ], PaymentStatView);
 exports.default = PaymentStatView;

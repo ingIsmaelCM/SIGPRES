@@ -13,10 +13,10 @@ export default class Preference extends Model implements  IPreference{
   declare value: string;
   declare type: string;
 
-  getSearchables(): Array<keyof IPreference> {
+ static  getSearchables(): Array<keyof IPreference> {
     return ["key", "value", "label"];
   }
-  getRelations(): Array<keyof IPreferenceRelation> {
+ static getRelations(): Array<keyof IPreferenceRelation> {
     return [];
   }
   static modelName = "Preference";

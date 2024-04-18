@@ -8,7 +8,6 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
-var AmortizationView_1;
 Object.defineProperty(exports, "__esModule", { value: true });
 const sequelize_1 = require("sequelize");
 const ITenantModel_1 = __importDefault(require("@app/models/ITenantModel"));
@@ -16,7 +15,6 @@ const models_1 = require("@source/models");
 const moment_1 = __importDefault(require("moment"));
 const amortization_1 = __importDefault(require("@app/utils/amortization"));
 let AmortizationView = class AmortizationView extends sequelize_1.Model {
-    static { AmortizationView_1 = this; }
     static tableName = "amortizationView";
     static modelName = "AmortizationView";
     static additionalOptions = {};
@@ -61,28 +59,30 @@ let AmortizationView = class AmortizationView extends sequelize_1.Model {
             }
         }
     };
-    getSearchables() {
+    static getSearchables() {
         return [
-            ...new models_1.Amortization().getSearchables(),
+            ...models_1.Amortization.getSearchables(),
             "expiresAt",
             'date'
         ];
     }
-    getRelations() {
-        return new models_1.Amortization().getRelations();
+    static getRelations() {
+        return models_1.Amortization.getRelations();
     }
-    static initRelation() {
-        AmortizationView_1.belongsTo(models_1.Loan, {
+    static initRelation(sequelize) {
+        sequelize.model("AmortizationView")
+            .belongsTo(sequelize.model("Loan"), {
             foreignKey: "loanId",
             as: "loan"
         });
-        AmortizationView_1.belongsTo(models_1.ClientView, {
+        sequelize.model("AmortizationView")
+            .belongsTo(sequelize.model("ClientView"), {
             foreignKey: "clientId",
             as: "client"
         });
     }
 };
-AmortizationView = AmortizationView_1 = __decorate([
+AmortizationView = __decorate([
     ITenantModel_1.default.staticImplements()
 ], AmortizationView);
 exports.default = AmortizationView;

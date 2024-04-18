@@ -36,9 +36,9 @@ class TenantConnection {
     static requestNamespace = (0, cls_hooked_1.createNamespace)("request");
     constructor() {
     }
-    static getConnection() {
+    static getConnection(dbName) {
         const storedReq = TenantConnection.requestNamespace.get('req');
-        const tenant = storedReq?.cookies.tenant;
+        const tenant = dbName || storedReq?.cookies.tenant;
         if (!TenantConnection.connections.has(tenant)) {
             const sequelize = new sequelize_1.Sequelize({
                 dialect: app_config_1.default.db.dialect,
@@ -51,22 +51,21 @@ class TenantConnection {
                 timezone: "-04:00"
             });
             TenantConnection.connections.set(tenant, sequelize);
+            TenantConnection.initModels(sequelize);
         }
         return TenantConnection.connections.get(tenant);
     }
     static initModels(instanceConnection) {
         try {
-            const modelos = Object.values(models).filter((model) => !instanceConnection.models[model]);
-            for (let model of modelos) {
-                model.init(model.attributes, {
-                    sequelize: instanceConnection,
+            for (let model of Object.values(models)) {
+                instanceConnection.define(model.modelName, model.attributes, {
                     modelName: model.modelName,
                     tableName: model.tableName,
                     paranoid: true,
-                    ...model.additionalOptions
+                    ...(model.additionalOptions || {})
                 });
             }
-            SourceRelation_1.default.initRelation();
+            SourceRelation_1.default.initRelation(instanceConnection);
         }
         catch (error) {
             throw {

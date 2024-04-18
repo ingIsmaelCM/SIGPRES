@@ -8,15 +8,12 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
-var ClientContactView_1;
 Object.defineProperty(exports, "__esModule", { value: true });
 const sequelize_1 = require("sequelize");
 const ITenantModel_1 = __importDefault(require("@app/models/ITenantModel"));
 const models_1 = require("@source/models");
-const Image_1 = __importDefault(require("../Image"));
 const FileInterface_1 = require("@app/interfaces/FileInterface");
 let ClientContactView = class ClientContactView extends sequelize_1.Model {
-    static { ClientContactView_1 = this; }
     static tableName = "clientContactView";
     static modelName = "ClientContactView";
     static attributes = {
@@ -27,14 +24,14 @@ let ClientContactView = class ClientContactView extends sequelize_1.Model {
         }
     };
     static additionalOptions = {};
-    getSearchables() {
+    static getSearchables() {
         return ["contactId", "clientId", "relationship", "lastname", "name", "address", "email", "phone", "isGarante"];
     }
-    getRelations() {
+    static getRelations() {
         return ["clients", "profile"];
     }
-    static initRelation() {
-        ClientContactView_1.hasOne(Image_1.default, {
+    static initRelation(sequelize) {
+        sequelize.model("ClientContactView").hasOne(sequelize.model("Image"), {
             foreignKey: "imageableId",
             sourceKey: "contactId",
             scope: {
@@ -45,7 +42,7 @@ let ClientContactView = class ClientContactView extends sequelize_1.Model {
         });
     }
 };
-ClientContactView = ClientContactView_1 = __decorate([
+ClientContactView = __decorate([
     ITenantModel_1.default.staticImplements()
 ], ClientContactView);
 exports.default = ClientContactView;

@@ -14,12 +14,12 @@ export default class LawyerView extends Model {
         ...Info.attributes
     };
 
-    getSearchables(): Array<keyof ILawyerView> {
+   static  getSearchables(): Array<keyof ILawyerView> {
         return ["name", "lastname", "exequatur",
             "email", "dni", "gender", "country", "infoId", "birthdate"]
     }
 
-    getRelations(): Array<keyof ILawyerRelation> {
+   static getRelations(): Array<keyof ILawyerRelation> {
         return ["expenses", "loans", "payments","image","document"]
     }
 

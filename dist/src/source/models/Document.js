@@ -57,10 +57,10 @@ let Document = class Document extends sequelize_1.Model {
             allowNull: true,
         },
     };
-    getSearchables() {
+    static getSearchables() {
         return ["path", "title", "size", "documentableType", "documentableId"];
     }
-    getRelations() {
+    static getRelations() {
         return [];
     }
 };

@@ -8,17 +8,14 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
-var Expense_1;
 Object.defineProperty(exports, "__esModule", { value: true });
 const ITenantModel_1 = __importDefault(require("@/app/models/ITenantModel"));
 const sequelize_1 = require("sequelize");
-const index_1 = require("@source/models/index");
 let Expense = class Expense extends sequelize_1.Model {
-    static { Expense_1 = this; }
-    getSearchables() {
+    static getSearchables() {
         return ["amount", "date", "concepto", "walletId", "lawyerId"];
     }
-    getRelations() {
+    static getRelations() {
         return ["wallet", "lawyer"];
     }
     static additionalOptions = {};
@@ -47,18 +44,20 @@ let Expense = class Expense extends sequelize_1.Model {
             allowNull: true,
         },
     };
-    static initRelation() {
-        Expense_1.belongsTo(index_1.Wallet, {
+    static initRelation(sequelize) {
+        sequelize.model("Expense")
+            .belongsTo(sequelize.model("Wallet"), {
             as: "wallet",
             foreignKey: 'walletId'
         });
-        Expense_1.belongsTo(index_1.Lawyer, {
+        sequelize.model("Expense")
+            .belongsTo(sequelize.model("Lawyer"), {
             as: "lawyer",
             foreignKey: 'lawyerId'
         });
     }
 };
-Expense = Expense_1 = __decorate([
+Expense = __decorate([
     ITenantModel_1.default.staticImplements()
 ], Expense);
 exports.default = Expense;

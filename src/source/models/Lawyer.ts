@@ -13,10 +13,10 @@ export default class Lawyer extends Model implements ILawyer {
     declare payMode: ELawyerPaymode;
     declare payPrice: number;
 
-    getSearchables(): Array<keyof ILawyer> {
+   static  getSearchables(): Array<keyof ILawyer> {
         return ["name", "lastname", "exequatur", "infoId"];
     }
-    getRelations(): (keyof ILawyerRelation)[] {
+   static getRelations(): (keyof ILawyerRelation)[] {
         return ["info", "loans", "payments", "expenses", "image", "document"];
     }
 

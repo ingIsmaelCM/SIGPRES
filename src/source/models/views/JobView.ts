@@ -16,12 +16,12 @@ export default class JobView extends Model {
 
     };
 
-    getSearchables(): Array<keyof IJobView> {
+   static  getSearchables(): Array<keyof IJobView> {
         return ["status", "clientId", "position", "company", "endAt", "startAt",
             "email", "dni", "gender", "country", "infoId", "birthdate"]
     }
 
-    getRelations(): Array<keyof IJobRelation> {
+   static getRelations(): Array<keyof IJobRelation> {
         return ["client","image","document"]
     }
 

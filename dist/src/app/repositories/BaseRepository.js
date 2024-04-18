@@ -8,6 +8,7 @@ const sequelize_1 = require("sequelize");
 const scopes_1 = __importDefault(require("../utils/scopes"));
 const logger_1 = __importDefault(require("@/logger"));
 const SocketService_1 = __importDefault(require("@app/services/SocketService"));
+const TenantConnection_1 = __importDefault(require("@app/db/TenantConnection"));
 class BaseRepository {
     model;
     socketService;
@@ -19,9 +20,16 @@ class BaseRepository {
     async safeRun(method) {
         try {
             this.primaryKeyName = this.model.primaryKeyAttribute;
-            return await method();
+            const dbName = this.model.sequelize?.getDatabaseName();
+            let model = this.model;
+            if (dbName !== 'sigpres_main') {
+                model = TenantConnection_1.default.getConnection()
+                    .model(this.model.modelName);
+            }
+            return await method(model);
         }
         catch (error) {
+            console.log(error);
             logger_1.default.error(JSON.stringify(error));
             throw {
                 code: error.code || 500,
@@ -30,7 +38,7 @@ class BaseRepository {
         }
     }
     async getAll(params) {
-        return this.safeRun(() => scopes_1.default.get(this.model, params));
+        return this.safeRun((model) => scopes_1.default.get(model, params));
     }
     async find(key, value, withTrashed, params) {
         return this.safeRun(() => scopes_1.default.get(this.model, {

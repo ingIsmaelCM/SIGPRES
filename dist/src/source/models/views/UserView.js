@@ -8,7 +8,6 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
-var UserView_1;
 Object.defineProperty(exports, "__esModule", { value: true });
 const sequelize_1 = require("sequelize");
 const ITenantModel_1 = __importDefault(require("@app/models/ITenantModel"));
@@ -16,7 +15,6 @@ const ModelPermission_1 = __importDefault(require("@auth/models/ModelPermission"
 const Auth_1 = __importDefault(require("@auth/models/Auth"));
 const Role_1 = __importDefault(require("@auth/models/Role"));
 let UserView = class UserView extends sequelize_1.Model {
-    static { UserView_1 = this; }
     static tableName = "userview";
     static modelName = "UserView";
     static additionalOptions = {};
@@ -71,14 +69,15 @@ let UserView = class UserView extends sequelize_1.Model {
         },
         ...ITenantModel_1.default.commonAttributes,
     };
-    getSearchables() {
+    static getSearchables() {
         return [];
     }
-    getRelations() {
+    static getRelations() {
         return ["permissions", "roles.permissions"];
     }
-    static initRelation() {
-        UserView_1.belongsToMany(Auth_1.default.sequelize.models.Permission, {
+    static initRelation(sequelize) {
+        sequelize.model("UserView")
+            .belongsToMany(Auth_1.default.sequelize.models.Permission, {
             as: "permissions",
             foreignKey: "modelId",
             through: {
@@ -89,14 +88,15 @@ let UserView = class UserView extends sequelize_1.Model {
             },
             constraints: false,
         });
-        UserView_1.belongsToMany(Role_1.default, {
+        sequelize.model("UserView")
+            .belongsToMany(Role_1.default, {
             foreignKey: "roleId",
             through: "auth_roles",
             as: "roles",
         });
     }
 };
-UserView = UserView_1 = __decorate([
+UserView = __decorate([
     ITenantModel_1.default.staticImplements()
 ], UserView);
 exports.default = UserView;

@@ -12,10 +12,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const sequelize_1 = require("sequelize");
 const ITenantModel_1 = __importDefault(require("@app/models/ITenantModel"));
 let Image = class Image extends sequelize_1.Model {
-    getSearchables() {
+    static getSearchables() {
         return ["caption", "path", "imageableType", "imageableId"];
     }
-    getRelations() {
+    static getRelations() {
         return [];
     }
     static additionalOptions = {};

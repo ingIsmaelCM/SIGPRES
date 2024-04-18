@@ -26,12 +26,12 @@ class Auth
     declare updatedAt: string;
     declare deletedAt: string;
 
-    getSearchables() {
+   static getSearchables() {
         return ["email", "username", "name", "lastname", "lastLogin", "verifiedAt", "status"];
     }
 
     /* istanbul ignore next */
-    getRelations() {
+    static getRelations() {
         return [
             "roles",
             "roles.auths",

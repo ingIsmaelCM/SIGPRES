@@ -4,6 +4,7 @@ import {IParams} from "../interfaces/AppInterfaces";
 import tools from "../utils/tools";
 import logger from "@/logger";
 import SocketService from "@app/services/SocketService";
+import TenantConnection from "@app/db/TenantConnection";
 
 /**
  * @template T - Generic thats extends from model
@@ -17,14 +18,22 @@ export class BaseRepository<T extends Model> {
 
     constructor(model: ModelStatic<T>) {
         this.model = model;
+
         this.socketService = new SocketService();
     }
 
-    protected async safeRun(method: () => Promise<any>): Promise<any> {
+    protected async safeRun(method: (model: ModelStatic<any>) => Promise<any>): Promise<any> {
         try {
             this.primaryKeyName = this.model.primaryKeyAttribute;
-            return await method();
+            const dbName = this.model.sequelize?.getDatabaseName();
+            let model=this.model;
+            if (dbName !== 'sigpres_main') {
+                model =<any> TenantConnection.getConnection()
+                    .model((<any>this.model).modelName)!
+            }
+            return await method(model);
         } catch (error: any) {
+            console.log(error)
             logger.error(JSON.stringify(error))
             throw {
                 code: error.code || 500,
@@ -34,7 +43,7 @@ export class BaseRepository<T extends Model> {
     }
 
     public async getAll(params: IParams): Promise<any> {
-        return this.safeRun(() => Scope.get(this.model, params));
+        return this.safeRun((model: ModelStatic<any>) => Scope.get(model, params));
     }
 
     public async find(
@@ -161,7 +170,7 @@ export class BaseRepository<T extends Model> {
     }
 
 
-    async bulkUpdate(data: any, options: UpdateOptions,  trans: Transaction) {
+    async bulkUpdate(data: any, options: UpdateOptions, trans: Transaction) {
         return await this.safeRun(async () => {
             return await this.model.update(data, {
                 ...options,

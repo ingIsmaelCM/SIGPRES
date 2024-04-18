@@ -14,10 +14,10 @@ const sequelize_1 = require("sequelize");
 const SourceInterfaces_1 = require("@app/interfaces/SourceInterfaces");
 const tools_1 = __importDefault(require("@app/utils/tools"));
 let Lawyer = class Lawyer extends sequelize_1.Model {
-    getSearchables() {
+    static getSearchables() {
         return ["name", "lastname", "exequatur", "infoId"];
     }
-    getRelations() {
+    static getRelations() {
         return ["info", "loans", "payments", "expenses", "image", "document"];
     }
     static additionalOptions = {};

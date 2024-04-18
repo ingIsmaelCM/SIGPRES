@@ -9,10 +9,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const sequelize_1 = require("sequelize");
 const ITenantModel_1 = require("@app/models/ITenantModel");
 let Preference = class Preference extends sequelize_1.Model {
-    getSearchables() {
+    static getSearchables() {
         return ["key", "value", "label"];
     }
-    getRelations() {
+    static getRelations() {
         return [];
     }
     static modelName = "Preference";

@@ -3,17 +3,13 @@ import { ICommonField } from "../interfaces/AppInterfaces";
 
 /* FIXED: Setting static and common interfaces */
 
-interface ItenantNonStatic<T, R> {
-  getSearchables(): Array<keyof T>;
-  getRelations(): Array<keyof R>;
-}
-
 export interface ITenantInterface<T, R> {
-  new (): ItenantNonStatic<T, R>;
   modelName: string;
   tableName: string;
   attributes: Record<keyof T, any>;
-  additionalOptions:Partial<InitOptions>
+  additionalOptions:Partial<InitOptions>,
+  getSearchables(): Array<keyof T>;
+  getRelations(): Array<keyof R>;
 }
 
 export function staticImplements<T, R>() {

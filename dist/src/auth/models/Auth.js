@@ -6,10 +6,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const sequelize_1 = require("sequelize");
 const BaseConnection_1 = __importDefault(require("@app/db/BaseConnection"));
 class Auth extends sequelize_1.Model {
-    getSearchables() {
+    static getSearchables() {
         return ["email", "username", "name", "lastname", "lastLogin", "verifiedAt", "status"];
     }
-    getRelations() {
+    static getRelations() {
         return [
             "roles",
             "roles.auths",

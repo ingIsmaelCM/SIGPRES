@@ -23,11 +23,11 @@ export default class Wallet extends Model implements IWallet {
     static modelName = "Wallet";
     static additionalOptions = {}
 
-    getSearchables(): Array<keyof IWallet> {
+   static  getSearchables(): Array<keyof IWallet> {
         return ["name", "balance", "authId"];
     }
 
-    getRelations(): Array<keyof IWalletRelation> {
+   static getRelations(): Array<keyof IWalletRelation> {
         return ["expenses", "payments", "loans"];
     }
 

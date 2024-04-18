@@ -1,4 +1,4 @@
-import {DataTypes, Model, ModelAttributeColumnOptions} from "sequelize";
+import {DataTypes, Model, ModelAttributeColumnOptions, Sequelize} from "sequelize";
 import {EInfoGender, IUserView} from "@app/interfaces/SourceInterfaces";
 import ITM from "@app/models/ITenantModel";
 import {IAuthRelation} from "@app/interfaces/AuthInterfaces";
@@ -82,16 +82,17 @@ export default class UserView extends Model implements IUserView {
 
     }
 
-    getSearchables(): Array<keyof IUserView> {
+   static  getSearchables(): Array<keyof IUserView> {
         return []
     }
 
-    getRelations(): Array<keyof IAuthRelation> {
+   static getRelations(): Array<keyof IAuthRelation> {
         return ["permissions", "roles.permissions"]
     }
 
-    static  initRelation(){
-        UserView.belongsToMany(Auth.sequelize!.models.Permission,{
+    static  initRelation(sequelize: Sequelize){
+         sequelize.model("UserView")
+             .belongsToMany(Auth.sequelize!.models.Permission,{
             as: "permissions",
             foreignKey: "modelId",
             through: {
@@ -103,7 +104,8 @@ export default class UserView extends Model implements IUserView {
             constraints: false,
         })
 
-        UserView.belongsToMany(Role, {
+         sequelize.model("UserView")
+             .belongsToMany(Role, {
             foreignKey: "roleId",
             through: "auth_roles",
             as: "roles",

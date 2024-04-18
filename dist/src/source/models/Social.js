@@ -15,12 +15,12 @@ let Social = class Social extends sequelize_1.Model {
     static tableName = "socials";
     static modelName = "Social";
     static additionalOptions = {};
-    getSearchables() {
+    static getSearchables() {
         return [
             "facebook", "instagram", "whatsapp"
         ];
     }
-    getRelations() {
+    static getRelations() {
         return ["client"];
     }
     static attributes = {

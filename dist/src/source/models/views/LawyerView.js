@@ -20,11 +20,11 @@ let LawyerView = class LawyerView extends sequelize_1.Model {
         ...models_1.Lawyer.attributes,
         ...models_1.Info.attributes
     };
-    getSearchables() {
+    static getSearchables() {
         return ["name", "lastname", "exequatur",
             "email", "dni", "gender", "country", "infoId", "birthdate"];
     }
-    getRelations() {
+    static getRelations() {
         return ["expenses", "loans", "payments", "image", "document"];
     }
 };

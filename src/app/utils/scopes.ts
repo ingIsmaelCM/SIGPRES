@@ -2,6 +2,7 @@ import {col, DataTypes, Model, ModelStatic, Op} from "sequelize";
 import {IParams} from "../interfaces/AppInterfaces";
 import tools from "./tools";
 import moment from "moment";
+import * as models from "@source/models"
 
 /* BUG Send page, perpage and limit at the same time throw error */
 class Scope {
@@ -169,7 +170,7 @@ class Scope {
         includes: string,
         model: T
     ): object {
-        const associations = new (model as any)().getRelations();
+        const associations = this.getClassModel(<any>model).getRelations();
         associations.push("creator", "updator");
         let inclusions: Array<any> = includes.split(",");
         inclusions = inclusions.filter((i) =>
@@ -297,7 +298,7 @@ class Scope {
         model: ModelStatic<T>,
         params: IParams
     ): Promise<any> {
-        const cols = new (model as any)().getSearchables();
+        const cols = this.getClassModel(model).getSearchables();
         const args = this.getQuery(params, cols, model);
         model = this.loadScopes(model, params);
         return this.loadResults(model, params, args);
@@ -370,6 +371,13 @@ class Scope {
                 break
         }
         return result;
+    }
+
+    getClassModel(model: ModelStatic<any>): any {
+        const dbName = model.sequelize?.getDatabaseName();
+        if (dbName === "sigpres_main") return model;
+        const className = new (model as any)().constructor.name;
+        return (<any>models)[className];
     }
 }
 

@@ -12,10 +12,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const ITenantModel_1 = __importDefault(require("@/app/models/ITenantModel"));
 const sequelize_1 = require("sequelize");
 let Condition = class Condition extends sequelize_1.Model {
-    getSearchables() {
+    static getSearchables() {
         return ["initTerm", "initRateMora", "finalRateMora", "loanId", "clientId"];
     }
-    getRelations() {
+    static getRelations() {
         return ["loan", "client"];
     }
     static additionalOptions = {};

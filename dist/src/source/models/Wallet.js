@@ -16,10 +16,10 @@ let Wallet = class Wallet extends sequelize_1.Model {
     static tableName = "wallets";
     static modelName = "Wallet";
     static additionalOptions = {};
-    getSearchables() {
+    static getSearchables() {
         return ["name", "balance", "authId"];
     }
-    getRelations() {
+    static getRelations() {
         return ["expenses", "payments", "loans"];
     }
     static attributes = {

@@ -8,14 +8,11 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
-var Payment_1;
 Object.defineProperty(exports, "__esModule", { value: true });
 const sequelize_1 = require("sequelize");
 const ITenantModel_1 = __importDefault(require("@/app/models/ITenantModel"));
-const index_1 = require("@source/models/index");
 let Payment = class Payment extends sequelize_1.Model {
-    static { Payment_1 = this; }
-    getSearchables() {
+    static getSearchables() {
         return [
             "amount",
             "capital",
@@ -31,7 +28,7 @@ let Payment = class Payment extends sequelize_1.Model {
             "lawyerId",
         ];
     }
-    getRelations() {
+    static getRelations() {
         return ["wallet", "loan", "lawyer", "client", "mora", "images", "loan.client", "loan.condition", "loan.wallet"];
     }
     static tableName = "payments";
@@ -88,26 +85,30 @@ let Payment = class Payment extends sequelize_1.Model {
             allowNull: true,
         },
     };
-    static initRelation() {
-        Payment_1.hasOne(index_1.Mora, {
+    static initRelation(sequelize) {
+        sequelize.model("Payment")
+            .hasOne(sequelize.model("Mora"), {
             foreignKey: "paymentId",
             as: "mora"
         });
-        Payment_1.belongsTo(index_1.Wallet, {
+        sequelize.model("Payment")
+            .belongsTo(sequelize.model("Wallet"), {
             foreignKey: "walletId",
             as: "wallet"
         });
-        Payment_1.belongsTo(index_1.Loan, {
+        sequelize.model("Payment")
+            .belongsTo(sequelize.model("Loan"), {
             foreignKey: "loanId",
             as: "loan"
         });
-        Payment_1.belongsTo(index_1.Client, {
+        sequelize.model("Payment")
+            .belongsTo(sequelize.model("Client"), {
             foreignKey: "clientId",
             as: "client"
         });
     }
 };
-Payment = Payment_1 = __decorate([
+Payment = __decorate([
     ITenantModel_1.default.staticImplements()
 ], Payment);
 exports.default = Payment;

@@ -6,10 +6,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const BaseConnection_1 = __importDefault(require("@/app/db/BaseConnection"));
 const sequelize_1 = require("sequelize");
 class Tenant extends sequelize_1.Model {
-    getRelations() {
+    static getRelations() {
         return ["auths", "auths.roles.permissions", "auths.permissions"];
     }
-    getSearchables() {
+    static getSearchables() {
         return ["name", "key"];
     }
 }

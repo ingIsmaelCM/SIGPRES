@@ -23,7 +23,7 @@ class AuthMiddleware extends Middleware_1.default {
                 catch (error) {
                 }
                 TenantConnection_1.default.requestNamespace.set("req", req);
-                TenantConnection_1.default.initModels(TenantConnection_1.default.getConnection());
+                TenantConnection_1.default.getConnection().model('ClientView');
                 next();
             });
         }

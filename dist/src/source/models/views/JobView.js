@@ -20,11 +20,11 @@ let JobView = class JobView extends sequelize_1.Model {
         ...models_1.Job.attributes,
         ...models_1.Info.attributes,
     };
-    getSearchables() {
+    static getSearchables() {
         return ["status", "clientId", "position", "company", "endAt", "startAt",
             "email", "dni", "gender", "country", "infoId", "birthdate"];
     }
-    getRelations() {
+    static getRelations() {
         return ["client", "image", "document"];
     }
 };

@@ -8,32 +8,21 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
-var ClientContact_1;
 Object.defineProperty(exports, "__esModule", { value: true });
 const sequelize_1 = require("sequelize");
-const Client_1 = __importDefault(require("@source/models/Client"));
-const Contact_1 = __importDefault(require("@source/models/Contact"));
 const ITenantModel_1 = __importDefault(require("@app/models/ITenantModel"));
 const SourceInterfaces_1 = require("@app/interfaces/SourceInterfaces");
-const index_1 = require("@source/models/index");
 let ClientContact = class ClientContact extends sequelize_1.Model {
-    static { ClientContact_1 = this; }
     static tableName = "client_contacts";
     static modelName = "ClientContact";
     static attributes = {
         clientId: {
-            type: sequelize_1.DataTypes.INTEGER,
-            references: {
-                model: Client_1.default,
-                key: "id"
-            }
+            type: sequelize_1.DataTypes.STRING,
+            allowNull: false
         },
         contactId: {
-            type: sequelize_1.DataTypes.INTEGER,
-            references: {
-                model: Contact_1.default,
-                key: "id"
-            }
+            type: sequelize_1.DataTypes.STRING,
+            allowNull: false
         },
         relationship: {
             type: sequelize_1.DataTypes.ENUM(...Object.values(SourceInterfaces_1.EClientContactRelationship)),
@@ -48,24 +37,26 @@ let ClientContact = class ClientContact extends sequelize_1.Model {
         ...ITenantModel_1.default.commonAttributes
     };
     static additionalOptions = {};
-    getSearchables() {
+    static getSearchables() {
         return ["clientId", "contactId", "isGarante", "relationship"];
     }
-    getRelations() {
+    static getRelations() {
         return ["client", "contact"];
     }
-    static initRelation() {
-        ClientContact_1.belongsTo(index_1.ClientView, {
+    static initRelation(sequelize) {
+        sequelize.model("ClientContact")
+            .belongsTo(sequelize.model("ClientView"), {
             foreignKey: "clientId",
             as: "client",
         });
-        ClientContact_1.belongsTo(index_1.ContactView, {
+        sequelize.model("ClientContact")
+            .belongsTo(sequelize.model("ContactView"), {
             foreignKey: "contactId",
             as: "contact",
         });
     }
 };
-ClientContact = ClientContact_1 = __decorate([
+ClientContact = __decorate([
     ITenantModel_1.default.staticImplements()
 ], ClientContact);
 exports.default = ClientContact;

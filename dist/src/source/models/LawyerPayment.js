@@ -8,14 +8,11 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
-var LawyerPayment_1;
 Object.defineProperty(exports, "__esModule", { value: true });
 const sequelize_1 = require("sequelize");
 const SourceInterfaces_1 = require("@app/interfaces/SourceInterfaces");
 const ITenantModel_1 = __importDefault(require("@app/models/ITenantModel"));
-const index_1 = require("@source/models/index");
 let LawyerPayment = class LawyerPayment extends sequelize_1.Model {
-    static { LawyerPayment_1 = this; }
     static tableName = "lawyer_payments";
     static modelName = "LawyerPayment";
     static additionalOptions = {};
@@ -64,32 +61,36 @@ let LawyerPayment = class LawyerPayment extends sequelize_1.Model {
         },
         ...ITenantModel_1.default.commonAttributes
     };
-    getSearchables() {
+    static getSearchables() {
         return ["loanId", "lawyerId", "paymentId", "amount", "closedAt", "payPrice", "status", "walletId"];
     }
-    getRelations() {
+    static getRelations() {
         return ["lawyer", "payment", "loan", "wallet"];
     }
-    static initRelation() {
-        LawyerPayment_1.belongsTo(index_1.LawyerView, {
+    static initRelation(sequelize) {
+        sequelize.model("LawyerPayment")
+            .belongsTo(sequelize.model("LawyerView"), {
             foreignKey: "lawyerId",
             as: "lawyer"
         });
-        LawyerPayment_1.belongsTo(index_1.Loan, {
+        sequelize.model("LawyerPayment")
+            .belongsTo(sequelize.model("Loan"), {
             foreignKey: "loanId",
             as: "loan"
         });
-        LawyerPayment_1.belongsTo(index_1.Payment, {
+        sequelize.model("LawyerPayment")
+            .belongsTo(sequelize.model("Payment"), {
             foreignKey: "paymentId",
             as: "payment"
         });
-        LawyerPayment_1.belongsTo(index_1.Wallet, {
+        sequelize.model("LawyerPayment")
+            .belongsTo(sequelize.model("Wallet"), {
             foreignKey: "walletId",
             as: "wallet"
         });
     }
 };
-LawyerPayment = LawyerPayment_1 = __decorate([
+LawyerPayment = __decorate([
     ITenantModel_1.default.staticImplements()
 ], LawyerPayment);
 exports.default = LawyerPayment;

@@ -12,7 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const ITenantModel_1 = __importDefault(require("@/app/models/ITenantModel"));
 const sequelize_1 = require("sequelize");
 let Amortization = class Amortization extends sequelize_1.Model {
-    getSearchables() {
+    static getSearchables() {
         return [
             "date",
             "nro",
@@ -25,7 +25,7 @@ let Amortization = class Amortization extends sequelize_1.Model {
             "clientId",
         ];
     }
-    getRelations() {
+    static getRelations() {
         return ["loan", "client"];
     }
     static additionalOptions = {};

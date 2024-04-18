@@ -8,19 +8,16 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
-var Loan_1;
 Object.defineProperty(exports, "__esModule", { value: true });
 const ITenantModel_1 = __importDefault(require("@/app/models/ITenantModel"));
 const sequelize_1 = require("sequelize");
 const SourceInterfaces_1 = require("@app/interfaces/SourceInterfaces");
-const index_1 = require("@source/models/index");
 const FileInterface_1 = require("@app/interfaces/FileInterface");
 let Loan = class Loan extends sequelize_1.Model {
-    static { Loan_1 = this; }
     static tableName = "loans";
     static modelName = "Loan";
     static additionalOptions = {};
-    getSearchables() {
+    static getSearchables() {
         return [
             "code",
             "clientId",
@@ -37,7 +34,7 @@ let Loan = class Loan extends sequelize_1.Model {
             "guarantorId",
         ];
     }
-    getRelations() {
+    static getRelations() {
         return [
             "lawyer",
             "guarantor",
@@ -120,52 +117,54 @@ let Loan = class Loan extends sequelize_1.Model {
             allowNull: false,
         },
     };
-    static initRelations() {
-        Loan_1.belongsTo(index_1.LawyerView, {
+    static initRelations(sequelize) {
+        sequelize.model("Loan")
+            .belongsTo(sequelize.model("LawyerView"), {
             as: "lawyer",
             foreignKey: 'lawyerId',
         });
-        Loan_1.belongsTo(index_1.ContactView, {
+        sequelize.model("Loan")
+            .belongsTo(sequelize.model("ContactView"), {
             as: 'guarantor',
             foreignKey: 'guarantorId'
         });
-        Loan_1.belongsTo(index_1.ClientView, {
+        sequelize.model("Loan").belongsTo(sequelize.model("ClientView"), {
             as: 'client',
             foreignKey: 'clientId'
         });
-        Loan_1.hasOne(index_1.Condition, {
+        sequelize.model("Loan").hasOne(sequelize.model("Condition"), {
             as: 'condition',
             foreignKey: 'loanId'
         });
-        Loan_1.hasMany(index_1.Image, {
+        sequelize.model("Loan").hasMany(sequelize.model("Image"), {
             as: 'images',
             foreignKey: 'imageableId',
             scope: {
                 imageableType: FileInterface_1.EImageable.Loan
             }
         });
-        Loan_1.hasMany(index_1.Document, {
+        sequelize.model("Loan").hasMany(sequelize.model("Document"), {
             as: 'documents',
             foreignKey: 'documentableId',
             scope: {
                 documentableType: FileInterface_1.EDocumentable.Loan
             }
         });
-        Loan_1.hasMany(index_1.Payment, {
+        sequelize.model("Loan").hasMany(sequelize.model("Payment"), {
             as: 'payments',
             foreignKey: 'loanId',
         });
-        Loan_1.hasMany(index_1.Mora, {
+        sequelize.model("Loan").hasMany(sequelize.model("Mora"), {
             as: 'moras',
             foreignKey: 'loanId',
         });
-        Loan_1.hasMany(index_1.Amortization, {
+        sequelize.model("Loan").hasMany(sequelize.model("Amortization"), {
             as: 'amortizations',
             foreignKey: 'loanId',
         });
     }
 };
-Loan = Loan_1 = __decorate([
+Loan = __decorate([
     ITenantModel_1.default.staticImplements()
 ], Loan);
 exports.default = Loan;

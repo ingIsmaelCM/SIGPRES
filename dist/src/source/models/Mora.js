@@ -14,7 +14,7 @@ const ITenantModel_1 = __importDefault(require("@app/models/ITenantModel"));
 const SourceInterfaces_1 = require("@app/interfaces/SourceInterfaces");
 let Mora = class Mora extends sequelize_1.Model {
     static tableName = "moras";
-    static modelName;
+    static modelName = "Mora";
     static additionalOptions = {};
     static attributes = {
         initAmount: {
@@ -58,12 +58,12 @@ let Mora = class Mora extends sequelize_1.Model {
         },
         ...ITenantModel_1.default.commonAttributes
     };
-    getSearchables() {
+    static getSearchables() {
         return [
             "dueAt", "closedAt", "initAmount", "lateAmount", "status", "clientId", "paymentId", "loanId"
         ];
     }
-    getRelations() {
+    static getRelations() {
         return ["loan", "client", "payment"];
     }
 };

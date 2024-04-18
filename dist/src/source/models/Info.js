@@ -80,7 +80,7 @@ let Info = class Info extends sequelize_1.Model {
             allowNull: true,
         },
     };
-    getSearchables() {
+    static getSearchables() {
         return [
             "dni",
             "phone",
@@ -91,7 +91,7 @@ let Info = class Info extends sequelize_1.Model {
             "country",
         ];
     }
-    getRelations() {
+    static getRelations() {
         return ["image", "document"];
     }
 };

@@ -1,4 +1,27 @@
 "use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -6,6 +29,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const sequelize_1 = require("sequelize");
 const tools_1 = __importDefault(require("./tools"));
 const moment_1 = __importDefault(require("moment"));
+const models = __importStar(require("@source/models"));
 class Scope {
     operators = {
         eq: sequelize_1.Op.eq,
@@ -157,7 +181,7 @@ class Scope {
         }
     }
     include(includes, model) {
-        const associations = new model().getRelations();
+        const associations = this.getClassModel(model).getRelations();
         associations.push("creator", "updator");
         let inclusions = includes.split(",");
         inclusions = inclusions.filter((i) => associations.find((ass) => ass == i));
@@ -262,7 +286,7 @@ class Scope {
         return query;
     }
     async get(model, params) {
-        const cols = new model().getSearchables();
+        const cols = this.getClassModel(model).getSearchables();
         const args = this.getQuery(params, cols, model);
         model = this.loadScopes(model, params);
         return this.loadResults(model, params, args);
@@ -330,6 +354,13 @@ class Scope {
                 break;
         }
         return result;
+    }
+    getClassModel(model) {
+        const dbName = model.sequelize?.getDatabaseName();
+        if (dbName === "sigpres_main")
+            return model;
+        const className = new model().constructor.name;
+        return models[className];
     }
 }
 exports.default = new Scope();

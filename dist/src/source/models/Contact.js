@@ -13,10 +13,10 @@ const ITenantModel_1 = __importDefault(require("@/app/models/ITenantModel"));
 const sequelize_1 = require("sequelize");
 const tools_1 = __importDefault(require("@app/utils/tools"));
 let Contact = class Contact extends sequelize_1.Model {
-    getSearchables() {
+    static getSearchables() {
         return ["name", "lastname", "infoId"];
     }
-    getRelations() {
+    static getRelations() {
         return ["clients", "info",];
     }
     static tableName = "contacts";

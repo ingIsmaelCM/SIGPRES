@@ -18,11 +18,11 @@ export default class Condition extends Model implements ICondition {
     declare updatedAt?: string;
     declare deletedAt?: string;
 
-    getSearchables(): Array<keyof ICondition> {
+   static  getSearchables(): Array<keyof ICondition> {
         return ["initTerm", "initRateMora", "finalRateMora", "loanId", "clientId"];
     }
 
-    getRelations(): (keyof IConditionRelation)[] {
+   static getRelations(): (keyof IConditionRelation)[] {
         return ["loan", "client"];
     }
 

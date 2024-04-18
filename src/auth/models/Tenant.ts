@@ -20,11 +20,11 @@ class Tenant
     declare updatedAt: string;
 
 
-    getRelations(): string[] {
+   static getRelations(): string[] {
         return ["auths","auths.roles.permissions","auths.permissions"];
     }
 
-    getSearchables(): string[] {
+   static  getSearchables(): string[] {
         return ["name", "key"];
     }
 }

@@ -88,7 +88,7 @@ export default class Info extends Model implements IInfo {
     declare updatedAt?: string;
     declare deletedAt?: string;
 
-    getSearchables(): Array<keyof IInfo> {
+   static  getSearchables(): Array<keyof IInfo> {
         return [
             "dni",
             "phone",
@@ -100,7 +100,7 @@ export default class Info extends Model implements IInfo {
         ];
     }
 
-    getRelations(): (keyof IInfoRelation)[] {
+   static getRelations(): (keyof IInfoRelation)[] {
         return ["image", "document"];
     }
 }

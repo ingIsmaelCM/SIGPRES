@@ -18,13 +18,13 @@ export default class Social extends Model implements ISocial {
     static tableName = "socials";
     static modelName = "Social";
     static additionalOptions={}
-    getSearchables(): Array<keyof ISocial> {
+   static  getSearchables(): Array<keyof ISocial> {
         return [
             "facebook", "instagram", "whatsapp"
         ]
     }
 
-    getRelations(): Array<keyof ISocialRelation> {
+   static getRelations(): Array<keyof ISocialRelation> {
         return ["client"]
     }
 

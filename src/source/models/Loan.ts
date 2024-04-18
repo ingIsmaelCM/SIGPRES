@@ -1,5 +1,5 @@
 import ITM from "@/app/models/ITenantModel";
-import {DataTypes, Model, ModelAttributeColumnOptions} from "sequelize";
+import {DataTypes, Model, ModelAttributeColumnOptions, Sequelize} from "sequelize";
 import {
     ELoanPeriod,
     ELoanStatus, ELoanType,
@@ -46,7 +46,7 @@ export default class Loan extends Model implements ILoan {
     static modelName = "Loan";
     static additionalOptions = {}
 
-    getSearchables(): Array<keyof ILoan> {
+    static getSearchables(): Array<keyof ILoan> {
         return [
             "code",
             "clientId",
@@ -64,7 +64,7 @@ export default class Loan extends Model implements ILoan {
         ];
     }
 
-    getRelations(): Array<keyof ILoanRelation> {
+    static getRelations(): Array<keyof ILoanRelation> {
         return [
             "lawyer",
             "guarantor",
@@ -87,21 +87,21 @@ export default class Loan extends Model implements ILoan {
         amount: {
             type: DataTypes.DECIMAL,
             allowNull: false,
-            get(this: Loan){
+            get(this: Loan) {
                 return Number(this.getDataValue("amount"))
             }
         },
         balance: {
             type: DataTypes.DECIMAL,
             allowNull: false,
-            get(this: Loan){
+            get(this: Loan) {
                 return Number(this.getDataValue("balance"))
             }
         },
         term: {
             type: DataTypes.INTEGER,
             allowNull: false,
-            get(this: Loan){
+            get(this: Loan) {
                 return Number(this.getDataValue("term"))
             }
         },
@@ -115,10 +115,10 @@ export default class Loan extends Model implements ILoan {
             type: DataTypes.STRING,
             allowNull: false,
         },
-        type:{
-          type: DataTypes.ENUM(...Object.values(ELoanType)),
-          allowNull: false,
-          defaultValue: ELoanType.Fixed
+        type: {
+            type: DataTypes.ENUM(...Object.values(ELoanType)),
+            allowNull: false,
+            defaultValue: ELoanType.Fixed
         },
         clientId: {
             type: DataTypes.INTEGER,
@@ -151,35 +151,37 @@ export default class Loan extends Model implements ILoan {
     };
 
 
-    static initRelations() {
-        Loan.belongsTo(LawyerView, {
-            as: "lawyer",
-            foreignKey: 'lawyerId',
-        })
+    static initRelations(sequelize: Sequelize) {
+        sequelize.model("Loan")
+            .belongsTo(sequelize.model("LawyerView"), {
+                as: "lawyer",
+                foreignKey: 'lawyerId',
+            })
 
-        Loan.belongsTo(ContactView, {
-            as: 'guarantor',
-            foreignKey: 'guarantorId'
-        })
+        sequelize.model("Loan")
+            .belongsTo(sequelize.model("ContactView"), {
+                as: 'guarantor',
+                foreignKey: 'guarantorId'
+            })
 
-        Loan.belongsTo(ClientView, {
+        sequelize.model("Loan").belongsTo(sequelize.model("ClientView"), {
             as: 'client',
             foreignKey: 'clientId'
         })
 
-        Loan.hasOne(Condition, {
+        sequelize.model("Loan").hasOne(sequelize.model("Condition"), {
             as: 'condition',
             foreignKey: 'loanId'
         })
 
-        Loan.hasMany(Image, {
+        sequelize.model("Loan").hasMany(sequelize.model("Image"), {
             as: 'images',
             foreignKey: 'imageableId',
             scope: {
                 imageableType: EImageable.Loan
             }
         })
-        Loan.hasMany(Document, {
+        sequelize.model("Loan").hasMany(sequelize.model("Document"), {
             as: 'documents',
             foreignKey: 'documentableId',
             scope: {
@@ -187,17 +189,17 @@ export default class Loan extends Model implements ILoan {
             }
         })
 
-        Loan.hasMany(Payment, {
+        sequelize.model("Loan").hasMany(sequelize.model("Payment"), {
             as: 'payments',
             foreignKey: 'loanId',
         })
 
-        Loan.hasMany(Mora, {
+        sequelize.model("Loan").hasMany(sequelize.model("Mora"), {
             as: 'moras',
             foreignKey: 'loanId',
         })
 
-        Loan.hasMany(Amortization, {
+        sequelize.model("Loan").hasMany(sequelize.model("Amortization"), {
             as: 'amortizations',
             foreignKey: 'loanId',
         })

@@ -21,8 +21,8 @@ class AuthMiddleware extends Middleware {
                     await new AuthService().refreshToken(req, res);
                 } catch (error) {
                 }
-                TenantConnection.requestNamespace.set("req", req)
-                TenantConnection.initModels(TenantConnection.getConnection());
+                TenantConnection.requestNamespace.set("req", req);
+                TenantConnection.getConnection().model('ClientView');
                 next();
             });
         } catch (error: any) {

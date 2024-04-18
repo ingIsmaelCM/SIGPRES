@@ -7,7 +7,7 @@ import {EMoraStatus, IMora, IMoraRelation} from "@app/interfaces/SourceInterface
 export default class Mora extends Model implements IMora {
 
     static tableName = "moras";
-    static modelName: "Mora";
+    static modelName= "Mora";
     static additionalOptions = {}
     static attributes: Record<keyof IMora, ModelAttributeColumnOptions> = {
         initAmount: {
@@ -67,13 +67,13 @@ export default class Mora extends Model implements IMora {
     declare updatedAt?: string;
     declare deletedAt?: string;
 
-    getSearchables(): Array<keyof IMora> {
+   static  getSearchables(): Array<keyof IMora> {
         return [
             "dueAt", "closedAt", "initAmount", "lateAmount", "status", "clientId", "paymentId", "loanId"
         ];
     }
 
-    getRelations(): (keyof IMoraRelation)[] {
+   static getRelations(): (keyof IMoraRelation)[] {
         return ["loan", "client", "payment"];
     }
 

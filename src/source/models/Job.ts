@@ -21,11 +21,11 @@ export default class Job extends Model implements IJob {
     declare updatedAt?: string;
     declare deletedAt?: string;
 
-    getSearchables(): Array<keyof IJob> {
+   static  getSearchables(): Array<keyof IJob> {
         return ["startAt", "endAt", "status", "salary", "clientId", "company", "infoId", "position"];
     }
 
-    getRelations(): Array<keyof IJobRelation> {
+   static getRelations(): Array<keyof IJobRelation> {
         return ["client", "info", "image", "document"];
     }
 

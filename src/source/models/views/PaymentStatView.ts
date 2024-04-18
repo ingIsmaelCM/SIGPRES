@@ -1,4 +1,4 @@
-import {DataTypes, InitOptions, Model, ModelAttributeColumnOptions} from "sequelize";
+import {DataTypes, InitOptions, Model, ModelAttributeColumnOptions, Sequelize} from "sequelize";
 import {IPaymentRelation, IPaymentStatView} from "@app/interfaces/SourceInterfaces";
 import ITM from "@app/models/ITenantModel";
 import {Client, Loan} from "@source/models";
@@ -37,14 +37,14 @@ export default class PaymentStatView extends Model implements IPaymentStatView {
         timestamps: false
     };
 
-    getSearchables(): Array<keyof IPaymentStatView> {
-        return ["clientId", "loanId","onTime","averageAbonoCapital","averageDiffInDay",
-        "finalMora","initialMora","loanAmount","loanBalance","loanCode", "modaWallet",
-        "mora","outTime", "totalAbonoCapital","totalAmount","totalCapital",
-        "totalCapitalOnCuota","totalInterest"]
+    static getSearchables(): Array<keyof IPaymentStatView> {
+        return ["clientId", "loanId", "onTime", "averageAbonoCapital", "averageDiffInDay",
+            "finalMora", "initialMora", "loanAmount", "loanBalance", "loanCode", "modaWallet",
+            "mora", "outTime", "totalAbonoCapital", "totalAmount", "totalCapital",
+            "totalCapitalOnCuota", "totalInterest"]
     }
 
-    getRelations(): Array<keyof IPaymentRelation> {
+    static getRelations(): Array<keyof IPaymentRelation> {
         return []
     }
 
@@ -79,7 +79,7 @@ export default class PaymentStatView extends Model implements IPaymentStatView {
         onTime: {
             type: DataTypes.DECIMAL,
             get(this: PaymentStatView) {
-                if(this.getDataValue('outTime')===0){
+                if (this.getDataValue('outTime') === 0) {
                     return 1;
                 }
                 return this.getDataValue('onTime');
@@ -91,18 +91,18 @@ export default class PaymentStatView extends Model implements IPaymentStatView {
         percentOnTime: {
             type: DataTypes.VIRTUAL,
             get(this: PaymentStatView) {
-                if(this.getDataValue('outTime')===0){
+                if (this.getDataValue('outTime') === 0) {
                     return 100;
                 }
-                const percent = Number(this.getDataValue("onTime")||0.01) /
-                   ( (this.getDataValue("onTime")) + this.getDataValue("outTime"));
+                const percent = Number(this.getDataValue("onTime") || 0.01) /
+                    ((this.getDataValue("onTime")) + this.getDataValue("outTime"));
                 return Number((percent * 100).toFixed(2))
             }
         },
         percentOutTime: {
             type: DataTypes.VIRTUAL,
             get(this: PaymentStatView) {
-                const percent = Number(this.getDataValue("outTime"))||0.01 /
+                const percent = Number(this.getDataValue("outTime")) || 0.01 /
                     (this.getDataValue("onTime") + this.getDataValue("outTime"));
                 return Number((percent * 100).toFixed(2))
             }
@@ -155,15 +155,17 @@ export default class PaymentStatView extends Model implements IPaymentStatView {
         }
     }
 
-    static initRelation() {
-        PaymentStatView.belongsTo(Client, {
-            foreignKey: "clientId",
-            as: "client"
-        })
-        PaymentStatView.belongsTo(Loan, {
-            foreignKey: "loanId",
-            as: "loan"
-        })
+    static initRelation(sequelize: Sequelize) {
+        sequelize.model("PaymentStatView")
+            .belongsTo(sequelize.model("Client"), {
+                foreignKey: "clientId",
+                as: "client"
+            })
+        sequelize.model("PaymentStatView")
+            .belongsTo(sequelize.model("Loan"), {
+                foreignKey: "loanId",
+                as: "loan"
+            })
     }
 
 

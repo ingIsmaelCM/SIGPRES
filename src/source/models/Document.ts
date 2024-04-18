@@ -60,11 +60,11 @@ export default class Document extends Model implements IDocument {
     declare documentableType: string;
     declare updatedAt: string;
 
-    getSearchables(): Array<keyof IDocument> {
+   static  getSearchables(): Array<keyof IDocument> {
         return ["path", "title", "size", "documentableType", "documentableId"]
     }
 
-    getRelations(): Array<keyof IDocumentRelation> {
+   static getRelations(): Array<keyof IDocumentRelation> {
         return []
     }
 

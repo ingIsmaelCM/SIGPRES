@@ -21,6 +21,7 @@ export default class ClientService extends Service {
 
     async getClients(params: IParams) {
         return this.safeRun(async () =>
+
             await this.clientViewRepo.getAll(params)
         )
     }

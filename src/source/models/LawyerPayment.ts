@@ -1,4 +1,4 @@
-import {DataTypes, Model, ModelAttributeColumnOptions} from "sequelize";
+import {DataTypes, Model, ModelAttributeColumnOptions, Sequelize} from "sequelize";
 import {ELawyerPaymentStatus, ILawyerPayment, ILawyerPaymentRelation} from "@app/interfaces/SourceInterfaces";
 import ITM from "@app/models/ITenantModel";
 import {LawyerView, Loan, Payment, Wallet} from "@source/models/index";
@@ -66,31 +66,35 @@ export default class LawyerPayment extends Model implements ILawyerPayment {
         ...ITM.commonAttributes
     }
 
-    getSearchables(): Array<keyof ILawyerPayment> {
+    static getSearchables(): Array<keyof ILawyerPayment> {
         return ["loanId", "lawyerId", "paymentId", "amount", "closedAt", "payPrice", "status", "walletId"]
     }
 
-    getRelations(): Array<keyof ILawyerPaymentRelation> {
+    static getRelations(): Array<keyof ILawyerPaymentRelation> {
         return ["lawyer", "payment", "loan", "wallet"]
     }
 
-    static initRelation() {
-        LawyerPayment.belongsTo(LawyerView, {
-            foreignKey: "lawyerId",
-            as: "lawyer"
-        })
-        LawyerPayment.belongsTo(Loan, {
-            foreignKey: "loanId",
-            as: "loan"
-        })
-        LawyerPayment.belongsTo(Payment, {
-            foreignKey: "paymentId",
-            as: "payment"
-        })
-        LawyerPayment.belongsTo(Wallet, {
-            foreignKey: "walletId",
-            as: "wallet"
-        })
+    static initRelation(sequelize: Sequelize) {
+        sequelize.model("LawyerPayment")
+            .belongsTo(sequelize.model("LawyerView"), {
+                foreignKey: "lawyerId",
+                as: "lawyer"
+            })
+        sequelize.model("LawyerPayment")
+            .belongsTo(sequelize.model("Loan"), {
+                foreignKey: "loanId",
+                as: "loan"
+            })
+        sequelize.model("LawyerPayment")
+            .belongsTo(sequelize.model("Payment"), {
+                foreignKey: "paymentId",
+                as: "payment"
+            })
+        sequelize.model("LawyerPayment")
+            .belongsTo(sequelize.model("Wallet"), {
+                foreignKey: "walletId",
+                as: "wallet"
+            })
     }
 
 

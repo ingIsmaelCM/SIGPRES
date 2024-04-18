@@ -1,4 +1,4 @@
-import {DataTypes, InitOptions, Model, ModelAttributeColumnOptions} from "sequelize";
+import {DataTypes, InitOptions, Model, ModelAttributeColumnOptions, Sequelize} from "sequelize";
 import {
     EClientContactRelationship,
     EInfoGender,
@@ -38,16 +38,16 @@ export default class ClientContactView extends Model implements IClientContactVi
     declare phone: string;
     declare relationship: EClientContactRelationship;
 
-    getSearchables(): Array<keyof IClientContactView> {
+   static  getSearchables(): Array<keyof IClientContactView> {
         return ["contactId", "clientId", "relationship", "lastname", "name", "address", "email", "phone", "isGarante"]
     }
 
-    getRelations(): Array<keyof IContactRelation|"profile"> {
+   static getRelations(): Array<keyof IContactRelation|"profile"> {
         return ["clients", "profile"]
     }
 
-    static initRelation(){
-        ClientContactView.hasOne(Image, {
+    static initRelation(sequelize: Sequelize){
+         sequelize.model("ClientContactView").hasOne( sequelize.model("Image"), {
             foreignKey: "imageableId",
             sourceKey: "contactId",
             scope: {

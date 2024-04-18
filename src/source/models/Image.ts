@@ -14,10 +14,10 @@ class Image extends Model implements  IImage{
   declare createdAt?: string;
   declare updatedAt?: string;
   declare deletedAt?: string;
-  getSearchables(): Array<keyof IImage> {
+ static  getSearchables(): Array<keyof IImage> {
     return ["caption", "path", "imageableType", "imageableId"];
   }
-  getRelations(): (keyof IImageRelation)[] {
+ static getRelations(): (keyof IImageRelation)[] {
     return [];
   }
   static additionalOptions={}

@@ -1,4 +1,4 @@
-import {DataTypes, Model} from "sequelize";
+import {DataTypes, Model, Sequelize} from "sequelize";
 import ITM from "@app/models/ITenantModel";
 import {EAmortizationStatus, IAmortizationRelation, IAmortizationView} from "@app/interfaces/SourceInterfaces";
 import {Amortization, ClientView, Condition, Loan} from "@source/models";
@@ -36,17 +36,17 @@ export default class AmortizationView extends Model implements IAmortizationView
         expiresAt: {
             type: DataTypes.DATE
         },
-        cuota:{
-          type: DataTypes.DECIMAL,
-          get(this:AmortizationView){
-              const cuota= Number(this.getDataValue("cuota"))+Number(this.mora)
-              return Number(cuota.toFixed(2))
-          }
+        cuota: {
+            type: DataTypes.DECIMAL,
+            get(this: AmortizationView) {
+                const cuota = Number(this.getDataValue("cuota")) + Number(this.mora)
+                return Number(cuota.toFixed(2))
+            }
         },
         mora: {
             type: DataTypes.VIRTUAL,
             get(this: AmortizationView) {
-                const {mora} = this.getDataValue("mora")|| amortization.getMora(this);
+                const {mora} = this.getDataValue("mora") || amortization.getMora(this);
                 return mora;
             }
         },
@@ -73,26 +73,28 @@ export default class AmortizationView extends Model implements IAmortizationView
 
     };
 
-    getSearchables(): Array<any> {
-        return  [
-            ...new Amortization().getSearchables(),
+    static getSearchables(): Array<any> {
+        return [
+            ...Amortization.getSearchables(),
             "expiresAt",
             'date'
         ]
     }
 
-    getRelations(): Array<keyof IAmortizationRelation> {
-        return new Amortization().getRelations()
+    static getRelations(): Array<keyof IAmortizationRelation> {
+        return Amortization.getRelations()
     }
 
-    static initRelation() {
-        AmortizationView.belongsTo(Loan, {
-            foreignKey: "loanId",
-            as: "loan"
-        })
-        AmortizationView.belongsTo(ClientView, {
-            foreignKey: "clientId",
-            as: "client"
-        })
+    static initRelation(sequelize: Sequelize) {
+        sequelize.model("AmortizationView")
+            .belongsTo(sequelize.model("Loan"), {
+                foreignKey: "loanId",
+                as: "loan"
+            })
+        sequelize.model("AmortizationView")
+            .belongsTo(sequelize.model("ClientView"), {
+                foreignKey: "clientId",
+                as: "client"
+            })
     }
 }

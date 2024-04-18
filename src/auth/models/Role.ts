@@ -18,11 +18,11 @@ class Role
   declare id: string;
   declare name: string;
 
-  getSearchables(): string[] {
+ static  getSearchables(): string[] {
     return ["name"];
   }
   /* istanbul ignore next */
-  getRelations(): string[] {
+ static getRelations(): string[] {
     return ["auths", "auths.user"];
   }
 }

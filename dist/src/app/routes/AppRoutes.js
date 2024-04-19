@@ -13,7 +13,8 @@ class AppRoutes extends BaseRoutes_1.default {
         super(new AppController_1.default());
     }
     initRoutes() {
-        this.router.post("/cloudinary/signature", AuthMiddleware_1.default.auth, RoleMiddleware_1.default.hasPermission(PermissionEnums_1.default.getCloudinarySigns), (req, res) => this.controller.getCloudSignature(req, res));
+        this.controller.router.post("/cloudinary/signature", AuthMiddleware_1.default.auth, RoleMiddleware_1.default.hasPermission(PermissionEnums_1.default.getCloudinarySigns), (req, res) => this.controller.getCloudSignature(req, res));
+        this.controller.router.get('/test', (req, res) => this.controller.testRoute(req, res));
     }
 }
 exports.default = AppRoutes;

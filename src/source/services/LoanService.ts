@@ -6,9 +6,9 @@ import {
     EAmortizationStatus,
     ELawyerPaymentStatus,
     ELawyerPaymode,
-    ELoanStatus, IAmortization,
+    ELoanStatus, IAmortization, IExpense,
     ILawyerPayment,
-    ILoan
+    ILoan, ILoanRelation
 } from "@app/interfaces/SourceInterfaces";
 import amortization from "@app/utils/amortization";
 import ConditionRepository from "@source/repositories/ConditionRepository";
@@ -18,6 +18,7 @@ import LawyerPaymentRepository from "@source/repositories/LawyerPaymentRepositor
 import LawyerRepository from "@source/repositories/LawyerRepository";
 import {Op, Transaction} from "sequelize";
 import moment from "moment";
+import ExpenseService from "@source/services/ExpenseService";
 
 export default class LoanService extends Service {
     private mainRepo = new LoanRepository();
@@ -138,6 +139,58 @@ export default class LoanService extends Service {
         )
     }
 
+    async rechargeLoan(loanId: string, data: ILoan): Promise<ILoan> {
+        const trans = await TenantConnection.getTrans();
+        return this.safeRun(async () => {
+            const loan = await this.mainRepo.findById(loanId, {include: "condition"});
+            const amorts = (await this.amortizationRepo.getAll({
+                filter: [
+                    `loanId:eq:${loanId}:and`,
+                    `status:eq:${EAmortizationStatus.Pendiente}:and`
+                ],
+                order: "nro"
+            })).rows;
+            const newBalance=Number(loan.balance) + Number(data.amount);
+            let newAmorts = this.getNewAmorts(newBalance, amorts, loan);
+            for(const amort of newAmorts){
+                await this.amortizationRepo.updateOrCreate(amort, trans);
+            }
+            const loanUpdated=await this.mainRepo.update({balance: newBalance}, loanId, trans);
+            const expenseData: IExpense={
+                amount: data.amount,
+                date: loanUpdated.updatedAt!,
+                concepto: `Reenganche al préstamo ${loan.code}`,
+                walletId: data.walletId,
+                createdBy: data.createdBy,
+                updatedBy: data.updatedBy
+            }
+            await  new ExpenseService().createExpense(expenseData, trans);
+            await trans.commit();
+            return loanUpdated;
+        }, async () => await trans.rollback())
+    }
+
+    private getNewAmorts(newBalance: number, amorts: IAmortization[], loan: ILoan & ILoanRelation) {
+        let newAmorts = amortization.getAmortization({
+                amount: newBalance,
+                term: amorts.length,
+                rate: loan.condition.rate,
+                startAt: amorts.at(0)?.date,
+                period: loan.period
+            }
+        )
+        return newAmorts.map((amort: IAmortization, index: number) => (
+            {
+                ...amort,
+                nro: amorts.at(index)?.nro,
+                loanId: loan.id,
+                clientId: loan.clientId,
+                createdBy: loan.createdBy,
+                updatedBy: loan.updatedBy
+            }
+        ))
+    }
+
     async updateLoan(loanId: string, data: ILoan): Promise<ILoan> {
         const trans = await TenantConnection.getTrans();
         return this.safeRun(async () => {
@@ -167,11 +220,11 @@ export default class LoanService extends Service {
                         }, true, trans)
                         await this.createPaymentForLawyerFromLoan(loan.lawyerId, loan, trans);
                     }
-                    if(oldWallet?.id===newWallet?.id){
+                    if (oldWallet?.id === newWallet?.id) {
                         if (newWallet) {
-                            await this.walletRepo.setBalance(loan.amount-data.amount, oldWallet.id, trans);
+                            await this.walletRepo.setBalance(loan.amount - data.amount, oldWallet.id, trans);
                         }
-                    } else{
+                    } else {
                         if (oldWallet) {
                             await this.walletRepo.setBalance(loan.amount, oldWallet.id, trans);
                         }

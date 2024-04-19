@@ -91,6 +91,9 @@ let config = {
         logo: process.env.COMPANY_LOGO || "No Company Logo",
         rnc: process.env.COMPANY_RNC || "No Company RNC",
     },
+    stripe: {
+        key: process.env.STRIPE_KEY
+    }
 };
 exports.default = config;
 //# sourceMappingURL=app.config.js.map

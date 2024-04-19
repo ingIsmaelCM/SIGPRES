@@ -2,6 +2,7 @@ import {DataTypes, InferAttributes, InferCreationAttributes, Model,} from "seque
 import {IModel} from "@app/models/IModel";
 import BaseConnection from "@app/db/BaseConnection";
 import InfoRepository from "@source/repositories/InfoRepository";
+import tools from "@app/utils/tools";
 
 /*TODO: Create table, model and repository concerns.
    TODO: Set concernId on auths and modify register
@@ -26,7 +27,7 @@ class Auth
     declare updatedAt: string;
     declare deletedAt: string;
 
-   static getSearchables() {
+    static getSearchables() {
         return ["email", "username", "name", "lastname", "lastLogin", "verifiedAt", "status"];
     }
 
@@ -70,10 +71,16 @@ Auth.init(
         name: {
             type: DataTypes.STRING,
             allowNull: false,
+            set(this: Auth, value: string) {
+                this.setDataValue("name", tools.initialToUpper(value))
+            }
         },
         lastname: {
             type: DataTypes.STRING,
             allowNull: false,
+            set(this: Auth, value: string) {
+                this.setDataValue("lastname", tools.initialToUpper(value))
+            }
         },
         fullname: {
             type: DataTypes.VIRTUAL,

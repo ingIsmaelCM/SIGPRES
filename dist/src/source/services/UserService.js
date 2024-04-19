@@ -12,6 +12,7 @@ const UserViewRepository_1 = __importDefault(require("@source/repositories/UserV
 const InfoService_1 = __importDefault(require("@source/services/InfoService"));
 const TenantConnection_1 = __importDefault(require("@app/db/TenantConnection"));
 const TenantRepository_1 = __importDefault(require("@auth/repositories/TenantRepository"));
+const bcrypt_1 = __importDefault(require("bcrypt"));
 class UserService extends Service_1.default {
     mainRepo = new AuthRepository_1.AuthRepository();
     authMailService = new AuthMailService_1.default();
@@ -34,6 +35,7 @@ class UserService extends Service_1.default {
         const trans = await BaseConnection_1.default.getTrans();
         const infoTrans = await TenantConnection_1.default.getTrans();
         return this.safeRun(async () => {
+            data.password = await bcrypt_1.default.hash(data.password, 10);
             const newUser = await this.mainRepo.create({ ...data }, trans);
             const newInfo = await this.infoService.setFromRelated({ ...data, id: newUser.id }, infoTrans);
             await this.mainRepo.update({ infoId: newInfo.id }, newUser.id, trans);

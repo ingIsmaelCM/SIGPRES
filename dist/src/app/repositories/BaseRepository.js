@@ -19,7 +19,6 @@ class BaseRepository {
     }
     async safeRun(method) {
         try {
-            this.primaryKeyName = this.model.primaryKeyAttribute;
             const dbName = this.model.sequelize?.getDatabaseName();
             let model = this.model;
             if (dbName !== 'sigpres_main') {
@@ -29,7 +28,6 @@ class BaseRepository {
             return await method(model);
         }
         catch (error) {
-            console.log(error);
             logger_1.default.error(JSON.stringify(error));
             throw {
                 code: error.code || 500,
@@ -41,7 +39,7 @@ class BaseRepository {
         return this.safeRun((model) => scopes_1.default.get(model, params));
     }
     async find(key, value, withTrashed, params) {
-        return this.safeRun(() => scopes_1.default.get(this.model, {
+        return this.safeRun((model) => scopes_1.default.get(model, {
             ...params,
             page: undefined,
             perpage: undefined,
@@ -58,55 +56,55 @@ class BaseRepository {
         return this.safeRun(() => this.find("id", dataId, withTrashed, params));
     }
     async first(params, withTrashed) {
-        return this.safeRun(() => {
+        return this.safeRun((model) => {
             const parameters = {
-                order: this.model.primaryKeyAttribute,
+                order: model.primaryKeyAttribute,
                 ...params,
                 limit: 1,
                 withtrashed: withTrashed,
             };
-            return scopes_1.default.get(this.model, parameters);
+            return scopes_1.default.get(model, parameters);
         });
     }
     async last(params, withTrashed) {
-        return this.safeRun(() => {
+        return this.safeRun((model) => {
             const parameters = {
-                order: this.model.primaryKeyAttribute,
+                order: model.primaryKeyAttribute,
                 desc: true,
                 ...params,
                 limit: 1,
                 withtrashed: withTrashed,
             };
-            return scopes_1.default.get(this.model, parameters);
+            return scopes_1.default.get(model, parameters);
         });
     }
     async create(data, trans) {
-        return this.safeRun(() => this.model.create(data, { transaction: trans }));
+        return this.safeRun((model) => model.create(data, { transaction: trans }));
     }
     async updateOrCreate(data, trans) {
-        const newData = await this.safeRun(() => this.model.upsert(data, {
+        const newData = await this.safeRun((model) => model.upsert(data, {
             transaction: trans,
         }));
         return newData[0];
     }
     async bulkCreate(data, trans) {
-        return this.safeRun(() => this.model.bulkCreate(data, { transaction: trans }));
+        return this.safeRun((model) => model.bulkCreate(data, { transaction: trans }));
     }
     async update(data, primaryKey, trans, key) {
-        return this.safeRun(async () => {
+        return this.safeRun(async (model) => {
             const { updatedAt, createdAt, deletedAt, id, ...newData } = data;
-            await this.model.update(newData, {
-                where: sequelize_1.Sequelize.where(sequelize_1.Sequelize.col(key || this.primaryKeyName), primaryKey),
+            await model.update(newData, {
+                where: sequelize_1.Sequelize.where(sequelize_1.Sequelize.col(key || model.primaryKeyAttribute), primaryKey),
                 transaction: trans,
             });
-            const updated = await this.model.findByPk(primaryKey, { transaction: trans });
-            this.socketService.emit(`update${this.model.tableName}`, updated);
+            const updated = await model.findByPk(primaryKey, { transaction: trans });
+            this.socketService.emit(`update${model.tableName}`, updated);
             return updated;
         });
     }
     async delete(primaryKey, trans) {
-        return this.safeRun(async () => {
-            const dataToDelete = await this.find(this.primaryKeyName, primaryKey);
+        return this.safeRun(async (model) => {
+            const dataToDelete = await this.find(model.primaryKeyAttribute, primaryKey);
             if (dataToDelete) {
                 return dataToDelete.destroy({ transaction: trans });
             }
@@ -117,8 +115,8 @@ class BaseRepository {
         });
     }
     async bulkDelete(options, force, trans) {
-        return await this.safeRun(async () => {
-            return await this.model.destroy({
+        return await this.safeRun(async (model) => {
+            return await model.destroy({
                 ...options,
                 transaction: trans,
                 force: true
@@ -126,22 +124,22 @@ class BaseRepository {
         });
     }
     async bulkUpdate(data, options, trans) {
-        return await this.safeRun(async () => {
-            return await this.model.update(data, {
+        return await this.safeRun(async (model) => {
+            return await model.update(data, {
                 ...options,
                 transaction: trans,
             });
         });
     }
     async restore(primaryKey, trans) {
-        return this.safeRun(async () => {
-            const dataToRestore = await this.find(this.primaryKeyName, primaryKey, true);
+        return this.safeRun(async (model) => {
+            const dataToRestore = await this.find(model.primaryKeyAttribute, primaryKey, true);
             return dataToRestore.restore({ transaction: trans });
         });
     }
     async forceDelete(primaryKey, trans) {
-        return this.safeRun(async () => {
-            const dataToForceDelete = await this.find(this.primaryKeyName, primaryKey, true);
+        return this.safeRun(async (model) => {
+            const dataToForceDelete = await this.find(model.primaryKeyAttribute, primaryKey, true);
             return dataToForceDelete.destroy({
                 force: true,
                 transaction: trans,

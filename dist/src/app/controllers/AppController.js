@@ -7,6 +7,7 @@ const express_1 = require("express");
 const AppService_1 = __importDefault(require("../services/AppService"));
 const response_1 = __importDefault(require("../utils/response"));
 const Controller_1 = __importDefault(require("./Controller"));
+const StripeService_1 = __importDefault(require("@source/services/StripeService"));
 class AppController extends Controller_1.default {
     prefix = "app";
     router = (0, express_1.Router)();
@@ -19,6 +20,9 @@ class AppController extends Controller_1.default {
         catch (error) {
             response_1.default.error(res, error.code, error.message);
         }
+    }
+    async testRoute(req, res) {
+        return this.safeRun(async () => await StripeService_1.default.getInstance().createCustomer(), res, 200, "Prueba Exitosa");
     }
 }
 exports.default = AppController;

@@ -29,7 +29,11 @@ class ExpenseService extends Service_1.default {
                 await trans.commit();
             }
             return newExpense;
-        }, async () => await trans.rollback());
+        }, async () => {
+            if (!externTrans) {
+                await trans.rollback();
+            }
+        });
     }
     async createExpenseFromLawyer(data) {
         const trans = await TenantConnection_1.default.getTrans();

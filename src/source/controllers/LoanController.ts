@@ -47,6 +47,14 @@ export default class LoanController extends Controller implements IController {
     }
 
     @setAuthor
+    async recharge(req: Request, res: Response) {
+        return this.safeRun(async () =>
+                this.mainService.rechargeLoan(req.params.id, req.body),
+            res, 201, "Monto de préstamo aumentado"
+        )
+    }
+
+    @setAuthor
     async update(req: Request, res: Response) {
         return this.safeRun(async () =>
                 this.mainService.updateLoan(req.params.id, req.body),

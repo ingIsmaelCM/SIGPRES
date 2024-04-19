@@ -62,6 +62,7 @@ class TenantConnection {
                     modelName: model.modelName,
                     tableName: model.tableName,
                     paranoid: true,
+                    timestamps: true,
                     ...(model.additionalOptions || {})
                 });
             }

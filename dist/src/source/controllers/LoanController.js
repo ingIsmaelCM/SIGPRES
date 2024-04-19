@@ -55,6 +55,9 @@ class LoanController extends Controller_1.default {
     async decline(req, res) {
         return this.safeRun(async () => this.mainService.declineLoan(req.params.id, req.body), res, 201, "Solicitud Rechazada");
     }
+    async recharge(req, res) {
+        return this.safeRun(async () => this.mainService.rechargeLoan(req.params.id, req.body), res, 201, "Monto de préstamo aumentado");
+    }
     async update(req, res) {
         return this.safeRun(async () => this.mainService.updateLoan(req.params.id, req.body), res, 201, "Préstamo actualizado");
     }
@@ -84,6 +87,12 @@ __decorate([
     __metadata("design:paramtypes", [Object, Object]),
     __metadata("design:returntype", Promise)
 ], LoanController.prototype, "decline", null);
+__decorate([
+    Controller_1.setAuthor,
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, Object]),
+    __metadata("design:returntype", Promise)
+], LoanController.prototype, "recharge", null);
 __decorate([
     Controller_1.setAuthor,
     __metadata("design:type", Function),

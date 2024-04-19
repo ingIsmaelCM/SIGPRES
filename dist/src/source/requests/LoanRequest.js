@@ -38,6 +38,13 @@ class LoanRequest extends BaseRequest_1.default {
             this.RequestCheck.required("startAt")
         ];
     }
+    loanRechargeRequest() {
+        return [
+            this.RequestCheck.required("amount"),
+            this.RequestCheck.isFloat("amount", 100, 9 * 100 * 1000),
+            this.RequestCheck.required("walletId"),
+        ];
+    }
 }
 exports.default = new LoanRequest();
 //# sourceMappingURL=LoanRequest.js.map

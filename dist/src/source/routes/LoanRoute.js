@@ -17,7 +17,8 @@ class LoanRoutes extends BaseRoutes_1.default {
         this.controller.router.route("/")
             .get(RoleMiddleware_1.default.hasPermission(PermissionEnums_1.default.getLoans), (req, res) => this.controller.index(req, res))
             .post(RoleMiddleware_1.default.hasPermission(PermissionEnums_1.default.createLoan), LoanRequest_1.default.loanCreateRequest(), ConditionRequest_1.default.conditionCreateRequest(), LoanRequest_1.default.validate, (req, res) => this.controller.store(req, res));
-        this.controller.router.patch("/:id/confirm", RoleMiddleware_1.default.hasPermission(PermissionEnums_1.default.approveLoan), LoanRequest_1.default.loanConfirmRequest(), LoanRequest_1.default.requireIdRequest(), LoanRequest_1.default.validate, (req, res) => this.controller.confirm(req, res));
+        this.controller.router.patch("/:id/confirm", RoleMiddleware_1.default.hasPermission(PermissionEnums_1.default.reestructurateLoan), LoanRequest_1.default.loanConfirmRequest(), LoanRequest_1.default.requireIdRequest(), LoanRequest_1.default.validate, (req, res) => this.controller.confirm(req, res));
+        this.controller.router.patch("/:id/recharge", RoleMiddleware_1.default.hasPermission(PermissionEnums_1.default.approveLoan), LoanRequest_1.default.loanRechargeRequest(), LoanRequest_1.default.requireIdRequest(), LoanRequest_1.default.validate, (req, res) => this.controller.recharge(req, res));
         this.controller.router.patch("/:id/decline", RoleMiddleware_1.default.hasPermission(PermissionEnums_1.default.declineLoan), LoanRequest_1.default.requireIdRequest(), LoanRequest_1.default.validate, (req, res) => this.controller.decline(req, res));
         this.controller.router.route("/:id")
             .get(RoleMiddleware_1.default.hasPermission(PermissionEnums_1.default.getLoans), (req, res) => this.controller.show(req, res))

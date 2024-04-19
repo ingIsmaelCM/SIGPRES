@@ -37,11 +37,12 @@ export default class TenantConnection {
     static initModels(instanceConnection: Sequelize) {
         try {
             for (let model of Object.values(models)) {
-              instanceConnection.define(model.modelName, <any>model.attributes, {
+                instanceConnection.define(model.modelName, <any>model.attributes, {
                     modelName: model.modelName,
                     tableName: model.tableName,
                     paranoid: true,
-                    ...(model.additionalOptions||{})
+                    timestamps: true,
+                    ...(model.additionalOptions || {})
                 });
 
             }

@@ -13,6 +13,7 @@ import TenantConnection from "@app/db/TenantConnection";
 import TenantRepository from "@auth/repositories/TenantRepository";
 import tenant from "@auth/models/Tenant";
 import tenantRequest from "@auth/requests/TenantRequest";
+import bcrypt from "bcrypt";
 
 export default class UserService extends Service {
     private mainRepo = new AuthRepository();
@@ -42,6 +43,7 @@ export default class UserService extends Service {
         const trans = await BaseConnection.getTrans();
         const infoTrans = await TenantConnection.getTrans();
         return this.safeRun(async () => {
+                data.password = await bcrypt.hash(data.password, 10);
                 const newUser = await this.mainRepo.create({...data}, trans);
                 const newInfo = await this.infoService.setFromRelated({...data, id: newUser.id} as any, infoTrans);
                 await this.mainRepo.update({infoId: newInfo.id}, newUser.id, trans);

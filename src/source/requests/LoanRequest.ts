@@ -38,6 +38,15 @@ class LoanRequest extends BaseRequest {
         ]
     }
 
+
+    loanRechargeRequest():Array<ValidationChain>{
+        return [
+            this.RequestCheck.required("amount"),
+            this.RequestCheck.isFloat("amount",100,9*100*1000),
+            this.RequestCheck.required("walletId"),
+        ]
+    }
+
 }
 
 export default new LoanRequest();

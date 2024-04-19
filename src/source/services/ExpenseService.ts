@@ -30,7 +30,11 @@ export default class ExpenseService extends Service {
                 }
                 return newExpense;
             },
-            async () => await trans.rollback()
+            async () => {
+                if (!externTrans) {
+                    await trans.rollback()
+                }
+            }
         )
     }
 
@@ -53,7 +57,7 @@ export default class ExpenseService extends Service {
                 const newExpense = await this.mainRepo.create(data, trans);
                 await this.walletRepo.setBalance((0 - data.amount), data.walletId, trans);
                 await trans.commit();
-               return newExpense;
+                return newExpense;
 
             },
             async () => await trans.rollback()

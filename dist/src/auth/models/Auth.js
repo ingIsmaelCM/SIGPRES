@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const sequelize_1 = require("sequelize");
 const BaseConnection_1 = __importDefault(require("@app/db/BaseConnection"));
+const tools_1 = __importDefault(require("@app/utils/tools"));
 class Auth extends sequelize_1.Model {
     static getSearchables() {
         return ["email", "username", "name", "lastname", "lastLogin", "verifiedAt", "status"];
@@ -46,10 +47,16 @@ Auth.init({
     name: {
         type: sequelize_1.DataTypes.STRING,
         allowNull: false,
+        set(value) {
+            this.setDataValue("name", tools_1.default.initialToUpper(value));
+        }
     },
     lastname: {
         type: sequelize_1.DataTypes.STRING,
         allowNull: false,
+        set(value) {
+            this.setDataValue("lastname", tools_1.default.initialToUpper(value));
+        }
     },
     fullname: {
         type: sequelize_1.DataTypes.VIRTUAL,

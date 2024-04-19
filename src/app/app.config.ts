@@ -70,6 +70,10 @@ let config: any = {
     logo: process.env.COMPANY_LOGO || "No Company Logo",
     rnc: process.env.COMPANY_RNC || "No Company RNC",
   },
+
+  stripe:{
+    key: process.env.STRIPE_KEY
+  }
 };
 
 export default config;

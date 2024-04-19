@@ -15,6 +15,7 @@ const LawyerPaymentRepository_1 = __importDefault(require("@source/repositories/
 const LawyerRepository_1 = __importDefault(require("@source/repositories/LawyerRepository"));
 const sequelize_1 = require("sequelize");
 const moment_1 = __importDefault(require("moment"));
+const ExpenseService_1 = __importDefault(require("@source/services/ExpenseService"));
 class LoanService extends Service_1.default {
     mainRepo = new LoanRepository_1.default();
     conditionRepo = new ConditionRepository_1.default();
@@ -115,6 +116,53 @@ class LoanService extends Service_1.default {
             await trans.commit();
             return true;
         }, async () => await trans.rollback());
+    }
+    async rechargeLoan(loanId, data) {
+        const trans = await TenantConnection_1.default.getTrans();
+        return this.safeRun(async () => {
+            const loan = await this.mainRepo.findById(loanId, { include: "condition" });
+            const amorts = (await this.amortizationRepo.getAll({
+                filter: [
+                    `loanId:eq:${loanId}:and`,
+                    `status:eq:${SourceInterfaces_1.EAmortizationStatus.Pendiente}:and`
+                ],
+                order: "nro"
+            })).rows;
+            const newBalance = Number(loan.balance) + Number(data.amount);
+            let newAmorts = this.getNewAmorts(newBalance, amorts, loan);
+            for (const amort of newAmorts) {
+                await this.amortizationRepo.updateOrCreate(amort, trans);
+            }
+            const loanUpdated = await this.mainRepo.update({ balance: newBalance }, loanId, trans);
+            const expenseData = {
+                amount: data.amount,
+                date: loanUpdated.updatedAt,
+                concepto: `Reenganche al préstamo ${loan.code}`,
+                walletId: data.walletId,
+                createdBy: data.createdBy,
+                updatedBy: data.updatedBy
+            };
+            await new ExpenseService_1.default().createExpense(expenseData, trans);
+            await trans.commit();
+            return loanUpdated;
+        }, async () => await trans.rollback());
+    }
+    getNewAmorts(newBalance, amorts, loan) {
+        let newAmorts = amortization_1.default.getAmortization({
+            amount: newBalance,
+            term: amorts.length,
+            rate: loan.condition.rate,
+            startAt: amorts.at(0)?.date,
+            period: loan.period
+        });
+        return newAmorts.map((amort, index) => ({
+            ...amort,
+            nro: amorts.at(index)?.nro,
+            loanId: loan.id,
+            clientId: loan.clientId,
+            createdBy: loan.createdBy,
+            updatedBy: loan.updatedBy
+        }));
     }
     async updateLoan(loanId, data) {
         const trans = await TenantConnection_1.default.getTrans();

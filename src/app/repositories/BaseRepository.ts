@@ -24,7 +24,6 @@ export class BaseRepository<T extends Model> {
 
     protected async safeRun(method: (model: ModelStatic<any>) => Promise<any>): Promise<any> {
         try {
-            this.primaryKeyName = this.model.primaryKeyAttribute;
             const dbName = this.model.sequelize?.getDatabaseName();
             let model=this.model;
             if (dbName !== 'sigpres_main') {
@@ -33,7 +32,6 @@ export class BaseRepository<T extends Model> {
             }
             return await method(model);
         } catch (error: any) {
-            console.log(error)
             logger.error(JSON.stringify(error))
             throw {
                 code: error.code || 500,
@@ -52,8 +50,8 @@ export class BaseRepository<T extends Model> {
         withTrashed?: boolean,
         params?: IParams
     ): Promise<any> {
-        return this.safeRun(() =>
-            Scope.get(this.model, {
+        return this.safeRun((model: ModelStatic<any>) =>
+            Scope.get(model, {
                 ...params,
                 page: undefined,
                 perpage: undefined,
@@ -79,36 +77,36 @@ export class BaseRepository<T extends Model> {
     }
 
     public async first(params?: any, withTrashed?: boolean): Promise<T> {
-        return this.safeRun(() => {
+        return this.safeRun((model: ModelStatic<any>) => {
             const parameters: IParams = {
-                order: this.model.primaryKeyAttribute,
+                order: model.primaryKeyAttribute,
                 ...params,
                 limit: 1,
                 withtrashed: withTrashed,
             };
-            return Scope.get(this.model, parameters);
+            return Scope.get(model, parameters);
         });
     }
 
     public async last(params?: any, withTrashed?: boolean): Promise<T> {
-        return this.safeRun(() => {
+        return this.safeRun((model: ModelStatic<any>) => {
             const parameters: IParams = {
-                order: this.model.primaryKeyAttribute,
+                order: model.primaryKeyAttribute,
                 desc: true,
                 ...params,
                 limit: 1,
                 withtrashed: withTrashed,
             };
-            return Scope.get(this.model, parameters);
+            return Scope.get(model, parameters);
         });
     }
 
     public async create(data: any, trans: any): Promise<T> {
-        return this.safeRun(() => this.model.create(data, {transaction: trans}));
+        return this.safeRun((model: ModelStatic<any>) => model.create(data, {transaction: trans}));
     }
 
     public async updateOrCreate(data: any, trans: any): Promise<T> {
-        const newData = await this.safeRun(() => this.model.upsert(data, {
+        const newData = await this.safeRun((model: ModelStatic<any>) => model.upsert(data, {
             transaction: trans,
 
         }));
@@ -116,8 +114,8 @@ export class BaseRepository<T extends Model> {
     }
 
     public async bulkCreate(data: any[], trans: any): Promise<T[]> {
-        return this.safeRun(() =>
-            this.model.bulkCreate(data, {transaction: trans})
+        return this.safeRun((model: ModelStatic<any>) =>
+            model.bulkCreate(data, {transaction: trans})
         );
     }
 
@@ -127,25 +125,25 @@ export class BaseRepository<T extends Model> {
         trans: any,
         key?: string
     ): Promise<T> {
-        return this.safeRun(async () => {
+        return this.safeRun(async (model: ModelStatic<any>) => {
             const {updatedAt, createdAt, deletedAt, id, ...newData} = data;
-            await this.model.update(newData, {
+            await model.update(newData, {
                 where: Sequelize.where(
-                    Sequelize.col(key || this.primaryKeyName),
+                    Sequelize.col(key || model.primaryKeyAttribute),
                     primaryKey
                 ),
                 transaction: trans,
             });
 
-            const updated = await this.model.findByPk(primaryKey, {transaction: trans});
-            this.socketService.emit(`update${this.model.tableName}`, updated)
+            const updated = await model.findByPk(primaryKey, {transaction: trans});
+            this.socketService.emit(`update${model.tableName}`, updated)
             return updated;
         });
     }
 
     public async delete(primaryKey: string | number, trans: any): Promise<T> {
-        return this.safeRun(async () => {
-            const dataToDelete = await this.find(this.primaryKeyName, primaryKey);
+        return this.safeRun(async (model: ModelStatic<any>) => {
+            const dataToDelete = await this.find(model.primaryKeyAttribute, primaryKey);
             if (dataToDelete) {
                 return dataToDelete.destroy({transaction: trans});
             }
@@ -159,8 +157,8 @@ export class BaseRepository<T extends Model> {
     }
 
     async bulkDelete(options: DestroyOptions, force: boolean, trans: Transaction) {
-        return await this.safeRun(async () => {
-            return await this.model.destroy({
+        return await this.safeRun(async (model: ModelStatic<any>) => {
+            return await model.destroy({
                 ...options,
                 transaction: trans,
                 force: true
@@ -169,10 +167,9 @@ export class BaseRepository<T extends Model> {
         })
     }
 
-
     async bulkUpdate(data: any, options: UpdateOptions, trans: Transaction) {
-        return await this.safeRun(async () => {
-            return await this.model.update(data, {
+        return await this.safeRun(async (model: ModelStatic<any>) => {
+            return await model.update(data, {
                 ...options,
                 transaction: trans,
             })
@@ -180,9 +177,9 @@ export class BaseRepository<T extends Model> {
     }
 
     public async restore(primaryKey: string | number, trans: any): Promise<T> {
-        return this.safeRun(async () => {
+        return this.safeRun(async (model: ModelStatic<any>) => {
             const dataToRestore = await this.find(
-                this.primaryKeyName,
+                model.primaryKeyAttribute,
                 primaryKey,
                 true
             );
@@ -194,9 +191,9 @@ export class BaseRepository<T extends Model> {
         primaryKey: string | number,
         trans: any
     ): Promise<T> {
-        return this.safeRun(async () => {
+        return this.safeRun(async (model: ModelStatic<any>) => {
             const dataToForceDelete = await this.find(
-                this.primaryKeyName,
+                model.primaryKeyAttribute,
                 primaryKey,
                 true
             );

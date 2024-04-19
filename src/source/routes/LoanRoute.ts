@@ -25,19 +25,28 @@ export default class LoanRoutes extends BaseRoutes<LoanController> {
                 (req: Request, res: Response) => this.controller.store(req, res)
             );
 
+
         this.controller.router.patch("/:id/confirm",
-            RoleMiddleware.hasPermission(PermissionEnums.approveLoan),
+            RoleMiddleware.hasPermission(PermissionEnums.reestructurateLoan),
             LoanRequest.loanConfirmRequest(),
             LoanRequest.requireIdRequest(),
             LoanRequest.validate,
             (req: Request, res: Response) => this.controller.confirm(req, res)
-            );
+        );
+
+        this.controller.router.patch("/:id/recharge",
+            RoleMiddleware.hasPermission(PermissionEnums.approveLoan),
+            LoanRequest.loanRechargeRequest(),
+            LoanRequest.requireIdRequest(),
+            LoanRequest.validate,
+            (req: Request, res: Response) => this.controller.recharge(req, res)
+        );
         this.controller.router.patch("/:id/decline",
             RoleMiddleware.hasPermission(PermissionEnums.declineLoan),
             LoanRequest.requireIdRequest(),
             LoanRequest.validate,
             (req: Request, res: Response) => this.controller.decline(req, res)
-            )
+        )
         this.controller.router.route("/:id")
             .get(
                 RoleMiddleware.hasPermission(PermissionEnums.getLoans),

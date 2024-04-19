@@ -29,7 +29,6 @@ var PermissionEnums;
     PermissionEnums["editClient"] = "Editar Clientes";
     PermissionEnums["deleteClient"] = "Eliminar Clientes";
     PermissionEnums["confirmLoan"] = "Confirm Pr\u00E9stamo";
-    PermissionEnums["restructureLoan"] = "Restructurar Pr\u00E9stamo";
     PermissionEnums["createLoan"] = "Crear Pr\u00E9stamos";
     PermissionEnums["editLoan"] = "Editar Pr\u00E9stamos";
     PermissionEnums["deleteLoan"] = "Eliminar Pr\u00E9stamos";

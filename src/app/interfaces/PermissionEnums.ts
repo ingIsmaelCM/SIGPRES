@@ -26,7 +26,6 @@ enum PermissionEnums {
   editClient = "Editar Clientes",
   deleteClient = "Eliminar Clientes",
   confirmLoan = "Confirm Préstamo",
-  restructureLoan = "Restructurar Préstamo",
   createLoan = "Crear Préstamos",
   editLoan = "Editar Préstamos",
   deleteLoan = "Eliminar Préstamos",

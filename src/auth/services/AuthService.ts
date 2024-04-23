@@ -8,18 +8,15 @@ import {v4 as uuidv4} from "uuid";
 import {Response} from "express";
 import tools from "@app/utils/tools";
 import BaseConnection from "@app/db/BaseConnection";
-import {IAuth, Itenant} from "@app/interfaces/AuthInterfaces";
-import Permission from "../models/Permission";
-import Role from "../models/Role";
+import {IAuth} from "@app/interfaces/AuthInterfaces";
 import Service from "@app/services/Service";
-import InfoRepository from "@source/repositories/InfoRepository";
 import TenantConnection from "@app/db/TenantConnection";
 import InfoService from "@source/services/InfoService";
+import appConfig from "@app/app.config";
 
 export default class AuthService extends Service {
     private authRepo: AuthRepository = new AuthRepository();
     private authMailService: AuthMailService = new AuthMailService();
-    private infoRepo = new InfoRepository();
 
 
     async createAuth(auth: IAuth): Promise<Auth> {
@@ -102,11 +99,12 @@ export default class AuthService extends Service {
                     roles: userAuth.roles?.map((role: any) =>
                         ({id: role.id, name: role.name})),
                 };
+                result.version = appConfig.app.version;
                 return {userAuth: result, token};
             }
             await Promise.reject({
                 code: 401,
-                message: "Invalid credentials",
+                message: "Credenciales incorrectas",
             });
         } catch (error: any) {
             await trans.rollback();

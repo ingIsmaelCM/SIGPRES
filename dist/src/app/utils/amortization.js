@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const moment_1 = __importDefault(require("moment"));
+const moment_timezone_1 = __importDefault(require("moment-timezone"));
 exports.default = {
     getAmortization(data) {
         const { amount, term, rate, startAt, period } = data;
@@ -44,19 +44,19 @@ exports.default = {
         return amount / cuota;
     },
     getDateCuota(startAt, period, isFirst = false) {
-        let date = (0, moment_1.default)(startAt);
+        let date = (0, moment_timezone_1.default)(startAt);
         period = typeof period == "string" ? period : String(period);
-        const quincena = (0, moment_1.default)(date).date(15);
-        const endOfMonth = (0, moment_1.default)(date).endOf("month");
-        const endOfMonthNumber = Number((0, moment_1.default)(endOfMonth).format("DD"));
-        const day = Number((0, moment_1.default)(date).format("DD"));
+        const quincena = (0, moment_timezone_1.default)(date).date(15);
+        const endOfMonth = (0, moment_timezone_1.default)(date).endOf("month");
+        const endOfMonthNumber = Number((0, moment_timezone_1.default)(endOfMonth).format("DD"));
+        const day = Number((0, moment_timezone_1.default)(date).format("DD"));
         switch (period.toLowerCase()) {
             case "diario":
                 date = isFirst ? date : date.add(1, "day");
                 break;
             case "semanal":
                 date = isFirst ? date : date.add(1, "week");
-                date = date.day("saturday");
+                date = date.day(6);
                 break;
             case "quincenal":
                 if (!isFirst) {
@@ -72,7 +72,13 @@ exports.default = {
                 }
                 break;
             case "mensual":
-                date = isFirst ? date : date.add(1, "month");
+                const endFebruary = (0, moment_timezone_1.default)(date).month(1).endOf("month");
+                if (date.format("DD/MM/YYYY") === endFebruary.format("DD/MM/YYYY")) {
+                    date = isFirst ? date : date.add(1, "month").endOf("month");
+                }
+                else {
+                    date = isFirst ? date : date.add(1, "month");
+                }
                 break;
             default:
                 if (!isNaN(parseInt(period))) {
@@ -88,29 +94,34 @@ exports.default = {
         return date;
     },
     moveDateCuota(startDate, period) {
-        let date = (0, moment_1.default)(startDate);
+        let date = (0, moment_timezone_1.default)(startDate);
         period = typeof period === "string" ? period : String(period);
-        const quincena = (0, moment_1.default)(date).date(15);
-        const endOfMonth = (0, moment_1.default)(date).endOf("month");
-        const endOfMonthNumber = Number((0, moment_1.default)(endOfMonth).format("DD"));
-        const day = Number((0, moment_1.default)(date).format("DD"));
+        const endOfMonth = (0, moment_timezone_1.default)(date).endOf("month");
+        const endOfMonthNumber = Number((0, moment_timezone_1.default)(endOfMonth).format("DD"));
+        const day = Number((0, moment_timezone_1.default)(date).format("DD"));
         switch (period.toLowerCase()) {
             case "diario":
-                date = (0, moment_1.default)(date).add(1, "day");
+                date = (0, moment_timezone_1.default)(date).add(1, "day");
                 break;
             case "semanal":
-                date = (0, moment_1.default)(date).add(1, "week").day("saturday");
+                date = (0, moment_timezone_1.default)(date).add(1, "week").day(6);
                 break;
             case "quincenal":
                 let daysToAdd = day > 15 ? (15 + (endOfMonthNumber - 30)) : 15;
-                date = (0, moment_1.default)(date).add(daysToAdd, 'days');
+                date = (0, moment_timezone_1.default)(date).add(daysToAdd, 'days');
                 break;
             case "mensual":
-                date = (0, moment_1.default)(date).add(1, "month");
+                const endFebruary = (0, moment_timezone_1.default)(date).month(1).endOf("month");
+                if (date.format("DD/MM/YYYY") === endFebruary.format("DD/MM/YYYY")) {
+                    date = (0, moment_timezone_1.default)(date).add(1, "month").endOf("month");
+                }
+                else {
+                    date = (0, moment_timezone_1.default)(date).add(1, "month");
+                }
                 break;
             default:
                 if (!isNaN(parseInt(period))) {
-                    date = (0, moment_1.default)(date).add(period, "d");
+                    date = (0, moment_timezone_1.default)(date).add(period, "d");
                 }
                 else {
                     throw new Error("Periodo de cuota no válido");
@@ -123,9 +134,9 @@ exports.default = {
         let mora = 0;
         let initMora = 0;
         let finalMora = 0;
-        const isExpired = (0, moment_1.default)().subtract(25, 'hours').isAfter((0, moment_1.default)(amort.getDataValue("expiresAt")));
+        const isExpired = (0, moment_timezone_1.default)().subtract(25, 'hours').isAfter((0, moment_timezone_1.default)(amort.getDataValue("expiresAt")));
         if (isExpired) {
-            const diffInDays = (0, moment_1.default)().diff(amort.getDataValue("expiresAt"), 'days') - 1;
+            const diffInDays = (0, moment_timezone_1.default)().diff(amort.getDataValue("expiresAt"), 'days') - 1;
             const initDay = diffInDays >= amort.getDataValue("initTerm") ? amort.getDataValue("initTerm") : diffInDays;
             const finalDay = diffInDays - initDay > 0 ? (diffInDays - initDay) : 0;
             initMora = ((amort.getDataValue("cuota") * (amort.getDataValue("initRateMora"))

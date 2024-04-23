@@ -1,6 +1,5 @@
-import moment, {Moment} from "moment";
+import moment, {Moment} from "moment-timezone";
 import {AmortizationView} from "@source/models";
-
 export default {
     getAmortization(data: any): any {
         const {amount, term, rate, startAt, period} = data;
@@ -63,7 +62,7 @@ export default {
                 break;
             case "semanal":
                 date = isFirst ? date : date.add(1, "week");
-                date = date.day("saturday")
+                date = date.day(6)
                 break;
             case "quincenal":
                 if (!isFirst) {
@@ -78,7 +77,12 @@ export default {
                 }
                 break;
             case "mensual":
-                date = isFirst ? date : date.add(1, "month")
+                const endFebruary = moment(date).month(1).endOf("month");
+                if (date.format("DD/MM/YYYY") === endFebruary.format("DD/MM/YYYY")) {
+                    date = isFirst ? date : date.add(1, "month").endOf("month");
+                } else {
+                    date = isFirst ? date : date.add(1, "month");
+                }
                 break;
             default:
                 if (!isNaN(parseInt(period))) {
@@ -95,7 +99,6 @@ export default {
     moveDateCuota(startDate: Date, period: string | number): Date {
         let date = moment(startDate);
         period = typeof period === "string" ? period : String(period);
-        const quincena = moment(date).date(15);
         const endOfMonth = moment(date).endOf("month")
         const endOfMonthNumber = Number(moment(endOfMonth).format("DD"))
         const day = Number(moment(date).format("DD"))
@@ -104,14 +107,20 @@ export default {
                 date = moment(date).add(1, "day");
                 break;
             case "semanal":
-                date = moment(date).add(1, "week").day("saturday");
+                date = moment(date).add(1, "week").day(6);
                 break;
             case "quincenal":
                 let daysToAdd = day > 15 ? (15 + (endOfMonthNumber - 30)) : 15;
                 date = moment(date).add(daysToAdd, 'days')
                 break;
             case "mensual":
-                date = moment(date).add(1, "month");
+                const endFebruary = moment(date).month(1).endOf("month");
+                if (date.format("DD/MM/YYYY") === endFebruary.format("DD/MM/YYYY")) {
+                    date = moment(date).add(1, "month").endOf("month");
+                } else {
+                    date = moment(date).add(1, "month");
+                }
+
                 break;
             default:
                 if (!isNaN(parseInt(period))) {

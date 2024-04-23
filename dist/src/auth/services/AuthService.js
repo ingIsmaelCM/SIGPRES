@@ -14,7 +14,7 @@ const BaseConnection_1 = __importDefault(require("@app/db/BaseConnection"));
 const Service_1 = __importDefault(require("@app/services/Service"));
 const TenantConnection_1 = __importDefault(require("@app/db/TenantConnection"));
 const InfoService_1 = __importDefault(require("@source/services/InfoService"));
-const app_config_2 = __importDefault(require("@app/app.config"));
+const package_json_1 = require("../../../package.json");
 class AuthService extends Service_1.default {
     authRepo = new AuthRepository_1.AuthRepository();
     authMailService = new AuthMailService_1.default();
@@ -80,7 +80,7 @@ class AuthService extends Service_1.default {
                     permissions: userAuth.allPermissions,
                     roles: userAuth.roles?.map((role) => ({ id: role.id, name: role.name })),
                 };
-                result.version = app_config_2.default.app.version;
+                result.version = package_json_1.version;
                 return { userAuth: result, token };
             }
             await Promise.reject({

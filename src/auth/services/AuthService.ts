@@ -13,6 +13,7 @@ import Service from "@app/services/Service";
 import TenantConnection from "@app/db/TenantConnection";
 import InfoService from "@source/services/InfoService";
 import appConfig from "@app/app.config";
+ import {version} from "../../../package.json"
 
 export default class AuthService extends Service {
     private authRepo: AuthRepository = new AuthRepository();
@@ -99,7 +100,7 @@ export default class AuthService extends Service {
                     roles: userAuth.roles?.map((role: any) =>
                         ({id: role.id, name: role.name})),
                 };
-                result.version = appConfig.app.version;
+                result.version = version;
                 return {userAuth: result, token};
             }
             await Promise.reject({

@@ -82,11 +82,11 @@ let Amortization = class Amortization extends sequelize_1.Model {
             allowNull: false,
         },
         loanId: {
-            type: sequelize_1.DataTypes.INTEGER,
+            type: sequelize_1.DataTypes.STRING,
             allowNull: false,
         },
         clientId: {
-            type: sequelize_1.DataTypes.INTEGER,
+            type: sequelize_1.DataTypes.STRING,
             allowNull: false,
         },
     };

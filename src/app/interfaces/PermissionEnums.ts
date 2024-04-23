@@ -98,6 +98,11 @@ enum PermissionEnums {
   deleteCondition = "Eliminar Condiciones",
   getTrashs="Ver Papelera",
   restoreData="Restaurar Datos",
+  getCards="Ver Tarjetas",
+  createCard="Crear Tarjeta",
+  editCard="Editar Tarjeta",
+  deleteCard="Eliminar Tarjeta"
+
 }
 
 export default PermissionEnums;

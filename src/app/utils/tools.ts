@@ -9,9 +9,19 @@ import fs from "fs";
 import AppService from "@app/services/AppService";
 import cloudinary from "cloudinary"
 import logger from "@/logger";
-
+import * as crypto from "crypto";
 
 class Tool {
+    async  decrypt(encrypted:  any, secretKey: string,
+                   ivArray: any) {
+        const encoder = new TextEncoder();
+        const keyData = encoder.encode(secretKey);
+        const keyHash = crypto.createHash('sha256').update(keyData).digest();
+        const decipher = crypto.createDecipheriv('aes-256-cbc', keyHash, Buffer.from(ivArray));
+        let decrypted = decipher.update(Buffer.from(encrypted));
+        decrypted = Buffer.concat([decrypted, decipher.final()]);
+        return decrypted.toString('utf8');
+    }
     parseOrZero(value: string | number | undefined): number {
         if (typeof value == "number") {
             return value;

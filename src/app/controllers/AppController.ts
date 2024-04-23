@@ -4,6 +4,7 @@ import AppService from "../services/AppService";
 import response from "../utils/response";
 import Controller from "./Controller";
 import StripeService from "@source/services/StripeService";
+import BraintreeService from "@source/services/BraintreeService";
 
 export default class AppController extends Controller implements IController {
     prefix: string = "app";
@@ -22,7 +23,7 @@ export default class AppController extends Controller implements IController {
 
     public async testRoute(req: Request, res: Response) {
         return this.safeRun(async () =>
-                await StripeService.getInstance().createCustomer()
+                await BraintreeService.getInstance().createToken()
             , res, 200, "Prueba Exitosa")
     }
 }

@@ -59,7 +59,7 @@ export default class PaymentStatView extends Model implements IPaymentStatView {
             type: DataTypes.DECIMAL
         },
         clientId: {
-            type: DataTypes.INTEGER
+            type: DataTypes.STRING
         },
         finalMora: {
             type: DataTypes.DECIMAL
@@ -68,7 +68,7 @@ export default class PaymentStatView extends Model implements IPaymentStatView {
             type: DataTypes.DECIMAL
         },
         loanId: {
-            type: DataTypes.INTEGER
+            type: DataTypes.STRING
         },
         modaWallet: {
             type: DataTypes.STRING

@@ -101,6 +101,10 @@ var PermissionEnums;
     PermissionEnums["deleteCondition"] = "Eliminar Condiciones";
     PermissionEnums["getTrashs"] = "Ver Papelera";
     PermissionEnums["restoreData"] = "Restaurar Datos";
+    PermissionEnums["getCards"] = "Ver Tarjetas";
+    PermissionEnums["createCard"] = "Crear Tarjeta";
+    PermissionEnums["editCard"] = "Editar Tarjeta";
+    PermissionEnums["deleteCard"] = "Eliminar Tarjeta";
 })(PermissionEnums || (PermissionEnums = {}));
 exports.default = PermissionEnums;
 //# sourceMappingURL=PermissionEnums.js.map

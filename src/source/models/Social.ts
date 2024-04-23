@@ -43,7 +43,7 @@ export default class Social extends Model implements ISocial {
                 allowNull: true
             },
             clientId: {
-                type: DataTypes.INTEGER,
+                type: DataTypes.STRING,
                 allowNull: false
             },
             ...ITM.commonAttributes

@@ -11,7 +11,6 @@ const Tenant_1 = __importDefault(require("./Tenant"));
 class AuthRelation {
     static initRelations() {
         Auth_1.default.belongsToMany(Role_1.default, {
-            foreignKey: "roleId",
             through: "auth_roles",
             as: "roles",
         });

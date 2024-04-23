@@ -63,7 +63,7 @@ let Job = class Job extends sequelize_1.Model {
             allowNull: false,
         },
         clientId: {
-            type: sequelize_1.DataTypes.INTEGER,
+            type: sequelize_1.DataTypes.STRING,
             allowNull: false,
         },
         ...ITenantModel_1.default.commonAttributes,

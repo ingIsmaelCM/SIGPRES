@@ -22,6 +22,7 @@ const ClientContactRoute_1 = __importDefault(require("@source/routes/ClientConta
 const PreferenceRoute_1 = __importDefault(require("@source/routes/PreferenceRoute"));
 const LawyerPaymentRoute_1 = __importDefault(require("@source/routes/LawyerPaymentRoute"));
 const WhatsappRoute_1 = __importDefault(require("@source/routes/WhatsappRoute"));
+const CardRoute_1 = __importDefault(require("@source/routes/CardRoute"));
 const sourceRoutes = [
     new PreferenceRoute_1.default(),
     new AmortizationRoute_1.default(),
@@ -42,6 +43,7 @@ const sourceRoutes = [
     new ClientContactRoute_1.default(),
     new LawyerPaymentRoute_1.default(),
     new WhatsappRoute_1.default(),
+    new CardRoute_1.default(),
 ];
 exports.default = sourceRoutes;
 //# sourceMappingURL=index.js.map

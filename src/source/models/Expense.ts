@@ -38,11 +38,11 @@ export default class Expense extends Model implements IExpense {
             allowNull: false,
         },
         walletId: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.STRING,
             allowNull: false,
         },
         lawyerId: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.STRING,
             allowNull: true,
         },
     };

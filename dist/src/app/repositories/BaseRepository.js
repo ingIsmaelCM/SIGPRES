@@ -12,7 +12,6 @@ const TenantConnection_1 = __importDefault(require("@app/db/TenantConnection"));
 class BaseRepository {
     model;
     socketService;
-    primaryKeyName = "id";
     constructor(model) {
         this.model = model;
         this.socketService = new SocketService_1.default();

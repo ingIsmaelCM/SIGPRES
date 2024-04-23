@@ -29,11 +29,10 @@ export default class Preference extends Model implements  IPreference{
       allowNull: false,
     },
     value: {
-      type: DataTypes.TEXT,
-      allowNull: false,
+      type: DataTypes.TEXT("long"),
     },
     label: {
-      type: DataTypes.TEXT,
+      type: DataTypes.STRING(255),
       allowNull: false,
     },
     type: {

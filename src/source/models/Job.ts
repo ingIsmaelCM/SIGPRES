@@ -72,7 +72,7 @@ export default class Job extends Model implements IJob {
             allowNull: false,
         },
         clientId: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.STRING,
             allowNull: false,
         },
         ...ITM.commonAttributes,

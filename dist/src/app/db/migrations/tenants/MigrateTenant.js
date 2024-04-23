@@ -47,7 +47,6 @@ class MigrateTenant {
             logging: app_config_1.default.db.logging,
             timezone: "-04:00"
         });
-        ;
         try {
             const folderPath = __dirname;
             const files = fs_1.default.readdirSync(folderPath);

@@ -6,17 +6,6 @@ import {
     ILoan,
     ILoanRelation,
 } from "@app/interfaces/SourceInterfaces";
-import {
-    Amortization,
-    ClientView,
-    Condition,
-    ContactView,
-    Document,
-    Image,
-    LawyerView,
-    Mora,
-    Payment
-} from "@source/models/index";
 import {EDocumentable, EImageable} from "@app/interfaces/FileInterface";
 
 @ITM.staticImplements<ILoan, ILoanRelation>()
@@ -121,19 +110,19 @@ export default class Loan extends Model implements ILoan {
             defaultValue: ELoanType.Fixed
         },
         clientId: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.STRING,
             allowNull: false,
         },
         lawyerId: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.STRING,
             allowNull: true,
         },
         walletId: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.STRING,
             allowNull: true,
         },
         guarantorId: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.STRING,
             allowNull: true,
         },
         startAt: {
@@ -164,45 +153,52 @@ export default class Loan extends Model implements ILoan {
                 foreignKey: 'guarantorId'
             })
 
-        sequelize.model("Loan").belongsTo(sequelize.model("ClientView"), {
-            as: 'client',
-            foreignKey: 'clientId'
-        })
+        sequelize.model("Loan")
+            .belongsTo(sequelize.model("ClientView"), {
+                as: 'client',
+                foreignKey: 'clientId'
+            })
 
-        sequelize.model("Loan").hasOne(sequelize.model("Condition"), {
-            as: 'condition',
-            foreignKey: 'loanId'
-        })
+        sequelize.model("Loan")
+            .hasOne(sequelize.model("Condition"), {
+                as: 'condition',
+                foreignKey: 'loanId'
+            })
 
-        sequelize.model("Loan").hasMany(sequelize.model("Image"), {
-            as: 'images',
-            foreignKey: 'imageableId',
-            scope: {
-                imageableType: EImageable.Loan
-            }
-        })
-        sequelize.model("Loan").hasMany(sequelize.model("Document"), {
-            as: 'documents',
-            foreignKey: 'documentableId',
-            scope: {
-                documentableType: EDocumentable.Loan
-            }
-        })
+        sequelize.model("Loan")
+            .hasMany(sequelize.model("Image"), {
+                as: 'images',
+                foreignKey: 'imageableId',
+                scope: {
+                    imageableType: EImageable.Loan
+                }
+            })
+        sequelize.model("Loan")
+            .hasMany(sequelize.model("Document"), {
+                as: 'documents',
+                foreignKey: 'documentableId',
+                scope: {
+                    documentableType: EDocumentable.Loan
+                }
+            })
 
-        sequelize.model("Loan").hasMany(sequelize.model("Payment"), {
-            as: 'payments',
-            foreignKey: 'loanId',
-        })
+        sequelize.model("Loan")
+            .hasMany(sequelize.model("Payment"), {
+                as: 'payments',
+                foreignKey: 'loanId',
+            })
 
-        sequelize.model("Loan").hasMany(sequelize.model("Mora"), {
-            as: 'moras',
-            foreignKey: 'loanId',
-        })
+        sequelize.model("Loan")
+            .hasMany(sequelize.model("Mora"), {
+                as: 'moras',
+                foreignKey: 'loanId',
+            })
 
-        sequelize.model("Loan").hasMany(sequelize.model("Amortization"), {
-            as: 'amortizations',
-            foreignKey: 'loanId',
-        })
+        sequelize.model("Loan")
+            .hasMany(sequelize.model("Amortization"), {
+                as: 'amortizations',
+                foreignKey: 'loanId',
+            })
     }
 }
 

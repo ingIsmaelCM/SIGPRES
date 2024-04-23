@@ -24,6 +24,8 @@ import AmortizationView from "@source/models/views/AmortizationView";
 import PaymentStatView from "@source/models/views/PaymentStatView";
 import LawyerPayment from "@source/models/LawyerPayment";
 import UserView from "@source/models/views/UserView";
+import Card from "@source/models/Card"
+
 export {
     Client,
     Amortization,
@@ -51,4 +53,6 @@ export {
     AmortizationView,
     ClientContactView,
     ClientContact,
+    Card,
+
 };

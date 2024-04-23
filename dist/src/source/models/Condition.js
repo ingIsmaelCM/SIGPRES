@@ -60,11 +60,11 @@ let Condition = class Condition extends sequelize_1.Model {
             }
         },
         loanId: {
-            type: sequelize_1.DataTypes.INTEGER,
+            type: sequelize_1.DataTypes.STRING,
             allowNull: false,
         },
         clientId: {
-            type: sequelize_1.DataTypes.INTEGER,
+            type: sequelize_1.DataTypes.STRING,
             allowNull: false,
         },
     };

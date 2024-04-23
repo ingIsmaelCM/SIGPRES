@@ -31,6 +31,8 @@ const app_config_1 = __importDefault(require("../app.config"));
 const models = __importStar(require("../../source/models"));
 const SourceRelation_1 = __importDefault(require("../../source/models/SourceRelation"));
 const cls_hooked_1 = require("cls-hooked");
+const path_1 = __importDefault(require("path"));
+const MigrateView_1 = __importDefault(require("@app/db/migrations/tenants/MigrateView"));
 class TenantConnection {
     static connections = new Map();
     static requestNamespace = (0, cls_hooked_1.createNamespace)("request");
@@ -66,9 +68,14 @@ class TenantConnection {
                     ...(model.additionalOptions || {})
                 });
             }
+            const filePath = path_1.default.join(__dirname, 'migrations', 'tenants', 'tableView.sql');
+            MigrateView_1.default.runSQLFile(filePath, instanceConnection)
+                .then(() => console.log("Query ejecutado"))
+                .catch((err) => console.log(err));
             SourceRelation_1.default.initRelation(instanceConnection);
         }
         catch (error) {
+            console.log(error);
             throw {
                 code: 500,
                 message: error.message,

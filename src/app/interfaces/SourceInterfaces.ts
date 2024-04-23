@@ -97,7 +97,7 @@ export interface IUserView extends IAuth {
     country: string;
 }
 
-export  interface  IUserViewRelation{
+export interface IUserViewRelation {
 
 }
 
@@ -211,7 +211,7 @@ export interface IExpenseRelation {
     lawyer: ILawyer;
 }
 
-export interface IInfo  {
+export interface IInfo {
     id: string;
     dni: string;
     phone: string;
@@ -220,6 +220,8 @@ export interface IInfo  {
     address?: string;
     gender: EInfoGender;
     country: string;
+    type: string;
+    note?:string;
     createdBy?: number;
     updatedBy?: number;
     createdAt?: string;
@@ -308,7 +310,7 @@ export enum ELawyerPaymode {
     Mensual = "Mensual",
     Porcentaje = "Porcentaje de Cobro",
     Cuota = "Cuota de Cobro",
-    Contrato= "Por Contrato"
+    Contrato = "Por Contrato"
 }
 
 export interface ILawyerRelation {
@@ -336,10 +338,12 @@ export interface ILoan extends ICommonField {
     walletId: string;
     guarantorId: string;
 }
-export  enum ELoanType{
-    Fixed="Tasa Fija",
-    Variable="Tasa Variable"
+
+export enum ELoanType {
+    Fixed = "Tasa Fija",
+    Variable = "Tasa Variable"
 }
+
 export enum ELoanPeriod {
     Diario = "diario",
     Semanal = "semanal",
@@ -447,4 +451,16 @@ export interface IPreference extends ICommonField {
 }
 
 export interface IPreferenceRelation {
+}
+
+export  interface  ICard extends  ICommonField{
+    value: string;
+    ending: number;
+    holdname: string;
+    brand: string;
+    clientId: string;
+}
+
+export interface  ICardRelation{
+    client: IClientView;
 }

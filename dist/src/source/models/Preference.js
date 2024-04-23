@@ -25,11 +25,10 @@ let Preference = class Preference extends sequelize_1.Model {
             allowNull: false,
         },
         value: {
-            type: sequelize_1.DataTypes.TEXT,
-            allowNull: false,
+            type: sequelize_1.DataTypes.TEXT("long"),
         },
         label: {
-            type: sequelize_1.DataTypes.TEXT,
+            type: sequelize_1.DataTypes.STRING(255),
             allowNull: false,
         },
         type: {

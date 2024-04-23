@@ -14,8 +14,6 @@ export class BaseRepository<T extends Model> {
     protected model;
     protected socketService: SocketService;
 
-    private primaryKeyName: string = "id";
-
     constructor(model: ModelStatic<T>) {
         this.model = model;
 
@@ -25,9 +23,9 @@ export class BaseRepository<T extends Model> {
     protected async safeRun(method: (model: ModelStatic<any>) => Promise<any>): Promise<any> {
         try {
             const dbName = this.model.sequelize?.getDatabaseName();
-            let model=this.model;
+            let model = this.model;
             if (dbName !== 'sigpres_main') {
-                model =<any> TenantConnection.getConnection()
+                model = <any>TenantConnection.getConnection()
                     .model((<any>this.model).modelName)!
             }
             return await method(model);

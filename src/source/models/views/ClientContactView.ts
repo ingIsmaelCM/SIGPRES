@@ -18,7 +18,7 @@ export default class ClientContactView extends Model implements IClientContactVi
         ...ClientContact.attributes,
         ...ContactView.attributes,
         relationId:{
-            type: DataTypes.INTEGER
+            type: DataTypes.STRING
         }
     }
     static additionalOptions: Partial<InitOptions>={

@@ -38,7 +38,7 @@ let UserView = class UserView extends sequelize_1.Model {
             type: sequelize_1.DataTypes.STRING
         },
         infoId: {
-            type: sequelize_1.DataTypes.INTEGER
+            type: sequelize_1.DataTypes.STRING
         },
         lastlogin: {
             type: sequelize_1.DataTypes.DATE

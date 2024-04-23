@@ -18,12 +18,6 @@ let Info = class Info extends sequelize_1.Model {
     static modelName = "Info";
     static tableName = "infos";
     static attributes = {
-        id: {
-            type: sequelize_1.DataTypes.STRING,
-            primaryKey: true,
-            allowNull: false,
-            defaultValue: sequelize_1.DataTypes.UUIDV4
-        },
         dni: {
             type: sequelize_1.DataTypes.STRING,
             allowNull: true,
@@ -49,11 +43,20 @@ let Info = class Info extends sequelize_1.Model {
                 }
             }
         },
+        note: {
+            type: sequelize_1.DataTypes.STRING(150),
+            allowNull: true,
+        },
         gender: {
             type: sequelize_1.DataTypes.ENUM,
             values: Object.values(SourceInterfaces_1.EInfoGender),
             allowNull: false,
             defaultValue: SourceInterfaces_1.EInfoGender.Ninguno,
+        },
+        type: {
+            type: sequelize_1.DataTypes.STRING,
+            allowNull: false,
+            defaultValue: "General"
         },
         country: {
             type: sequelize_1.DataTypes.STRING,
@@ -63,22 +66,7 @@ let Info = class Info extends sequelize_1.Model {
                 this.setDataValue("country", tools_1.default.initialToUpper(value));
             }
         },
-        createdBy: {
-            type: sequelize_1.DataTypes.INTEGER,
-        },
-        updatedBy: {
-            type: sequelize_1.DataTypes.INTEGER,
-        },
-        createdAt: {
-            type: sequelize_1.DataTypes.DATE,
-        },
-        updatedAt: {
-            type: sequelize_1.DataTypes.DATE,
-        },
-        deletedAt: {
-            type: sequelize_1.DataTypes.DATE,
-            allowNull: true,
-        },
+        ...ITenantModel_1.default.commonAttributes
     };
     static getSearchables() {
         return [
@@ -89,6 +77,8 @@ let Info = class Info extends sequelize_1.Model {
             "address",
             "gender",
             "country",
+            'note',
+            'type'
         ];
     }
     static getRelations() {

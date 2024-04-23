@@ -35,7 +35,7 @@ export default class Document extends Model implements IDocument {
             allowNull: false
         },
         documentableId: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.STRING,
             allowNull: false
         },
         createdAt: {

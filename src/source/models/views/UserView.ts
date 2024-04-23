@@ -48,7 +48,7 @@ export default class UserView extends Model implements IUserView {
             type: DataTypes.STRING
         },
         infoId: {
-            type: DataTypes.INTEGER
+            type: DataTypes.STRING
         },
         lastlogin: {
             type: DataTypes.DATE

@@ -69,19 +69,19 @@ let Payment = class Payment extends sequelize_1.Model {
             allowNull: true,
         },
         walletId: {
-            type: sequelize_1.DataTypes.INTEGER,
+            type: sequelize_1.DataTypes.STRING,
             allowNull: false,
         },
         loanId: {
-            type: sequelize_1.DataTypes.INTEGER,
+            type: sequelize_1.DataTypes.STRING,
             allowNull: false,
         },
         clientId: {
-            type: sequelize_1.DataTypes.INTEGER,
+            type: sequelize_1.DataTypes.STRING,
             allowNull: false,
         },
         lawyerId: {
-            type: sequelize_1.DataTypes.INTEGER,
+            type: sequelize_1.DataTypes.STRING,
             allowNull: true,
         },
     };

@@ -20,7 +20,7 @@ let ClientContactView = class ClientContactView extends sequelize_1.Model {
         ...models_1.ClientContact.attributes,
         ...models_1.ContactView.attributes,
         relationId: {
-            type: sequelize_1.DataTypes.INTEGER
+            type: sequelize_1.DataTypes.STRING
         }
     };
     static additionalOptions = {};

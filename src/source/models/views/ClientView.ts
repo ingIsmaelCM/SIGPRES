@@ -11,11 +11,11 @@ export default class ClientView extends Model {
     static tableName = "clientView";
     static modelName = "ClientView";
     static additionalOptions = {}
-
     static attributes: Record<keyof IClientView, ModelAttributeColumnOptions> = {
         ...Client.attributes,
         ...Info.attributes
     };
+
 
     static getSearchables(): Array<keyof IClientView> {
         return ["name", "lastname", "email", "dni", "gender", "country", "code",

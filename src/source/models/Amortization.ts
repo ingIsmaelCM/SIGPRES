@@ -96,11 +96,11 @@ export default class Amortization extends Model implements IAmortization {
             allowNull: false,
         },
         loanId: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.STRING,
             allowNull: false,
         },
         clientId: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.STRING,
             allowNull: false,
         },
     };

@@ -3,7 +3,7 @@
 SET foreign_key_checks = 0;
 
 
-CREATE TABLE `images`(
+CREATE TABLE IF NOT EXISTS `images`(
 `id` VARCHAR(70) PRIMARY KEY DEFAULT (UUID()),
 `path` VARCHAR(150) NOT NULL,
 `caption` VARCHAR(50) NOT NULL,
@@ -16,7 +16,7 @@ CREATE TABLE `images`(
 `deletedAt` TIMESTAMP
 );
 
-CREATE TABLE `documents`(
+CREATE TABLE IF NOT EXISTS `documents`(
 `id` VARCHAR(70) PRIMARY KEY DEFAULT (UUID()),
 `path` VARCHAR(150) NOT NULL,
 `title` VARCHAR(150) NOT NULL,
@@ -29,7 +29,7 @@ CREATE TABLE `documents`(
 `deletedAt` TIMESTAMP
 );
 
-CREATE TABLE `preferences`
+CREATE TABLE IF NOT EXISTS `preferences`
 (
     `id` VARCHAR(70) PRIMARY KEY DEFAULT (UUID()),
     `key` VARCHAR(50) NOT NULL UNIQUE,
@@ -44,7 +44,7 @@ CREATE TABLE `preferences`
 );
 
 
-CREATE TABLE `infos`(
+CREATE TABLE IF NOT EXISTS `infos`(
     `id` VARCHAR(70) PRIMARY KEY DEFAULT (UUID()),
     `dni` VARCHAR(18)  COMMENT 'Cédula, Pasaporte u otro',
     `phone` VARCHAR(15) ,
@@ -60,7 +60,7 @@ CREATE TABLE `infos`(
     `deletedAt` TIMESTAMP
 );
 
-CREATE TABLE `clients`(
+CREATE TABLE IF NOT EXISTS `clients`(
     `id` VARCHAR(70) PRIMARY KEY DEFAULT (UUID()),
     `code` VARCHAR(10),
     `name` VARCHAR(50) NOT NULL,
@@ -74,7 +74,7 @@ CREATE TABLE `clients`(
     `deletedAt` TIMESTAMP
 );
 
-CREATE TABLE `socials`(
+CREATE TABLE IF NOT EXISTS `socials`(
     `id` VARCHAR(70) PRIMARY KEY DEFAULT (UUID()),
     `instagram` VARCHAR(50) UNIQUE,
     `facebook` VARCHAR(50) UNIQUE,
@@ -87,7 +87,7 @@ CREATE TABLE `socials`(
     `deletedAt` TIMESTAMP
 );
 
-CREATE TABLE `lawyers`(
+CREATE TABLE IF NOT EXISTS `lawyers`(
     `id` VARCHAR(70) PRIMARY KEY DEFAULT (UUID()),
     `name` VARCHAR(50) NOT NULL,
     `lastname` VARCHAR(50) NOT NULL,
@@ -102,7 +102,7 @@ CREATE TABLE `lawyers`(
     `deletedAt` TIMESTAMP
 );
 
-CREATE TABLE `lawyer_payments`(
+CREATE TABLE IF NOT EXISTS `lawyer_payments`(
     `id` VARCHAR(70) PRIMARY KEY DEFAULT (UUID()),
     `amount` DECIMAL(10,2) NOT NULL,
     `loanId` VARCHAR(70),
@@ -121,7 +121,7 @@ CREATE TABLE `lawyer_payments`(
 );
 
 
-CREATE TABLE `contacts`(
+CREATE TABLE IF NOT EXISTS `contacts`(
     `id` VARCHAR(70) PRIMARY KEY DEFAULT (UUID()),
     `name` VARCHAR(50) NOT NULL,
     `lastname` VARCHAR(50) NOT NULL,
@@ -133,7 +133,7 @@ CREATE TABLE `contacts`(
     `deletedAt` TIMESTAMP
 );
 
-CREATE TABLE `client_contacts`(
+CREATE TABLE IF NOT EXISTS `client_contacts`(
       `id` VARCHAR(70) PRIMARY KEY DEFAULT (UUID()),
       `clientId` VARCHAR(70) NOT NULL,
       `contactId` VARCHAR(70) NOT NULL,
@@ -147,7 +147,7 @@ CREATE TABLE `client_contacts`(
 );
 
 
-CREATE TABLE `jobs`(
+CREATE TABLE IF NOT EXISTS `jobs`(
     `id` VARCHAR(70) PRIMARY KEY DEFAULT (UUID()),
     `startAt` DATE NOT NULL,
     `endAt` DATE,
@@ -165,7 +165,7 @@ CREATE TABLE `jobs`(
 );
 
 
-CREATE TABLE `wallets`(
+CREATE TABLE IF NOT EXISTS `wallets`(
     `id` VARCHAR(70) PRIMARY KEY DEFAULT (UUID()),
     `name` VARCHAR(50) NOT NULL UNIQUE,
     `balance` DECIMAL(10,2) NOT NULL DEFAULT 0,
@@ -178,7 +178,7 @@ CREATE TABLE `wallets`(
 );
 
 
-CREATE TABLE `expenses`(
+CREATE TABLE IF NOT EXISTS `expenses`(
     `id` VARCHAR(70) PRIMARY KEY DEFAULT (UUID()),
     `amount` DECIMAL(10,2) NOT NULL,
     `date` DATE NOT NULL,
@@ -192,7 +192,7 @@ CREATE TABLE `expenses`(
     `deletedAt` TIMESTAMP
 );
 
-CREATE TABLE `loans`(
+CREATE TABLE IF NOT EXISTS `loans`(
     `id` VARCHAR(70) PRIMARY KEY DEFAULT (UUID()),
      `code` VARCHAR(10),
     `amount` DECIMAL(10,2) NOT NULL,
@@ -216,7 +216,7 @@ CREATE TABLE `loans`(
 );
 
 
-CREATE TABLE `conditions`(
+CREATE TABLE IF NOT EXISTS `conditions`(
     `id` VARCHAR(70) PRIMARY KEY DEFAULT (UUID()),
     `initTerm` INT NOT NULL DEFAULT 0 COMMENT 'Días de recargo inicial',
     `initRateMora` DECIMAL(4,2) NOT NULL COMMENT 'Tasa de recargo inicial',
@@ -233,7 +233,7 @@ CREATE TABLE `conditions`(
 );
 
 
-CREATE TABLE `payments`(
+CREATE TABLE IF NOT EXISTS `payments`(
     `id` VARCHAR(70) PRIMARY KEY DEFAULT (UUID()),
     `amount` DECIMAL(10,2) NOT NULL,
     `capital` DECIMAL(10,2) NOT NULL DEFAULT 0,
@@ -255,7 +255,7 @@ CREATE TABLE `payments`(
 );
 
 
-CREATE TABLE `amortizations`(
+CREATE TABLE IF NOT EXISTS `amortizations`(
     `id` VARCHAR(70) PRIMARY KEY DEFAULT (UUID()),
     `date` DATE NOT NULL,
     `nro` INT NOT NULL,
@@ -275,7 +275,7 @@ CREATE TABLE `amortizations`(
 );
 
 
-CREATE TABLE `moras`(
+CREATE TABLE IF NOT EXISTS `moras`(
     `id` VARCHAR(70) PRIMARY KEY DEFAULT (UUID()),
     `initAmount` DECIMAL(10,2) NOT NULL,
     `lateAmount` DECIMAL (10,2) NOT NULL DEFAULT 0,
@@ -296,7 +296,6 @@ CREATE TABLE `moras`(
 CREATE OR REPLACE VIEW clientView
 AS SELECT c.*, i.dni, i.address,i.phone, i.email, i.birthdate, i.gender, i.country
 FROM clients c LEFT JOIN infos i ON c.infoId=i.id;
-
 
 CREATE OR REPLACE VIEW contactView
 AS SELECT c.*, i.dni, i.address,i.phone, i.email, i.birthdate, i.gender, i.country
@@ -320,6 +319,13 @@ i.dni, i.phone, i.birthdate, i.address, i.gender, i.country, i.createdBy, i.upda
 i.updatedAt, i.createdAt, i.deletedAt
 FROM `infos` i INNER JOIN `sigpres_main`.`auths` a ON a.infoId=i.id;
 
+CREATE OR REPLACE VIEW clientContactView
+AS SELECT con.id, con.name, con.lastname, con.infoId, con.createdBy, con.updatedBy, con.createdAt,
+ con.updatedAt, con.dni, con.address, con.phone, con.email,con.birthdate, con.gender, con.country,
+ cc.clientId, cc.contactId, cc.isGarante, cc.relationship, cc.id as relationId, cc.deletedAt as deletedAt
+    FROM contactView con LEFT JOIN client_contacts cc ON cc.contactId=con.id;
+
+
 CREATE OR REPLACE VIEW paymentStatView AS
 SELECT ANY_VALUE(pay.id) AS id, ANY_VALUE(l.code) AS loanCode, pay.clientId , pay.loanId,
 ROUND(AVG(DATEDIFF(m.closedAt, m.dueAt)),2) AS averageDiffInDay,
@@ -341,11 +347,7 @@ LEFT JOIN `moras` m ON m.paymentId=pay.id
 LEFT JOIN `loans` l ON pay.loanId=l.id
 GROUP BY  pay.clientId, pay.loanId;
 
-CREATE OR REPLACE VIEW clientContactView
-AS SELECT con.id, con.name, con.lastname, con.infoId, con.createdBy, con.updatedBy, con.createdAt,
- con.updatedAt, con.dni, con.address, con.phone, con.email,con.birthdate, con.gender, con.country,
- cc.clientId, cc.contactId, cc.isGarante, cc.relationship, cc.id as relationId, cc.deletedAt as deletedAt
-    FROM contactView con LEFT JOIN client_contacts cc ON cc.contactId=con.id;
+
 
 
 ALTER TABLE `clients` ADD CONSTRAINT `FK_clients_infos` FOREIGN KEY (`infoId`) REFERENCES `infos` (`id`)

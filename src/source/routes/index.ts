@@ -18,6 +18,7 @@ import ClientContactRoutes from "@source/routes/ClientContactRoute";
 import PreferenceRoutes from "@source/routes/PreferenceRoute";
 import LawyerPaymentRoutes from "@source/routes/LawyerPaymentRoute";
 import WhatsappRoutes from "@source/routes/WhatsappRoute";
+import CardRoutes from "@source/routes/CardRoute";
 
 const sourceRoutes: BaseRoutes<any>[] = [
     new PreferenceRoutes(),
@@ -39,6 +40,7 @@ const sourceRoutes: BaseRoutes<any>[] = [
     new ClientContactRoutes(),
     new LawyerPaymentRoutes(),
     new WhatsappRoutes(),
+    new CardRoutes(),
 ]
 
 export default sourceRoutes;

@@ -43,7 +43,7 @@ let Image = class Image extends sequelize_1.Model {
             type: sequelize_1.DataTypes.STRING,
         },
         imageableId: {
-            type: sequelize_1.DataTypes.INTEGER,
+            type: sequelize_1.DataTypes.STRING,
         },
         createdAt: {
             type: sequelize_1.DataTypes.DATEONLY,

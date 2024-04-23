@@ -38,7 +38,7 @@ let PaymentStatView = class PaymentStatView extends sequelize_1.Model {
             type: sequelize_1.DataTypes.DECIMAL
         },
         clientId: {
-            type: sequelize_1.DataTypes.INTEGER
+            type: sequelize_1.DataTypes.STRING
         },
         finalMora: {
             type: sequelize_1.DataTypes.DECIMAL
@@ -47,7 +47,7 @@ let PaymentStatView = class PaymentStatView extends sequelize_1.Model {
             type: sequelize_1.DataTypes.DECIMAL
         },
         loanId: {
-            type: sequelize_1.DataTypes.INTEGER
+            type: sequelize_1.DataTypes.STRING
         },
         modaWallet: {
             type: sequelize_1.DataTypes.STRING

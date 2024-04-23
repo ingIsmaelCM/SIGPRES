@@ -1,5 +1,5 @@
 import {
-    AmortizationView,
+    AmortizationView, Card,
     ClientContact,
     ClientContactView,
     ClientView,
@@ -31,5 +31,6 @@ export default class SourceRelation {
         LawyerPayment.initRelation(sequelize);
         UserView.initRelation(sequelize);
         Expense.initRelation(sequelize);
+        Card.initRelation(sequelize);
     }
 }

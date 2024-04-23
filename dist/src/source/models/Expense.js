@@ -36,11 +36,11 @@ let Expense = class Expense extends sequelize_1.Model {
             allowNull: false,
         },
         walletId: {
-            type: sequelize_1.DataTypes.INTEGER,
+            type: sequelize_1.DataTypes.STRING,
             allowNull: false,
         },
         lawyerId: {
-            type: sequelize_1.DataTypes.INTEGER,
+            type: sequelize_1.DataTypes.STRING,
             allowNull: true,
         },
     };

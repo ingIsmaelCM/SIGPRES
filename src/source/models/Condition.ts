@@ -70,11 +70,11 @@ export default class Condition extends Model implements ICondition {
             }
         },
         loanId: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.STRING,
             allowNull: false,
         },
         clientId: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.STRING,
             allowNull: false,
         },
     };

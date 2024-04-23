@@ -8,7 +8,6 @@ import {UserView} from "@source/models";
 export default class AuthRelation {
   static initRelations() {
     Auth.belongsToMany(Role, {
-      foreignKey: "roleId",
       through: "auth_roles",
       as: "roles",
     });

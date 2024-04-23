@@ -10,6 +10,7 @@ const AuthRepository_1 = require("../repositories/AuthRepository");
 const Middleware_1 = __importDefault(require("@app/middlewares/Middleware"));
 const TenantConnection_1 = __importDefault(require("@/app/db/TenantConnection"));
 const AuthService_1 = __importDefault(require("@auth/services/AuthService"));
+const tools_1 = __importDefault(require("@app/utils/tools"));
 class AuthMiddleware extends Middleware_1.default {
     async auth(req, res, next) {
         try {
@@ -19,6 +20,8 @@ class AuthMiddleware extends Middleware_1.default {
             TenantConnection_1.default.requestNamespace.run(async () => {
                 try {
                     await new AuthService_1.default().refreshToken(req, res);
+                    const tenant = req.cookies.tenant;
+                    tools_1.default.setCookie(res, "tenant", tenant);
                 }
                 catch (error) {
                 }

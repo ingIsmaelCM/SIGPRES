@@ -150,13 +150,20 @@ export default class LoanService extends Service {
                 ],
                 order: "nro"
             })).rows;
-            const newBalance=Number(loan.balance) + Number(data.amount);
+
+            if (loan.balance <= 0 || amorts.length === 0) {
+                return Promise.reject({
+                    code: 422,
+                    message: 'No se puede reenganchar a este préstamo'
+                })
+            }
+            const newBalance = Number(loan.balance) + Number(data.amount);
             let newAmorts = this.getNewAmorts(newBalance, amorts, loan);
-            for(const amort of newAmorts){
+            for (const amort of newAmorts) {
                 await this.amortizationRepo.updateOrCreate(amort, trans);
             }
-            const loanUpdated=await this.mainRepo.update({balance: newBalance}, loanId, trans);
-            const expenseData: IExpense={
+            const loanUpdated = await this.mainRepo.update({balance: newBalance}, loanId, trans);
+            const expenseData: IExpense = {
                 amount: data.amount,
                 date: loanUpdated.updatedAt!,
                 concepto: `Reenganche al préstamo ${loan.code}`,
@@ -164,7 +171,7 @@ export default class LoanService extends Service {
                 createdBy: data.createdBy,
                 updatedBy: data.updatedBy
             }
-            await  new ExpenseService().createExpense(expenseData, trans);
+            await new ExpenseService().createExpense(expenseData, trans);
             await trans.commit();
             return loanUpdated;
         }, async () => await trans.rollback())

@@ -11,13 +11,6 @@ export default class Info extends Model implements IInfo {
     static modelName = "Info";
     static tableName = "infos";
     static attributes: Record<keyof IInfo, ModelAttributeColumnOptions> = {
-        id: {
-            type: DataTypes.STRING,
-            primaryKey: true,
-            allowNull: false,
-            defaultValue: DataTypes.UUIDV4
-
-        },
         dni: {
             type: DataTypes.STRING,
             allowNull: true,
@@ -43,11 +36,20 @@ export default class Info extends Model implements IInfo {
                 }
             }
         },
+        note: {
+            type: DataTypes.STRING(150),
+            allowNull: true,
+        },
         gender: {
             type: DataTypes.ENUM,
             values: Object.values(EInfoGender),
             allowNull: false,
             defaultValue: EInfoGender.Ninguno,
+        },
+        type: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            defaultValue: "General"
         },
         country: {
             type: DataTypes.STRING,
@@ -57,22 +59,7 @@ export default class Info extends Model implements IInfo {
                 this.setDataValue("country", tools.initialToUpper(value))
             }
         },
-        createdBy: {
-            type: DataTypes.INTEGER,
-        },
-        updatedBy: {
-            type: DataTypes.INTEGER,
-        },
-        createdAt: {
-            type: DataTypes.DATE,
-        },
-        updatedAt: {
-            type: DataTypes.DATE,
-        },
-        deletedAt: {
-            type: DataTypes.DATE,
-            allowNull: true,
-        },
+        ...ITM.commonAttributes
     };
     declare dni: string;
     declare phone: string;
@@ -81,6 +68,8 @@ export default class Info extends Model implements IInfo {
     declare address?: string;
     declare gender: EInfoGender;
     declare country: string;
+    declare type: string;
+    declare note: string;
     declare id: string;
     declare createdBy?: number;
     declare updatedBy?: number;
@@ -88,7 +77,7 @@ export default class Info extends Model implements IInfo {
     declare updatedAt?: string;
     declare deletedAt?: string;
 
-   static  getSearchables(): Array<keyof IInfo> {
+    static getSearchables(): Array<keyof IInfo> {
         return [
             "dni",
             "phone",
@@ -97,10 +86,12 @@ export default class Info extends Model implements IInfo {
             "address",
             "gender",
             "country",
+            'note',
+            'type'
         ];
     }
 
-   static getRelations(): (keyof IInfoRelation)[] {
+    static getRelations(): (keyof IInfoRelation)[] {
         return ["image", "document"];
     }
 }

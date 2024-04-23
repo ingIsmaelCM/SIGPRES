@@ -1,14 +1,3 @@
-TRUNCATE TABLE `roles`;
-TRUNCATE TABLE `permissions`;
-TRUNCATE TABLE `auths`;
-TRUNCATE TABLE `tenants`;
-TRUNCATE TABLE `auth_tenants`;
-TRUNCATE TABLE `model_permissions`;
-
-INSERT INTO `roles` (id, name) VALUES
-(1, 'Superadmin'), (2, 'Admin');
-
-
 INSERT INTO `permissions` ( name, id) VALUES
 ('Crear Rol',1),
 ('Asignar Permiso a Rol', 2),
@@ -109,15 +98,8 @@ INSERT INTO `permissions` ( name, id) VALUES
 ('Editar Métodos de Pago', (UUID())),
 ('Ver Papelera', (UUID())),
 ('Restaurar Datos', (UUID())),
-('Eliminar Métodos de Pago', (UUID()));
-
-INSERT INTO `auths` (id, email, password, username, name, lastname, verifiedAt, infoId)
-VALUES
-(1, 'developer@ismaelcm.dev','$2a$12$5ZdhDxFotW64vqX.KAqoeuBN.0DTt9SXwJpqJwJzRbPY.veNXghkG', 'icontreras','Ismael','Contreras', '2024-01-01 12:00:01', 1),
-(2,'user1@example.com', '$2a$10$sOhAGjEUAIGVSVffACk3POMbIzkDorKX3imNeCFndiJQMCx7elimK', 'user1', "User","One", '2024-01-01 12:00:01',NULL);
-
-INSERT INTO `tenants` (name, `key`) VALUES ('Base de Datos Administrador','sigpres_main_tenant');
-
-INSERT INTO `auth_roles` (authId, roleId) VALUES (1,1);
-
-INSERT INTO `model_permissions` (permissionId, modelId, modelType) VALUES (1,1, 'auth'),(2,1, 'auth');
+('Eliminar Métodos de Pago', (UUID())),
+ ('Crear Tarjeta', (UUID())),
+ ('Ver Tarjetas', (UUID())),
+ ('Editar Tarjeta', (UUID())),
+ ('Eliminar Tarjeta', (UUID())) ON DUPLICATE KEY UPDATE id=id;

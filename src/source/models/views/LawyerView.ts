@@ -1,4 +1,4 @@
-import {Model} from "sequelize";
+import {DataTypes, Model} from "sequelize";
 import ITM from "@app/models/ITenantModel";
 import {ILawyerRelation, ILawyerView} from "@app/interfaces/SourceInterfaces";
 import {Info, Lawyer} from "@source/models";
@@ -12,6 +12,7 @@ export default class LawyerView extends Model {
     static attributes = {
         ...Lawyer.attributes,
         ...Info.attributes
+
     };
 
    static  getSearchables(): Array<keyof ILawyerView> {

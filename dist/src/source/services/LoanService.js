@@ -128,6 +128,12 @@ class LoanService extends Service_1.default {
                 ],
                 order: "nro"
             })).rows;
+            if (loan.balance <= 0 || amorts.length === 0) {
+                return Promise.reject({
+                    code: 422,
+                    message: 'No se puede reenganchar a este préstamo'
+                });
+            }
             const newBalance = Number(loan.balance) + Number(data.amount);
             let newAmorts = this.getNewAmorts(newBalance, amorts, loan);
             for (const amort of newAmorts) {

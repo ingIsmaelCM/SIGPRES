@@ -29,6 +29,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const dotenv_1 = __importDefault(require("dotenv"));
 const path_1 = __importDefault(require("path"));
 const process = __importStar(require("process"));
+const braintree_1 = require("braintree");
 dotenv_1.default.config();
 const env = process.env.NODE_ENV || "prod";
 let config = {
@@ -93,6 +94,12 @@ let config = {
     },
     stripe: {
         key: process.env.STRIPE_KEY
+    },
+    braintree: {
+        environment: process.env.BRAINTREE_ENVIRONMENT == 'sandbox' ? braintree_1.Environment.Sandbox : braintree_1.Environment.Production,
+        merchantId: process.env.BRAINTREE_MERCHANT_ID,
+        publicKey: process.env.BRAINTREE_PUBLIC_KEY,
+        privateKey: process.env.BRAINTREE_PRIVATE_KEY
     }
 };
 exports.default = config;

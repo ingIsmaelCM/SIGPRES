@@ -9,16 +9,16 @@ function staticImplements() {
 exports.staticImplements = staticImplements;
 exports.commonAttributes = {
     id: {
-        type: sequelize_1.DataTypes.STRING,
+        type: sequelize_1.DataTypes.STRING(70),
         primaryKey: true,
         allowNull: false,
         defaultValue: sequelize_1.DataTypes.UUIDV4
     },
     createdBy: {
-        type: sequelize_1.DataTypes.INTEGER,
+        type: sequelize_1.DataTypes.STRING,
     },
     updatedBy: {
-        type: sequelize_1.DataTypes.INTEGER,
+        type: sequelize_1.DataTypes.STRING,
     },
     createdAt: {
         type: sequelize_1.DataTypes.DATE,

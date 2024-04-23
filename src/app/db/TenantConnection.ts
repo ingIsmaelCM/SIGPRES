@@ -5,6 +5,9 @@ import SourceRelation from "../../source/models/SourceRelation";
 import {request} from "express";
 import app from "../../../App";
 import {createNamespace} from "cls-hooked"
+import MigrateTenant from "@app/db/migrations/tenants/MigrateTenant";
+import path from "path";
+import MigrateView from "@app/db/migrations/tenants/MigrateView";
 
 export default class TenantConnection {
     private static readonly connections: Map<string, Sequelize> = new Map();
@@ -46,8 +49,13 @@ export default class TenantConnection {
                 });
 
             }
+            const filePath = path.join(__dirname, 'migrations', 'tenants', 'tableView.sql');
+            MigrateView.runSQLFile(filePath, instanceConnection)
+                .then(() => console.log("Query ejecutado"))
+                .catch((err: any) => console.log(err));
             SourceRelation.initRelation(instanceConnection);
         } catch (error: any) {
+            console.log(error)
             throw {
                 code: 500,
                 message: error.message,

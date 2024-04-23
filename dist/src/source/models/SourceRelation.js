@@ -19,6 +19,7 @@ class SourceRelation {
         LawyerPayment_1.default.initRelation(sequelize);
         index_1.UserView.initRelation(sequelize);
         index_1.Expense.initRelation(sequelize);
+        index_1.Card.initRelation(sequelize);
     }
 }
 exports.default = SourceRelation;

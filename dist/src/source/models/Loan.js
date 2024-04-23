@@ -89,19 +89,19 @@ let Loan = class Loan extends sequelize_1.Model {
             defaultValue: SourceInterfaces_1.ELoanType.Fixed
         },
         clientId: {
-            type: sequelize_1.DataTypes.INTEGER,
+            type: sequelize_1.DataTypes.STRING,
             allowNull: false,
         },
         lawyerId: {
-            type: sequelize_1.DataTypes.INTEGER,
+            type: sequelize_1.DataTypes.STRING,
             allowNull: true,
         },
         walletId: {
-            type: sequelize_1.DataTypes.INTEGER,
+            type: sequelize_1.DataTypes.STRING,
             allowNull: true,
         },
         guarantorId: {
-            type: sequelize_1.DataTypes.INTEGER,
+            type: sequelize_1.DataTypes.STRING,
             allowNull: true,
         },
         startAt: {
@@ -128,37 +128,44 @@ let Loan = class Loan extends sequelize_1.Model {
             as: 'guarantor',
             foreignKey: 'guarantorId'
         });
-        sequelize.model("Loan").belongsTo(sequelize.model("ClientView"), {
+        sequelize.model("Loan")
+            .belongsTo(sequelize.model("ClientView"), {
             as: 'client',
             foreignKey: 'clientId'
         });
-        sequelize.model("Loan").hasOne(sequelize.model("Condition"), {
+        sequelize.model("Loan")
+            .hasOne(sequelize.model("Condition"), {
             as: 'condition',
             foreignKey: 'loanId'
         });
-        sequelize.model("Loan").hasMany(sequelize.model("Image"), {
+        sequelize.model("Loan")
+            .hasMany(sequelize.model("Image"), {
             as: 'images',
             foreignKey: 'imageableId',
             scope: {
                 imageableType: FileInterface_1.EImageable.Loan
             }
         });
-        sequelize.model("Loan").hasMany(sequelize.model("Document"), {
+        sequelize.model("Loan")
+            .hasMany(sequelize.model("Document"), {
             as: 'documents',
             foreignKey: 'documentableId',
             scope: {
                 documentableType: FileInterface_1.EDocumentable.Loan
             }
         });
-        sequelize.model("Loan").hasMany(sequelize.model("Payment"), {
+        sequelize.model("Loan")
+            .hasMany(sequelize.model("Payment"), {
             as: 'payments',
             foreignKey: 'loanId',
         });
-        sequelize.model("Loan").hasMany(sequelize.model("Mora"), {
+        sequelize.model("Loan")
+            .hasMany(sequelize.model("Mora"), {
             as: 'moras',
             foreignKey: 'loanId',
         });
-        sequelize.model("Loan").hasMany(sequelize.model("Amortization"), {
+        sequelize.model("Loan")
+            .hasMany(sequelize.model("Amortization"), {
             as: 'amortizations',
             foreignKey: 'loanId',
         });

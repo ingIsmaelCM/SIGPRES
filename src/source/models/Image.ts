@@ -45,7 +45,7 @@ class Image extends Model implements  IImage{
       type: DataTypes.STRING,
     },
     imageableId: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING,
     },
     createdAt: {
       type: DataTypes.DATEONLY,

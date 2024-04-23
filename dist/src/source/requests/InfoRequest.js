@@ -13,13 +13,13 @@ class InfoRequest extends BaseRequest_1.default {
         return [
             this.RequestCheck.isLength("dni", 8, 18).optional({ values: "falsy" }),
             (0, express_validator_1.body)("dni", "Este dni ya está registrado")
-                .custom(async (val, meta) => await this.checkUnique("dni", val)),
+                .custom(async (val, meta) => await this.checkUnique("dni", val, meta.req.body)),
             this.RequestCheck.isLength("phone", 10, 15).optional({ values: "falsy" }),
             (0, express_validator_1.body)("phone", "Este teléfono ya está registrado")
-                .custom(async (val, meta) => await this.checkUnique("phone", val)),
+                .custom(async (val, meta) => await this.checkUnique("phone", val, meta.req.body)),
             this.RequestCheck.isEmail("email").optional({ values: "falsy" }),
             (0, express_validator_1.body)("email", "Este correo ya está registrado")
-                .custom(async (val, meta) => await this.checkUnique("email", val)),
+                .custom(async (val, meta) => await this.checkUnique("email", val, meta.req.body)),
             this.RequestCheck.isDate("birthdate").optional({ values: "falsy" }),
             this.RequestCheck.isIn("gender", "Masculino | Femenino | Ninguno", [SourceInterfaces_1.EInfoGender.Masculino, SourceInterfaces_1.EInfoGender.Femenino, SourceInterfaces_1.EInfoGender.Ninguno]).optional({ values: "falsy" }),
             this.RequestCheck.isLength("address", 2, 125).optional({ values: "falsy" }),
@@ -30,13 +30,13 @@ class InfoRequest extends BaseRequest_1.default {
         return [
             this.RequestCheck.isLength("dni", 8, 18).optional({ values: "falsy" }),
             (0, express_validator_1.body)("dni", "Este dni ya está registrado")
-                .custom(async (val, meta) => await this.checkUnique("dni", val, meta.req.params.id)),
+                .custom(async (val, meta) => await this.checkUnique("dni", val, meta.req.body, meta.req.params.id)),
             this.RequestCheck.isLength("phone", 10, 15).optional({ values: "falsy" }),
             (0, express_validator_1.body)("phone", "Este teléfono ya está registrado")
-                .custom(async (val, meta) => await this.checkUnique("phone", val, meta.req.params.id)),
+                .custom(async (val, meta) => await this.checkUnique("phone", val, meta.req.body, meta.req.params.id)),
             this.RequestCheck.isEmail("email").optional({ values: "falsy" }),
             (0, express_validator_1.body)("email", "Este correo ya está registrado")
-                .custom(async (val, meta) => await this.checkUnique("email", val, meta.req.params.id)),
+                .custom(async (val, meta) => await this.checkUnique("email", val, meta.req.body, meta.req.params.id)),
             this.RequestCheck.isDate("birthdate").optional({ values: "falsy" }),
             this.RequestCheck.isIn("gender", "Masculino | Femenino | Ninguno", [SourceInterfaces_1.EInfoGender.Masculino, SourceInterfaces_1.EInfoGender.Femenino, SourceInterfaces_1.EInfoGender.Ninguno]).optional({ values: "falsy" }),
             this.RequestCheck.isLength("address", 2, 125).optional({ values: "falsy" }),
@@ -53,30 +53,35 @@ class InfoRequest extends BaseRequest_1.default {
             this.RequestCheck.isLength("address", 2, 125).optional({ values: "falsy" }),
             this.RequestCheck.isString("country").optional({ values: "falsy" }),
             this.RequestCheck.isEmail("email").optional({ values: "falsy" }),
+            this.RequestCheck.isLength("note", 0, 150).optional({ values: "falsy" }),
         ];
     }
     relatedInfoRequest() {
         return [
             this.RequestCheck.isLength("dni", 8, 18).optional({ values: "falsy" }),
             (0, express_validator_1.body)("dni", "Este dni ya está registrado")
-                .custom(async (val, meta) => await this.checkUnique("dni", val, meta.req.body.infoId)),
+                .custom(async (val, meta) => await this.checkUnique("dni", val, meta.req.body, meta.req.body.infoId)),
             this.RequestCheck.required("phone"),
             this.RequestCheck.isLength("phone", 10, 15),
             (0, express_validator_1.body)("phone", "Este teléfono ya está registrado")
-                .custom(async (val, meta) => await this.checkUnique("phone", val, meta.req.body.infoId)),
+                .custom(async (val, meta) => await this.checkUnique("phone", val, meta.req.body, meta.req.body.infoId)),
             this.RequestCheck.isEmail("email").optional({ values: "falsy" }),
             (0, express_validator_1.body)("email", "Este correo ya está registrado")
-                .custom(async (val, meta) => await this.checkUnique("email", val, meta.req.body.infoId)),
+                .custom(async (val, meta) => await this.checkUnique("email", val, meta.req.body, meta.req.body.infoId)),
             this.RequestCheck.isDate("birthdate").optional({ values: "falsy" }),
             this.RequestCheck.isIn("gender", "Masculino | Femenino | Ninguno", [SourceInterfaces_1.EInfoGender.Masculino, SourceInterfaces_1.EInfoGender.Femenino, SourceInterfaces_1.EInfoGender.Ninguno]).optional({ values: "falsy" }),
             this.RequestCheck.isLength("address", 2, 125).optional({ values: "falsy" }),
             this.RequestCheck.isString("country").optional({ values: "falsy" }),
+            this.RequestCheck.isLength("note", 0, 150).optional({ values: "falsy" }),
         ];
     }
-    async checkUnique(field, value, column) {
+    async checkUnique(field, value, data, column) {
+        if (!value)
+            return true;
         const existingInfo = await this.infoRepo.getAll({
             filter: [
                 `${field}:eq:${value}:and`,
+                `type:eq:${data.type}:and`,
                 `id:ne:${column || 0}:and`,
             ],
             limit: 1

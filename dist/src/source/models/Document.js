@@ -43,7 +43,7 @@ let Document = class Document extends sequelize_1.Model {
             allowNull: false
         },
         documentableId: {
-            type: sequelize_1.DataTypes.INTEGER,
+            type: sequelize_1.DataTypes.STRING,
             allowNull: false
         },
         createdAt: {

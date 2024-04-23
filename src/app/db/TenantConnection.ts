@@ -2,10 +2,7 @@ import {Sequelize} from "sequelize";
 import config from "../app.config";
 import * as models from "../../source/models";
 import SourceRelation from "../../source/models/SourceRelation";
-import {request} from "express";
-import app from "../../../App";
 import {createNamespace} from "cls-hooked"
-import MigrateTenant from "@app/db/migrations/tenants/MigrateTenant";
 import path from "path";
 import MigrateView from "@app/db/migrations/tenants/MigrateView";
 

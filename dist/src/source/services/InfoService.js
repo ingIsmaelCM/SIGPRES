@@ -22,13 +22,15 @@ class InfoService extends Service_1.default {
             return newInfo;
         }, async () => await trans.rollback());
     }
-    async setFromRelated(data, trans) {
+    async setFromRelated(data, trans, type = 'General') {
         return this.safeRun(async () => {
+            data.type = type;
             return await this.mainRepo.updateOrCreate(data, trans);
         });
     }
-    async updateFromRelated(data, infoId, trans) {
+    async updateFromRelated(data, infoId, trans, type = "General") {
         return this.safeRun(async () => {
+            data.type = type;
             return await this.mainRepo.update(data, infoId, trans);
         });
     }

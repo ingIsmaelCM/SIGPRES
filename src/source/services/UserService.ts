@@ -45,7 +45,7 @@ export default class UserService extends Service {
         return this.safeRun(async () => {
                 data.password = await bcrypt.hash(data.password, 10);
                 const newUser = await this.mainRepo.create({...data}, trans);
-                const newInfo = await this.infoService.setFromRelated({...data, id: newUser.id} as any, infoTrans);
+                const newInfo = await this.infoService.setFromRelated({...data, id: newUser.id} as any, infoTrans, 'User');
                 await this.mainRepo.update({infoId: newInfo.id}, newUser.id, trans);
                 await trans.commit();
                 await infoTrans.commit();
@@ -61,7 +61,7 @@ export default class UserService extends Service {
     async updateUser(data: IAuth): Promise<IAuth> {
         const infoTrans = await TenantConnection.getTrans();
         return this.safeRun(async () => {
-                const updatedInfo = await this.infoService.setFromRelated(data as any, infoTrans);
+                const updatedInfo = await this.infoService.setFromRelated(data as any, infoTrans, 'User');
                 await infoTrans.commit();
                 return updatedInfo;
             },

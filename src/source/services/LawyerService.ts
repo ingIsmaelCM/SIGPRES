@@ -22,7 +22,7 @@ export default class LawyerService extends Service {
     async createLawyer(data: ILawyer & ILawyerRelation): Promise<ILawyer> {
         const trans = await TenantConnection.getTrans();
         return this.safeRun(async () => {
-            const newInfo = await this.infoService.setFromRelated(data, trans);
+            const newInfo = await this.infoService.setFromRelated(data, trans,'Lawyer');
             const  newLawyer=await this.mainRepo.create({...data, infoId: newInfo.id}, trans);
             await  trans.commit();
             return {...newInfo.dataValues, ...newLawyer.dataValues};
@@ -36,7 +36,7 @@ export default class LawyerService extends Service {
         return this.safeRun(async () => {
             const updatedLawyer=await this.mainRepo.update(data, lawyerId, trans);
                 if(data.infoId){
-                    await this.infoService.updateFromRelated(data, data.infoId, trans);
+                    await this.infoService.updateFromRelated(data, data.infoId, trans, 'Lawyer');
                 }
             await trans.commit();
             return updatedLawyer;

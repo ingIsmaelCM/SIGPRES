@@ -28,15 +28,17 @@ export default class InfoService extends Service {
         )
     }
 
-    async setFromRelated(data: any, trans: Transaction): Promise<Info> {
+    async setFromRelated(data: any, trans: Transaction, type: string = 'General'): Promise<Info> {
         return this.safeRun(async () => {
+                data.type = type;
                 return await this.mainRepo.updateOrCreate(data, trans);
             }
         )
     }
 
-    async updateFromRelated(data: any, infoId: string|string, trans: Transaction): Promise<Info> {
+    async updateFromRelated(data: any, infoId: string | string, trans: Transaction, type: string = "General"): Promise<Info> {
         return this.safeRun(async () => {
+                data.type = type;
                 return await this.mainRepo.update(data, infoId, trans);
             }
         )

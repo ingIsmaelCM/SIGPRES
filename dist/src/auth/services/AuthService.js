@@ -12,13 +12,12 @@ const uuid_1 = require("uuid");
 const tools_1 = __importDefault(require("@app/utils/tools"));
 const BaseConnection_1 = __importDefault(require("@app/db/BaseConnection"));
 const Service_1 = __importDefault(require("@app/services/Service"));
-const InfoRepository_1 = __importDefault(require("@source/repositories/InfoRepository"));
 const TenantConnection_1 = __importDefault(require("@app/db/TenantConnection"));
 const InfoService_1 = __importDefault(require("@source/services/InfoService"));
+const app_config_2 = __importDefault(require("@app/app.config"));
 class AuthService extends Service_1.default {
     authRepo = new AuthRepository_1.AuthRepository();
     authMailService = new AuthMailService_1.default();
-    infoRepo = new InfoRepository_1.default();
     async createAuth(auth) {
         const trans = await BaseConnection_1.default.getTrans();
         try {
@@ -81,11 +80,12 @@ class AuthService extends Service_1.default {
                     permissions: userAuth.allPermissions,
                     roles: userAuth.roles?.map((role) => ({ id: role.id, name: role.name })),
                 };
+                result.version = app_config_2.default.app.version;
                 return { userAuth: result, token };
             }
             await Promise.reject({
                 code: 401,
-                message: "Invalid credentials",
+                message: "Credenciales incorrectas",
             });
         }
         catch (error) {

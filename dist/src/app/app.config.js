@@ -42,7 +42,8 @@ let config = {
         env,
         allowedUrl: process.env.ALLOWED_URL,
         rateLimit: process.env.REQUEST_RATE_LIMIT || 1500,
-        rateTime: process.env.REQUEST_RATE_TIME || (30 * 60 * 10000)
+        rateTime: process.env.REQUEST_RATE_TIME || (30 * 60 * 10000),
+        version: process.env.npm_package_version || '1.0.0'
     },
     db: {
         database: process.env.DATABASE_NAME || "any",

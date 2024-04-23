@@ -1,7 +1,6 @@
 import {DestroyOptions, Model, ModelStatic, Sequelize, Transaction, UpdateOptions} from "sequelize";
 import Scope from "../utils/scopes";
 import {IParams} from "../interfaces/AppInterfaces";
-import tools from "../utils/tools";
 import logger from "@/logger";
 import SocketService from "@app/services/SocketService";
 import TenantConnection from "@app/db/TenantConnection";

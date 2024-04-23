@@ -18,6 +18,10 @@ export interface IAmortization extends ICommonField {
 export interface IAmortizationRelation {
     loan: ILoan;
     client: IClient;
+    'loan.client': ILoan,
+    'loan.condition': ILoan,
+    'loan.lawyer': ILoan,
+    'loan.guarantor': ILoan,
 }
 
 export enum EAmortizationStatus {

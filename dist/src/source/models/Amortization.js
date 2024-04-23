@@ -26,7 +26,7 @@ let Amortization = class Amortization extends sequelize_1.Model {
         ];
     }
     static getRelations() {
-        return ["loan", "client"];
+        return ["loan", "client", 'loan.client', 'loan.condition', 'loan.guarantor', 'loan.lawyer'];
     }
     static additionalOptions = {};
     static tableName = "amortizations";

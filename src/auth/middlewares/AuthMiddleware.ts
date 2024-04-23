@@ -11,21 +11,22 @@ import {IAuth, Itenant} from "@app/interfaces/AuthInterfaces";
 import AuthService from "@auth/services/AuthService";
 import tools from "@app/utils/tools";
 
+
 class AuthMiddleware extends Middleware {
     async auth(req: any, res: Response, next: NextFunction): Promise<any> {
         try {
             const authToken = await this.verifyTokenExists(req);
             const decoded = await this.verifyTokenIsValid(authToken);
             req.auth = await this.validateSessionId(decoded);
+
             TenantConnection.requestNamespace.run(async () => {
                 try {
                     await new AuthService().refreshToken(req, res);
-                    const tenant=req.cookies.tenant;
+                    const tenant = req.cookies.tenant;
                     tools.setCookie(res, "tenant", tenant);
                 } catch (error) {
                 }
                 TenantConnection.requestNamespace.set("req", req);
-                TenantConnection.getConnection().model('ClientView');
                 next();
             });
         } catch (error: any) {

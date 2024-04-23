@@ -38,7 +38,7 @@ export default class Amortization extends Model implements IAmortization {
     }
 
    static getRelations(): Array<keyof IAmortizationRelation> {
-        return ["loan", "client"];
+        return ["loan", "client", 'loan.client','loan.condition','loan.guarantor','loan.lawyer'];
     }
 
     static additionalOptions = {}

@@ -30,6 +30,7 @@ export default class WhatsappManagement {
                 } else {
                     client.on('qr', (qr: string) => {
                         WhatsappManagement.socket.emit(`wsQrCode${tenantId}`, {tenantId: tenantId, qrCode: qr});
+                        console.log(qr, tenantId)
                     });
                     client.on('ready', () => {
                         WhatsappManagement.wsClients.set(tenantId, client);

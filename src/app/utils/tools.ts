@@ -10,10 +10,11 @@ import AppService from "@app/services/AppService";
 import cloudinary from "cloudinary"
 import logger from "@/logger";
 import * as crypto from "crypto";
+import TenantConnection from "@app/db/TenantConnection";
 
 class Tool {
-    async  decrypt(encrypted:  any, secretKey: string,
-                   ivArray: any) {
+    async decrypt(encrypted: any, secretKey: string,
+                  ivArray: any) {
         const encoder = new TextEncoder();
         const keyData = encoder.encode(secretKey);
         const keyHash = crypto.createHash('sha256').update(keyData).digest();
@@ -22,6 +23,16 @@ class Tool {
         decrypted = Buffer.concat([decrypted, decipher.final()]);
         return decrypted.toString('utf8');
     }
+
+    async decryptCard(token: String) {
+        const storedReq = TenantConnection.requestNamespace.get('req')
+        const tenant = storedReq.cookies.tenant;
+        let encrypted: any = jwt.verify(String(token), appConfig.auth.secret);
+        encrypted = JSON.parse(encrypted.value);
+        const decrypted = await this.decrypt(encrypted.encrypted, tenant, encrypted.iv);
+        return JSON.parse(decrypted)
+    }
+
     parseOrZero(value: string | number | undefined): number {
         if (typeof value == "number") {
             return value;

@@ -35,7 +35,7 @@ export default class ClientService extends Service {
     async createClient(data: IClientView): Promise<IClient> {
         const trans = await TenantConnection.getTrans();
         return this.safeRun(async () => {
-                const newInfo = await this.infoService.setFromRelated(data as any, trans);
+                const newInfo = await this.infoService.setFromRelated(data as any, trans, 'Client');
                 const newClient = await this.mainRepo.create({...data, infoId: newInfo.id}, trans);
                 await trans.commit();
                 return {...newClient.dataValues, info: newInfo};
@@ -49,7 +49,7 @@ export default class ClientService extends Service {
         return this.safeRun(async () => {
                 const updatedClient = await this.mainRepo.update(data, clientId, trans);
                 if (data.infoId) {
-                    await this.infoService.updateFromRelated(data as any, data.infoId as any, trans);
+                    await this.infoService.updateFromRelated(data as any, data.infoId as any, trans, 'Client');
                 }
                 await trans.commit();
                 return updatedClient;

@@ -32,7 +32,7 @@ class ContactService extends Service_1.default {
     async createContact(data) {
         const trans = await TenantConnection_1.default.getTrans();
         return this.safeRun(async () => {
-            const newInfo = await this.infoService.setFromRelated(data, trans);
+            const newInfo = await this.infoService.setFromRelated(data, trans, 'Contact');
             let newContact = await this.mainRepo.create({ ...data, infoId: newInfo.id }, trans);
             if (data.clientId) {
                 await this.clientContactRepo.create({
@@ -50,7 +50,7 @@ class ContactService extends Service_1.default {
         return this.safeRun(async () => {
             const updatedContact = await this.mainRepo.update(data, contactId, trans);
             if (data.infoId) {
-                await this.infoService.updateFromRelated(data, data.infoId, trans);
+                await this.infoService.updateFromRelated(data, data.infoId, trans, 'Contact');
             }
             if (data.relationId) {
                 await this.clientContactRepo.update(data, data.relationId, trans);

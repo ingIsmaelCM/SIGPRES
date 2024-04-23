@@ -24,7 +24,7 @@ export default class JobService extends Service {
     async createJob(data: IJob & IJobRelation): Promise<IJob> {
         const trans = await TenantConnection.getTrans();
         return this.safeRun(async () => {
-                const newInfo = await this.infoService.setFromRelated(data, trans);
+                const newInfo = await this.infoService.setFromRelated(data, trans, 'Job');
                 const newJob = await this.mainRepo.create({...data, infoId: newInfo.id}, trans);
                 const result = {...newInfo.dataValues, ...newJob.dataValues}
                 await trans.commit();
@@ -39,7 +39,7 @@ export default class JobService extends Service {
         return this.safeRun(async () => {
                 const updatedJob = await this.mainRepo.update(data, jobId, trans);
                 if(data.infoId){
-                    await this.infoService.updateFromRelated(data, data.infoId, trans);
+                    await this.infoService.updateFromRelated(data, data.infoId, trans, 'Job');
                 }
                 await trans.commit();
                 return updatedJob;

@@ -27,11 +27,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const app_config_1 = __importDefault(require("../app.config"));
+const app_config_2 = __importDefault(require("../app.config"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const moment_1 = __importDefault(require("moment"));
 require("moment/locale/es");
 const fs_1 = __importDefault(require("fs"));
 const crypto = __importStar(require("crypto"));
+const TenantConnection_1 = __importDefault(require("@app/db/TenantConnection"));
 class Tool {
     async decrypt(encrypted, secretKey, ivArray) {
         const encoder = new TextEncoder();
@@ -41,6 +43,14 @@ class Tool {
         let decrypted = decipher.update(Buffer.from(encrypted));
         decrypted = Buffer.concat([decrypted, decipher.final()]);
         return decrypted.toString('utf8');
+    }
+    async decryptCard(token) {
+        const storedReq = TenantConnection_1.default.requestNamespace.get('req');
+        const tenant = storedReq.cookies.tenant;
+        let encrypted = jsonwebtoken_1.default.verify(String(token), app_config_2.default.auth.secret);
+        encrypted = JSON.parse(encrypted.value);
+        const decrypted = await this.decrypt(encrypted.encrypted, tenant, encrypted.iv);
+        return JSON.parse(decrypted);
     }
     parseOrZero(value) {
         if (typeof value == "number") {

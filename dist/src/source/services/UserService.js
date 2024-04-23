@@ -37,7 +37,7 @@ class UserService extends Service_1.default {
         return this.safeRun(async () => {
             data.password = await bcrypt_1.default.hash(data.password, 10);
             const newUser = await this.mainRepo.create({ ...data }, trans);
-            const newInfo = await this.infoService.setFromRelated({ ...data, id: newUser.id }, infoTrans);
+            const newInfo = await this.infoService.setFromRelated({ ...data, id: newUser.id }, infoTrans, 'User');
             await this.mainRepo.update({ infoId: newInfo.id }, newUser.id, trans);
             await trans.commit();
             await infoTrans.commit();
@@ -50,7 +50,7 @@ class UserService extends Service_1.default {
     async updateUser(data) {
         const infoTrans = await TenantConnection_1.default.getTrans();
         return this.safeRun(async () => {
-            const updatedInfo = await this.infoService.setFromRelated(data, infoTrans);
+            const updatedInfo = await this.infoService.setFromRelated(data, infoTrans, 'User');
             await infoTrans.commit();
             return updatedInfo;
         }, async () => await infoTrans.rollback());

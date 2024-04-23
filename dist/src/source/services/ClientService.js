@@ -27,7 +27,7 @@ class ClientService extends Service_1.default {
     async createClient(data) {
         const trans = await TenantConnection_1.default.getTrans();
         return this.safeRun(async () => {
-            const newInfo = await this.infoService.setFromRelated(data, trans);
+            const newInfo = await this.infoService.setFromRelated(data, trans, 'Client');
             const newClient = await this.mainRepo.create({ ...data, infoId: newInfo.id }, trans);
             await trans.commit();
             return { ...newClient.dataValues, info: newInfo };
@@ -38,7 +38,7 @@ class ClientService extends Service_1.default {
         return this.safeRun(async () => {
             const updatedClient = await this.mainRepo.update(data, clientId, trans);
             if (data.infoId) {
-                await this.infoService.updateFromRelated(data, data.infoId, trans);
+                await this.infoService.updateFromRelated(data, data.infoId, trans, 'Client');
             }
             await trans.commit();
             return updatedClient;

@@ -20,9 +20,7 @@ class CardService extends Service_1.default {
         return this.safeRun(async () => {
             const storedReq = TenantConnection_1.default.requestNamespace.get('req');
             const tenant = storedReq.cookies.tenant;
-            const token = jsonwebtoken_1.default.sign(data, tenant, {
-                expiresIn: 60 * 60 * 1000 * 1000
-            });
+            const token = jsonwebtoken_1.default.sign(data, tenant, { expiresIn: 60 * 60 * 1000 * 1000 });
             data.value = String(token);
             const newCard = await this.mainRepo.create(data, trans);
             await trans.commit();

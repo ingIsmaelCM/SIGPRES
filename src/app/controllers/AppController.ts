@@ -23,7 +23,7 @@ export default class AppController extends Controller implements IController {
 
     public async testRoute(req: Request, res: Response) {
         return this.safeRun(async () =>
-                await BraintreeService.getInstance().createToken()
+                true
             , res, 200, "Prueba Exitosa")
     }
 }

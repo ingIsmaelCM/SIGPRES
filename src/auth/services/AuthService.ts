@@ -5,7 +5,7 @@ import AuthMailService from "@auth/services/AuthMailService";
 import config from "@app/app.config";
 import jwt from "jsonwebtoken";
 import {v4 as uuidv4} from "uuid";
-import {Response} from "express";
+import {Request, Response} from "express";
 import tools from "@app/utils/tools";
 import BaseConnection from "@app/db/BaseConnection";
 import {IAuth} from "@app/interfaces/AuthInterfaces";
@@ -68,7 +68,7 @@ export default class AuthService extends Service {
     }
 
 
-    async login(auth: any, res: Response) {
+    async login(auth: any, res: Response, req?: Request) {
         const trans = await BaseConnection.getTrans();
         try {
             let userAuth = await this.authRepo.find(
@@ -90,10 +90,16 @@ export default class AuthService extends Service {
                 const updateData = {lastlogin: new Date(), status: 1};
                 await this.authRepo.update(updateData, userAuth.id, trans);
                 const {token, refreshToken} = this.generateTokens(userAuth);
-                this.setLoginCookies(res, refreshToken, token, userAuth);
+                this.setLoginCookies(res, refreshToken, token, userAuth, req);
                 await trans.commit();
+                const prevTenant=userAuth.tenants.find((tenant: any)=>tenant.key===req?.cookies?.tenant)
+                userAuth.tenants=userAuth.tenants.filter((tenant: any)=>tenant.key!==prevTenant?.key);
+                if(prevTenant){
+                    userAuth.tenants.unshift(prevTenant)
+                }
                 const result = {
                     ...userAuth.dataValues,
+                    tenants: userAuth.tenants,
                     password: null,
                     fullname: userAuth.fullname,
                     permissions: userAuth.allPermissions,
@@ -330,12 +336,14 @@ export default class AuthService extends Service {
         res: Response,
         refreshToken: String,
         token: String,
-        userAuth: any
+        userAuth: any,
+        req?: Request
     ) {
         tools.setCookie(res, "refreshToken", `${refreshToken}`);
         tools.setCookie(res, "accessToken", `Bearer ${token}`);
-        tools.setCookie(res, "tenant", userAuth.tenants
-            .sort((a: any,b: any)=>a.key.localeCompare(b.key))[0].key);
+        const tenant =  req?.cookies?.tenant|| userAuth.tenants
+            .sort((a: any,b: any)=>a.key.localeCompare(b.key))[0].key;
+        tools.setCookie(res, "tenant",tenant);
     }
 
 

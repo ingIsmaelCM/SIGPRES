@@ -22,7 +22,7 @@ export class AuthController extends Controller implements IController {
     }
 
     async loginAuth(req: Request, res: Response) {
-        return await this.safeRun(async () => await this.mainService.login(req.body, res),
+        return await this.safeRun(async () => await this.mainService.login(req.body, res, req),
             res, 200, "Sesión iniciada correctamente")
     }
 

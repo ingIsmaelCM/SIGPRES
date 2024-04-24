@@ -52,7 +52,7 @@ class AuthController extends Controller_1.default {
         }, res, 201, "Perfil Actualizado Correctamente");
     }
     async loginAuth(req, res) {
-        return await this.safeRun(async () => await this.mainService.login(req.body, res), res, 200, "Sesión iniciada correctamente");
+        return await this.safeRun(async () => await this.mainService.login(req.body, res, req), res, 200, "Sesión iniciada correctamente");
     }
     async verifyAuth(req, res) {
         return await this.safeRun(async () => {

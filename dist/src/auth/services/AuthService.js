@@ -56,7 +56,7 @@ class AuthService extends Service_1.default {
             await authTrans.rollback();
         });
     }
-    async login(auth, res) {
+    async login(auth, res, req) {
         const trans = await BaseConnection_1.default.getTrans();
         try {
             let userAuth = await this.authRepo.find(app_config_1.default.auth.loginField, auth[app_config_1.default.auth.loginField], false, { include: "roles.permissions,permissions,tenants" });
@@ -71,10 +71,16 @@ class AuthService extends Service_1.default {
                 const updateData = { lastlogin: new Date(), status: 1 };
                 await this.authRepo.update(updateData, userAuth.id, trans);
                 const { token, refreshToken } = this.generateTokens(userAuth);
-                this.setLoginCookies(res, refreshToken, token, userAuth);
+                this.setLoginCookies(res, refreshToken, token, userAuth, req);
                 await trans.commit();
+                const prevTenant = userAuth.tenants.find((tenant) => tenant.key === req?.cookies?.tenant);
+                userAuth.tenants = userAuth.tenants.filter((tenant) => tenant.key !== prevTenant?.key);
+                if (prevTenant) {
+                    userAuth.tenants.unshift(prevTenant);
+                }
                 const result = {
                     ...userAuth.dataValues,
+                    tenants: userAuth.tenants,
                     password: null,
                     fullname: userAuth.fullname,
                     permissions: userAuth.allPermissions,
@@ -274,11 +280,12 @@ class AuthService extends Service_1.default {
             };
         }
     }
-    setLoginCookies(res, refreshToken, token, userAuth) {
+    setLoginCookies(res, refreshToken, token, userAuth, req) {
         tools_1.default.setCookie(res, "refreshToken", `${refreshToken}`);
         tools_1.default.setCookie(res, "accessToken", `Bearer ${token}`);
-        tools_1.default.setCookie(res, "tenant", userAuth.tenants
-            .sort((a, b) => a.key.localeCompare(b.key))[0].key);
+        const tenant = req?.cookies?.tenant || userAuth.tenants
+            .sort((a, b) => a.key.localeCompare(b.key))[0].key;
+        tools_1.default.setCookie(res, "tenant", tenant);
     }
     async validateAuthAccount(auth, pwd) {
         const isValidPassword = await bcrypt_1.default.compare(pwd, auth["_previousDataValues"].password);

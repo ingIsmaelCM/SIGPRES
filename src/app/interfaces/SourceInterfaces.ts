@@ -401,6 +401,7 @@ export interface IPayment extends ICommonField {
     amount: number;
     capital: number;
     interest: number;
+    mora: number;
     balanceBefore: number;
     balanceAfter: number;
     dueAt: string;
@@ -417,7 +418,7 @@ export interface IPaymentRelation {
     loan: ILoan;
     lawyer?: ILawyer;
     client: IClient;
-    mora?: IMora;
+    moratoria?: IMora;
     images: IImage[];
     "loan.client": ILoan,
     "loan.condition": ILoan,

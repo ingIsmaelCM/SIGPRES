@@ -104,7 +104,8 @@ export default class PaymentService extends Service {
                         }, amort.id!, trans);
                     }
                 }
-                await this.walletRepo.setBalance(walletBalance, wallet.id, trans);
+                console.log(newPayments.at(0))
+                await this.walletRepo.setBalance(walletBalance, "wallet.id", trans);
                 await trans.commit();
                 return newLoan;
             },
@@ -126,6 +127,7 @@ export default class PaymentService extends Service {
                 }
                 const loan = await this.loanRepo.findById(data.loanId, {include: "condition"});
                 let newDate = amort.date;
+
                 while (data.interest && moment().add(3, 'days').isAfter(moment(newDate))) {
                     newDate = amortization.getDateCuota(new Date(newDate), loan.period).format('YYYY-MM-DD')
                 }
@@ -149,10 +151,9 @@ export default class PaymentService extends Service {
                     interest: isPayed ? amort.interest : newAmort.interest,
                     capital: isPayed ? amort.capital : newAmort.capital,
                     status: newStatus,
-                    mora: isPayed ? amort.mora :0,
+                    mora: isPayed ? data.mora :0,
                     updatedBy: data.updatedBy
                 }
-
                 if (newPayment.lawyerId) {
                     await this.createPaymentForLawyerFromPayment(payment, trans);
                 }
@@ -207,11 +208,12 @@ export default class PaymentService extends Service {
         }
     }
 
-    private getPaymentFromCapitalAndData(data: Record<string, any>, loan: ILoan) {
+    private getPaymentFromCapitalAndData(data: Record<string, any>, loan: ILoan): IPayment {
         return {
             amount: data.capital + data.interest+data.mora,
             capital: data.capital,
             interest: data.interest,
+            mora: data.mora,
             balanceBefore: loan.balance,
             balanceAfter: Number(Number(loan.balance - data.capital).toFixed(2)),
             dueAt: data.payedAt,
@@ -255,14 +257,15 @@ export default class PaymentService extends Service {
             }))
     }
 
-    private getPaymentFromAmortsAndData(amorts: any, data: Record<string, any>) {
-        return amorts.rows.map((amort: IAmortizationView) => {
+    private getPaymentFromAmortsAndData(amorts: any, data: Record<string, any>): IPayment[] {
+        return amorts.rows.map((amort: IAmortizationView): IPayment => {
             const capital = data.justInterest ? 0 : amort.capital;
             const cuota = data.justInterest ? (amort.cuota - amort.capital) : amort.cuota
             return {
                 amount: data.omitMora ? (cuota - amort.mora) : cuota,
                 capital: capital,
                 interest: amort.interest,
+                mora: data.omitMora ? 0 : amort.mora,
                 balanceBefore: Number(amort.balance) + Number(amort.capital),
                 balanceAfter: data.justInterest ? Number(amort.balance) + Number(amort.capital) : amort.balance,
                 dueAt: amort.date,

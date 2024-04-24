@@ -35,7 +35,7 @@ export default class MigrateView {
                 type: DataTypes.STRING(150),
                 allowNull: true
             },
-        })
+        });
         await this.addColumnsIfNotExists(queryInterface, {
             table: 'infos',
             column: 'type',
@@ -43,6 +43,15 @@ export default class MigrateView {
                 type: DataTypes.STRING(50),
                 defaultValue: 'General',
                 allowNull: false
+            },
+        });
+        await this.addColumnsIfNotExists(queryInterface, {
+            table: 'payments',
+            column: 'mora',
+            colDefinition: {
+                type: DataTypes.DECIMAL(10,2),
+                defaultValue: 0,
+                allowNull: false,
             },
         })
     }

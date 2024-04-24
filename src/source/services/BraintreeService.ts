@@ -12,7 +12,6 @@ interface ICard {
     cardYear: string;
     cardCvv: string;
     brand: string;
-
 }
 
 export default class BraintreeService extends Service {

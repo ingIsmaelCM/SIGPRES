@@ -5,6 +5,8 @@ import response from "../utils/response";
 import Controller from "./Controller";
 import StripeService from "@source/services/StripeService";
 import BraintreeService from "@source/services/BraintreeService";
+import ClientViewRepository from "@source/repositories/ClientViewRepository";
+import {IClientView} from "@app/interfaces/SourceInterfaces";
 
 export default class AppController extends Controller implements IController {
     prefix: string = "app";
@@ -22,8 +24,10 @@ export default class AppController extends Controller implements IController {
     }
 
     public async testRoute(req: Request, res: Response) {
-        return this.safeRun(async () =>
-                true
+        return this.safeRun(async () => {
+                const client = await new ClientViewRepository().first();
+                return await StripeService.getInstance().createPayment(<IClientView>(client as unknown))
+            }
             , res, 200, "Prueba Exitosa")
     }
 }

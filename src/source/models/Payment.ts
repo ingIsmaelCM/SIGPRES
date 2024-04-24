@@ -8,6 +8,7 @@ export default class Payment extends Model implements IPayment {
     declare amount: number;
     declare capital: number;
     declare interest: number;
+    declare mora: number;
     declare balanceBefore: number;
     declare balanceAfter: number;
     declare dueAt: string;
@@ -29,6 +30,7 @@ export default class Payment extends Model implements IPayment {
             "amount",
             "capital",
             "interest",
+            "mora",
             "balanceBefore",
             "balanceAfter",
             "dueAt",
@@ -42,7 +44,7 @@ export default class Payment extends Model implements IPayment {
     }
 
     static getRelations(): (keyof IPaymentRelation)[] {
-        return ["wallet", "loan", "lawyer", "client", "mora", "images", "loan.client", "loan.condition", "loan.wallet"];
+        return ["wallet", "loan", "lawyer", "client", "moratoria", "images", "loan.client", "loan.condition", "loan.wallet"];
     }
 
     static tableName = "payments";
@@ -59,6 +61,10 @@ export default class Payment extends Model implements IPayment {
             allowNull: false,
         },
         interest: {
+            type: DataTypes.DECIMAL,
+            allowNull: false,
+        },
+        mora: {
             type: DataTypes.DECIMAL,
             allowNull: false,
         },
@@ -107,7 +113,7 @@ export default class Payment extends Model implements IPayment {
         sequelize.model("Payment")
             .hasOne(sequelize.model("Mora"), {
                 foreignKey: "paymentId",
-                as: "mora"
+                as: "moratoria"
             })
 
         sequelize.model("Payment")

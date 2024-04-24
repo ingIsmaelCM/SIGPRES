@@ -19,7 +19,7 @@ export default class AppRoutes extends BaseRoutes<AppController> {
                 this.controller.getCloudSignature(req, res)
         );
 
-        this.controller.router.get('/test',
+        this.controller.router.post('/test',
             (req: any, res: any) =>
                 this.controller.testRoute(req, res)
         )

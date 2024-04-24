@@ -42,6 +42,15 @@ class MigrateView {
                 allowNull: false
             },
         });
+        await this.addColumnsIfNotExists(queryInterface, {
+            table: 'payments',
+            column: 'mora',
+            colDefinition: {
+                type: sequelize_1.DataTypes.DECIMAL(10, 2),
+                defaultValue: 0,
+                allowNull: false,
+            },
+        });
     }
     static async addColumnsIfNotExists(queryInterface, options) {
         const { table, column, colDefinition } = options;

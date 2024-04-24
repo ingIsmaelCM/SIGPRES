@@ -19,21 +19,44 @@ class StripeService extends Service_1.default {
         }
         return StripeService.instance;
     }
-    async createCustomer() {
+    async createCustomer(client) {
         const params = {
-            description: "Test client",
-            balance: 25000 * 100
+            name: client.fullname,
+            email: client.email,
+            phone: client.phone,
+            shipping: {
+                name: client.fullname,
+                address: {
+                    line1: client.address,
+                    country: client.country
+                },
+                phone: client.phone
+            },
+            address: {
+                line1: client.address,
+                country: client.country
+            },
+            balance: 25000 * 100,
         };
         const customer = await StripeService.stripe.customers.create(params);
-        const payment = await StripeService.getInstance().createPayment(customer);
-        return { customer: customer, payment: payment };
+        return { customer: customer };
     }
-    async createPayment(customer) {
+    async createPaymentMethod(card) {
+    }
+    async createPayment(client) {
+        const { customer } = await this.createCustomer(client);
         return await StripeService.stripe.paymentIntents.create({
-            customer: customer.id,
-            amount: 2500 * 100,
-            currency: 'DOP',
+            amount: 4500 * 100,
+            currency: 'dop',
             confirm: true,
+            description: "Prueba de pago",
+            payment_method: "pm_card_visa",
+            customer: customer.id,
+            setup_future_usage: 'on_session',
+            automatic_payment_methods: {
+                enabled: true,
+                allow_redirects: "never"
+            }
         });
     }
 }

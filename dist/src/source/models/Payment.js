@@ -17,6 +17,7 @@ let Payment = class Payment extends sequelize_1.Model {
             "amount",
             "capital",
             "interest",
+            "mora",
             "balanceBefore",
             "balanceAfter",
             "dueAt",
@@ -29,7 +30,7 @@ let Payment = class Payment extends sequelize_1.Model {
         ];
     }
     static getRelations() {
-        return ["wallet", "loan", "lawyer", "client", "mora", "images", "loan.client", "loan.condition", "loan.wallet"];
+        return ["wallet", "loan", "lawyer", "client", "moratoria", "images", "loan.client", "loan.condition", "loan.wallet"];
     }
     static tableName = "payments";
     static modelName = "Payment";
@@ -45,6 +46,10 @@ let Payment = class Payment extends sequelize_1.Model {
             allowNull: false,
         },
         interest: {
+            type: sequelize_1.DataTypes.DECIMAL,
+            allowNull: false,
+        },
+        mora: {
             type: sequelize_1.DataTypes.DECIMAL,
             allowNull: false,
         },
@@ -89,7 +94,7 @@ let Payment = class Payment extends sequelize_1.Model {
         sequelize.model("Payment")
             .hasOne(sequelize.model("Mora"), {
             foreignKey: "paymentId",
-            as: "mora"
+            as: "moratoria"
         });
         sequelize.model("Payment")
             .belongsTo(sequelize.model("Wallet"), {

@@ -88,7 +88,8 @@ class PaymentService extends Service_1.default {
                     }, amort.id, trans);
                 }
             }
-            await this.walletRepo.setBalance(walletBalance, wallet.id, trans);
+            console.log(newPayments.at(0));
+            await this.walletRepo.setBalance(walletBalance, "wallet.id", trans);
             await trans.commit();
             return newLoan;
         }, async () => await trans.rollback());
@@ -130,7 +131,7 @@ class PaymentService extends Service_1.default {
                 interest: isPayed ? amort.interest : newAmort.interest,
                 capital: isPayed ? amort.capital : newAmort.capital,
                 status: newStatus,
-                mora: isPayed ? amort.mora : 0,
+                mora: isPayed ? data.mora : 0,
                 updatedBy: data.updatedBy
             };
             if (newPayment.lawyerId) {
@@ -186,6 +187,7 @@ class PaymentService extends Service_1.default {
             amount: data.capital + data.interest + data.mora,
             capital: data.capital,
             interest: data.interest,
+            mora: data.mora,
             balanceBefore: loan.balance,
             balanceAfter: Number(Number(loan.balance - data.capital).toFixed(2)),
             dueAt: data.payedAt,
@@ -232,6 +234,7 @@ class PaymentService extends Service_1.default {
                 amount: data.omitMora ? (cuota - amort.mora) : cuota,
                 capital: capital,
                 interest: amort.interest,
+                mora: data.omitMora ? 0 : amort.mora,
                 balanceBefore: Number(amort.balance) + Number(amort.capital),
                 balanceAfter: data.justInterest ? Number(amort.balance) + Number(amort.capital) : amort.balance,
                 dueAt: amort.date,

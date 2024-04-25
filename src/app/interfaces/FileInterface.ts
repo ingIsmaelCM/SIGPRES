@@ -37,7 +37,8 @@ export enum EImageable {
     Loan = "Loan",
     Payment = "Payment",
     Lawyer = "Lawyer",
-    Job = "Job"
+    Job = "Job",
+    Guarantee = "Guarantee",
 }
 
 export enum EDocumentable {
@@ -47,4 +48,5 @@ export enum EDocumentable {
     Payment = "Payment",
     Lawyer = "Lawyer",
     Job = "Job",
+    Guarantee = "Guarantee",
 }

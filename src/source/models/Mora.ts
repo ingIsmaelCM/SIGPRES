@@ -61,8 +61,8 @@ export default class Mora extends Model implements IMora {
     declare paymentId: string;
     declare status: EMoraStatus;
     declare id?: string;
-    declare createdBy?: number;
-    declare updatedBy?: number;
+    declare createdBy?: string;
+    declare updatedBy?: string;
     declare createdAt?: string;
     declare updatedAt?: string;
     declare deletedAt?: string;

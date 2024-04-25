@@ -12,8 +12,8 @@ export default class Condition extends Model implements ICondition {
     declare grace: number;
     declare rate: number;
     declare id?: string;
-    declare createdBy?: number;
-    declare updatedBy?: number;
+    declare createdBy?: string;
+    declare updatedBy?: string;
     declare createdAt?: string;
     declare updatedAt?: string;
     declare deletedAt?: string;

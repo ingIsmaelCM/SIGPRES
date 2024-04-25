@@ -71,8 +71,8 @@ export default class Info extends Model implements IInfo {
     declare type: string;
     declare note: string;
     declare id: string;
-    declare createdBy?: number;
-    declare updatedBy?: number;
+    declare createdBy?: string;
+    declare updatedBy?: string;
     declare createdAt?: string;
     declare updatedAt?: string;
     declare deletedAt?: string;

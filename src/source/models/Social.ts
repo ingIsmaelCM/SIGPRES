@@ -6,13 +6,13 @@ import ITM from "@app/models/ITenantModel";
 export default class Social extends Model implements ISocial {
     declare clientId: string;
     declare createdAt: string;
-    declare createdBy: number;
+    declare createdBy: string;
     declare deletedAt: string;
     declare facebook: string;
     declare Id: string;
     declare instagram: string;
     declare updatedAt: string;
-    declare updatedBy: number;
+    declare updatedBy: string;
     declare whatsapp: string;
 
     static tableName = "socials";

@@ -88,8 +88,7 @@ class PaymentService extends Service_1.default {
                     }, amort.id, trans);
                 }
             }
-            console.log(newPayments.at(0));
-            await this.walletRepo.setBalance(walletBalance, "wallet.id", trans);
+            await this.walletRepo.setBalance(walletBalance, wallet.id, trans);
             await trans.commit();
             return newLoan;
         }, async () => await trans.rollback());

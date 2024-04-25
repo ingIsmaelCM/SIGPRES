@@ -1,18 +1,15 @@
 import {
-    AmortizationView, Card,
+    AmortizationView,
+    Card,
     ClientContact,
     ClientContactView,
     ClientView,
     ContactView,
-    Document, Expense,
-    Job,
+    Expense, Guarantee,
     Loan,
-    Mora,
     Payment,
-    Social, UserView
+    UserView
 } from "@source/models/index";
-import Image from "@source/models/Image";
-import {EDocumentable, EImageable} from "@app/interfaces/FileInterface";
 import PaymentStatView from "@source/models/views/PaymentStatView";
 import LawyerPayment from "@source/models/LawyerPayment";
 import {Sequelize} from "sequelize";
@@ -32,5 +29,6 @@ export default class SourceRelation {
         UserView.initRelation(sequelize);
         Expense.initRelation(sequelize);
         Card.initRelation(sequelize);
+        Guarantee.initRelation(sequelize);
     }
 }

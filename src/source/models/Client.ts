@@ -16,8 +16,8 @@ export default class Client extends Model implements IClient {
     declare infoId?: string;
     declare clienttype: EClientType;
     declare id?: string;
-    declare createdBy?: number;
-    declare updatedBy?: number;
+    declare createdBy?: string;
+    declare updatedBy?: string;
     declare createdAt?: string;
     declare updatedAt?: string;
     declare deletedAt?: string;
@@ -85,8 +85,5 @@ export default class Client extends Model implements IClient {
         ...ITM.commonAttributes,
     };
 }
-/*
 
-FIXED Add clienttype `[Personal, Negocio]
-TODO: create guarantees table (name, description) (relation image or document) status (consignado, devuelto), type (física, nominal)
-*/
+

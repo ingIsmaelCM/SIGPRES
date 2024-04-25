@@ -16,10 +16,10 @@ export default class Contact extends Model implements  IContact{
   declare fullname?: string;
   declare name: string;
   declare createdAt?: string;
-  declare createdBy?: number;
+  declare createdBy?: string;
   declare deletedAt?: string;
   declare updatedAt?: string;
-  declare updatedBy?: number;
+  declare updatedBy?: string;
  static  getSearchables(): Array<keyof IContact> {
     return ["name", "lastname", "infoId"];
   }

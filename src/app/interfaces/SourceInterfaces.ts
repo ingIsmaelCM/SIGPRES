@@ -215,8 +215,7 @@ export interface IExpenseRelation {
     lawyer: ILawyer;
 }
 
-export interface IInfo {
-    id: string;
+export interface IInfo extends ICommonField{
     dni: string;
     phone: string;
     email?: string;
@@ -225,12 +224,8 @@ export interface IInfo {
     gender: EInfoGender;
     country: string;
     type: string;
-    note?:string;
-    createdBy?: number;
-    updatedBy?: number;
-    createdAt?: string;
-    updatedAt?: string;
-    deletedAt?: string;
+    note?: string;
+
 }
 
 export interface IInfoRelation {
@@ -458,7 +453,7 @@ export interface IPreference extends ICommonField {
 export interface IPreferenceRelation {
 }
 
-export  interface  ICard extends  ICommonField{
+export interface ICard extends ICommonField {
     value: string;
     ending: number;
     holdname: string;
@@ -466,6 +461,48 @@ export  interface  ICard extends  ICommonField{
     clientId: string;
 }
 
-export interface  ICardRelation{
+export interface ICardRelation {
     client: IClientView;
+}
+
+export interface IGuarantee extends ICommonField {
+    name: string;
+    value: number;
+    status: EGuaranteeStatus;
+    loanId: string;
+    clientId: string;
+    attributes: string;
+}
+
+export interface IGuaranteeRelation {
+    client: IClientView;
+    loan: ILoan;
+    images: IImage[];
+    documents: IDocument[]
+}
+
+export interface IGuaranteeAttribute extends ICommonField {
+    name: string;
+    type: EGuaranteeAttributeType,
+    options: string
+}
+
+export interface IGuaranteeAttributeRelation {
+}
+
+export enum EGuaranteeAttributeType {
+    bool = "Booleano",
+    string = "Texto",
+    numeric = "Numérico",
+    options = "Opciones"
+}
+
+export enum EGuaranteeStatus {
+    Retenido = "Retenido",
+    Financiado = "Financiado",
+    Incautado = "Incautado",
+    Documentado = "Documentado",
+    Recuperado = "Recuperado",
+    Saldado = "Saldado"
+
 }

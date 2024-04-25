@@ -47,13 +47,7 @@ export default class MigrateTenant {
         });
         try {
             const folderPath = __dirname;
-            const files = fs.readdirSync(folderPath);
-            files.sort();
-            for (const file of files) {
-                if (file.endsWith(".sql")) {
-                    await this.runSQLFile(path.join(folderPath, file), connection);
-                }
-            }
+            await this.runSQLFile(path.join(folderPath, "database.sql"), connection);
         } catch (error: any) {
             throw {
                 code: 500,

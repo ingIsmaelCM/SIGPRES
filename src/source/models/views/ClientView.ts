@@ -8,7 +8,7 @@ import {EDocumentable, EImageable} from "@app/interfaces/FileInterface";
 
 @ITM.staticImplements<IClientView, IClientRelation>()
 export default class ClientView extends Model {
-    static tableName = "clientView";
+    static tableName = "clientview";
     static modelName = "ClientView";
     static additionalOptions = {}
     static attributes: Record<keyof IClientView, ModelAttributeColumnOptions> = {

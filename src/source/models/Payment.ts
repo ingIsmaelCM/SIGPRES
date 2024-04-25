@@ -19,8 +19,8 @@ export default class Payment extends Model implements IPayment {
     declare clientId: string;
     declare lawyerId?: string;
     declare id?: string;
-    declare createdBy?: number;
-    declare updatedBy?: number;
+    declare createdBy?: string;
+    declare updatedBy?: string;
     declare createdAt?: string;
     declare updatedAt?: string;
     declare deletedAt?: string;

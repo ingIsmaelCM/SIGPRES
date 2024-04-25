@@ -25,8 +25,8 @@ export default class Loan extends Model implements ILoan {
     declare walletId: string;
     declare guarantorId: string;
     declare id?: string;
-    declare createdBy?: number;
-    declare updatedBy?: number;
+    declare createdBy?: string;
+    declare updatedBy?: string;
     declare createdAt?: string;
     declare updatedAt?: string;
     declare deletedAt?: string;

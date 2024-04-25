@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const fs_1 = __importDefault(require("fs"));
 const sequelize_1 = require("sequelize");
 const models_1 = require("@source/models");
+const Guarantee_1 = __importDefault(require("@source/models/Guarantee"));
 class MigrateView {
     static async runSQLFile(filePath, connection) {
         await this.addColumns(connection);
@@ -25,6 +26,8 @@ class MigrateView {
     static async addColumns(connection) {
         const queryInterface = connection.getQueryInterface();
         await this.createCardTable(queryInterface);
+        await this.createGuaranteeTable(queryInterface);
+        await this.createGuaranteeAttributeTable(queryInterface);
         await this.addColumnsIfNotExists(queryInterface, {
             table: 'infos',
             column: 'note',
@@ -61,7 +64,25 @@ class MigrateView {
     }
     static async createCardTable(queryInterface) {
         try {
-            await queryInterface.createTable("cards", models_1.Card.attributes, models_1.Card.additionalOptions)
+            await queryInterface.createTable(models_1.Card.tableName, models_1.Card.attributes, models_1.Card.additionalOptions)
+                .catch((err) => console.log(err));
+        }
+        catch (err) {
+            console.log(err);
+        }
+    }
+    static async createGuaranteeTable(queryInterface) {
+        try {
+            await queryInterface.createTable(Guarantee_1.default.tableName, Guarantee_1.default.attributes, Guarantee_1.default.additionalOptions)
+                .catch((err) => console.log(err));
+        }
+        catch (err) {
+            console.log(err);
+        }
+    }
+    static async createGuaranteeAttributeTable(queryInterface) {
+        try {
+            await queryInterface.createTable(models_1.GuaranteeAttribute.tableName, models_1.GuaranteeAttribute.attributes, models_1.GuaranteeAttribute.additionalOptions)
                 .catch((err) => console.log(err));
         }
         catch (err) {

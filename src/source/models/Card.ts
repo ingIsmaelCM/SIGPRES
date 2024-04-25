@@ -8,11 +8,11 @@ import tools from "@app/utils/tools";
 export default class Card extends Model implements ICard {
     declare clientId: string;
     declare createdAt: string;
-    declare createdBy: number;
+    declare createdBy: string;
     declare deletedAt: string;
     declare id: string;
     declare updatedAt: string;
-    declare updatedBy: number;
+    declare updatedBy: string;
     declare value: string;
     declare holdname: string;
     declare ending: number;

@@ -1,6 +1,7 @@
 import fs from "fs";
 import {col, DataTypes, ModelAttributeColumnOptions, QueryInterface, Sequelize} from "sequelize";
-import {Card} from "@source/models";
+import {Card, GuaranteeAttribute} from "@source/models";
+import Guarantee from "@source/models/Guarantee";
 
 interface IAddColumn {
     table: string;
@@ -28,6 +29,8 @@ export default class MigrateView {
     static async addColumns(connection: Sequelize) {
         const queryInterface = connection.getQueryInterface();
         await this.createCardTable(queryInterface);
+        await this.createGuaranteeTable(queryInterface);
+        await this.createGuaranteeAttributeTable(queryInterface);
         await this.addColumnsIfNotExists(queryInterface, {
             table: 'infos',
             column: 'note',
@@ -49,14 +52,14 @@ export default class MigrateView {
             table: 'payments',
             column: 'mora',
             colDefinition: {
-                type: DataTypes.DECIMAL(10,2),
+                type: DataTypes.DECIMAL(10, 2),
                 defaultValue: 0,
                 allowNull: false,
             },
         })
     }
 
-    static async addColumnsIfNotExists(queryInterface: QueryInterface, options: IAddColumn) {
+    private static async addColumnsIfNotExists(queryInterface: QueryInterface, options: IAddColumn) {
         const {table, column, colDefinition} = options;
         const cols = Object.keys((await queryInterface.describeTable(table)));
         if (!cols.includes(column)) {
@@ -64,10 +67,31 @@ export default class MigrateView {
         }
     }
 
-    static async createCardTable(queryInterface: QueryInterface) {
+    private static async createCardTable(queryInterface: QueryInterface) {
         try {
 
-            await queryInterface.createTable("cards", Card.attributes, Card.additionalOptions)
+            await queryInterface.createTable(Card.tableName, Card.attributes, Card.additionalOptions)
+                .catch((err: any) => console.log(err))
+        } catch (err: any) {
+            console.log(err)
+        }
+    }
+
+    private static async createGuaranteeTable(queryInterface: QueryInterface) {
+        try {
+
+            await queryInterface.createTable(Guarantee.tableName, Guarantee.attributes, Guarantee.additionalOptions)
+                .catch((err: any) => console.log(err))
+        } catch (err: any) {
+            console.log(err)
+        }
+    }
+
+    private static async createGuaranteeAttributeTable(queryInterface: QueryInterface) {
+        try {
+
+            await queryInterface.createTable(GuaranteeAttribute.tableName, GuaranteeAttribute.attributes,
+                GuaranteeAttribute.additionalOptions)
                 .catch((err: any) => console.log(err))
         } catch (err: any) {
             console.log(err)

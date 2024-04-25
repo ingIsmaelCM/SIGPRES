@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Card = exports.ClientContact = exports.ClientContactView = exports.AmortizationView = exports.PaymentStatView = exports.UserView = exports.LawyerPayment = exports.LawyerView = exports.JobView = exports.ContactView = exports.ClientView = exports.Mora = exports.Social = exports.Document = exports.Wallet = exports.Lawyer = exports.Payment = exports.Loan = exports.Preference = exports.Image = exports.Job = exports.Info = exports.Expense = exports.Contact = exports.Condition = exports.Amortization = exports.Client = void 0;
+exports.GuaranteeAttribute = exports.Guarantee = exports.Card = exports.ClientContact = exports.ClientContactView = exports.AmortizationView = exports.PaymentStatView = exports.UserView = exports.LawyerPayment = exports.LawyerView = exports.JobView = exports.ContactView = exports.ClientView = exports.Mora = exports.Social = exports.Document = exports.Wallet = exports.Lawyer = exports.Payment = exports.Loan = exports.Preference = exports.Image = exports.Job = exports.Info = exports.Expense = exports.Contact = exports.Condition = exports.Amortization = exports.Client = void 0;
 const Client_1 = __importDefault(require("./Client"));
 exports.Client = Client_1.default;
 const Amortization_1 = __importDefault(require("./Amortization"));
@@ -58,4 +58,8 @@ const UserView_1 = __importDefault(require("@source/models/views/UserView"));
 exports.UserView = UserView_1.default;
 const Card_1 = __importDefault(require("@source/models/Card"));
 exports.Card = Card_1.default;
+const Guarantee_1 = __importDefault(require("@source/models/Guarantee"));
+exports.Guarantee = Guarantee_1.default;
+const GuaranteeAttribute_1 = __importDefault(require("@source/models/GuaranteeAttribute"));
+exports.GuaranteeAttribute = GuaranteeAttribute_1.default;
 //# sourceMappingURL=index.js.map

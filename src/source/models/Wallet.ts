@@ -13,8 +13,8 @@ export default class Wallet extends Model implements IWallet {
     declare balance: number;
     declare authId: string;
     declare id?: string;
-    declare createdBy?: number;
-    declare updatedBy?: number;
+    declare createdBy?: string;
+    declare updatedBy?: string;
     declare createdAt?: string;
     declare updatedAt?: string;
     declare deletedAt?: string;

@@ -20,8 +20,8 @@ export interface IParams {
 
 export interface ICommonField {
   id?: string;
-  createdBy?: number;
-  updatedBy?: number;
+  createdBy?: string;
+  updatedBy?: string;
   createdAt?: string;
   updatedAt?: string;
   deletedAt?: string;

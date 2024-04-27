@@ -30,7 +30,7 @@ CREATE OR REPLACE VIEW clientContactview
 AS SELECT con.id, con.name, con.lastname, con.infoId, con.type, con.note, con.createdBy, con.updatedBy, con.createdAt,
  con.updatedAt, con.dni, con.address, con.phone, con.email,con.birthdate, con.gender, con.country,
  cc.clientId, cc.contactId, cc.isGarante, cc.relationship, cc.id as relationId, cc.deletedAt as deletedAt
-    FROM contactView con LEFT JOIN client_contacts cc ON cc.contactId=con.id;
+    FROM contactview con LEFT JOIN client_contacts cc ON cc.contactId=con.id;
 
 
 CREATE OR REPLACE VIEW paymentStatview AS

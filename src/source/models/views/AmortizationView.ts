@@ -27,7 +27,7 @@ export default class AmortizationView extends Model implements IAmortizationView
     declare grace: number;
     declare rate: number;
     declare mora: number;
-    static tableName = "amortizationView";
+    static tableName = "amortizationview";
     static modelName = "AmortizationView";
     static additionalOptions = {}
     static attributes = {

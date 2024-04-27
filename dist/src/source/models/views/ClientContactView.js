@@ -14,7 +14,7 @@ const ITenantModel_1 = __importDefault(require("@app/models/ITenantModel"));
 const models_1 = require("@source/models");
 const FileInterface_1 = require("@app/interfaces/FileInterface");
 let ClientContactView = class ClientContactView extends sequelize_1.Model {
-    static tableName = "clientContactView";
+    static tableName = "clientContactview";
     static modelName = "ClientContactView";
     static attributes = {
         ...models_1.ClientContact.attributes,

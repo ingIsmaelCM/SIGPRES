@@ -7,7 +7,7 @@ import moment from "moment";
 
 @ITM.staticImplements<IJobView, IJobRelation>()
 export default class JobView extends Model {
-    static tableName = "jobView";
+    static tableName = "jobview";
     static modelName = "JobView";
     static additionalOptions = {}
     static attributes = {

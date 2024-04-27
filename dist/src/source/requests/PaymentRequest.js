@@ -31,6 +31,7 @@ class PaymentRequest extends BaseRequest_1.default {
             this.RequestCheck.required("mora"),
             this.RequestCheck.isFloat("capital", 0),
             this.RequestCheck.isFloat("mora", 0),
+            this.RequestCheck.required("moveDate"),
             this.RequestCheck.isFloat("interest").optional(),
             this.RequestCheck.isString("note").optional({ values: "falsy" }),
             this.RequestCheck.isString("lawyerId").optional({ values: "falsy" })

@@ -30,7 +30,7 @@ export default class PaymentStatView extends Model implements IPaymentStatView {
     declare loanBalance: number;
     declare loanPayedPercent: number;
 
-    static tableName = "paymentStatView";
+    static tableName = "paymentStatview";
     static modelName = "PaymentStatView";
     static additionalOptions: Partial<InitOptions> = {
         paranoid: false,

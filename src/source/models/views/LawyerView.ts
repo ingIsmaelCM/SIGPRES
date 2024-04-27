@@ -6,7 +6,7 @@ import {Info, Lawyer} from "@source/models";
 
 @ITM.staticImplements<ILawyerView, ILawyerRelation>()
 export default class LawyerView extends Model {
-    static tableName = "lawyerView";
+    static tableName = "lawyerview";
     static modelName = "LawyerView";
     static additionalOptions = {}
     static attributes = {

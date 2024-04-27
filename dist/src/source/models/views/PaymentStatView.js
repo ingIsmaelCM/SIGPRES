@@ -12,7 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const sequelize_1 = require("sequelize");
 const ITenantModel_1 = __importDefault(require("@app/models/ITenantModel"));
 let PaymentStatView = class PaymentStatView extends sequelize_1.Model {
-    static tableName = "paymentStatView";
+    static tableName = "paymentStatview";
     static modelName = "PaymentStatView";
     static additionalOptions = {
         paranoid: false,

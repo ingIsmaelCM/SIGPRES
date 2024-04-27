@@ -12,7 +12,7 @@ import {EImageable} from "@app/interfaces/FileInterface";
 
 @ITM.staticImplements<IClientContactView, IContactRelation>()
 export default class ClientContactView extends Model implements IClientContactView {
-    static tableName = "clientContactView";
+    static tableName = "clientContactview";
     static modelName = "ClientContactView"
     static attributes: Record<keyof IClientContactView, ModelAttributeColumnOptions> = {
         ...ClientContact.attributes,

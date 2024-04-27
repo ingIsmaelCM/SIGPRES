@@ -13,7 +13,7 @@ const LoanRepository_1 = __importDefault(require("@source/repositories/LoanRepos
 const amortization_1 = __importDefault(require("@app/utils/amortization"));
 const AmortizationRepository_1 = __importDefault(require("@source/repositories/AmortizationRepository"));
 const PaymentStatViewRepository_1 = __importDefault(require("@source/repositories/PaymentStatViewRepository"));
-const moment_1 = __importDefault(require("moment"));
+const moment_timezone_1 = __importDefault(require("moment-timezone"));
 const LawyerPaymentRepository_1 = __importDefault(require("@source/repositories/LawyerPaymentRepository"));
 const LawyerRepository_1 = __importDefault(require("@source/repositories/LawyerRepository"));
 const SourceInterfaces_1 = require("@app/interfaces/SourceInterfaces");
@@ -27,6 +27,9 @@ class PaymentService extends Service_1.default {
     paymentStatRepo = new PaymentStatViewRepository_1.default();
     lawyerPaymentRepo = new LawyerPaymentRepository_1.default();
     lawyerRepo = new LawyerRepository_1.default();
+    constructor() {
+        super();
+    }
     async getPayments(params) {
         return await this.mainRepo.getAll(params);
     }
@@ -61,7 +64,7 @@ class PaymentService extends Service_1.default {
             const isPayed = newBalance <= 0 && !data.justInterest;
             const newLoanData = {
                 balance: data.justInterest ? loan.balance : newBalance,
-                nextPaymentAt: (0, moment_1.default)(nextPaymentDate).format("YYYY-MM-DD"),
+                nextPaymentAt: (0, moment_timezone_1.default)(nextPaymentDate).format("YYYY-MM-DD"),
                 updatedBy: data.updatedBy,
                 status: isPayed ? SourceInterfaces_1.ELoanStatus.Pagado : loan.status
             };
@@ -107,8 +110,14 @@ class PaymentService extends Service_1.default {
             }
             const loan = await this.loanRepo.findById(data.loanId, { include: "condition" });
             let newDate = amort.date;
-            while (data.interest && (0, moment_1.default)().add(3, 'days').isAfter((0, moment_1.default)(newDate))) {
+            let isActual = false;
+            let difInDays = 0;
+            while (data.moveDate && !isActual) {
                 newDate = amortization_1.default.getDateCuota(new Date(newDate), loan.period).format('YYYY-MM-DD');
+                if (!difInDays) {
+                    difInDays = Math.abs((0, moment_timezone_1.default)(amort.date).diff((0, moment_timezone_1.default)(newDate), "days"));
+                }
+                isActual = (0, moment_timezone_1.default)().add(Math.ceil(difInDays / 2) - 1, 'days').isBefore((0, moment_timezone_1.default)(newDate));
             }
             const isPayed = loan.balance === data.capital;
             const newStatus = isPayed ? SourceInterfaces_1.EAmortizationStatus.Pagado : SourceInterfaces_1.EAmortizationStatus.Pendiente;
@@ -171,7 +180,7 @@ class PaymentService extends Service_1.default {
                     (payment.amount * (lawyer.payPrice / 100)),
                 paymentId: payment.id,
                 loanId: payment.loanId,
-                date: (0, moment_1.default)(payment.payedAt).format('YYYY-MM-DD'),
+                date: (0, moment_timezone_1.default)(payment.payedAt).format('YYYY-MM-DD'),
                 status: SourceInterfaces_1.ELawyerPaymentStatus.Pendiente,
                 payPrice: lawyer.payPrice,
                 createdBy: payment.createdBy,

@@ -9,7 +9,7 @@ import LoanRepository from "@source/repositories/LoanRepository";
 import amortization from "@app/utils/amortization";
 import AmortizationRepository from "@source/repositories/AmortizationRepository";
 import PaymentStatViewRepository from "@source/repositories/PaymentStatViewRepository";
-import moment from "moment";
+import moment from "moment-timezone";
 import {Transaction} from "sequelize";
 import LawyerPaymentRepository from "@source/repositories/LawyerPaymentRepository";
 import LawyerRepository from "@source/repositories/LawyerRepository";
@@ -35,6 +35,10 @@ export default class PaymentService extends Service {
     private paymentStatRepo = new PaymentStatViewRepository();
     private lawyerPaymentRepo = new LawyerPaymentRepository();
     private lawyerRepo = new LawyerRepository();
+
+    constructor() {
+        super();
+    }
 
     async getPayments(params: IParams) {
         return await this.mainRepo.getAll(params)
@@ -126,9 +130,14 @@ export default class PaymentService extends Service {
                 }
                 const loan = await this.loanRepo.findById(data.loanId, {include: "condition"});
                 let newDate = amort.date;
-
-                while (data.interest && moment().add(3, 'days').isAfter(moment(newDate))) {
-                    newDate = amortization.getDateCuota(new Date(newDate), loan.period).format('YYYY-MM-DD')
+                let isActual = false;
+                let difInDays = 0;
+                while (data.moveDate && !isActual) {
+                    newDate = amortization.getDateCuota(new Date(newDate), loan.period).format('YYYY-MM-DD');
+                    if (!difInDays) {
+                        difInDays = Math.abs(moment(amort.date).diff(moment(newDate), "days"));
+                    }
+                    isActual = moment().add(Math.ceil(difInDays / 2) - 1, 'days').isBefore(moment(newDate));
                 }
                 const isPayed = loan.balance === data.capital;
                 const newStatus = isPayed ? EAmortizationStatus.Pagado : EAmortizationStatus.Pendiente;
@@ -150,7 +159,7 @@ export default class PaymentService extends Service {
                     interest: isPayed ? amort.interest : newAmort.interest,
                     capital: isPayed ? amort.capital : newAmort.capital,
                     status: newStatus,
-                    mora: isPayed ? data.mora :0,
+                    mora: isPayed ? data.mora : 0,
                     updatedBy: data.updatedBy
                 }
                 if (newPayment.lawyerId) {
@@ -162,7 +171,7 @@ export default class PaymentService extends Service {
                     status: isPayed ? ELoanStatus.Pagado : loan.status
                 }, loan.id, trans);
                 await this.amortizationRepo.update(newAmort, amort.id!, trans);
-                await this.walletRepo.setBalance(newPayment.amount,wallet.id, trans);
+                await this.walletRepo.setBalance(newPayment.amount, wallet.id, trans);
                 await trans.commit();
                 return newLoan;
             },
@@ -209,7 +218,7 @@ export default class PaymentService extends Service {
 
     private getPaymentFromCapitalAndData(data: Record<string, any>, loan: ILoan): IPayment {
         return {
-            amount: data.capital + data.interest+data.mora,
+            amount: data.capital + data.interest + data.mora,
             capital: data.capital,
             interest: data.interest,
             mora: data.mora,

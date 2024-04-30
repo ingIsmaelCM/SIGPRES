@@ -1,6 +1,6 @@
 import fs from "fs";
 import {col, DataTypes, ModelAttributeColumnOptions, QueryInterface, Sequelize} from "sequelize";
-import {Card, GuaranteeAttribute} from "@source/models";
+import {Card, Attribute} from "@source/models";
 import Guarantee from "@source/models/Guarantee";
 
 interface IAddColumn {
@@ -30,7 +30,7 @@ export default class MigrateView {
         const queryInterface = connection.getQueryInterface();
         await this.createCardTable(queryInterface);
         await this.createGuaranteeTable(queryInterface);
-        await this.createGuaranteeAttributeTable(queryInterface);
+        await this.createAttributeTable(queryInterface);
         await this.addColumnsIfNotExists(queryInterface, {
             table: 'infos',
             column: 'note',
@@ -87,11 +87,11 @@ export default class MigrateView {
         }
     }
 
-    private static async createGuaranteeAttributeTable(queryInterface: QueryInterface) {
+    private static async createAttributeTable(queryInterface: QueryInterface) {
         try {
 
-            await queryInterface.createTable(GuaranteeAttribute.tableName, GuaranteeAttribute.attributes,
-                GuaranteeAttribute.additionalOptions)
+            await queryInterface.createTable(Attribute.tableName, Attribute.attributes,
+                Attribute.additionalOptions)
                 .catch((err: any) => console.log(err))
         } catch (err: any) {
             console.log(err)

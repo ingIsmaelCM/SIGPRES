@@ -41,13 +41,13 @@ class AttributeController extends Controller_1.default {
     prefix = 'attributes';
     mainService = new AttributeService_1.default();
     async index(req, res) {
-        return this.safeRun(async () => this.mainService.getAttributes(req.query), res, 200, "");
+        return this.safeRun(async () => this.mainService.getAttributes(req.query), res, 200, "Listados de Atributos");
     }
     async show(req, res) {
-        return this.safeRun(async () => this.mainService.findAttribute(req.params.id, req.query), res, 200, "");
+        return this.safeRun(async () => this.mainService.findAttribute(req.params.id, req.query), res, 200, "Detalles del atributo");
     }
     async store(req, res) {
-        return this.safeRun(async () => this.mainService.createAttribute(req.body), res, 201, "");
+        return this.safeRun(async () => this.mainService.createAttribute(req.body), res, 201, "Atributo Registrado");
     }
     async update(req, res) {
         return this.safeRun(async () => this.mainService.updateAttribute(req.params.id, req.body), res, 201, "");

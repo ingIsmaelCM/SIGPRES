@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.EGuaranteeStatus = exports.EGuaranteeAttributeType = exports.EMoraStatus = exports.ELoanStatus = exports.ELoanPeriod = exports.ELoanType = exports.ELawyerPaymode = exports.ELawyerPaymentStatus = exports.EJobStatus = exports.EInfoGender = exports.EInfoModels = exports.EClientContactRelationship = exports.EClientType = exports.EAmortizationStatus = void 0;
+exports.EGuaranteeStatus = exports.EAttributeType = exports.EMoraStatus = exports.ELoanStatus = exports.ELoanPeriod = exports.ELoanType = exports.ELawyerPaymode = exports.ELawyerPaymentStatus = exports.EJobStatus = exports.EInfoGender = exports.EInfoModels = exports.EClientContactRelationship = exports.EClientType = exports.EAmortizationStatus = void 0;
 var EAmortizationStatus;
 (function (EAmortizationStatus) {
     EAmortizationStatus["Pendiente"] = "Pendiente";
@@ -75,13 +75,13 @@ var EMoraStatus;
     EMoraStatus["Cobrada"] = "Cobrada";
     EMoraStatus["Perdonada"] = "Perdonada";
 })(EMoraStatus || (exports.EMoraStatus = EMoraStatus = {}));
-var EGuaranteeAttributeType;
-(function (EGuaranteeAttributeType) {
-    EGuaranteeAttributeType["bool"] = "Booleano";
-    EGuaranteeAttributeType["string"] = "Texto";
-    EGuaranteeAttributeType["numeric"] = "Num\u00E9rico";
-    EGuaranteeAttributeType["options"] = "Opciones";
-})(EGuaranteeAttributeType || (exports.EGuaranteeAttributeType = EGuaranteeAttributeType = {}));
+var EAttributeType;
+(function (EAttributeType) {
+    EAttributeType["bool"] = "Booleano";
+    EAttributeType["string"] = "Texto";
+    EAttributeType["numeric"] = "Num\u00E9rico";
+    EAttributeType["options"] = "Opciones";
+})(EAttributeType || (exports.EAttributeType = EAttributeType = {}));
 var EGuaranteeStatus;
 (function (EGuaranteeStatus) {
     EGuaranteeStatus["Retenido"] = "Retenido";

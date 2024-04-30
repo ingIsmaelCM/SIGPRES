@@ -19,9 +19,11 @@ import LawyerRepository from "@source/repositories/LawyerRepository";
 import {Op, Transaction} from "sequelize";
 import moment from "moment";
 import ExpenseService from "@source/services/ExpenseService";
+import LoanViewRepository from "@source/repositories/LoanViewRepository";
 
 export default class LoanService extends Service {
     private mainRepo = new LoanRepository();
+    private loanViewRepo=new LoanViewRepository();
     private conditionRepo = new ConditionRepository();
     private amortizationRepo = new AmortizationRepository();
     private walletRepo = new WalletRepository();
@@ -29,11 +31,11 @@ export default class LoanService extends Service {
     private lawyerRepo = new LawyerRepository();
 
     async getLoans(params: IParams) {
-        return await this.mainRepo.getAll(params)
+        return await this.loanViewRepo.getAll(params)
     }
 
     async findLoan(loanId: string, params: IParams) {
-        return await this.mainRepo.findById(loanId, params)
+        return await this.loanViewRepo.findById(loanId, params)
     }
 
     async createLoan(data: ILoan): Promise<ILoan> {

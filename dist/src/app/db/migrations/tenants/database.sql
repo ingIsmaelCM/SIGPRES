@@ -314,10 +314,13 @@ SELECT amort.*, DATE_ADD(amort.date, INTERVAL cond.grace DAY) as expiresAt,
 cond.initTerm, cond.initRateMora, cond.finalRateMora, cond.grace, cond.rate
 FROM amortizations amort LEFT JOIN conditions cond ON amort.loanId=cond.loanId;
 
-CREATE OR REPLACE VIEW userview AS SELECT a.id, a.name, a.lastname, a.username, a.email, a.lastlogin, a.infoId, a.verifiedAt,
-i.dni, i.phone, i.birthdate, i.address, i.gender, i.country, i.createdBy, i.updatedBy,
-i.updatedAt, i.createdAt, i.deletedAt
-FROM `infos` i INNER JOIN `sigpres_main`.`auths` a ON a.infoId=i.id;
+CREATE OR REPLACE VIEW userview AS SELECT a.id, a.name, a.lastname, a.username, a.email, a.lastlogin, a.infoId,
+a.verifiedAt, i.dni, i.phone, i.birthdate, i.address, i.gender, i.country, i.createdBy, i.updatedBy,
+i.updatedAt, i.createdAt, i.deletedAt FROM `infos` i INNER JOIN `sigpres_main`.`auths` a ON a.infoId=i.id;
+
+CREATE OR REPLACE VIEW loanview AS SELECT l.*, CONCAT(c.name, ' ',c.lastname) as clientName,
+cond.rate, cond.grace, cond.initRateMora, cond.initTerm, cond.finalRateMora FROM loans l LEFT JOIN clients c
+ON l.clientId=c.id LEFT JOIN conditions cond on cond.loanId=l.id;
 
 CREATE OR REPLACE VIEW clientContactview
 AS SELECT con.id, con.name, con.lastname, con.infoId, con.createdBy, con.updatedBy, con.createdAt,

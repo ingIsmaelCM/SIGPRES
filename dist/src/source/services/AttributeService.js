@@ -17,6 +17,9 @@ class AttributeService extends Service_1.default {
     async createAttribute(data) {
         const trans = await TenantConnection_1.default.getTrans();
         return this.safeRun(async () => {
+            const newAttribute = await this.mainRepo.updateOrCreate(data, trans);
+            await trans.commit();
+            return newAttribute;
         }, async () => await trans.rollback());
     }
     async updateAttribute(guaranteeAttributeId, data) {

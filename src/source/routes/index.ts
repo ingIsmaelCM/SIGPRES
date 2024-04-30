@@ -20,7 +20,7 @@ import LawyerPaymentRoutes from "@source/routes/LawyerPaymentRoute";
 import WhatsappRoutes from "@source/routes/WhatsappRoute";
 import CardRoutes from "@source/routes/CardRoute";
 import GuaranteeRoutes from "@source/routes/GuaranteeRoute";
-import GuaranteeAttributeRoutes from "@source/routes/GuaranteeAttributeRoute";
+import AttributeRoutes from "@source/routes/AttributeRoute";
 
 const sourceRoutes: BaseRoutes<any>[] = [
     new PreferenceRoutes(),
@@ -44,7 +44,7 @@ const sourceRoutes: BaseRoutes<any>[] = [
     new WhatsappRoutes(),
     new CardRoutes(),
     new GuaranteeRoutes(),
-    new GuaranteeAttributeRoutes(),
+    new AttributeRoutes(),
 ]
 
 export default sourceRoutes;

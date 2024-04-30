@@ -26,6 +26,10 @@ i.dni, i.phone, i.birthdate, i.address, i.gender, i.country, i.createdBy, i.upda
 i.updatedAt, i.createdAt, i.deletedAt, i.note, i.type
 FROM `infos` i INNER JOIN `sigpres_main`.`auths` a ON a.infoId=i.id;
 
+CREATE OR REPLACE VIEW loanview AS SELECT l.*, CONCAT(c.name, ' ',c.lastname) as clientName,
+cond.rate, cond.grace, cond.initRateMora, cond.initTerm, cond.finalRateMora FROM loans l LEFT JOIN clients c
+ON l.clientId=c.id LEFT JOIN conditions cond on cond.loanId=l.id;
+
 CREATE OR REPLACE VIEW clientContactview
 AS SELECT con.id, con.name, con.lastname, con.infoId, con.type, con.note, con.createdBy, con.updatedBy, con.createdAt,
  con.updatedAt, con.dni, con.address, con.phone, con.email,con.birthdate, con.gender, con.country,

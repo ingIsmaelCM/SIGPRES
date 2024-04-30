@@ -1,13 +1,13 @@
 import BaseRoutes from "@app/routes/BaseRoutes";
-import GuaranteeAttributeController from "@source/controllers/GuaranteeAttributeController";
+import AttributeController from "@source/controllers/AttributeController";
 import {Request, Response} from "express";
-import GuaranteeAttributeRequest from "@source/requests/GuaranteeAttributeRequest";
+import AttributeRequest from "@source/requests/AttributeRequest";
 import RoleMiddleware from "@/auth/middlewares/RoleMiddleware";
 import PermissionEnums from "@/app/interfaces/PermissionEnums";
 
-export default class GuaranteeAttributeRoutes extends BaseRoutes<GuaranteeAttributeController> {
+export default class AttributeRoutes extends BaseRoutes<AttributeController> {
     constructor() {
-        super(new GuaranteeAttributeController());
+        super(new AttributeController());
     }
 
     initRoutes(): void {
@@ -18,8 +18,8 @@ export default class GuaranteeAttributeRoutes extends BaseRoutes<GuaranteeAttrib
             )
             .post(
                 RoleMiddleware.hasPermission(PermissionEnums.setPreference),
-                GuaranteeAttributeRequest.guaranteeAttributeCreateRequest(),
-                GuaranteeAttributeRequest.validate,
+                AttributeRequest.guaranteeAttributeCreateRequest(),
+                AttributeRequest.validate,
                 (req: Request, res: Response) => this.controller.store(req, res)
             );
 
@@ -30,8 +30,8 @@ export default class GuaranteeAttributeRoutes extends BaseRoutes<GuaranteeAttrib
             )
             .put(
                 RoleMiddleware.hasPermission(PermissionEnums.setPreference),
-                GuaranteeAttributeRequest.guaranteeAttributeUpdateRequest(),
-                GuaranteeAttributeRequest.validate,
+                AttributeRequest.guaranteeAttributeUpdateRequest(),
+                AttributeRequest.validate,
                 (req: Request, res: Response) => this.controller.update(req, res)
             )
             .delete(

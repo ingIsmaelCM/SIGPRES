@@ -6,7 +6,7 @@ import {
     ClientView,
     ContactView,
     Expense, Guarantee,
-    Loan,
+    Loan, LoanView,
     Payment,
     UserView
 } from "@source/models/index";
@@ -19,6 +19,7 @@ export default class SourceRelation {
     static initRelation(sequelize: Sequelize) {
         ClientView.initRelation(sequelize);
         Loan.initRelations(sequelize);
+        LoanView.initRelation(sequelize);
         ClientContact.initRelation(sequelize);
         ContactView.initRelation(sequelize);
         ClientContactView.initRelation(sequelize);

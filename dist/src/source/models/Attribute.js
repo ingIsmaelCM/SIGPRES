@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const sequelize_1 = require("sequelize");
 const SourceInterfaces_1 = require("@app/interfaces/SourceInterfaces");
 const ITenantModel_1 = __importDefault(require("@app/models/ITenantModel"));
+const tools_1 = __importDefault(require("@app/utils/tools"));
 let Attribute = class Attribute extends sequelize_1.Model {
     static tableName = "attributes";
     static modelName = "Attribute";
@@ -19,7 +20,11 @@ let Attribute = class Attribute extends sequelize_1.Model {
     static attributes = {
         name: {
             type: sequelize_1.DataTypes.STRING(70),
-            allowNull: false
+            allowNull: false,
+            unique: true,
+            set(val) {
+                this.setDataValue("name", tools_1.default.initialToUpper(val));
+            }
         },
         type: {
             type: sequelize_1.DataTypes.ENUM(...Object.values(SourceInterfaces_1.EAttributeType)),
@@ -28,8 +33,8 @@ let Attribute = class Attribute extends sequelize_1.Model {
         options: {
             type: sequelize_1.DataTypes.STRING,
             allowNull: true,
-            get() {
-                return this.getDataValue("options")?.split(',');
+            set(val) {
+                this.setDataValue("options", tools_1.default.initialToUpper(val.join(', ')));
             }
         },
         ...ITenantModel_1.default.commonAttributes

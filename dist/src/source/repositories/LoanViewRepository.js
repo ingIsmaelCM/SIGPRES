@@ -2,10 +2,10 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const BaseRepository_1 = require("@/app/repositories/BaseRepository");
 const models_1 = require("@source/models");
-class AttributeRepository extends BaseRepository_1.BaseRepository {
+class LoanViewRepository extends BaseRepository_1.BaseRepository {
     constructor() {
-        super(models_1.Attribute);
+        super(models_1.LoanView);
     }
 }
-exports.default = AttributeRepository;
-//# sourceMappingURL=AttributeRepository.js.map
+exports.default = LoanViewRepository;
+//# sourceMappingURL=LoanViewRepository.js.map

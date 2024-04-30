@@ -27,7 +27,7 @@ class MigrateView {
         const queryInterface = connection.getQueryInterface();
         await this.createCardTable(queryInterface);
         await this.createGuaranteeTable(queryInterface);
-        await this.createGuaranteeAttributeTable(queryInterface);
+        await this.createAttributeTable(queryInterface);
         await this.addColumnsIfNotExists(queryInterface, {
             table: 'infos',
             column: 'note',
@@ -80,9 +80,9 @@ class MigrateView {
             console.log(err);
         }
     }
-    static async createGuaranteeAttributeTable(queryInterface) {
+    static async createAttributeTable(queryInterface) {
         try {
-            await queryInterface.createTable(models_1.GuaranteeAttribute.tableName, models_1.GuaranteeAttribute.attributes, models_1.GuaranteeAttribute.additionalOptions)
+            await queryInterface.createTable(models_1.Attribute.tableName, models_1.Attribute.attributes, models_1.Attribute.additionalOptions)
                 .catch((err) => console.log(err));
         }
         catch (err) {

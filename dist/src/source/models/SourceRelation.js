@@ -10,6 +10,7 @@ class SourceRelation {
     static initRelation(sequelize) {
         index_1.ClientView.initRelation(sequelize);
         index_1.Loan.initRelations(sequelize);
+        index_1.LoanView.initRelation(sequelize);
         index_1.ClientContact.initRelation(sequelize);
         index_1.ContactView.initRelation(sequelize);
         index_1.ClientContactView.initRelation(sequelize);

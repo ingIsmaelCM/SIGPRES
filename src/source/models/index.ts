@@ -26,7 +26,8 @@ import LawyerPayment from "@source/models/LawyerPayment";
 import UserView from "@source/models/views/UserView";
 import Card from "@source/models/Card";
 import Guarantee from "@source/models/Guarantee";
-import GuaranteeAttribute from "@source/models/GuaranteeAttribute";
+import Attribute from "@source/models/Attribute";
+import LoanView from "@source/models/views/LoanView";
 
 export {
     Client,
@@ -57,6 +58,7 @@ export {
     ClientContact,
     Card,
     Guarantee,
-    GuaranteeAttribute
+    Attribute,
+    LoanView
 
 };

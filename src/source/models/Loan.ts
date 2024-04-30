@@ -140,32 +140,32 @@ export default class Loan extends Model implements ILoan {
     };
 
 
-    static initRelations(sequelize: Sequelize) {
-        sequelize.model("Loan")
+    static initRelations(sequelize: Sequelize, modelName="Loan") {
+        sequelize.model(modelName)
             .belongsTo(sequelize.model("LawyerView"), {
                 as: "lawyer",
                 foreignKey: 'lawyerId',
             })
 
-        sequelize.model("Loan")
+        sequelize.model(modelName)
             .belongsTo(sequelize.model("ContactView"), {
                 as: 'guarantor',
                 foreignKey: 'guarantorId'
             })
 
-        sequelize.model("Loan")
+        sequelize.model(modelName)
             .belongsTo(sequelize.model("ClientView"), {
                 as: 'client',
                 foreignKey: 'clientId'
             })
 
-        sequelize.model("Loan")
+        sequelize.model(modelName)
             .hasOne(sequelize.model("Condition"), {
                 as: 'condition',
                 foreignKey: 'loanId'
             })
 
-        sequelize.model("Loan")
+        sequelize.model(modelName)
             .hasMany(sequelize.model("Image"), {
                 as: 'images',
                 foreignKey: 'imageableId',
@@ -173,7 +173,7 @@ export default class Loan extends Model implements ILoan {
                     imageableType: EImageable.Loan
                 }
             })
-        sequelize.model("Loan")
+        sequelize.model(modelName)
             .hasMany(sequelize.model("Document"), {
                 as: 'documents',
                 foreignKey: 'documentableId',
@@ -182,19 +182,19 @@ export default class Loan extends Model implements ILoan {
                 }
             })
 
-        sequelize.model("Loan")
+        sequelize.model(modelName)
             .hasMany(sequelize.model("Payment"), {
                 as: 'payments',
                 foreignKey: 'loanId',
             })
 
-        sequelize.model("Loan")
+        sequelize.model(modelName)
             .hasMany(sequelize.model("Mora"), {
                 as: 'moras',
                 foreignKey: 'loanId',
             })
 
-        sequelize.model("Loan")
+        sequelize.model(modelName)
             .hasMany(sequelize.model("Amortization"), {
                 as: 'amortizations',
                 foreignKey: 'loanId',

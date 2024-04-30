@@ -16,18 +16,20 @@ const LawyerRepository_1 = __importDefault(require("@source/repositories/LawyerR
 const sequelize_1 = require("sequelize");
 const moment_1 = __importDefault(require("moment"));
 const ExpenseService_1 = __importDefault(require("@source/services/ExpenseService"));
+const LoanViewRepository_1 = __importDefault(require("@source/repositories/LoanViewRepository"));
 class LoanService extends Service_1.default {
     mainRepo = new LoanRepository_1.default();
+    loanViewRepo = new LoanViewRepository_1.default();
     conditionRepo = new ConditionRepository_1.default();
     amortizationRepo = new AmortizationRepository_1.default();
     walletRepo = new WalletRepository_1.default();
     lawyerPaymentRepo = new LawyerPaymentRepository_1.default();
     lawyerRepo = new LawyerRepository_1.default();
     async getLoans(params) {
-        return await this.mainRepo.getAll(params);
+        return await this.loanViewRepo.getAll(params);
     }
     async findLoan(loanId, params) {
-        return await this.mainRepo.findById(loanId, params);
+        return await this.loanViewRepo.findById(loanId, params);
     }
     async createLoan(data) {
         const trans = await TenantConnection_1.default.getTrans();

@@ -338,6 +338,15 @@ export interface ILoan extends ICommonField {
     guarantorId: string;
 }
 
+export interface ILoanView extends ILoan{
+    clientName: string,
+    initTerm: number;
+    initRateMora: number;
+    finalRateMora: number;
+    grace: number;
+    rate: number;
+}
+
 export enum ELoanType {
     Fixed = "Tasa Fija",
     Variable = "Tasa Variable"
@@ -481,16 +490,16 @@ export interface IGuaranteeRelation {
     documents: IDocument[]
 }
 
-export interface IGuaranteeAttribute extends ICommonField {
+export interface IAttribute extends ICommonField {
     name: string;
-    type: EGuaranteeAttributeType,
+    type: EAttributeType,
     options: string
 }
 
-export interface IGuaranteeAttributeRelation {
+export interface IAttributeRelation {
 }
 
-export enum EGuaranteeAttributeType {
+export enum EAttributeType {
     bool = "Booleano",
     string = "Texto",
     numeric = "Numérico",

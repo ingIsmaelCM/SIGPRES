@@ -156,6 +156,56 @@ class PaymentService extends Service_1.default {
             return newLoan;
         }, async () => await trans.rollback());
     }
+    async createPaymentAbone(data) {
+        const trans = await TenantConnection_1.default.getTrans();
+        return this.safeRun(async () => {
+            data.mora = 0;
+            const amorts = (await this.getAmortizationFromLoan(data));
+            const wallet = await this.walletRepo.findById(data.walletId);
+            const total = data.capital + data.interest;
+            if (total <= 0) {
+                return Promise.reject({
+                    code: 422,
+                    message: "No ingresó ningún valor"
+                });
+            }
+            const loan = await this.loanRepo.findById(data.loanId, { include: "condition" });
+            let newDate = loan.nextPaymentAt;
+            const isPayed = loan.balance === data.capital;
+            const newStatus = isPayed ? SourceInterfaces_1.EAmortizationStatus.Pagado : SourceInterfaces_1.EAmortizationStatus.Pendiente;
+            const payment = this.getPaymentFromCapitalAndData(data, loan);
+            const newPayment = await this.mainRepo.create(payment, trans);
+            let newAmorts = amortization_1.default.getAmortization({
+                amount: loan.balance - data.capital,
+                term: amorts.length,
+                rate: loan.condition.rate,
+                startAt: newDate,
+                period: loan.period
+            });
+            let index = 0;
+            for (const amort of newAmorts) {
+                await this.amortizationRepo.updateOrCreate({
+                    ...amort,
+                    nro: amorts.at(index).nro,
+                    loanId: loan.id,
+                    clientId: loan.clientId,
+                    updatedBy: data.updatedBy,
+                    createdBy: data.createdBy,
+                }, trans);
+                index++;
+            }
+            if (newPayment.lawyerId) {
+                await this.createPaymentForLawyerFromPayment(payment, trans);
+            }
+            const newLoan = await this.loanRepo.update({
+                balance: newPayment.balanceAfter,
+                status: isPayed ? SourceInterfaces_1.ELoanStatus.Pagado : loan.status
+            }, loan.id, trans);
+            await this.walletRepo.setBalance(newPayment.amount, wallet.id, trans);
+            await trans.commit();
+            return newLoan;
+        }, async () => await trans.rollback());
+    }
     async saveMoraFromCapital(amort, data, loan, newPayment, trans) {
         const mora = {
             initAmount: amort.initMora,

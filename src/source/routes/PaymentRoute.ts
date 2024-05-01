@@ -40,6 +40,12 @@ export default class PaymentRoutes extends BaseRoutes<PaymentController> {
             PaymentRequest.validate,
             (req: Request, res: Response) => this.controller.storePaymentCapital(req, res)
         )
+        this.controller.router.post("/abone",
+            RoleMiddleware.hasPermission(PermissionEnums.createPayment),
+            PaymentRequest.paymentCreateAboneRequest(),
+            PaymentRequest.validate,
+            (req: Request, res: Response) => this.controller.storePaymentAbone(req, res)
+        )
         this.controller.router.route("/:id")
             .get(
                 RoleMiddleware.hasPermission(PermissionEnums.getPayments),

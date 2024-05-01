@@ -11,6 +11,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const sequelize_1 = require("sequelize");
 const ITenantModel_1 = __importDefault(require("@app/models/ITenantModel"));
+const SourceInterfaces_1 = require("@app/interfaces/SourceInterfaces");
 const models_1 = require("@source/models");
 const moment_1 = __importDefault(require("moment"));
 const amortization_1 = __importDefault(require("@app/utils/amortization"));
@@ -23,6 +24,9 @@ let AmortizationView = class AmortizationView extends sequelize_1.Model {
         ...models_1.Condition.attributes,
         expiresAt: {
             type: sequelize_1.DataTypes.DATE
+        },
+        loanStatus: {
+            type: sequelize_1.DataTypes.ENUM(...(Object.values(SourceInterfaces_1.ELoanStatus)))
         },
         cuota: {
             type: sequelize_1.DataTypes.DECIMAL,
@@ -63,7 +67,7 @@ let AmortizationView = class AmortizationView extends sequelize_1.Model {
         return [
             ...models_1.Amortization.getSearchables(),
             "expiresAt",
-            'date'
+            'date', "loanStatus"
         ];
     }
     static getRelations() {

@@ -88,5 +88,4 @@ export default class LoanView extends Model implements ILoanView {
     static initRelation(sequelize: Sequelize) {
         Loan.initRelations(sequelize, "LoanView");
     }
-
 }

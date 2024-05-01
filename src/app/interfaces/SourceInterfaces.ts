@@ -84,7 +84,8 @@ export interface IAmortizationView extends IAmortization, ICondition {
     expiresAt: string,
     mora: number,
     initMora: number,
-    finalMora: number
+    finalMora: number,
+    loanStatus: ELoanStatus
 }
 
 export interface IClientContactView extends IContactView, IClientContact {

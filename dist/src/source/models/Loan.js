@@ -32,6 +32,7 @@ let Loan = class Loan extends sequelize_1.Model {
             "status",
             "type",
             "guarantorId",
+            "nextPaymentAt"
         ];
     }
     static getRelations() {

@@ -224,6 +224,15 @@ class LoanService extends Service_1.default {
     async deleteLoan(loanId) {
         const trans = await TenantConnection_1.default.getTrans();
         return this.safeRun(async () => {
+            const loan = await this.mainRepo.findById(loanId);
+            if (loan.status == SourceInterfaces_1.ELoanStatus.Aprobado) {
+                await this.walletRepo.setBalance(loan.balance, loan.walletId, trans);
+            }
+            const deletedLoan = await this.mainRepo.delete(loanId, trans);
+            await this.amortizationRepo.bulkDelete({ where: { loanId: loan.id } }, false, trans);
+            await this.conditionRepo.bulkDelete({ where: { loanId: loan.id } }, false, trans);
+            await trans.commit();
+            return deletedLoan;
         }, async () => await trans.rollback());
     }
     async restoreLoan(loanId) {

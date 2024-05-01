@@ -17,9 +17,10 @@ AS SELECT j.*, i.dni, i.address,i.phone, i.email, i.birthdate, i.gender, i.count
 FROM jobs j LEFT JOIN infos i ON j.infoId=i.id;
 
 CREATE OR REPLACE VIEW amortizationview AS
-SELECT amort.*, DATE_ADD(amort.date, INTERVAL cond.grace DAY) as expiresAt,
+SELECT amort.*, DATE_ADD(amort.date, INTERVAL cond.grace DAY) as expiresAt, l.status as loanStatus,
 cond.initTerm, cond.initRateMora, cond.finalRateMora, cond.grace, cond.rate
-FROM amortizations amort LEFT JOIN conditions cond ON amort.loanId=cond.loanId;
+FROM amortizations amort LEFT JOIN conditions cond ON amort.loanId=cond.loanId
+LEFT JOIN loans l on amort.loanId=l.id;
 
 CREATE OR REPLACE VIEW userview AS SELECT a.id, a.name, a.lastname, a.username, a.email, a.lastlogin, a.infoId, a.verifiedAt,
 i.dni, i.phone, i.birthdate, i.address, i.gender, i.country, i.createdBy, i.updatedBy,

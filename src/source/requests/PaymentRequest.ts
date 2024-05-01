@@ -38,6 +38,20 @@ class PaymentRequest extends BaseRequest {
         ]
     }
 
+    paymentCreateAboneRequest(): Array<ValidationChain> {
+        return [
+            this.RequestCheck.required("walletId"),
+            this.RequestCheck.required("loanId"),
+            this.RequestCheck.required("payedAt"),
+            this.RequestCheck.isDate("payedAt"),
+            this.RequestCheck.required("capital"),
+            this.RequestCheck.isFloat("capital",0),
+            this.RequestCheck.isFloat("interest",0).optional(),
+            this.RequestCheck.isString("note").optional({values: "falsy"}),
+            this.RequestCheck.isString("lawyerId").optional({values: "falsy"})
+        ]
+    }
+
     paymentUpdateRequest(): Array<ValidationChain> {
         return []
     }

@@ -48,6 +48,14 @@ export default class PaymentController extends Controller implements IController
     async storePaymentCapital(req: Request, res: Response) {
         return this.safeRun(async () =>
                 this.mainService.createPaymentCapital(req.body),
+            res, 201, "Pago Registrado Exitosamente"
+        )
+    }
+
+    @setAuthor
+    async storePaymentAbone(req: Request, res: Response) {
+        return this.safeRun(async () =>
+                this.mainService.createPaymentAbone(req.body),
             res, 201, "Abono Registrado Exitosamente"
         )
     }

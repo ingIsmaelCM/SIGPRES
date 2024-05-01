@@ -19,6 +19,7 @@ class PaymentRoutes extends BaseRoutes_1.default {
         this.controller.router.get("/stats", RoleMiddleware_1.default.hasPermission(PermissionEnums_1.default.getPayments), RoleMiddleware_1.default.hasPermission(PermissionEnums_1.default.getPaymentReports), (req, res) => this.controller.getPaymentStat(req, res));
         this.controller.router.post("/cuotas", RoleMiddleware_1.default.hasPermission(PermissionEnums_1.default.createPayment), PaymentRequest_1.default.paymentCreateCuotaRequest(), PaymentRequest_1.default.validate, (req, res) => this.controller.storePaymentCuota(req, res));
         this.controller.router.post("/capital", RoleMiddleware_1.default.hasPermission(PermissionEnums_1.default.createPayment), PaymentRequest_1.default.paymentCreateCapitalRequest(), PaymentRequest_1.default.validate, (req, res) => this.controller.storePaymentCapital(req, res));
+        this.controller.router.post("/abone", RoleMiddleware_1.default.hasPermission(PermissionEnums_1.default.createPayment), PaymentRequest_1.default.paymentCreateAboneRequest(), PaymentRequest_1.default.validate, (req, res) => this.controller.storePaymentAbone(req, res));
         this.controller.router.route("/:id")
             .get(RoleMiddleware_1.default.hasPermission(PermissionEnums_1.default.getPayments), (req, res) => this.controller.show(req, res))
             .put(RoleMiddleware_1.default.hasPermission(PermissionEnums_1.default.editPayment), PaymentRequest_1.default.paymentUpdateRequest(), PaymentRequest_1.default.validate, (req, res) => this.controller.update(req, res))

@@ -178,6 +178,58 @@ export default class PaymentService extends Service {
             async () => await trans.rollback())
     }
 
+    async createPaymentAbone(data: Record<string, any>): Promise<IPayment> {
+        const trans = await TenantConnection.getTrans();
+        return this.safeRun(async () => {
+                data.mora = 0;
+                const amorts: IAmortizationView[] = (await this.getAmortizationFromLoan(data));
+                const wallet = await this.walletRepo.findById(data.walletId);
+                const total = data.capital + data.interest;
+                if (total <= 0) {
+                    return Promise.reject({
+                        code: 422,
+                        message: "No ingresó ningún valor"
+                    })
+                }
+                const loan = await this.loanRepo.findById(data.loanId, {include: "condition"});
+                let newDate = loan.nextPaymentAt;
+                const isPayed = loan.balance === data.capital;
+                const newStatus = isPayed ? EAmortizationStatus.Pagado : EAmortizationStatus.Pendiente;
+                const payment = this.getPaymentFromCapitalAndData(data, loan);
+                const newPayment = await this.mainRepo.create(payment, trans);
+
+                let newAmorts = amortization.getAmortization({
+                    amount: loan.balance - data.capital,
+                    term: amorts.length,
+                    rate: loan.condition.rate,
+                    startAt: newDate,
+                    period: loan.period
+                });
+                let index = 0;
+                for (const amort of newAmorts) {
+                    await this.amortizationRepo.updateOrCreate({
+                        ...amort,
+                        nro: amorts.at(index)!.nro,
+                        loanId: loan.id,
+                        clientId: loan.clientId,
+                        updatedBy: data.updatedBy,
+                        createdBy: data.createdBy,
+                    }, trans)
+                    index++;
+                }
+                if (newPayment.lawyerId) {
+                    await this.createPaymentForLawyerFromPayment(payment, trans);
+                }
+                const newLoan = await this.loanRepo.update({
+                    balance: newPayment.balanceAfter,
+                    status: isPayed ? ELoanStatus.Pagado : loan.status
+                }, loan.id, trans);
+                await this.walletRepo.setBalance(newPayment.amount, wallet.id, trans);
+                await trans.commit();
+                return newLoan;
+            },
+            async () => await trans.rollback())
+    }
 
     private async saveMoraFromCapital(amort: IAmortizationView, data: Record<string, any>,
                                       loan: ILoan, newPayment: IPayment, trans: Transaction) {

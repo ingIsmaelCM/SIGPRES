@@ -23,7 +23,7 @@ import LoanViewRepository from "@source/repositories/LoanViewRepository";
 
 export default class LoanService extends Service {
     private mainRepo = new LoanRepository();
-    private loanViewRepo=new LoanViewRepository();
+    private loanViewRepo = new LoanViewRepository();
     private conditionRepo = new ConditionRepository();
     private amortizationRepo = new AmortizationRepository();
     private walletRepo = new WalletRepository();
@@ -257,6 +257,15 @@ export default class LoanService extends Service {
     async deleteLoan(loanId: string): Promise<ILoan> {
         const trans = await TenantConnection.getTrans();
         return this.safeRun(async () => {
+                const loan = await this.mainRepo.findById(loanId);
+                if (loan.status == ELoanStatus.Aprobado) {
+                    await this.walletRepo.setBalance(loan.balance, loan.walletId, trans);
+                }
+                const deletedLoan = await this.mainRepo.delete(loanId, trans);
+                await this.amortizationRepo.bulkDelete({where: {loanId: loan.id}}, false, trans);
+                await this.conditionRepo.bulkDelete({where: {loanId: loan.id}}, false, trans);
+                await trans.commit();
+                return deletedLoan;
             },
             async () => await trans.rollback()
         )

@@ -50,6 +50,7 @@ export default class Loan extends Model implements ILoan {
             "status",
             "type",
             "guarantorId",
+            "nextPaymentAt"
         ];
     }
 

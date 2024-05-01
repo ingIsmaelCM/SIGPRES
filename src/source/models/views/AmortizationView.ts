@@ -1,6 +1,11 @@
-import {DataTypes, Model, Sequelize} from "sequelize";
+import {DataTypes, Model, ModelAttributeColumnOptions, Sequelize} from "sequelize";
 import ITM from "@app/models/ITenantModel";
-import {EAmortizationStatus, IAmortizationRelation, IAmortizationView} from "@app/interfaces/SourceInterfaces";
+import {
+    EAmortizationStatus,
+    ELoanStatus,
+    IAmortizationRelation,
+    IAmortizationView
+} from "@app/interfaces/SourceInterfaces";
 import {Amortization, ClientView, Condition, Loan} from "@source/models";
 import moment from "moment";
 import amortization from "@app/utils/amortization";
@@ -19,6 +24,7 @@ export default class AmortizationView extends Model implements IAmortizationView
     declare interest: number;
     declare balance: number;
     declare status: EAmortizationStatus;
+    declare loanStatus: ELoanStatus;
     declare loanId: string;
     declare clientId: string;
     declare initTerm: number;
@@ -30,11 +36,14 @@ export default class AmortizationView extends Model implements IAmortizationView
     static tableName = "amortizationview";
     static modelName = "AmortizationView";
     static additionalOptions = {}
-    static attributes = {
+    static attributes: Record<keyof IAmortizationView, ModelAttributeColumnOptions> = {
         ...Amortization.attributes,
         ...Condition.attributes,
         expiresAt: {
             type: DataTypes.DATE
+        },
+        loanStatus: {
+            type: DataTypes.ENUM(...(Object.values(ELoanStatus)))
         },
         cuota: {
             type: DataTypes.DECIMAL,
@@ -77,7 +86,7 @@ export default class AmortizationView extends Model implements IAmortizationView
         return [
             ...Amortization.getSearchables(),
             "expiresAt",
-            'date'
+            'date', "loanStatus"
         ]
     }
 

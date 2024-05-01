@@ -1,7 +1,7 @@
 {
   "name": "sigpres",
-  "version": "1.0.5",
-  "description": "Gestor de gestión integral",
+  "version": "1.0.6",
+  "description": "Sistema para gestión de préstamos",
   "main": "App.ts",
   "scripts": {
     "test": " cross-env NODE_ENV=test  jest --testTimeout=35000 --coverage ",

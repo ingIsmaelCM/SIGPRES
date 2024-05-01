@@ -56,7 +56,10 @@ class PaymentController extends Controller_1.default {
         return this.safeRun(async () => this.mainService.createPaymentCuotas(req.body), res, 201, "Pago Registrado Exitosamente");
     }
     async storePaymentCapital(req, res) {
-        return this.safeRun(async () => this.mainService.createPaymentCapital(req.body), res, 201, "Abono Registrado Exitosamente");
+        return this.safeRun(async () => this.mainService.createPaymentCapital(req.body), res, 201, "Pago Registrado Exitosamente");
+    }
+    async storePaymentAbone(req, res) {
+        return this.safeRun(async () => this.mainService.createPaymentAbone(req.body), res, 201, "Abono Registrado Exitosamente");
     }
     async update(req, res) {
         return this.safeRun(async () => this.mainService.updatePayment(req.params.id, req.body), res, 201, "");
@@ -87,6 +90,12 @@ __decorate([
     __metadata("design:paramtypes", [Object, Object]),
     __metadata("design:returntype", Promise)
 ], PaymentController.prototype, "storePaymentCapital", null);
+__decorate([
+    Controller_1.setAuthor,
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, Object]),
+    __metadata("design:returntype", Promise)
+], PaymentController.prototype, "storePaymentAbone", null);
 __decorate([
     Controller_1.setAuthor,
     __metadata("design:type", Function),

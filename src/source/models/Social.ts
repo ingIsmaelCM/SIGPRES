@@ -4,27 +4,27 @@ import ITM from "@app/models/ITenantModel";
 
 @ITM.staticImplements<ISocial, ISocialRelation>()
 export default class Social extends Model implements ISocial {
-    declare clientId: number;
+    declare clientId: string;
     declare createdAt: string;
-    declare createdBy: number;
+    declare createdBy: string;
     declare deletedAt: string;
     declare facebook: string;
-    declare id: number;
+    declare Id: string;
     declare instagram: string;
     declare updatedAt: string;
-    declare updatedBy: number;
+    declare updatedBy: string;
     declare whatsapp: string;
 
     static tableName = "socials";
     static modelName = "Social";
     static additionalOptions={}
-    getSearchables(): Array<keyof ISocial> {
+   static  getSearchables(): Array<keyof ISocial> {
         return [
             "facebook", "instagram", "whatsapp"
         ]
     }
 
-    getRelations(): Array<keyof ISocialRelation> {
+   static getRelations(): Array<keyof ISocialRelation> {
         return ["client"]
     }
 
@@ -43,7 +43,7 @@ export default class Social extends Model implements ISocial {
                 allowNull: true
             },
             clientId: {
-                type: DataTypes.INTEGER,
+                type: DataTypes.STRING,
                 allowNull: false
             },
             ...ITM.commonAttributes

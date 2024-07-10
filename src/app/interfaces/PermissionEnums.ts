@@ -25,6 +25,7 @@ enum PermissionEnums {
   getClients = "Ver Clientes",
   editClient = "Editar Clientes",
   deleteClient = "Eliminar Clientes",
+  confirmLoan = "Confirm Préstamo",
   createLoan = "Crear Préstamos",
   editLoan = "Editar Préstamos",
   deleteLoan = "Eliminar Préstamos",
@@ -58,6 +59,9 @@ enum PermissionEnums {
   deleteSocial = "Eliminar Redes Sociales",
   getClientReports = "Ver Reportes de Clientes",
   sendMessage = "Enviar Mensajes",
+  getMessage = "Ver Mensajes",
+  connectWhatsapp="Conectarse a WhatsApp",
+  disconnectWhatsapp="Desconectarse de WhatsApp",
   createAmortization = "Crear Amortizaciones",
   getAmortizations = "Ver Amortizaciones",
   editAmortization = "Editar Amortizaciones",
@@ -70,7 +74,10 @@ enum PermissionEnums {
   setLawyerToPayment = "Asignar Abogado a Pagos",
   setContract = "Generar Contrato",
   reestructurateLoan = "Reestructurar Préstamos",
-  setGuarantee = "Registrar Garantías",
+  getGuarantees = "Ver Garantías",
+  editGuarantee = "Editar Garantía",
+  deleteGuarantee = "Eliminar Garantía",
+  createGuarantee = "Registrar Garantías",
   getLoanReports = "Ver Reportes de Préstamos",
   createPayment = "Crear Pagos",
   getPayments = "Ver Pagos",
@@ -94,6 +101,11 @@ enum PermissionEnums {
   deleteCondition = "Eliminar Condiciones",
   getTrashs="Ver Papelera",
   restoreData="Restaurar Datos",
+  getCards="Ver Tarjetas",
+  createCard="Crear Tarjeta",
+  editCard="Editar Tarjeta",
+  deleteCard="Eliminar Tarjeta"
+
 }
 
 export default PermissionEnums;

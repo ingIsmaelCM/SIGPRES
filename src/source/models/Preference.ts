@@ -13,10 +13,10 @@ export default class Preference extends Model implements  IPreference{
   declare value: string;
   declare type: string;
 
-  getSearchables(): Array<keyof IPreference> {
+ static  getSearchables(): Array<keyof IPreference> {
     return ["key", "value", "label"];
   }
-  getRelations(): Array<keyof IPreferenceRelation> {
+ static getRelations(): Array<keyof IPreferenceRelation> {
     return [];
   }
   static modelName = "Preference";
@@ -29,11 +29,10 @@ export default class Preference extends Model implements  IPreference{
       allowNull: false,
     },
     value: {
-      type: DataTypes.TEXT,
-      allowNull: false,
+      type: DataTypes.TEXT("long"),
     },
     label: {
-      type: DataTypes.TEXT,
+      type: DataTypes.STRING(255),
       allowNull: false,
     },
     type: {

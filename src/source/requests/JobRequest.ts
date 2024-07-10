@@ -25,11 +25,11 @@ class JobRequest extends BaseRequest {
             this.RequestCheck.isDate('endAt').optional({values: "falsy"}),
             this.RequestCheck.isIn("status", "Actual | Anterior",
                 ['Actual', 'Anterior']).optional(),
-            this.RequestCheck.isInt("infoId").optional(),
+            this.RequestCheck.isString("infoId").optional(),
             this.RequestCheck.isFloat('salary', 0, (9 * 100 * 100 * 10)).optional(),
             this.RequestCheck.isLength("position", 5, 50).optional(),
             this.RequestCheck.isLength('company', 2, 75).optional(),
-            this.RequestCheck.isInt('clientId').optional()
+            this.RequestCheck.isString('clientId').optional()
         ]
     }
 

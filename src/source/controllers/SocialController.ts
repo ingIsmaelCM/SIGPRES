@@ -17,7 +17,7 @@ export default class SocialController extends Controller implements IController 
 
     async show(req: Request, res: Response) {
         return this.safeRun(async () =>
-                this.mainService.findSocial(Number(req.params.id), req.query),
+                this.mainService.findSocial(req.params.id, req.query),
             res, 200, "Detalles de redes sociales"
         )
     }

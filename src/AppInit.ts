@@ -17,7 +17,7 @@ import Backend from "i18next-fs-backend";
 import i18nextMiddleware from "i18next-http-middleware"
 import Multer from "@app/middlewares/Multer";
 import IdempotencyMiddleware from "@app/middlewares/IdempotencyMiddleware";
-
+import proxy from "express-http-proxy";
 
 export class App {
     public app: express.Application;
@@ -31,14 +31,14 @@ export class App {
      * @param port
      */
     constructor(routes: Array<any>, port: number) {
-
         this.app = express();
+        this.app.use('/proxy',proxy(config.app.url))
         this.server = http.createServer(this.app);
         SocketService.createSocket(this.server)
         this.port = port;
         this.initApp();
         this.app.get("/api", (req, res) => {
-            res.status(200).send(`El api está corriendo en el puerdo ${this.port}`);
+            res.status(200).send(`El api está corriendo en el puerto ${this.port}`);
         });
         this.initRoutes(routes);
     }

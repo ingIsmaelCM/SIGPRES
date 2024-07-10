@@ -11,7 +11,7 @@ export default class TenantRoutes extends BaseRoutes<TenantController> {
   }
 
   initRoutes(): void {
-    this.router
+    this.controller.router
       .route("/")
       .get(
         RoleMiddleware.hasPermission(PermissionEnums.getTenants),
@@ -24,11 +24,26 @@ export default class TenantRoutes extends BaseRoutes<TenantController> {
         (req: any, res: any) => this.controller.createTenant(req, res)
       );
 
-    this.router
+    this.controller.router.post('/:id/assign',
+        RoleMiddleware.hasPermission(PermissionEnums.createTenant),
+        TenantRequest.assignTenantRequest(),
+        TenantRequest.requireIdRequest(),
+        TenantRequest.validate,
+        (req: any, res: any) => this.controller.assignToUser(req, res)
+    )
+
+    this.controller.router.post('/switch',
+        TenantRequest.switchTenantRequest(),
+        TenantRequest.validate,
+        (req: any, res: any) => this.controller.switchTenant(req, res)
+    )
+
+    this.controller.router
       .route("/:id")
       .put(
         RoleMiddleware.hasPermission(PermissionEnums.editTenant),
         TenantRequest.updateTenantRequest(),
+        TenantRequest.requireIdRequest(),
         TenantRequest.validate,
         (req: any, res: any) => this.controller.updateTenant(req, res)
       );

@@ -31,6 +31,7 @@ export default class InfoRoutes extends BaseRoutes<InfoController> {
             .put(
                 RoleMiddleware.hasPermission(PermissionEnums.editInfo),
                 InfoRequest.infoUpdateRequest(),
+                InfoRequest.requireIdRequest(),
                 InfoRequest.validate,
                 (req: Request, res: Response) => this.controller.update(req, res)
             )

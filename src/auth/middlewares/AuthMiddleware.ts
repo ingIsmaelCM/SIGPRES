@@ -6,26 +6,29 @@ import {AuthRepository} from "../repositories/AuthRepository";
 import Middleware from "@app/middlewares/Middleware";
 import Permission from "../models/Permission";
 import Role from "../models/Role";
-import {request} from "express";
 import TenantConnection from "@/app/db/TenantConnection";
-import {IAuth} from "@auth/utils/AuthInterfaces";
+import {IAuth, Itenant} from "@app/interfaces/AuthInterfaces";
 import AuthService from "@auth/services/AuthService";
+import tools from "@app/utils/tools";
+
 
 class AuthMiddleware extends Middleware {
-    static request: any;
-
     async auth(req: any, res: Response, next: NextFunction): Promise<any> {
         try {
             const authToken = await this.verifyTokenExists(req);
             const decoded = await this.verifyTokenIsValid(authToken);
             req.auth = await this.validateSessionId(decoded);
-            request.headers["tenant"] = req.cookies.tenant;
-            TenantConnection.getConnection();
-            try {
-                await new AuthService().refreshToken(req, res);
-            } catch (error) {
-            }
-            next();
+
+            TenantConnection.requestNamespace.run(async () => {
+                try {
+                    await new AuthService().refreshToken(req, res);
+                    const tenant = req.cookies.tenant;
+                    tools.setCookie(res, "tenant", tenant);
+                } catch (error) {
+                }
+                TenantConnection.requestNamespace.set("req", req);
+                next();
+            });
         } catch (error: any) {
             response.error(res, error.code, error.message, "No autorizado");
             return;
@@ -109,7 +112,7 @@ class AuthMiddleware extends Middleware {
         try {
             const authRepository = new AuthRepository();
             const auth = await authRepository.find("id", decoded.id, false, {
-                include: "roles.permissions,permissions",
+                include: "roles.permissions,permissions,tenants",
             });
             this.checkSessionId(auth, decoded)
             let permissions: any[] = auth.permissions.map((p: Permission) => ({
@@ -128,6 +131,8 @@ class AuthMiddleware extends Middleware {
                 password: null,
                 permissions: [...new Set(permissions)],
                 roles,
+                tenants: auth.tenants.map((tenant: Itenant) =>
+                    ({name: tenant.name, id: tenant.id, key: tenant.key})),
                 company: config.company,
             };
         } catch (error: any) {

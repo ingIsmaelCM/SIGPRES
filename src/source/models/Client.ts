@@ -13,20 +13,20 @@ export default class Client extends Model implements IClient {
     declare name: string;
     declare code?: string;
     declare lastname: string;
-    declare infoId?: number;
+    declare infoId?: string;
     declare clienttype: EClientType;
-    declare id?: number;
-    declare createdBy?: number;
-    declare updatedBy?: number;
+    declare id?: string;
+    declare createdBy?: string;
+    declare updatedBy?: string;
     declare createdAt?: string;
     declare updatedAt?: string;
     declare deletedAt?: string;
 
-    getSearchables(): Array<keyof IClient> {
+   static  getSearchables(): Array<keyof IClient> {
         return ["code", "name", "lastname", "infoId", "clienttype"];
     }
 
-    getRelations(): (keyof IClientRelation)[] {
+   static getRelations(): (keyof IClientRelation)[] {
         return [
             "info",
             "loans",
@@ -68,8 +68,8 @@ export default class Client extends Model implements IClient {
             }
         },
         infoId: {
-            type: DataTypes.NUMBER,
-            allowNull: true,
+            type: DataTypes.STRING,
+            allowNull: false,
         },
         clienttype: {
             type: DataTypes.ENUM(...Object.values(EClientType)),
@@ -85,8 +85,5 @@ export default class Client extends Model implements IClient {
         ...ITM.commonAttributes,
     };
 }
-/*
 
-FIXED Add clienttype `[Personal, Negocio]
-TODO: create guarantees table (name, description) (relation image or document) status (consignado, devuelto), type (física, nominal)
-*/
+

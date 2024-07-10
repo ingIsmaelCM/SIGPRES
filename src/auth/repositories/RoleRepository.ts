@@ -6,9 +6,9 @@ export default class RoleRepository extends BaseRepository<Role> {
     super(Role);
   }
 
-  public async assingPermission(
+  public async assignPermission(
     role: Role,
-    permission: Array<number>
+    permission: Array<string>
   ): Promise<any> {
     return this.safeRun(() => {
       return role.addPermissions(permission);

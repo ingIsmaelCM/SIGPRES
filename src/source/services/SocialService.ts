@@ -12,7 +12,7 @@ export default class SocialService extends Service {
         return await this.mainRepo.getAll(params)
     }
 
-    async findSocial(socialId: number, params: IParams) {
+    async findSocial(socialId: string, params: IParams) {
         return await this.mainRepo.findById(socialId, params)
     }
 

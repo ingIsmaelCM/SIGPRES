@@ -25,13 +25,13 @@ export default class ClientContactController extends Controller implements ICont
 
     async delete(req: Request, res: Response) {
         return this.safeRun(async () =>
-                this.mainService.deleteFromRelation(Number(req.params.id))
+                this.mainService.deleteFromRelation(req.params.id)
             , res, 200, "Contacto Removido")
     }
 
     async restore(req: Request, res: Response) {
         return this.safeRun(async () =>
-                this.mainService.restoreFromRelation(Number(req.params.id))
+                this.mainService.restoreFromRelation(req.params.id)
             , res, 200, "Contacto Restaurado")
     }
 

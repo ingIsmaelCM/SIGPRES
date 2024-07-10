@@ -2,7 +2,7 @@ import {Request, Response} from "express";
 import AuthService from "../services/AuthService";
 import IController from "@app/controllers/IController";
 
-import Controller from "@/app/controllers/Controller";
+import Controller, {setAuthor} from "@/app/controllers/Controller";
 
 export class AuthController extends Controller implements IController {
     mainService: AuthService = new AuthService();
@@ -14,15 +14,21 @@ export class AuthController extends Controller implements IController {
         }, res, 201, "Cuenta registrada exitosamente")
     }
 
+    @setAuthor
+    async updateAuthInfo(req: Request, res: Response) {
+        return await this.safeRun(async () => {
+            return await this.mainService.updateAuthInfo(req.params.id, req.body);
+        }, res, 201, "Perfil Actualizado Correctamente")
+    }
+
     async loginAuth(req: Request, res: Response) {
-        return await this.safeRun(async () => await this.mainService.login(req.body, res),
+        return await this.safeRun(async () => await this.mainService.login(req.body, res, req),
             res, 200, "Sesión iniciada correctamente")
     }
 
     async verifyAuth(req: Request, res: Response) {
         return await this.safeRun(async () => {
-            const authId = req.params.id;
-            return await this.mainService.verifyAuth(Number(authId));
+            return await this.mainService.verifyAuth(req.body);
         }, res, 200, "Usuario verificado exitosamente")
     }
 
@@ -61,9 +67,22 @@ export class AuthController extends Controller implements IController {
             res, 200, "Correo de recuperación enviado")
     }
 
+    async sendVerificationCode(req: any, res: Response) {
+        return await this.safeRun(async () =>
+                await this.mainService.sendVerificationCode(req.body.email),
+            res, 200, "Correo de verificación enviado")
+    }
+
+    async unAuthorize(req: Request, res: Response) {
+        return this.safeRun(async () =>
+                this.mainService.unAuthorizeUser(req.params.id),
+            res, 201, "Código de desautorizado"
+        )
+    }
 
     async recoverPassword(req: any, res: Response) {
-        return await this.safeRun(async()=> await this.mainService.recoverPassword(req.body, res),
+        return await this.safeRun(async () =>
+                await this.mainService.recoverPassword(req.body, res),
             res, 200, "Código Verificado correctamente")
 
     }

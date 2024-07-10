@@ -20,17 +20,22 @@ export default class ClientService extends Service {
 
 
     async getClients(params: IParams) {
-        return await this.clientViewRepo.getAll(params)
+        return this.safeRun(async () =>
+
+            await this.clientViewRepo.getAll(params)
+        )
     }
 
-    async findClient(clientId: number, params: IParams) {
-        return await this.clientViewRepo.findById(clientId, params)
+    async findClient(clientId: string, params: IParams) {
+        return this.safeRun(async () =>
+            await this.clientViewRepo.findById(clientId, params)
+        )
     }
 
     async createClient(data: IClientView): Promise<IClient> {
         const trans = await TenantConnection.getTrans();
         return this.safeRun(async () => {
-                const newInfo = await this.infoService.setFromRelated(data, trans);
+                const newInfo = await this.infoService.setFromRelated(data as any, trans, 'Client');
                 const newClient = await this.mainRepo.create({...data, infoId: newInfo.id}, trans);
                 await trans.commit();
                 return {...newClient.dataValues, info: newInfo};
@@ -39,12 +44,12 @@ export default class ClientService extends Service {
         )
     }
 
-    async updateClient(clientId: number, data: IClient & IClientRelation): Promise<IClient> {
+    async updateClient(clientId: string, data: IClient & IClientRelation): Promise<IClient> {
         const trans = await TenantConnection.getTrans();
         return this.safeRun(async () => {
                 const updatedClient = await this.mainRepo.update(data, clientId, trans);
                 if (data.infoId) {
-                    await this.infoService.updateFromRelated(data, data.infoId, trans);
+                    await this.infoService.updateFromRelated(data as any, data.infoId as any, trans, 'Client');
                 }
                 await trans.commit();
                 return updatedClient;
@@ -53,7 +58,7 @@ export default class ClientService extends Service {
         )
     }
 
-    async setInfoToClient(clientId: number, info: IInfo): Promise<IClient> {
+    async setInfoToClient(clientId: string, info: IInfo): Promise<IClient> {
         const trans = await TenantConnection.getTrans();
         return this.safeRun(async () => {
                 const client = await this.mainRepo.findById(clientId);
@@ -72,7 +77,7 @@ export default class ClientService extends Service {
         )
     }
 
-    async setProfilePhoto(clientId: number, data: any): Promise<IImage> {
+    async setProfilePhoto(clientId: string, data: any): Promise<IImage> {
         return this.safeRun(async () => {
                 const res = await CloudinaryService.getInstance().uploadFilesToCloudinary<IImage>(data);
                 const image: IImage = res[0]
@@ -83,7 +88,7 @@ export default class ClientService extends Service {
         )
     }
 
-    async setImagesToClient(clientId: number, data: any): Promise<IImage> {
+    async setImagesToClient(clientId: string, data: any): Promise<IImage> {
         return this.safeRun(async () => {
                 const res = await CloudinaryService.getInstance().uploadFilesToCloudinary<IImage>(data);
                 return await this.imageService
@@ -92,7 +97,7 @@ export default class ClientService extends Service {
         )
     }
 
-    async setDocumentsToClient(clientId: number, data: any): Promise<IImage> {
+    async setDocumentsToClient(clientId: string, data: any): Promise<IImage> {
         return this.safeRun(async () => {
                 const res = await CloudinaryService.getInstance().uploadFilesToCloudinary<IDocument>(data);
                 return await this.documentService
@@ -101,7 +106,7 @@ export default class ClientService extends Service {
         )
     }
 
-    async deleteClient(clientId: number): Promise<IClient> {
+    async deleteClient(clientId: string): Promise<IClient> {
         const trans = await TenantConnection.getTrans();
         return this.safeRun(async () => {
                 const deletedClient = await this.mainRepo.delete(clientId, trans);
@@ -112,7 +117,7 @@ export default class ClientService extends Service {
         )
     }
 
-    async restoreClient(clientId: number): Promise<IClient> {
+    async restoreClient(clientId: string): Promise<IClient> {
         const trans = await TenantConnection.getTrans();
         return this.safeRun(async () => {
                 const restoredClient = await this.mainRepo.restore(clientId, trans);

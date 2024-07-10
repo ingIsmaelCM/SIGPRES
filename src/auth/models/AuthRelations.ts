@@ -3,11 +3,11 @@ import Role from "@auth/models/Role";
 import Permission from "@auth/models/Permission";
 import ModelPermission from "@auth/models/ModelPermission";
 import Tenant from "./Tenant";
+import {UserView} from "@source/models";
 
 export default class AuthRelation {
   static initRelations() {
     Auth.belongsToMany(Role, {
-      foreignKey: "roleId",
       through: "auth_roles",
       as: "roles",
     });
@@ -23,6 +23,8 @@ export default class AuthRelation {
       },
       constraints: false,
     });
+
+
 
     Auth.belongsToMany(Tenant, {
       through: "auth_tenants",

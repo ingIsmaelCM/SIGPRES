@@ -1,5 +1,5 @@
 import ITM from "@/app/models/ITenantModel";
-import {DataTypes, Model} from "sequelize";
+import {DataTypes, Model, ModelAttributeColumnOptions} from "sequelize";
 import {EInfoGender, IInfo, IInfoRelation} from "@app/interfaces/SourceInterfaces";
 import tools from "@app/utils/tools";
 
@@ -10,24 +10,21 @@ export default class Info extends Model implements IInfo {
     static additionalOptions = {}
     static modelName = "Info";
     static tableName = "infos";
-    static attributes: Record<keyof IInfo, any> = {
-        ...ITM.commonAttributes,
+    static attributes: Record<keyof IInfo, ModelAttributeColumnOptions> = {
         dni: {
             type: DataTypes.STRING,
-            allowNull: false,
-            unique: true,
+            allowNull: true,
         },
         phone: {
             type: DataTypes.STRING,
-            allowNull: false,
+            allowNull: true,
         },
         email: {
             type: DataTypes.STRING,
             allowNull: true,
-            unique: true,
         },
         birthdate: {
-            type: DataTypes.DATE,
+            type: DataTypes.DATEONLY,
             allowNull: true,
         },
         address: {
@@ -39,11 +36,20 @@ export default class Info extends Model implements IInfo {
                 }
             }
         },
+        note: {
+            type: DataTypes.STRING(150),
+            allowNull: true,
+        },
         gender: {
             type: DataTypes.ENUM,
             values: Object.values(EInfoGender),
             allowNull: false,
             defaultValue: EInfoGender.Ninguno,
+        },
+        type: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            defaultValue: "General"
         },
         country: {
             type: DataTypes.STRING,
@@ -53,11 +59,8 @@ export default class Info extends Model implements IInfo {
                 this.setDataValue("country", tools.initialToUpper(value))
             }
         },
+        ...ITM.commonAttributes
     };
-    declare setClient: Function;
-    declare setContact: Function;
-    declare setLawyer: Function;
-    declare setJob: Function;
     declare dni: string;
     declare phone: string;
     declare email?: string;
@@ -65,14 +68,16 @@ export default class Info extends Model implements IInfo {
     declare address?: string;
     declare gender: EInfoGender;
     declare country: string;
-    declare id?: number;
-    declare createdBy?: number;
-    declare updatedBy?: number;
+    declare type: string;
+    declare note: string;
+    declare id: string;
+    declare createdBy?: string;
+    declare updatedBy?: string;
     declare createdAt?: string;
     declare updatedAt?: string;
     declare deletedAt?: string;
 
-    getSearchables(): Array<keyof IInfo> {
+    static getSearchables(): Array<keyof IInfo> {
         return [
             "dni",
             "phone",
@@ -81,10 +86,12 @@ export default class Info extends Model implements IInfo {
             "address",
             "gender",
             "country",
+            'note',
+            'type'
         ];
     }
 
-    getRelations(): (keyof IInfoRelation)[] {
+    static getRelations(): (keyof IInfoRelation)[] {
         return ["image", "document"];
     }
 }

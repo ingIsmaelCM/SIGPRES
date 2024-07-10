@@ -10,14 +10,14 @@ export default class WalletController extends Controller implements IController 
 
     async index(req: Request, res: Response) {
         return this.safeRun(async () =>
-                this.mainService.getWallets(req.query),
+                this.mainService.getWallets(req.query, req),
             res, 200, "Listado de Billeteras"
         )
     }
 
     async show(req: Request, res: Response) {
         return this.safeRun(async () =>
-                this.mainService.findWallet(Number(req.params.id), req.query),
+                this.mainService.findWallet(req.params.id, req.query),
             res, 200, "Detalles de la billetera"
         )
     }
@@ -29,25 +29,32 @@ export default class WalletController extends Controller implements IController 
             res, 201, "Billetera registrada"
         )
     }
+    @setAuthor
+    async addBalance(req: Request, res: Response) {
+        return this.safeRun(async () =>
+                this.mainService.addBalanceToWallet(req.params.id, req.body),
+            res, 201, "Saldo añadido exitosamente"
+        )
+    }
 
     @setAuthor
     async update(req: Request, res: Response) {
         return this.safeRun(async () =>
-                this.mainService.updateWallet(Number(req.params.id), req.body),
+                this.mainService.updateWallet(req.params.id, req.body),
             res, 201, "Billetera Actualizada"
         )
     }
 
     async delete(req: Request, res: Response) {
         return this.safeRun(async () =>
-                this.mainService.deleteWallet(Number(req.params.id)),
+                this.mainService.deleteWallet(req.params.id),
             res, 200, "Billetera Eliminada"
         )
     }
 
     async restore(req: Request, res: Response) {
         return this.safeRun(async () =>
-                this.mainService.restoreWallet(Number(req.params.id)),
+                this.mainService.restoreWallet(req.params.id),
             res, 200, "Billetera Restaurada"
         )
     }

@@ -1,46 +1,56 @@
 import {
-  DataTypes,
-  Model,
-  ModelAttributeColumnOptions,
+    DataTypes,
+    Model,
+    ModelAttributeColumnOptions,
 } from "sequelize";
-import { IWallet, IWalletRelation } from "@app/interfaces/SourceInterfaces";
+import {IWallet, IWalletRelation} from "@app/interfaces/SourceInterfaces";
 import ITM from "@/app/models/ITenantModel";
+import tools from "@app/utils/tools";
 
 @ITM.staticImplements<IWallet, IWalletRelation>()
 export default class Wallet extends Model implements IWallet {
-  declare name: string;
-  declare balance: number;
-  declare id?: number;
-  declare createdBy?: number;
-  declare updatedBy?: number;
-  declare createdAt?: string;
-  declare updatedAt?: string;
-  declare deletedAt?: string;
+    declare name: string;
+    declare balance: number;
+    declare authId: string;
+    declare id?: string;
+    declare createdBy?: string;
+    declare updatedBy?: string;
+    declare createdAt?: string;
+    declare updatedAt?: string;
+    declare deletedAt?: string;
 
-  static tableName = "wallets";
-  static modelName = "Wallet";
-  static additionalOptions={}
-  getSearchables(): Array<keyof IWallet> {
-    return ["name", "balance"];
-  }
+    static tableName = "wallets";
+    static modelName = "Wallet";
+    static additionalOptions = {}
 
-  getRelations(): Array<keyof IWalletRelation> {
-    return ["expenses", "payments", "loans"];
-  }
+   static  getSearchables(): Array<keyof IWallet> {
+        return ["name", "balance", "authId"];
+    }
 
-  static attributes: Record<keyof IWallet, ModelAttributeColumnOptions> = {
-    name: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: true,
-    },
-    balance: {
-      type: DataTypes.DECIMAL,
-      allowNull: false,
-      get(this: Wallet){
-        return Number(this.getDataValue('balance'))
-      }
-    },
-    ...ITM.commonAttributes,
-  };
+   static getRelations(): Array<keyof IWalletRelation> {
+        return ["expenses", "payments", "loans"];
+    }
+
+    static attributes: Record<keyof IWallet, ModelAttributeColumnOptions> = {
+        name: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            unique: true,
+            set(this: Wallet, val: string) {
+                this.setDataValue("name", tools.initialToUpper(val))
+            }
+        },
+        authId: {
+            type: DataTypes.STRING,
+            allowNull: true,
+        },
+        balance: {
+            type: DataTypes.DECIMAL,
+            allowNull: false,
+            get(this: Wallet) {
+                return Number(this.getDataValue('balance'))
+            }
+        },
+        ...ITM.commonAttributes,
+    };
 }

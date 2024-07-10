@@ -7,8 +7,8 @@ import {EMoraStatus, IMora, IMoraRelation} from "@app/interfaces/SourceInterface
 export default class Mora extends Model implements IMora {
 
     static tableName = "moras";
-    static modelName: "Mora";
-    static additionalOptions={}
+    static modelName= "Mora";
+    static additionalOptions = {}
     static attributes: Record<keyof IMora, ModelAttributeColumnOptions> = {
         initAmount: {
             type: DataTypes.DECIMAL,
@@ -18,54 +18,62 @@ export default class Mora extends Model implements IMora {
             type: DataTypes.DECIMAL,
             allowNull: false
         },
+        mora: {
+            type: DataTypes.VIRTUAL,
+            get(this: Mora) {
+                return (Number(this.getDataValue("initAmount"))
+                    + Number(this.getDataValue("lateAmount"))).toFixed(2)
+            }
+        },
         status: {
             type: DataTypes.ENUM(...Object.values(EMoraStatus)),
             allowNull: false,
         },
         dueAt: {
-            type: DataTypes.DATE,
+            type: DataTypes.DATEONLY,
             allowNull: false
         },
         closedAt: {
-            type: DataTypes.DATE,
+            type: DataTypes.DATEONLY,
             allowNull: false
         },
         loanId: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.STRING,
             allowNull: false
         },
         clientId: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.STRING,
             allowNull: false
         },
         paymentId: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.STRING,
             allowNull: false
         },
         ...ITM.commonAttributes
     }
-    declare clientId: number;
+    declare clientId: string;
     declare closedAt: string;
     declare dueAt: string;
     declare initAmount: number;
     declare lateAmount: number;
-    declare loanId: number;
-    declare paymentId: number;
+    declare mora: number;
+    declare loanId: string;
+    declare paymentId: string;
     declare status: EMoraStatus;
-    declare id?: number;
-    declare createdBy?: number;
-    declare updatedBy?: number;
+    declare id?: string;
+    declare createdBy?: string;
+    declare updatedBy?: string;
     declare createdAt?: string;
     declare updatedAt?: string;
     declare deletedAt?: string;
 
-    getSearchables(): Array<keyof IMora> {
+   static  getSearchables(): Array<keyof IMora> {
         return [
             "dueAt", "closedAt", "initAmount", "lateAmount", "status", "clientId", "paymentId", "loanId"
         ];
     }
 
-    getRelations(): (keyof IMoraRelation)[] {
+   static getRelations(): (keyof IMoraRelation)[] {
         return ["loan", "client", "payment"];
     }
 

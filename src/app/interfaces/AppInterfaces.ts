@@ -15,12 +15,13 @@ export interface IParams {
   isNull?: string;
   notNUll?: string;
   like?: string;
+  operation?: string;
 }
 
 export interface ICommonField {
-  id?: number;
-  createdBy?: number;
-  updatedBy?: number;
+  id?: string;
+  createdBy?: string;
+  updatedBy?: string;
   createdAt?: string;
   updatedAt?: string;
   deletedAt?: string;

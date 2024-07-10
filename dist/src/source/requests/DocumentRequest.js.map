@@ -1,0 +1,1 @@
+{"version":3,"file":"DocumentRequest.js","sourceRoot":"","sources":["../../../../src/source/requests/DocumentRequest.ts"],"names":[],"mappings":";;;;;AAAA,4EAAoD;AAGpD,MAAM,eAAgB,SAAQ,qBAAW;IAErC,qBAAqB;QACjB,OAAO;YACH,GAAG,IAAI,CAAC,gBAAgB,EAAE;SAC7B,CAAC;IACN,CAAC;IACD,qBAAqB;QACjB,OAAO;YACH,GAAG,IAAI,CAAC,gBAAgB,EAAE;SAC7B,CAAC;IACN,CAAC;CACJ;AAED,kBAAe,IAAI,eAAe,EAAE,CAAC"}

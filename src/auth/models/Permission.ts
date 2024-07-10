@@ -19,14 +19,14 @@ class Permission
   declare createdAt: string;
   declare updatedAt: string;
 
-  declare id: number;
+  declare id: string;
   declare name: string;
 
-  getSearchables(): string[] {
+ static  getSearchables(): string[] {
     return ["name"];
   }
   /* istanbul ignore next */
-  getRelations(): string[] {
+ static getRelations(): string[] {
     return [];
   }
 }

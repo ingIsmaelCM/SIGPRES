@@ -4,28 +4,29 @@ import { IImage, IImageRelation } from "@app/interfaces/FileInterface";
 
 @ITM.staticImplements<IImage, IImageRelation>()
 class Image extends Model implements  IImage{
-  declare id?: number;
+  declare id?: string;
   declare path: string;
   declare caption: string;
   declare publicId: string;
   declare size: number;
   declare imageableType: string;
-  declare imageableId: number;
+  declare imageableId: string;
   declare createdAt?: string;
   declare updatedAt?: string;
   declare deletedAt?: string;
-  getSearchables(): Array<keyof IImage> {
+ static  getSearchables(): Array<keyof IImage> {
     return ["caption", "path", "imageableType", "imageableId"];
   }
-  getRelations(): (keyof IImageRelation)[] {
+ static getRelations(): (keyof IImageRelation)[] {
     return [];
   }
   static additionalOptions={}
   static attributes = {
     id: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING,
       primaryKey: true,
-      autoIncrement: true,
+      allowNull: false,
+      defaultValue: DataTypes.UUIDV4
     },
     path: {
       type: DataTypes.STRING,
@@ -44,16 +45,16 @@ class Image extends Model implements  IImage{
       type: DataTypes.STRING,
     },
     imageableId: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING,
     },
     createdAt: {
-      type: DataTypes.DATE,
+      type: DataTypes.DATEONLY,
     },
     updatedAt: {
-      type: DataTypes.DATE,
+      type: DataTypes.DATEONLY,
     },
     deletedAt: {
-      type: DataTypes.DATE,
+      type: DataTypes.DATEONLY,
       allowNull: true,
     },
   };

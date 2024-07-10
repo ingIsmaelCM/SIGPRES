@@ -42,7 +42,7 @@ export default class ClientContactService extends Service {
     }
 
 
-    async deleteFromRelation(relationId: number): Promise<any> {
+    async deleteFromRelation(relationId: string): Promise<any> {
         const trans = await TenantConnection.getTrans();
         return this.safeRun(async () => {
                 const removedContact = await this.mainRepo.delete(relationId, trans);
@@ -52,7 +52,7 @@ export default class ClientContactService extends Service {
             async () => await trans.rollback()
         )
     }
-    async restoreFromRelation(relationId: number): Promise<any> {
+    async restoreFromRelation(relationId: string): Promise<any> {
         const trans = await TenantConnection.getTrans();
         return this.safeRun(async () => {
                 const restoredContact = await this.mainRepo.restore(relationId, trans);

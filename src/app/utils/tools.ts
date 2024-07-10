@@ -9,10 +9,30 @@ import fs from "fs";
 import AppService from "@app/services/AppService";
 import cloudinary from "cloudinary"
 import logger from "@/logger";
-
-
+import * as crypto from "crypto";
+import TenantConnection from "@app/db/TenantConnection";
 
 class Tool {
+    async decrypt(encrypted: any, secretKey: string,
+                  ivArray: any) {
+        const encoder = new TextEncoder();
+        const keyData = encoder.encode(secretKey);
+        const keyHash = crypto.createHash('sha256').update(keyData).digest();
+        const decipher = crypto.createDecipheriv('aes-256-cbc', keyHash, Buffer.from(ivArray));
+        let decrypted = decipher.update(Buffer.from(encrypted));
+        decrypted = Buffer.concat([decrypted, decipher.final()]);
+        return decrypted.toString('utf8');
+    }
+
+    async decryptCard(token: String) {
+        const storedReq = TenantConnection.requestNamespace.get('req')
+        const tenant = storedReq.cookies.tenant;
+        let encrypted: any = jwt.verify(String(token), appConfig.auth.secret);
+        encrypted = JSON.parse(encrypted.value);
+        const decrypted = await this.decrypt(encrypted.encrypted, tenant, encrypted.iv);
+        return JSON.parse(decrypted)
+    }
+
     parseOrZero(value: string | number | undefined): number {
         if (typeof value == "number") {
             return value;
@@ -63,7 +83,7 @@ class Tool {
             httpOnly: true,
             sameSite: false,
             secure: true,
-            expires: new Date(Date.now() + (expiration||24 * 60 * 60 * 1000)),
+            expires: new Date(Date.now() + (expiration || 24 * 60 * 60 * 1000)),
         });
     }
 
@@ -98,22 +118,21 @@ class Tool {
         return `${str[0].toUpperCase()}${str.substring(1)}`;
     }
 
-    initialToUpper = (sentence: string = "") => sentence.toLocaleLowerCase().replace(/\b[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ]+\b/gi,
-        (match: string) => match.toLowerCase().replace(match.charAt(0),
-            match.charAt(0).toUpperCase()));
+    initialToUpper = (sentence: string = "") => sentence.replace(/\b[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ]+\b/gi,
+        (match: string) => match !== match.toUpperCase() ? this.uppercaseFirst(match) : match);
 
     setUserRelated<
         T extends {
             createdBy?: any;
             updatedBy?: any;
-            id?: number;
+            id?: string;
             [x: string]: any;
         }
     >(req: any, data: T): T {
         if (!data.id) {
-            data.createdBy = req.auth.id;
+            data.createdBy = req.auth.username;
         }
-        data.updatedBy = req.auth.id;
+        data.updatedBy = req.auth.username;
         return data;
     }
 

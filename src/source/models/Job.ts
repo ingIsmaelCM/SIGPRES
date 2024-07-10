@@ -12,20 +12,20 @@ export default class Job extends Model implements IJob {
     declare salary: number;
     declare position: string;
     declare company: string;
-    declare infoId?: number;
-    declare clientId: number;
-    declare id?: number;
-    declare createdBy?: number;
-    declare updatedBy?: number;
+    declare infoId?: string;
+    declare clientId: string;
+    declare id?: string;
+    declare createdBy?: string;
+    declare updatedBy?: string;
     declare createdAt?: string;
     declare updatedAt?: string;
     declare deletedAt?: string;
 
-    getSearchables(): Array<keyof IJob> {
+   static  getSearchables(): Array<keyof IJob> {
         return ["startAt", "endAt", "status", "salary", "clientId", "company", "infoId", "position"];
     }
 
-    getRelations(): Array<keyof IJobRelation> {
+   static getRelations(): Array<keyof IJobRelation> {
         return ["client", "info", "image", "document"];
     }
 
@@ -34,11 +34,11 @@ export default class Job extends Model implements IJob {
     static additionalOptions={}
     static attributes: Record<keyof IJob, ModelAttributeColumnOptions> = {
         startAt: {
-            type: DataTypes.DATE,
+            type: DataTypes.DATEONLY,
             allowNull: false,
         },
         endAt: {
-            type: DataTypes.DATE,
+            type: DataTypes.DATEONLY,
             allowNull: true
         },
         status: {
@@ -68,11 +68,11 @@ export default class Job extends Model implements IJob {
             }
         },
         infoId: {
-            type: DataTypes.INTEGER,
-            allowNull: true,
+            type: DataTypes.STRING,
+            allowNull: false,
         },
         clientId: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.STRING,
             allowNull: false,
         },
         ...ITM.commonAttributes,

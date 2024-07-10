@@ -23,6 +23,29 @@ export default class PaymentRoutes extends BaseRoutes<PaymentController> {
                 (req: Request, res: Response) => this.controller.store(req, res)
             );
 
+        this.controller.router.get("/stats",
+            RoleMiddleware.hasPermission(PermissionEnums.getPayments),
+            RoleMiddleware.hasPermission(PermissionEnums.getPaymentReports),
+            (req: Request, res: Response) => this.controller.getPaymentStat(req, res))
+
+        this.controller.router.post("/cuotas",
+            RoleMiddleware.hasPermission(PermissionEnums.createPayment),
+            PaymentRequest.paymentCreateCuotaRequest(),
+            PaymentRequest.validate,
+            (req: Request, res: Response) => this.controller.storePaymentCuota(req, res)
+        )
+        this.controller.router.post("/capital",
+            RoleMiddleware.hasPermission(PermissionEnums.createPayment),
+            PaymentRequest.paymentCreateCapitalRequest(),
+            PaymentRequest.validate,
+            (req: Request, res: Response) => this.controller.storePaymentCapital(req, res)
+        )
+        this.controller.router.post("/abone",
+            RoleMiddleware.hasPermission(PermissionEnums.createPayment),
+            PaymentRequest.paymentCreateAboneRequest(),
+            PaymentRequest.validate,
+            (req: Request, res: Response) => this.controller.storePaymentAbone(req, res)
+        )
         this.controller.router.route("/:id")
             .get(
                 RoleMiddleware.hasPermission(PermissionEnums.getPayments),

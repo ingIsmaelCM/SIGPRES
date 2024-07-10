@@ -13,7 +13,7 @@ export default class DocumentService extends Service {
             this.mainRepo.getAll(params))
     }
 
-    async createSingleDocument(data: IDocument, relatedModel: EDocumentable, relatedId: number, upsert?: boolean) {
+    async createSingleDocument(data: IDocument, relatedModel: EDocumentable, relatedId: string, upsert?: boolean) {
         const trans = await TenantConnection.getTrans();
         return this.safeRun(async () => {
                 let newDocument = null;
@@ -35,7 +35,7 @@ export default class DocumentService extends Service {
         )
     }
 
-    async createMultipleDocuments(data: IDocument[], relatedModel: EDocumentable, relatedId: number) {
+    async createMultipleDocuments(data: IDocument[], relatedModel: EDocumentable, relatedId: string) {
         const trans = await TenantConnection.getTrans();
         return this.safeRun(async () => {
                 data = data.map((document: IDocument) => ({
@@ -51,11 +51,11 @@ export default class DocumentService extends Service {
         )
     }
 
-    async findDocument(documentId: number, params: IParams) {
+    async findDocument(documentId: string, params: IParams) {
         return await this.mainRepo.findById(documentId, params)
     }
 
-    async deleteDocument(documentId: number): Promise<IDocument> {
+    async deleteDocument(documentId: string): Promise<IDocument> {
         const trans = await TenantConnection.getTrans();
         return this.safeRun(async () => {
                 const document = await this.mainRepo.findById(documentId);
@@ -70,7 +70,7 @@ export default class DocumentService extends Service {
         )
     }
 
-    async restoreDocument(documentId: number): Promise<IDocument> {
+    async restoreDocument(documentId: string): Promise<IDocument> {
         const trans = await TenantConnection.getTrans();
         return this.safeRun(async () => {
             },
@@ -78,7 +78,7 @@ export default class DocumentService extends Service {
         )
     }
 
-    private async checkOldDocumentExists(relatedModel: EDocumentable, relatedId: number) {
+    private async checkOldDocumentExists(relatedModel: EDocumentable, relatedId: string) {
         return await this.mainRepo.getAll({
             filter: [
                 `documentableType:eq:${relatedModel}:and`,

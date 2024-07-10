@@ -1,7 +1,8 @@
-import {DataTypes, Model, ModelStatic, Op} from "sequelize";
+import {col, DataTypes, Model, ModelStatic, Op} from "sequelize";
 import {IParams} from "../interfaces/AppInterfaces";
 import tools from "./tools";
 import moment from "moment";
+import * as models from "@source/models"
 
 /* BUG Send page, perpage and limit at the same time throw error */
 class Scope {
@@ -169,7 +170,7 @@ class Scope {
         includes: string,
         model: T
     ): object {
-        const associations = new (model as any)().getRelations();
+        const associations = this.getClassModel(<any>model).getRelations();
         associations.push("creator", "updator");
         let inclusions: Array<any> = includes.split(",");
         inclusions = inclusions.filter((i) =>
@@ -215,9 +216,9 @@ class Scope {
     onlyTrashed(trashed: boolean | string): object {
         if (trashed == true || trashed == "true") {
             return {
-                    deletedAt: {
-                        [Op.not]: null,
-                    },
+                deletedAt: {
+                    [Op.not]: null,
+                },
             };
         }
         return {};
@@ -273,10 +274,10 @@ class Scope {
         }
         const searchables = Object.entries(model.getAttributes())
             .filter(([key, value]) => {
-                return !(value.type instanceof  DataTypes.DATE)
-                    && !(value.type instanceof  DataTypes.DATEONLY)
-                    && !(value.type instanceof  DataTypes.VIRTUAL)
-            }).map(([key])=>key);
+                return !(value.type instanceof DataTypes.DATE)
+                    && !(value.type instanceof DataTypes.DATEONLY)
+                    && !(value.type instanceof DataTypes.VIRTUAL)
+            }).map(([key]) => key);
         query.where = {
             ...(params.search ? this.search(params.search, searchables) : {}),
             [Op.and]: {
@@ -297,7 +298,7 @@ class Scope {
         model: ModelStatic<T>,
         params: IParams
     ): Promise<any> {
-        const cols = new (model as any)().getSearchables();
+        const cols = this.getClassModel(model).getSearchables();
         const args = this.getQuery(params, cols, model);
         model = this.loadScopes(model, params);
         return this.loadResults(model, params, args);
@@ -320,16 +321,63 @@ class Scope {
         params: IParams,
         args: any
     ): Promise<any> {
-        let result;
-        if (params.limit && params.limit == 1) {
-            result = await model.findOne(args);
-        } else {
-            result = await model.findAndCountAll(args);
-        }
-        if (params.page && params.perpage) {
-            result = this.getPaginationProps(params.page, params.perpage, result);
+        let result: any | any[] = [];
+        const operationQuery = params.operation
+        const [operation, column] = operationQuery?.split(':') || [];
+        const field = column ? column.split(',') : [];
+        switch (operation) {
+            case "sum":
+                if (field.length == 1) {
+                    result = await model.sum(column, args)
+                } else {
+                    for (const f of field) {
+                        const data = await model.sum(f, args);
+                        (result as any[]).push(data as any)
+                    }
+                }
+                break;
+            case "max":
+                if (field.length == 1) {
+                    result = await model.max(column, args)
+                } else {
+                    for (const f of field) {
+                        const data = await model.max(f, args);
+                        (result as any[]).push(data as any)
+                    }
+                }
+                break;
+            case "min":
+                if (field.length == 1) {
+                    result = await model.min(column, args)
+                } else {
+                    for (const f of field) {
+                        const data = await model.min(f, args);
+                        (result as any[]).push(data as any)
+                    }
+                }
+                break;
+            case "count":
+                result = await model.count(args);
+                break;
+            default :
+                if (params.limit && params.limit == 1) {
+                    result = await model.findOne(args);
+                } else {
+                    result = await model.findAndCountAll(args);
+                }
+                if (params.page && params.perpage && !params.limit) {
+                    result = this.getPaginationProps(params.page, params.perpage, result);
+                }
+                break
         }
         return result;
+    }
+
+    getClassModel(model: ModelStatic<any>): any {
+        const dbName = model.sequelize?.getDatabaseName();
+        if (dbName === "sigpres_main") return model;
+        const className = new (model as any)().constructor.name;
+        return (<any>models)[className];
     }
 }
 

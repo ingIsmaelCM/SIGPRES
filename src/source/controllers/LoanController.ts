@@ -11,14 +11,14 @@ export default class LoanController extends Controller implements IController {
     async index(req: Request, res: Response) {
         return this.safeRun(async () =>
                 this.mainService.getLoans(req.query),
-            res, 200, ""
+            res, 200, "Listado de préstamos"
         )
     }
 
     async show(req: Request, res: Response) {
         return this.safeRun(async () =>
-                this.mainService.findLoan(Number(req.params.id), req.query),
-            res, 200, ""
+                this.mainService.findLoan(req.params.id, req.query),
+            res, 200, "Detalles del préstamo"
         )
     }
 
@@ -26,28 +26,52 @@ export default class LoanController extends Controller implements IController {
     async store(req: Request, res: Response) {
         return this.safeRun(async () =>
                 this.mainService.createLoan(req.body),
-            res, 201, ""
+            res, 201, "Solicitud Registrada"
+        )
+    }
+
+    @setAuthor
+    async confirm(req: Request, res: Response) {
+        return this.safeRun(async () =>
+                this.mainService.confirmLoan(req.params.id, req.body),
+            res, 201, "Solicitud Confirmada"
+        )
+    }
+
+    @setAuthor
+    async decline(req: Request, res: Response) {
+        return this.safeRun(async () =>
+                this.mainService.declineLoan(req.params.id, req.body),
+            res, 201, "Solicitud Rechazada"
+        )
+    }
+
+    @setAuthor
+    async recharge(req: Request, res: Response) {
+        return this.safeRun(async () =>
+                this.mainService.rechargeLoan(req.params.id, req.body),
+            res, 201, "Monto de préstamo aumentado"
         )
     }
 
     @setAuthor
     async update(req: Request, res: Response) {
         return this.safeRun(async () =>
-                this.mainService.updateLoan(Number(req.params.id), req.body),
-            res, 201, ""
+                this.mainService.updateLoan(req.params.id, req.body),
+            res, 201, "Préstamo actualizado"
         )
     }
 
     async delete(req: Request, res: Response) {
         return this.safeRun(async () =>
-                this.mainService.deleteLoan(Number(req.params.id)),
+                this.mainService.deleteLoan(req.params.id),
             res, 200, ""
         )
     }
 
     async restore(req: Request, res: Response) {
         return this.safeRun(async () =>
-                this.mainService.restoreLoan(Number(req.params.id)),
+                this.mainService.restoreLoan(req.params.id),
             res, 200, ""
         )
     }

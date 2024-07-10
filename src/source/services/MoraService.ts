@@ -11,7 +11,7 @@ export default class MoraService extends Service {
         return await this.mainRepo.getAll(params)
     }
 
-    async findMora(moraId: number, params: IParams) {
+    async findMora(moraId: string, params: IParams) {
         return await this.mainRepo.findById(moraId, params)
     }
 
@@ -23,7 +23,7 @@ export default class MoraService extends Service {
         )
     }
 
-    async updateMora(moraId: number, data: IMora): Promise<IMora> {
+    async updateMora(moraId: string, data: IMora): Promise<IMora> {
         const trans = await TenantConnection.getTrans();
         return this.safeRun(async () => {
             },
@@ -32,7 +32,7 @@ export default class MoraService extends Service {
     }
 
 
-    async deleteMora(moraId: number): Promise<IMora> {
+    async deleteMora(moraId: string): Promise<IMora> {
         const trans = await TenantConnection.getTrans();
         return this.safeRun(async () => {
             },
@@ -40,7 +40,7 @@ export default class MoraService extends Service {
         )
     }
 
-    async restoreMora(moraId: number): Promise<IMora> {
+    async restoreMora(moraId: string): Promise<IMora> {
         const trans = await TenantConnection.getTrans();
         return this.safeRun(async () => {
             },

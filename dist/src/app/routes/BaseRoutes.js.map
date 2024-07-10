@@ -1,0 +1,1 @@
+{"version":3,"file":"BaseRoutes.js","sourceRoot":"","sources":["../../../../src/app/routes/BaseRoutes.ts"],"names":[],"mappings":";;AAOA,MAA8B,UAAU;IACtC,MAAM,CAAS;IACf,UAAU,CAAI;IAEd,YAAa,UAAa;QACxB,IAAI,CAAC,MAAM,GAAG,UAAU,CAAC,MAAM,CAAC;QAChC,IAAI,CAAC,UAAU,GAAG,UAAU,CAAC;QAC7B,IAAI,CAAC,UAAU,EAAE,CAAC;IAEpB,CAAC;CACF;AAVD,6BAUC"}

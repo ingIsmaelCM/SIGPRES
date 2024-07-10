@@ -17,7 +17,7 @@ export default class JobController extends Controller implements IController {
 
     async show(req: Request, res: Response) {
         return this.safeRun(async () =>
-                this.mainService.findJob(Number(req.params.id), req.query),
+                this.mainService.findJob(req.params.id, req.query),
             res, 200, "Detalles laborales"
         )
     }
@@ -33,21 +33,21 @@ export default class JobController extends Controller implements IController {
     @setAuthor
     async update(req: Request, res: Response) {
         return this.safeRun(async () =>
-                this.mainService.updateJob(Number(req.params.id), req.body),
+                this.mainService.updateJob(req.params.id, req.body),
             res, 201, "Datos laborales actualizados"
         )
     }
 
     async delete(req: Request, res: Response) {
         return this.safeRun(async () =>
-                this.mainService.deleteJob(Number(req.params.id)),
+                this.mainService.deleteJob(req.params.id),
             res, 200, "Datos laborales eliminados"
         )
     }
 
     async restore(req: Request, res: Response) {
         return this.safeRun(async () =>
-                this.mainService.restoreJob(Number(req.params.id)),
+                this.mainService.restoreJob(req.params.id),
             res, 200, "Datos laborales restaurados"
         )
     }

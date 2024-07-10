@@ -11,14 +11,14 @@ export default class InfoController extends Controller implements IController {
     async index(req: Request, res: Response) {
         return this.safeRun(async () =>
                 this.mainService.getInfos(req.query),
-            res, 200, ""
+            res, 200, "Registro de Informaciones"
         )
     }
 
     async show(req: Request, res: Response) {
         return this.safeRun(async () =>
-                this.mainService.findInfo(Number(req.params.id), req.query),
-            res, 200, ""
+                this.mainService.findInfo(req.params.id, req.query),
+            res, 200, "Detalles de la información"
         )
     }
 
@@ -26,28 +26,28 @@ export default class InfoController extends Controller implements IController {
     async store(req: Request, res: Response) {
         return this.safeRun(async () =>
                 this.mainService.createInfo(req.body),
-            res, 201, ""
+            res, 201, "Información Registrada con Éxito"
         )
     }
 
     @setAuthor
     async update(req: Request, res: Response) {
         return this.safeRun(async () =>
-                this.mainService.updateInfo(Number(req.params.id), req.body),
-            res, 201, ""
+                this.mainService.updateInfo(req.params.id, req.body),
+            res, 201, "Información Actualizada"
         )
     }
 
     async delete(req: Request, res: Response) {
         return this.safeRun(async () =>
-                this.mainService.deleteInfo(Number(req.params.id)),
+                this.mainService.deleteInfo(req.params.id),
             res, 200, ""
         )
     }
 
     async restore(req: Request, res: Response) {
         return this.safeRun(async () =>
-                this.mainService.restoreInfo(Number(req.params.id)),
+                this.mainService.restoreInfo(req.params.id),
             res, 200, ""
         )
     }

@@ -3,6 +3,9 @@ import BaseRoutes from "@app/routes/BaseRoutes";
 import AuthRequests from "@auth/requests/AuthRequest";
 import {AuthController} from "@auth/controllers/AuthController";
 import RoleMiddleware from "../middlewares/RoleMiddleware";
+import PermissionEnums from "@app/interfaces/PermissionEnums";
+import {Request, Response} from "express";
+import InfoRequest from "@source/requests/InfoRequest";
 
 export default class AuthRoutes extends BaseRoutes<AuthController> {
 
@@ -29,9 +32,9 @@ export default class AuthRoutes extends BaseRoutes<AuthController> {
             (req: any, res: any) => this.controller.refreshToken(req, res)
         );
         this.router.post(
-            "/verify/:id",
-            AuthMiddleware.auth,
-            RoleMiddleware.hasPermission("Verificar Usuario"),
+            "/verify",
+            AuthRequests.validateRecoverPasswordAndVerifyAccount(),
+            AuthRequests.validate,
             (req: any, res: any) => this.controller.verifyAuth(req, res)
         );
         this.router.post("/logout", AuthMiddleware.auth, (req: any, res: any) =>
@@ -47,19 +50,40 @@ export default class AuthRoutes extends BaseRoutes<AuthController> {
             AuthRequests.validate,
             (req: any, res: any) => this.controller.resetPassword(req, res)
         );
-
+        this.router.put(
+            "/profile/:id",
+            AuthMiddleware.auth,
+            InfoRequest.relatedInfoRequest(),
+            InfoRequest.validate,
+            (req: any, res: any) => this.controller.updateAuthInfo(req, res)
+        );
         this.router.post(
             "/password/recover",
-            AuthRequests.validateRecoverEmail(),
+            AuthRequests.validateRecoverAndVerifyEmail(),
             AuthRequests.validate,
             AuthMiddleware.emailExists,
             (req: any, res: any) => this.controller.sendRecoverLink(req, res)
         );
 
+        this.router.post(
+            "/verify/code",
+            AuthMiddleware.auth,
+            AuthRequests.validateRecoverAndVerifyEmail(),
+            AuthRequests.validate,
+            AuthMiddleware.emailExists,
+            RoleMiddleware.hasPermission(PermissionEnums.verifyUser),
+            (req: any, res: any) => this.controller.sendVerificationCode(req, res)
+        );
+        this.controller.router.post("/unauthorize/:id",
+            AuthMiddleware.auth,
+            RoleMiddleware.hasPermission(PermissionEnums.verifyUser),
+            AuthRequests.requireIdRequest(),
+            AuthRequests.validate,
+            (req: Request, res: Response) => this.controller.unAuthorize(req, res))
 
         this.router.put(
             "/password/recover",
-            AuthRequests.validateRecoverPassword(),
+            AuthRequests.validateRecoverPasswordAndVerifyAccount(),
             AuthRequests.validate,
             (req: any, res: any) => this.controller.recoverPassword(req, res)
         );

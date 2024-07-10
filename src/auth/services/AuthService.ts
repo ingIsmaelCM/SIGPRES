@@ -5,13 +5,15 @@ import AuthMailService from "@auth/services/AuthMailService";
 import config from "@app/app.config";
 import jwt from "jsonwebtoken";
 import {v4 as uuidv4} from "uuid";
-import {Response} from "express";
+import {Request, Response} from "express";
 import tools from "@app/utils/tools";
 import BaseConnection from "@app/db/BaseConnection";
-import {IAuth} from "@/auth/utils/AuthInterfaces";
-import Permission from "../models/Permission";
-import Role from "../models/Role";
+import {IAuth} from "@app/interfaces/AuthInterfaces";
 import Service from "@app/services/Service";
+import TenantConnection from "@app/db/TenantConnection";
+import InfoService from "@source/services/InfoService";
+import appConfig from "@app/app.config";
+ import {version} from "../../../package.json"
 
 export default class AuthService extends Service {
     private authRepo: AuthRepository = new AuthRepository();
@@ -21,7 +23,7 @@ export default class AuthService extends Service {
     async createAuth(auth: IAuth): Promise<Auth> {
         const trans: any = await BaseConnection.getTrans();
         try {
-            const emailExists: any = await this.authRepo.find("email", auth.email);
+            const emailExists: any = await this.authRepo.find("email", auth.email!);
             const usernameExists: any = await this.authRepo.find(
                 "username",
                 auth.username
@@ -49,8 +51,24 @@ export default class AuthService extends Service {
         }
     }
 
+    async updateAuthInfo(infoId: string, info: any) {
+        const trans = await TenantConnection.getTrans();
+        const authTrans = await BaseConnection.getTrans();
+        return this.safeRun(async () => {
+            const updatedInfo = await new InfoService().setFromRelated({...info, id: infoId}, trans);
+            await this.authRepo.update({infoId: infoId}, infoId, authTrans);
+            await trans.commit();
+            await authTrans.commit();
+            return updatedInfo
+        }, async () => {
+            await trans.rollback();
+            await authTrans.rollback();
 
-    async login(auth: any, res: Response) {
+        })
+    }
+
+
+    async login(auth: any, res: Response, req?: Request) {
         const trans = await BaseConnection.getTrans();
         try {
             let userAuth = await this.authRepo.find(
@@ -66,27 +84,34 @@ export default class AuthService extends Service {
                 if (!userAuth.tenants || userAuth.tenants.length == 0) {
                     await Promise.reject({
                         code: 401,
-                        message: "The user does not have a DB associated with them",
+                        message: "El usuario no tiene una base de datos asociada",
                     });
                 }
                 const updateData = {lastlogin: new Date(), status: 1};
                 await this.authRepo.update(updateData, userAuth.id, trans);
                 const {token, refreshToken} = this.generateTokens(userAuth);
-                this.setLoginCookies(res, refreshToken, token, userAuth);
-                let {permissions, roles}: { permissions: any[]; roles: any[] } =
-                    await this.setAuthFields(userAuth);
+                this.setLoginCookies(res, refreshToken, token, userAuth, req);
                 await trans.commit();
+                const prevTenant=userAuth.tenants.find((tenant: any)=>tenant.key===req?.cookies?.tenant)
+                userAuth.tenants=userAuth.tenants.filter((tenant: any)=>tenant.key!==prevTenant?.key);
+                if(prevTenant){
+                    userAuth.tenants.unshift(prevTenant)
+                }
                 const result = {
                     ...userAuth.dataValues,
+                    tenants: userAuth.tenants,
                     password: null,
-                    permissions: [...new Set(permissions)],
-                    roles,
+                    fullname: userAuth.fullname,
+                    permissions: userAuth.allPermissions,
+                    roles: userAuth.roles?.map((role: any) =>
+                        ({id: role.id, name: role.name})),
                 };
+                result.version = version;
                 return {userAuth: result, token};
             }
             await Promise.reject({
                 code: 401,
-                message: "Invalid credentials",
+                message: "Credenciales incorrectas",
             });
         } catch (error: any) {
             await trans.rollback();
@@ -94,17 +119,31 @@ export default class AuthService extends Service {
         }
     }
 
-    async verifyAuth(authId: number) {
+    async verifyAuth(data: any) {
         const trans = await BaseConnection.getTrans();
         try {
-            const auth = await this.authRepo.findById(authId);
+            const {email, code} = data;
+            const auth = await this.authRepo.find("email", email);
+
             if (!auth) {
-                await Promise.reject({
+                return Promise.reject({
                     code: 404,
                     message: "No existe este usuario",
                 });
             }
-            await this.authRepo.update({verifiedAt: new Date()}, authId, trans);
+            if (auth.verifiedAt) {
+                return Promise.reject({
+                    code: 419,
+                    message: "Esta cuenta ya está verificada",
+                });
+            }
+            if (!await bcrypt.compare(code, auth.sessionId)) {
+                return Promise.reject({
+                    code: 419,
+                    message: "El código ingresado no es correcto",
+                });
+            }
+            await this.authRepo.update({verifiedAt: new Date()}, auth.id, trans);
             await trans.commit();
         } catch (error: any) {
             await trans.rollback();
@@ -127,6 +166,18 @@ export default class AuthService extends Service {
     public async logout(res: Response) {
         tools.setCookie(res, "accessToken", "null");
     }
+
+    async unAuthorizeUser(userId: string): Promise<IAuth> {
+        const trans = await BaseConnection.getTrans();
+        return this.safeRun(async () => {
+                const unauthorized = await this.authRepo.update({verifiedAt: null}, userId, trans);
+                await trans.commit();
+                return unauthorized;
+            },
+            async () => await trans.rollback()
+        )
+    }
+
 
     public async logoutAll(req: any, res: Response) {
         const trans = await BaseConnection.getTrans();
@@ -152,7 +203,7 @@ export default class AuthService extends Service {
     }
 
     public async resetPassword(
-        authId: number,
+        authId: string,
         newPassword: string
     ): Promise<any> {
         const trans = await BaseConnection.getTrans();
@@ -188,7 +239,25 @@ export default class AuthService extends Service {
             return "Código enviado exitosamente";
         } catch (error: any) {
             throw {
-                code: error.code||500,
+                code: error.code || 500,
+                message: error.message,
+            };
+        }
+    }
+
+    public async sendVerificationCode(authEmail: string): Promise<any> {
+        try {
+            const context = await this.getContextForSendCodeToEmail(authEmail);
+            await this.authMailService.sendEmail({
+                to: authEmail,
+                context,
+                subject: "Verifique su cuenta",
+                template: "verifyAccount"
+            });
+            return "Código enviado exitosamente";
+        } catch (error: any) {
+            throw {
+                code: error.code || 500,
                 message: error.message,
             };
         }
@@ -201,13 +270,13 @@ export default class AuthService extends Service {
             numbers.push(String(num).padStart(3, "0"))
         }
         const auth = await this.authRepo.find("email", authEmail);
-        if(!auth){
+        if (!auth) {
             return Promise.reject({
                 code: 404,
                 message: "No se encontró el usuario"
             })
         }
-        const newSessionId=await bcrypt.hash(numbers.join(""),10)
+        const newSessionId = await bcrypt.hash(numbers.join(""), 10)
         await auth.update({sessionId: newSessionId})
         return {
             email: authEmail,
@@ -267,31 +336,16 @@ export default class AuthService extends Service {
         res: Response,
         refreshToken: String,
         token: String,
-        userAuth: any
+        userAuth: any,
+        req?: Request
     ) {
         tools.setCookie(res, "refreshToken", `${refreshToken}`);
         tools.setCookie(res, "accessToken", `Bearer ${token}`);
-        tools.setCookie(res, "tenant", userAuth.tenants[0].key);
+        const tenant =  req?.cookies?.tenant|| userAuth.tenants
+            .sort((a: any,b: any)=>a.key.localeCompare(b.key))[0].key;
+        tools.setCookie(res, "tenant",tenant);
     }
 
-    private async setAuthFields(userAuth: any) {
-        let permissions: any[] = userAuth.permissions.map((p: Permission) => ({
-            name: p.name,
-            id: p.id,
-        }));
-        const rolePermissions: any[] = userAuth.roles.map((r: Role) =>
-            r.permissions.map((p: Permission) => ({name: p.name, id: p.id}))
-        );
-        rolePermissions.forEach((rP) => {
-            permissions = permissions.concat(rP);
-        });
-        const roles = userAuth.roles.map((r: Role) => ({
-            name: r.name,
-            id: r.id,
-        }));
-
-        return {permissions, roles};
-    }
 
     private async validateAuthAccount(auth: any, pwd: string): Promise<Boolean> {
         const isValidPassword = await bcrypt.compare(

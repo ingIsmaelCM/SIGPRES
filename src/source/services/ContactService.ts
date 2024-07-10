@@ -23,7 +23,7 @@ export default class ContactService extends Service {
         return await this.contactViewRepo.getAll(params)
     }
 
-    async findContact(contactId: number, params: IParams) {
+    async findContact(contactId: string, params: IParams) {
         return await this.contactViewRepo.findById(contactId, params)
     }
 
@@ -31,10 +31,10 @@ export default class ContactService extends Service {
         return await this.clientContactViewRepo.getAll(params)
     }
 
-    async createContact(data: IContactView & { clientId: number }): Promise<IContact> {
+    async createContact(data: IContactView & { clientId: string }): Promise<IContact> {
         const trans = await TenantConnection.getTrans();
         return this.safeRun(async () => {
-                const newInfo = await this.infoService.setFromRelated(data, trans);
+                const newInfo = await this.infoService.setFromRelated(data, trans, 'Contact');
                 let newContact = await this.mainRepo.create({...data, infoId: newInfo.id}, trans);
                 if (data.clientId) {
                     await this.clientContactRepo.create({
@@ -51,12 +51,12 @@ export default class ContactService extends Service {
         )
     }
 
-    async updateContact(contactId: number, data: IContactView & { clientId: number }): Promise<IContact> {
+    async updateContact(contactId: string, data: IContactView & { clientId: string }): Promise<IContact> {
         const trans = await TenantConnection.getTrans();
         return this.safeRun(async () => {
                 const updatedContact = await this.mainRepo.update(data, contactId, trans);
                 if (data.infoId) {
-                    await this.infoService.updateFromRelated(data, data.infoId, trans);
+                    await this.infoService.updateFromRelated(data, data.infoId, trans, 'Contact');
                 }
                 if ((data as any).relationId) {
                     await this.clientContactRepo.update(data, (data as any).relationId, trans)
@@ -68,7 +68,7 @@ export default class ContactService extends Service {
         )
     }
 
-    async setProfilePhoto(contactId: number, data: any): Promise<IImage> {
+    async setProfilePhoto(contactId: string, data: any): Promise<IImage> {
         return this.safeRun(async () => {
                 const res = await CloudinaryService.getInstance().uploadFilesToCloudinary<IImage>(data)
                 const image: IImage = res[0]
@@ -79,7 +79,7 @@ export default class ContactService extends Service {
         )
     }
 
-    async deleteContact(contactId: number): Promise<IContact> {
+    async deleteContact(contactId: string): Promise<IContact> {
         const trans = await TenantConnection.getTrans();
         return this.safeRun(async () => {
                 const deletedContact = await this.mainRepo.delete(contactId, trans);
@@ -90,11 +90,10 @@ export default class ContactService extends Service {
         )
     }
 
-    async restoreContact(contactId: number): Promise<IContact> {
+    async restoreContact(contactId: string): Promise<IContact> {
         const trans = await TenantConnection.getTrans();
         return this.safeRun(async () => {
                 const restoredContact = await this.mainRepo.restore(contactId, trans);
-                console.log("Fue aquí")
                 await trans.commit();
                 return restoredContact;
             },

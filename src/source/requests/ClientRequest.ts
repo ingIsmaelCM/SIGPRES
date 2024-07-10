@@ -19,7 +19,7 @@ class ClientRequest extends BaseRequest {
         return [
             this.RequestCheck.isLength("name",2,50).optional(),
             this.RequestCheck.isLength("lastname",2,50).optional(),
-            this.RequestCheck.isInt("infoId").optional(),
+            this.RequestCheck.isString("infoId").optional(),
             this.RequestCheck.isIn("clienttype",`${EClientType.Persona} | ${EClientType.Negocio}`,
                 [EClientType.Persona, EClientType.Negocio]).optional(),
         ]

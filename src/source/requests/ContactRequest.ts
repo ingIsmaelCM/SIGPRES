@@ -9,8 +9,8 @@ class ContactRequest extends BaseRequest {
             this.RequestCheck.isLength("name",0,50),
             this.RequestCheck.required("lastname"),
             this.RequestCheck.isLength("lastname",0,50),
-            this.RequestCheck.isInt("clientId").optional(),
-            this.RequestCheck.isInt("relationId").optional(),
+            this.RequestCheck.isString("clientId").optional(),
+            this.RequestCheck.isString("relationId").optional(),
             this.RequestCheck.isIn("relationship",
                 Object.values(EClientContactRelationship).join(" | "),
                 Object.values(EClientContactRelationship)).optional()
@@ -21,8 +21,8 @@ class ContactRequest extends BaseRequest {
         return [
             this.RequestCheck.isLength("name",0,50),
             this.RequestCheck.isLength("lastname",0,50),
-            this.RequestCheck.isInt("relationId").optional(),
-            this.RequestCheck.isInt("infoId").optional(),
+            this.RequestCheck.isString("relationId").optional(),
+            this.RequestCheck.isString("infoId").optional(),
             this.RequestCheck.isIn("relationship",
                 Object.values(EClientContactRelationship).join(" | "),
                 Object.values(EClientContactRelationship)).optional()

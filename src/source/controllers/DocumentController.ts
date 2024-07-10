@@ -15,19 +15,19 @@ export default class DocumentController extends Controller implements IControlle
 
     async show(req: any, res: any) {
         await this.safeRun(async () =>
-                await this.mainService.findDocument(Number(req.params.id), req.query),
+                await this.mainService.findDocument(req.params.id, req.query),
             res, 200, "Detalles del documento");
     }
 
     async delete(req: any, res: any) {
         await this.safeRun(async () =>
-                await this.mainService.deleteDocument(Number(req.params.id)),
+                await this.mainService.deleteDocument(req.params.id),
             res, 200, "Documento Eliminada");
     }
 
     async restore(req: any, res: any) {
         await this.safeRun(async () =>
-                await this.mainService.deleteDocument(Number(req.params.id)),
+                await this.mainService.deleteDocument(req.params.id),
             res, 200, "Documento Eliminada");
     }
 }

@@ -23,6 +23,14 @@ export default class WalletRoutes extends BaseRoutes<WalletController> {
                 (req: Request, res: Response) => this.controller.store(req, res)
             );
 
+        this.controller.router.put("/:id/balance/add",
+            RoleMiddleware.hasPermission(PermissionEnums.createWallet),
+            WalletRequest.walletAddBalanceRequest(),
+            WalletRequest.requireIdRequest(),
+            WalletRequest.validate,
+            (req: Request, res: Response) => this.controller.addBalance(req, res)
+        );
+
         this.controller.router.route("/:id")
             .get(
                 RoleMiddleware.hasPermission(PermissionEnums.getWallets),

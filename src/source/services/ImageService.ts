@@ -23,7 +23,7 @@ export default class ImageService extends Service {
         })
     }
 
-    async createSingleImage(data: IImage, relatedModel: EImageable, relatedId: number, upsert?: boolean) {
+    async createSingleImage(data: IImage, relatedModel: EImageable, relatedId: string, upsert?: boolean) {
         const trans = await TenantConnection.getTrans();
         return this.safeRun(async () => {
                 let newImage = null;
@@ -46,7 +46,7 @@ export default class ImageService extends Service {
         )
     }
 
-    async createMultipleImages(data: IImage[], relatedModel: EImageable, relatedId: number) {
+    async createMultipleImages(data: IImage[], relatedModel: EImageable, relatedId: string) {
         const trans = await TenantConnection.getTrans();
         return this.safeRun(async () => {
                 data = data.map((image: IImage) => ({
@@ -62,11 +62,11 @@ export default class ImageService extends Service {
         )
     }
 
-    async findImage(imageId: number, params: IParams) {
+    async findImage(imageId: string, params: IParams) {
         return await this.mainRepo.findById(imageId, params)
     }
 
-    async deleteImage(imageId: number): Promise<IImage> {
+    async deleteImage(imageId: string): Promise<IImage> {
         const trans = await TenantConnection.getTrans();
         return this.safeRun(async () => {
                 const image = await this.mainRepo.findById(imageId);
@@ -83,7 +83,7 @@ export default class ImageService extends Service {
 
 
 
-    async restoreImage(imageId: number): Promise<IImage> {
+    async restoreImage(imageId: string): Promise<IImage> {
         const trans = await TenantConnection.getTrans();
         return this.safeRun(async () => {
             },
@@ -91,7 +91,7 @@ export default class ImageService extends Service {
         )
     }
 
-    private async checkOldImageExists(relatedModel: EImageable, relatedId: number) {
+    private async checkOldImageExists(relatedModel: EImageable, relatedId: string) {
         return await this.mainRepo.getAll({
             filter: [
                 `imageableType:eq:${relatedModel}:and`,

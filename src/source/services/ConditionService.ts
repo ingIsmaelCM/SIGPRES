@@ -11,7 +11,7 @@ export default class ConditionService extends Service {
         return await this.mainRepo.getAll(params)
     }
 
-    async findCondition(conditionId: number, params: IParams) {
+    async findCondition(conditionId: string, params: IParams) {
         return await this.mainRepo.findById(conditionId, params)
     }
 
@@ -23,7 +23,7 @@ export default class ConditionService extends Service {
         )
     }
 
-    async updateCondition(conditionId: number, data: ICondition): Promise<ICondition> {
+    async updateCondition(conditionId: string, data: ICondition): Promise<ICondition> {
         const trans = await TenantConnection.getTrans();
         return this.safeRun(async () => {
             },
@@ -32,7 +32,7 @@ export default class ConditionService extends Service {
     }
 
 
-    async deleteCondition(conditionId: number): Promise<ICondition> {
+    async deleteCondition(conditionId: string): Promise<ICondition> {
         const trans = await TenantConnection.getTrans();
         return this.safeRun(async () => {
             },
@@ -40,7 +40,7 @@ export default class ConditionService extends Service {
         )
     }
 
-    async restoreCondition(conditionId: number): Promise<ICondition> {
+    async restoreCondition(conditionId: string): Promise<ICondition> {
         const trans = await TenantConnection.getTrans();
         return this.safeRun(async () => {
             },

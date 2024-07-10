@@ -20,6 +20,14 @@ import ContactView from "@source/models/views/ContactView";
 import JobView from "@source/models/views/JobView";
 import LawyerView from "@source/models/views/LawyerView";
 import ClientContactView from "@source/models/views/ClientContactView";
+import AmortizationView from "@source/models/views/AmortizationView";
+import PaymentStatView from "@source/models/views/PaymentStatView";
+import LawyerPayment from "@source/models/LawyerPayment";
+import UserView from "@source/models/views/UserView";
+import Card from "@source/models/Card";
+import Guarantee from "@source/models/Guarantee";
+import Attribute from "@source/models/Attribute";
+import LoanView from "@source/models/views/LoanView";
 
 export {
     Client,
@@ -38,10 +46,19 @@ export {
     Document,
     Social,
     Mora,
-    ClientContact,
     ClientView,
     ContactView,
     JobView,
     LawyerView,
-    ClientContactView
+    LawyerPayment,
+    UserView,
+    PaymentStatView,
+    AmortizationView,
+    ClientContactView,
+    ClientContact,
+    Card,
+    Guarantee,
+    Attribute,
+    LoanView
+
 };

@@ -4,6 +4,7 @@ import {Request, Response} from "express";
 import LoanRequest from "@source/requests/LoanRequest";
 import RoleMiddleware from "@/auth/middlewares/RoleMiddleware";
 import PermissionEnums from "@app/interfaces/PermissionEnums";
+import ConditionRequest from "@source/requests/ConditionRequest";
 
 export default class LoanRoutes extends BaseRoutes<LoanController> {
     constructor() {
@@ -19,10 +20,33 @@ export default class LoanRoutes extends BaseRoutes<LoanController> {
             .post(
                 RoleMiddleware.hasPermission(PermissionEnums.createLoan),
                 LoanRequest.loanCreateRequest(),
+                ConditionRequest.conditionCreateRequest(),
                 LoanRequest.validate,
                 (req: Request, res: Response) => this.controller.store(req, res)
             );
 
+
+        this.controller.router.patch("/:id/confirm",
+            RoleMiddleware.hasPermission(PermissionEnums.reestructurateLoan),
+            LoanRequest.loanConfirmRequest(),
+            LoanRequest.requireIdRequest(),
+            LoanRequest.validate,
+            (req: Request, res: Response) => this.controller.confirm(req, res)
+        );
+
+        this.controller.router.patch("/:id/recharge",
+            RoleMiddleware.hasPermission(PermissionEnums.approveLoan),
+            LoanRequest.loanRechargeRequest(),
+            LoanRequest.requireIdRequest(),
+            LoanRequest.validate,
+            (req: Request, res: Response) => this.controller.recharge(req, res)
+        );
+        this.controller.router.patch("/:id/decline",
+            RoleMiddleware.hasPermission(PermissionEnums.declineLoan),
+            LoanRequest.requireIdRequest(),
+            LoanRequest.validate,
+            (req: Request, res: Response) => this.controller.decline(req, res)
+        )
         this.controller.router.route("/:id")
             .get(
                 RoleMiddleware.hasPermission(PermissionEnums.getLoans),
@@ -31,6 +55,8 @@ export default class LoanRoutes extends BaseRoutes<LoanController> {
             .put(
                 RoleMiddleware.hasPermission(PermissionEnums.editLoan),
                 LoanRequest.loanUpdateRequest(),
+                LoanRequest.requireIdRequest(),
+                ConditionRequest.conditionCreateRequest(),
                 LoanRequest.validate,
                 (req: Request, res: Response) => this.controller.update(req, res)
             )

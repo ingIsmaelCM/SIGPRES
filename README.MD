@@ -31,8 +31,8 @@ cp .env.example .env
 Create Databases
 
 ```mysql
-CREATE DATABASE IF NOT EXIST `sigpres_main`
-CREATE DATABASE IF NOT EXIST `sigpres_main_tenant`
+CREATE DATABASE IF NOT EXISTS `sigpres_main`;
+CREATE DATABASE IF NOT EXISTS `sigpres_main_tenant`;
 ```
 
 Migrate Data

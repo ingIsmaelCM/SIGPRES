@@ -1,6 +1,8 @@
 import {DataTypes, InferAttributes, InferCreationAttributes, Model,} from "sequelize";
 import {IModel} from "@app/models/IModel";
 import BaseConnection from "@app/db/BaseConnection";
+import InfoRepository from "@source/repositories/InfoRepository";
+import tools from "@app/utils/tools";
 
 /*TODO: Create table, model and repository concerns.
    TODO: Set concernId on auths and modify register
@@ -11,10 +13,12 @@ class Auth
     implements IModel {
     [x: string]: any;
 
-    declare id: number;
+    declare id: string;
     declare email: string;
     declare username: string;
     declare password: string;
+    declare fullname: string;
+    declare infoId: string;
     declare name: string;
     declare lastname: string;
     declare status: number;
@@ -23,12 +27,12 @@ class Auth
     declare updatedAt: string;
     declare deletedAt: string;
 
-    getSearchables() {
-        return ["email", "username", "lastLogin", "verifiedAt", "status"];
+    static getSearchables() {
+        return ["email", "username", "name", "lastname", "lastLogin", "verifiedAt", "status"];
     }
 
     /* istanbul ignore next */
-    getRelations() {
+    static getRelations() {
         return [
             "roles",
             "roles.auths",
@@ -42,9 +46,10 @@ class Auth
 Auth.init(
     {
         id: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.STRING,
             primaryKey: true,
-            autoIncrement: true,
+            allowNull: false,
+            defaultValue: DataTypes.UUIDV4
         },
         email: {
             type: DataTypes.STRING,
@@ -66,10 +71,46 @@ Auth.init(
         name: {
             type: DataTypes.STRING,
             allowNull: false,
+            set(this: Auth, value: string) {
+                this.setDataValue("name", tools.initialToUpper(value))
+            }
         },
         lastname: {
             type: DataTypes.STRING,
             allowNull: false,
+            set(this: Auth, value: string) {
+                this.setDataValue("lastname", tools.initialToUpper(value))
+            }
+        },
+        fullname: {
+            type: DataTypes.VIRTUAL,
+            get(this: Auth) {
+                return `${this.getDataValue("name")} ${this.getDataValue("lastname")}`
+            }
+        },
+        allPermissions: {
+            type: DataTypes.VIRTUAL,
+            get(this: Auth) {
+                if (!Boolean(this.permissions)) return null;
+                const rolePermissions: any[] = this.roles?.map((role: any) =>
+                    role.permissions.map((perm: any) =>
+                        ({id: perm.id, name: perm.name})))[0] || [];
+                const localPermissions: any[] = this.permissions
+                    .map((perm: any) =>
+                        ({id: perm.id, name: perm.name}))
+                ;
+                const allPermissions = rolePermissions.concat(localPermissions)
+                const uniquePermissions = allPermissions.filter((item, index, self) =>
+                        index === self.findIndex((t) => (
+                            t.id === item.id
+                        ))
+                );
+                return Array.from(new Set(uniquePermissions))
+            }
+        },
+        infoId: {
+            type: DataTypes.NUMBER,
+            allowNull: true,
         },
         lastlogin: {
             type: DataTypes.DATE,

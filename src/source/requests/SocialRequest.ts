@@ -13,7 +13,7 @@ class SocialRequest extends BaseRequest {
 
     socialUpdateRequest(): Array<ValidationChain> {
         return [
-            this.RequestCheck.isInt("clientId").optional(),
+            this.RequestCheck.isString("clientId").optional(),
             this.RequestCheck.isLength("instagram",5,50).optional(),
             this.RequestCheck.isLength("facebook",5,50).optional(),
             this.RequestCheck.isLength("whatsapp",5,50).optional(),

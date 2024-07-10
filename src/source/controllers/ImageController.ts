@@ -16,7 +16,7 @@ export default class ImageController extends Controller implements IController {
 
     async show(req: any, res: any) {
         await this.safeRun(async () =>
-                await this.mainService.findImage(Number(req.params.id), req.query),
+                await this.mainService.findImage(req.params.id, req.query),
             res, 200, "Detalles de la imagen");
     }
 
@@ -27,13 +27,13 @@ export default class ImageController extends Controller implements IController {
     }
     async delete(req: any, res: any) {
         await this.safeRun(async () =>
-                await this.mainService.deleteImage(Number(req.params.id)),
+                await this.mainService.deleteImage(req.params.id),
             res, 200, "Imagen Eliminada");
     }
 
     async restore(req: any, res: any) {
         await this.safeRun(async () =>
-                await this.mainService.deleteImage(Number(req.params.id)),
+                await this.mainService.deleteImage(req.params.id),
             res, 200, "Imagen Eliminada");
     }
 }

@@ -10,21 +10,21 @@ import tools from "@app/utils/tools";
 export default class Contact extends Model implements  IContact{
 
 
-  declare id: number;
-  declare infoId: number;
+  declare id: string;
+  declare infoId: string;
   declare lastname: string;
   declare fullname?: string;
   declare name: string;
   declare createdAt?: string;
-  declare createdBy?: number;
+  declare createdBy?: string;
   declare deletedAt?: string;
   declare updatedAt?: string;
-  declare updatedBy?: number;
-  getSearchables(): Array<keyof IContact> {
+  declare updatedBy?: string;
+ static  getSearchables(): Array<keyof IContact> {
     return ["name", "lastname", "infoId"];
   }
 
-  getRelations(): (keyof IContactRelation)[] {
+ static getRelations(): (keyof IContactRelation)[] {
     return ["clients", "info",];
   }
 
@@ -48,8 +48,8 @@ export default class Contact extends Model implements  IContact{
       }
     },
     infoId: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
+      type: DataTypes.STRING,
+      allowNull: false,
     },
     fullname: {
       type: DataTypes.VIRTUAL,

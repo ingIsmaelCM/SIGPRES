@@ -15,14 +15,14 @@ class Role
   declare createdAt: string;
   declare updatedAt: string;
 
-  declare id: number;
+  declare id: string;
   declare name: string;
 
-  getSearchables(): string[] {
+ static  getSearchables(): string[] {
     return ["name"];
   }
   /* istanbul ignore next */
-  getRelations(): string[] {
+ static getRelations(): string[] {
     return ["auths", "auths.user"];
   }
 }
@@ -30,9 +30,10 @@ class Role
 Role.init(
   {
     id: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING,
       primaryKey: true,
-      autoIncrement: true,
+      allowNull: false,
+      defaultValue: DataTypes.UUIDV4
     },
     name: {
       type: DataTypes.STRING,

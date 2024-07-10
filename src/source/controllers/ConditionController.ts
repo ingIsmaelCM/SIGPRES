@@ -17,7 +17,7 @@ export default class ConditionController extends Controller implements IControll
 
     async show(req: Request, res: Response) {
         return this.safeRun(async () =>
-                this.mainService.findCondition(Number(req.params.id), req.query),
+                this.mainService.findCondition(req.params.id, req.query),
             res, 200, ""
         )
     }
@@ -33,21 +33,21 @@ export default class ConditionController extends Controller implements IControll
     @setAuthor
     async update(req: Request, res: Response) {
         return this.safeRun(async () =>
-                this.mainService.updateCondition(Number(req.params.id), req.body),
+                this.mainService.updateCondition(req.params.id, req.body),
             res, 201, ""
         )
     }
 
     async delete(req: Request, res: Response) {
         return this.safeRun(async () =>
-                this.mainService.deleteCondition(Number(req.params.id)),
+                this.mainService.deleteCondition(req.params.id),
             res, 200, ""
         )
     }
 
     async restore(req: Request, res: Response) {
         return this.safeRun(async () =>
-                this.mainService.restoreCondition(Number(req.params.id)),
+                this.mainService.restoreCondition(req.params.id),
             res, 200, ""
         )
     }

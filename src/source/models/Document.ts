@@ -9,9 +9,10 @@ export default class Document extends Model implements IDocument {
     static modelName = "Document"
     static attributes: Record<keyof IDocument, ModelAttributeColumnOptions> = {
         id: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.STRING,
             primaryKey: true,
-            autoIncrement: true,
+            allowNull: false,
+            defaultValue: DataTypes.UUIDV4
         },
         path: {
             type: DataTypes.STRING,
@@ -34,7 +35,7 @@ export default class Document extends Model implements IDocument {
             allowNull: false
         },
         documentableId: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.STRING,
             allowNull: false
         },
         createdAt: {
@@ -48,22 +49,22 @@ export default class Document extends Model implements IDocument {
             allowNull: true,
         },
     }
-    declare id: number;
+    declare Id: string;
     declare path: string;
     declare size: number;
     declare title: string;
     declare publicId: string;
     declare createdAt: string;
     declare deletedAt: string;
-    declare documentableId: number;
+    declare documentableId: string;
     declare documentableType: string;
     declare updatedAt: string;
 
-    getSearchables(): Array<keyof IDocument> {
+   static  getSearchables(): Array<keyof IDocument> {
         return ["path", "title", "size", "documentableType", "documentableId"]
     }
 
-    getRelations(): Array<keyof IDocumentRelation> {
+   static getRelations(): Array<keyof IDocumentRelation> {
         return []
     }
 

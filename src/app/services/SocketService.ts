@@ -1,4 +1,4 @@
-import {IAuth} from "@/auth/utils/AuthInterfaces";
+import {IAuth} from "@app/interfaces/AuthInterfaces";
 import {Server as HttpServer} from "http";
 import {RemoteSocket, Server} from "socket.io";
 
@@ -17,7 +17,7 @@ export default class SocketService {
                 path: "/api/socket",
             });
             SocketService.setMiddelware();
-            SocketService.sockectListen();
+            SocketService.socketListen();
         }
 
     }
@@ -27,7 +27,7 @@ export default class SocketService {
         });
     }
 
-    private static sockectListen() {
+    private static socketListen() {
         try {
             this.socket.on("connection", (socket: any) => {
 

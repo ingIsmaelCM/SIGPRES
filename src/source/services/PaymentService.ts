@@ -116,6 +116,8 @@ export default class PaymentService extends Service {
         )
     }
 
+    //FIXED: Removed isActual and diffInDays validations
+    //Each payment must be recorded separately.
     async createPaymentCapital(data: Record<string, any>): Promise<IPayment> {
         const trans = await TenantConnection.getTrans();
         return this.safeRun(async () => {
@@ -130,14 +132,9 @@ export default class PaymentService extends Service {
                 }
                 const loan = await this.loanRepo.findById(data.loanId, {include: "condition"});
                 let newDate = amort.date;
-                let isActual = false;
-                let difInDays = 0;
-                while (data.moveDate && !isActual) {
+                if (data.moveDate) {
                     newDate = amortization.getDateCuota(new Date(newDate), loan.period).format('YYYY-MM-DD');
-                    if (!difInDays) {
-                        difInDays = Math.abs(moment(amort.date).diff(moment(newDate), "days"));
-                    }
-                    isActual = moment().add(Math.ceil(difInDays / 2) - 1, 'days').isBefore(moment(newDate));
+                    Math.abs(moment(amort.date).diff(moment(newDate), "days"));
                 }
                 const isPayed = loan.balance === data.capital;
                 const newStatus = isPayed ? EAmortizationStatus.Pagado : EAmortizationStatus.Pendiente;

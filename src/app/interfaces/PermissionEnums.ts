@@ -25,7 +25,6 @@ enum PermissionEnums {
   getClients = "Ver Clientes",
   editClient = "Editar Clientes",
   deleteClient = "Eliminar Clientes",
-  confirmLoan = "Confirm Préstamo",
   createLoan = "Crear Préstamos",
   editLoan = "Editar Préstamos",
   deleteLoan = "Eliminar Préstamos",
@@ -104,7 +103,9 @@ enum PermissionEnums {
   getCards="Ver Tarjetas",
   createCard="Crear Tarjeta",
   editCard="Editar Tarjeta",
-  deleteCard="Eliminar Tarjeta"
+  deleteCard="Eliminar Tarjeta",
+  changePassword="Cambiar Contraseña",
+  recoverPassword="Recuperar Contraseña",
 
 }
 

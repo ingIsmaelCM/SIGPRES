@@ -28,7 +28,6 @@ var PermissionEnums;
     PermissionEnums["getClients"] = "Ver Clientes";
     PermissionEnums["editClient"] = "Editar Clientes";
     PermissionEnums["deleteClient"] = "Eliminar Clientes";
-    PermissionEnums["confirmLoan"] = "Confirm Pr\u00E9stamo";
     PermissionEnums["createLoan"] = "Crear Pr\u00E9stamos";
     PermissionEnums["editLoan"] = "Editar Pr\u00E9stamos";
     PermissionEnums["deleteLoan"] = "Eliminar Pr\u00E9stamos";
@@ -108,6 +107,8 @@ var PermissionEnums;
     PermissionEnums["createCard"] = "Crear Tarjeta";
     PermissionEnums["editCard"] = "Editar Tarjeta";
     PermissionEnums["deleteCard"] = "Eliminar Tarjeta";
+    PermissionEnums["changePassword"] = "Cambiar Contrase\u00F1a";
+    PermissionEnums["recoverPassword"] = "Recuperar Contrase\u00F1a";
 })(PermissionEnums || (PermissionEnums = {}));
 exports.default = PermissionEnums;
 //# sourceMappingURL=PermissionEnums.js.map

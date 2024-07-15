@@ -25,8 +25,7 @@ INSERT INTO `permissions` ( name, id) VALUES
 ('Ver Clientes', (UUID())),
 ('Editar Clientes', (UUID())),
 ('Eliminar Clientes', (UUID())),
-('Confirmar Préstamo', (UUID())),
-('Reestructurar Préstamo', (UUID())),
+('Reestructurar Préstamos', (UUID())),
 ('Crear Préstamos', (UUID())),
 ('Editar Préstamos', (UUID())),
 ('Eliminar Préstamos', (UUID())),
@@ -105,4 +104,6 @@ INSERT INTO `permissions` ( name, id) VALUES
  ('Crear Tarjeta', (UUID())),
  ('Ver Tarjetas', (UUID())),
  ('Editar Tarjeta', (UUID())),
+ ('Cambiar Contraseña', (UUID())),
+ ('Recuperar Contraseña', (UUID())),
  ('Eliminar Tarjeta', (UUID())) ON DUPLICATE KEY UPDATE id=id;

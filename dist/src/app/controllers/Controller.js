@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.setAuthor = void 0;
+exports.setAuthor = setAuthor;
 const express_1 = require("express");
 const response_1 = __importDefault(require("../utils/response"));
 const tools_1 = __importDefault(require("../utils/tools"));
@@ -27,7 +27,6 @@ function setAuthor(_target, _propertyKey, descriptor) {
         return originalMethod.apply(this, [req, res]);
     };
 }
-exports.setAuthor = setAuthor;
 const mensajesEstado = {
     200: "Operación realizada con éxito",
     201: "Recurso creado/actualizado",

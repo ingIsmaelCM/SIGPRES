@@ -1,12 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.commonAttributes = exports.staticImplements = void 0;
+exports.commonAttributes = void 0;
+exports.staticImplements = staticImplements;
 const sequelize_1 = require("sequelize");
 function staticImplements() {
     return (_constructor) => {
     };
 }
-exports.staticImplements = staticImplements;
 exports.commonAttributes = {
     id: {
         type: sequelize_1.DataTypes.STRING(70),

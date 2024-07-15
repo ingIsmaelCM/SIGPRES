@@ -110,14 +110,9 @@ class PaymentService extends Service_1.default {
             }
             const loan = await this.loanRepo.findById(data.loanId, { include: "condition" });
             let newDate = amort.date;
-            let isActual = false;
-            let difInDays = 0;
-            while (data.moveDate && !isActual) {
+            if (data.moveDate) {
                 newDate = amortization_1.default.getDateCuota(new Date(newDate), loan.period).format('YYYY-MM-DD');
-                if (!difInDays) {
-                    difInDays = Math.abs((0, moment_timezone_1.default)(amort.date).diff((0, moment_timezone_1.default)(newDate), "days"));
-                }
-                isActual = (0, moment_timezone_1.default)().add(Math.ceil(difInDays / 2) - 1, 'days').isBefore((0, moment_timezone_1.default)(newDate));
+                Math.abs((0, moment_timezone_1.default)(amort.date).diff((0, moment_timezone_1.default)(newDate), "days"));
             }
             const isPayed = loan.balance === data.capital;
             const newStatus = isPayed ? SourceInterfaces_1.EAmortizationStatus.Pagado : SourceInterfaces_1.EAmortizationStatus.Pendiente;
